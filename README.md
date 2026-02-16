@@ -106,7 +106,7 @@ Chapter 3: Advanced Protocols
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/soroban-quest.git
+git clone https://github.com/JafetCHVDev/soroban-quest.git
 cd soroban-quest
 
 # Install dependencies
@@ -236,7 +236,7 @@ Missions are defined in `src/data/missions.js`. Each mission object includes:
 
 ```bash
 # Fork & clone
-git clone https://github.com/<your-fork>/soroban-quest.git
+git clone https://github.com/JafetCHVDev/soroban-quest.git
 
 # Create a feature branch
 git checkout -b feat/new-mission
