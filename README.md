@@ -12,6 +12,7 @@ Learn to build smart contracts through epic quests — no wallet, no installatio
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=white)](https://react.dev/)
 [![Stellar](https://img.shields.io/badge/Stellar-Soroban-7C3AED?logo=stellar&logoColor=white)](https://soroban.stellar.org/)
+[![CI](https://github.com/JafetCHVDev/soroban-quest/actions/workflows/ci.yml/badge.svg)](https://github.com/JafetCHVDev/soroban-quest/actions/workflows/ci.yml)
 
 [**🚀 Live Demo**](#) · [**📖 Documentation**](#features) · [**🐛 Report Bug**](../../issues) · [**✨ Request Feature**](../../issues)
 
