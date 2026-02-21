@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import prettierConfig from "eslint-config-prettier";
+import globals from "globals";
 
 export default [
   // Base JS recommended rules
@@ -21,30 +22,8 @@ export default [
       sourceType: "module",
       globals: {
         // Browser globals
-        window: "readonly",
-        document: "readonly",
-        navigator: "readonly",
-        console: "readonly",
-        fetch: "readonly",
-        URL: "readonly",
-        URLSearchParams: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        localStorage: "readonly",
-        sessionStorage: "readonly",
-        location: "readonly",
-        history: "readonly",
-        alert: "readonly",
-        confirm: "readonly",
-        prompt: "readonly",
-        HTMLElement: "readonly",
-        Element: "readonly",
-        Event: "readonly",
-        CustomEvent: "readonly",
-        // ES2021 globals
-        globalThis: "readonly",
+        ...globals.browser,
+        ...globals.es2021,
       },
       parserOptions: {
         ecmaFeatures: {
@@ -78,7 +57,7 @@ export default [
       ],
 
       // General JS quality rules
-      "no-console": "warn",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "no-var": "error",
       "prefer-const": "error",
