@@ -74,7 +74,7 @@ export default [
       "react/jsx-no-target-blank": "error",    
       "react/self-closing-comp": "warn",       
       "react/jsx-curly-brace-presence": [      
-        { props: "never", children: "never" },
+        "warn", "never"
       ],
 
       // General JS quality rules
