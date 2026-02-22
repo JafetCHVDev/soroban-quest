@@ -6,6 +6,7 @@ import { getMissionById, getNextMission } from '../systems/missionLoader';
 import { runTests } from '../systems/testRunner';
 import { loadProgress, saveProgress } from '../systems/storage';
 import { completeMission, recordAttempt, getXPProgress, getRankTitle } from '../systems/gameEngine';
+import { useokashi, TOAST_STATES } from '../systems/useokashi';
 
 export default function MissionDetail() {
     const { missionId } = useParams();
@@ -19,6 +20,7 @@ export default function MissionDetail() {
     const [victoryData, setVictoryData] = useState(null);
     const [hintIndex, setHintIndex] = useState(-1);
     const terminalBodyRef = useRef(null);
+    const { openInOkashi, toast } = useokashi();
 
     useEffect(() => {
         if (mission) {
@@ -262,7 +264,7 @@ export default function MissionDetail() {
                 </div>
             </div>
 
-            {/* Victory Modal */}
+            {/* Victory Modal — only shows when ALL tests pass */}
             {showVictory && victoryData && (
                 <div className="modal-overlay" onClick={() => setShowVictory(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -272,16 +274,20 @@ export default function MissionDetail() {
                             You've completed <strong>{mission.title}</strong>
                         </p>
                         <div className="modal-xp">+{victoryData.xp} XP</div>
+
                         {victoryData.leveledUp && (
                             <p style={{ color: 'var(--purple)', fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>
                                 🎉 Level Up! You are now Level {victoryData.newLevel} — {getRankTitle(victoryData.newLevel)}
                             </p>
                         )}
+
                         {victoryData.newBadges?.length > 0 && (
                             <p style={{ color: 'var(--gold)', marginBottom: '1rem' }}>
                                 🏅 New badge{victoryData.newBadges.length > 1 ? 's' : ''} earned!
                             </p>
                         )}
+
+                        {/* Navigation Buttons */}
                         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
                             <button className="btn btn-primary" onClick={handleNextMission}>
                                 Next Mission →
@@ -290,6 +296,67 @@ export default function MissionDetail() {
                                 Mission Map
                             </button>
                         </div>
+
+                        {/* ── Okashi Button ── only visible after mission completion ── */}
+                        <div style={{
+                            marginTop: '1.25rem',
+                            paddingTop: '1.25rem',
+                            borderTop: '1px solid rgba(255,255,255,0.08)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '8px',
+                        }}>
+                            <button
+                                onClick={() => openInOkashi(code)}
+                                style={{
+                                    padding: '10px 22px',
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+                                    color: '#fff',
+                                    fontSize: '14px',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 14px rgba(124,58,237,0.4)',
+                                    transition: 'opacity 0.2s',
+                                }}
+                                onMouseEnter={e => e.target.style.opacity = '0.85'}
+                                onMouseLeave={e => e.target.style.opacity = '1'}
+                            >
+                                🚀 Try on Okashi — Compile &amp; Deploy
+                            </button>
+
+                            <p style={{
+                                fontSize: '11px',
+                                color: '#94a3b8',
+                                textAlign: 'center',
+                                maxWidth: '300px',
+                                margin: 0,
+                                lineHeight: '1.5',
+                            }}>
+                                Opens okashi.dev in a new tab. Your code is copied to clipboard — paste it there to compile with the real Soroban compiler and deploy to Testnet.
+                            </p>
+
+                            {/* Toast notification */}
+                            {toast.state !== TOAST_STATES.IDLE && (
+                                <div style={{
+                                    padding: '10px 16px',
+                                    borderRadius: '8px',
+                                    fontSize: '13px',
+                                    fontWeight: '500',
+                                    background: toast.state === TOAST_STATES.SUCCESS ? '#064e3b' : '#4c0519',
+                                    color: toast.state === TOAST_STATES.SUCCESS ? '#6ee7b7' : '#fda4af',
+                                    border: toast.state === TOAST_STATES.SUCCESS ? '1px solid #065f46' : '1px solid #881337',
+                                    maxWidth: '340px',
+                                    textAlign: 'center',
+                                    lineHeight: '1.5',
+                                }}>
+                                    {toast.message}
+                                </div>
+                            )}
+                        </div>
+
                     </div>
                 </div>
             )}
