@@ -3,7 +3,7 @@
    RPG-inspired dark theme for Stellar/Soroban
    ========================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap");
 
 :root {
   /* Core palette */
@@ -12,7 +12,7 @@
   --bg-tertiary: #1a2236;
   --bg-card: rgba(17, 24, 39, 0.7);
   --bg-glass: rgba(17, 24, 39, 0.5);
-  
+
   /* Accent colors */
   --cyan: #06d6a0;
   --cyan-dim: rgba(6, 214, 160, 0.15);
@@ -29,23 +29,23 @@
   --green-dim: rgba(34, 197, 94, 0.15);
   --blue: #3b82f6;
   --blue-dim: rgba(59, 130, 246, 0.15);
-  
+
   /* Text */
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --text-accent: var(--cyan);
-  
+
   /* Borders */
   --border-subtle: rgba(148, 163, 184, 0.1);
   --border-accent: rgba(6, 214, 160, 0.3);
   --border-glow: rgba(6, 214, 160, 0.6);
-  
+
   /* Typography */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-code: 'JetBrains Mono', 'Fira Code', monospace;
-  --font-display: 'Orbitron', sans-serif;
-  
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: "JetBrains Mono", "Fira Code", monospace;
+  --font-display: "Orbitron", sans-serif;
+
   /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -54,27 +54,30 @@
   --space-xl: 2rem;
   --space-2xl: 3rem;
   --space-3xl: 4rem;
-  
+
   /* Radii */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow-cyan: 0 0 20px var(--cyan-glow), 0 0 60px rgba(6, 214, 160, 0.1);
-  --shadow-glow-purple: 0 0 20px var(--purple-glow), 0 0 60px rgba(139, 92, 246, 0.1);
-  --shadow-glow-gold: 0 0 20px var(--gold-glow), 0 0 60px rgba(245, 158, 11, 0.1);
-  
+  --shadow-glow-cyan:
+    0 0 20px var(--cyan-glow), 0 0 60px rgba(6, 214, 160, 0.1);
+  --shadow-glow-purple:
+    0 0 20px var(--purple-glow), 0 0 60px rgba(139, 92, 246, 0.1);
+  --shadow-glow-gold:
+    0 0 20px var(--gold-glow), 0 0 60px rgba(245, 158, 11, 0.1);
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
-  
+
   /* Z-indices */
   --z-navbar: 100;
   --z-modal: 200;
@@ -82,7 +85,9 @@
 }
 
 /* ============ RESET ============ */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -106,17 +111,29 @@ body {
 
 /* Animated background */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: 
-    radial-gradient(ellipse at 20% 50%, rgba(6, 214, 160, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+  background:
+    radial-gradient(
+      ellipse at 20% 50%,
+      rgba(6, 214, 160, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 80% 20%,
+      rgba(139, 92, 246, 0.04) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 50% 80%,
+      rgba(59, 130, 246, 0.03) 0%,
+      transparent 50%
+    ),
     var(--bg-primary);
   pointer-events: none;
 }
@@ -126,9 +143,14 @@ a {
   text-decoration: none;
   transition: color var(--transition-fast);
 }
-a:hover { color: var(--text-primary); }
+a:hover {
+  color: var(--text-primary);
+}
 
-img { max-width: 100%; display: block; }
+img {
+  max-width: 100%;
+  display: block;
+}
 
 button {
   cursor: pointer;
@@ -206,7 +228,7 @@ button {
 }
 
 .navbar-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -287,7 +309,9 @@ button {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 30px var(--cyan-glow), 0 0 80px rgba(6, 214, 160, 0.15);
+  box-shadow:
+    0 0 30px var(--cyan-glow),
+    0 0 80px rgba(6, 214, 160, 0.15);
 }
 
 .btn-secondary {
@@ -379,19 +403,28 @@ button {
 }
 
 .xp-bar-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
   animation: xpShimmer 2s infinite;
 }
 
 @keyframes xpShimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .xp-bar-label {
@@ -465,9 +498,15 @@ button {
   border-radius: 50%;
 }
 
-.terminal-dot.red { background: #ff5f56; }
-.terminal-dot.yellow { background: #ffbd2e; }
-.terminal-dot.green { background: #27c93f; }
+.terminal-dot.red {
+  background: #ff5f56;
+}
+.terminal-dot.yellow {
+  background: #ffbd2e;
+}
+.terminal-dot.green {
+  background: #27c93f;
+}
 
 .terminal-title {
   color: var(--text-muted);
@@ -505,8 +544,14 @@ button {
 }
 
 @keyframes terminalFadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============ MISSION CARD ============ */
@@ -522,7 +567,7 @@ button {
 }
 
 .mission-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -683,7 +728,12 @@ button {
 }
 
 .hero-title-gradient {
-  background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--gold) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--cyan) 0%,
+    var(--purple) 50%,
+    var(--gold) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -731,8 +781,14 @@ button {
 }
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============ FEATURES SECTION ============ */
@@ -867,6 +923,9 @@ button {
 }
 
 /* ============ MISSION DETAIL ============ */
+.mobile-tabs {
+  display: none;
+}
 .mission-detail {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -1158,13 +1217,23 @@ button {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ============ SCROLLBAR ============ */
@@ -1196,7 +1265,9 @@ button {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============ RESPONSIVE ============ */
@@ -1204,14 +1275,15 @@ button {
   .mission-detail {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
+    /* overflow: auto; */
   }
-  
+
   .mission-story {
     max-height: 300px;
     border-right: none;
     border-bottom: 1px solid var(--border-subtle);
   }
-  
+
   .navbar-links {
     display: none;
   }
@@ -1226,17 +1298,100 @@ button {
   .hero-title {
     font-size: 2rem;
   }
-  
+
   .hero-actions {
     flex-direction: column;
   }
-  
+
   .profile-header {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .mission-map-grid {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+
+.mobile-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: 12px var(--space-md);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 70px; /* sit just below the navbar */
+    z-index: 50;
+  }
+
+  .mobile-tabs p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+    position: relative;
+    padding: var(--space-xs) 0;
+  }
+
+  .mobile-tabs p::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    transition: width var(--transition-base);
+    border-radius: 1px;
+  }
+
+  .mobile-tabs p:hover {
+    color: var(--text-primary);
+  }
+
+  .mobile-tabs p:hover::after,
+  .mobile-tabs p.active::after {
+    width: 100%;
+  }
+
+  .mobile-tabs p.active {
+    color: var(--cyan);
+  }
+
+  .mission-story {
+    min-height: 100%;
+  }
+  .mission-editor-toolbar{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .mission-editor-panel {
+    min-height: 100vh;
+    min-width: 100%;
+  }
+  .mission-terminal-panel {
+    height: 100vh;
+    min-width: 100vw;
+    grid-column: 1;
+    grid-row: 3; /* force it into third row */
+    /* height: 250px; */
+  }
+  .terminal{
+    overflow: auto;
+  }
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  /* Make terminal fill the screen when it's the active tab */
+  .mission-terminal-panel {
+    height: calc(100vh - 70px - 44px); /* viewport - navbar - tab bar */
+  }
+
+  .terminal-body {
+    max-height: none;
   }
 }
