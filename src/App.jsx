@@ -7,17 +7,17 @@ import MissionDetail from './pages/MissionDetail';
 import Profile from './pages/Profile';
 
 export default function App() {
-    return (
-        <div className="app">
-            <Navbar />
-            <main className="main-content">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/missions" element={<MissionMap />} />
-                    <Route path="/mission/:missionId" element={<MissionDetail />} />
-                    <Route path="/profile" element={<Profile />} />
-                </Routes>
-            </main>
-        </div>
-    );
+  return (
+    <div className="app">
+      <Navbar />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/missions" element={<MissionMap />} />
+          <Route path="/mission/:missionId" element={<MissionDetail />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </main>
+    </div>
+  );
 }
