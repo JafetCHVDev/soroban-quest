@@ -14,7 +14,7 @@ Learn to build smart contracts through epic quests — no wallet, no installatio
 [![Stellar](https://img.shields.io/badge/Stellar-Soroban-7C3AED?logo=stellar&logoColor=white)](https://soroban.stellar.org/)
 [![CI](https://github.com/JafetCHVDev/soroban-quest/actions/workflows/ci.yml/badge.svg)](https://github.com/JafetCHVDev/soroban-quest/actions/workflows/ci.yml)
 
-[**🚀 Live Demo**](#) · [**📖 Documentation**](#features) · [**🐛 Report Bug**](../../issues) · [**✨ Request Feature**](../../issues)
+[**🚀 Live Demo**](https://soroban-quest.vercel.app/) · [**📖 Documentation**](#features) · [**🐛 Report Bug**](../../issues) · [**✨ Request Feature**](../../issues)
 
 </div>
 
@@ -41,13 +41,13 @@ Inspired by [Node Guardians](https://nodeguardians.io/), the platform provides:
 
 ### 🕹️ Gamified Learning
 
-| Feature | Description |
-|---------|-------------|
-| **7 Progressive Missions** | From "Hello Soroban" to multi-signature contracts |
-| **XP System** | Earn 100–400 XP per mission with exponential leveling |
-| **10 Rank Titles** | Progress from *Initiate* to *Stellar Sovereign* |
-| **8 Achievement Badges** | Unlock milestones like *First Contract* and *Completionist* |
-| **Hint System** | Progressive hints when you're stuck |
+| Feature                    | Description                                                 |
+| -------------------------- | ----------------------------------------------------------- |
+| **7 Progressive Missions** | From "Hello Soroban" to multi-signature contracts           |
+| **XP System**              | Earn 100–400 XP per mission with exponential leveling       |
+| **10 Rank Titles**         | Progress from _Initiate_ to _Stellar Sovereign_             |
+| **8 Achievement Badges**   | Unlock milestones like _First Contract_ and _Completionist_ |
+| **Hint System**            | Progressive hints when you're stuck                         |
 
 ### ⌨️ In-Browser IDE
 
@@ -100,7 +100,7 @@ Chapter 3: Advanced Protocols
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18+ 
+- [Node.js](https://nodejs.org/) v18+
 - npm (included with Node.js)
 
 ### Installation
@@ -165,15 +165,15 @@ soroban-quest/
 
 ### Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 18 |
-| Build Tool | Vite 6 |
-| Code Editor | Monaco Editor |
-| Routing | React Router DOM (HashRouter) |
-| Markdown | react-markdown |
-| Persistence | localStorage |
-| Styling | Vanilla CSS with custom properties |
+| Layer       | Technology                         |
+| ----------- | ---------------------------------- |
+| Framework   | React 18                           |
+| Build Tool  | Vite 6                             |
+| Code Editor | Monaco Editor                      |
+| Routing     | React Router DOM (HashRouter)      |
+| Markdown    | react-markdown                     |
+| Persistence | localStorage                       |
+| Styling     | Vanilla CSS with custom properties |
 
 ---
 
@@ -220,18 +220,18 @@ Missions are defined in `src/data/missions.js`. Each mission object includes:
 
 ### Validation Check Types
 
-| Type | Description |
-|------|-------------|
-| `has_function` | Checks for function with specific name/params |
-| `returns_type` | Validates function return type |
-| `has_attribute` | Checks for Rust attributes |
-| `contains_pattern` | Pattern exists in code |
-| `no_pattern` | Pattern must NOT exist |
-| `uses_type` | Checks for type usage |
-| `storage_operation` | Validates storage get/set/has/remove |
-| `has_struct` | Checks for struct definition |
-| `has_import` | Validates use/import statements |
-| `balanced_braces` | Syntax validation |
+| Type                | Description                                   |
+| ------------------- | --------------------------------------------- |
+| `has_function`      | Checks for function with specific name/params |
+| `returns_type`      | Validates function return type                |
+| `has_attribute`     | Checks for Rust attributes                    |
+| `contains_pattern`  | Pattern exists in code                        |
+| `no_pattern`        | Pattern must NOT exist                        |
+| `uses_type`         | Checks for type usage                         |
+| `storage_operation` | Validates storage get/set/has/remove          |
+| `has_struct`        | Checks for struct definition                  |
+| `has_import`        | Validates use/import statements               |
+| `balanced_braces`   | Syntax validation                             |
 
 ### Development Workflow
 
