@@ -3,14 +3,14 @@
    ========================================== */
 
 export const missions = [
-    {
-        id: 'hello-soroban',
-        title: 'The First Contract',
-        chapter: 1,
-        order: 1,
-        difficulty: 'beginner',
-        xpReward: 100,
-        story: `# 🌌 The Awakening
+  {
+    id: 'hello-soroban',
+    title: 'The First Contract',
+    chapter: 1,
+    order: 1,
+    difficulty: 'beginner',
+    xpReward: 100,
+    story: `# 🌌 The Awakening
 
 You stand at the gates of the **Stellar Citadel**, a shimmering fortress orbiting the edge of known space. The Guardians of Soroban have sensed your arrival.
 
@@ -37,8 +37,8 @@ Symbol               // A small, efficient string type
 \`\`\`
 
 Complete the code template to pass all checks. The Guardians await your first contract! ⚔️`,
-        learningGoal: 'Create your first Soroban smart contract with a hello function',
-        template: `#![no_std]
+    learningGoal: 'Create your first Soroban smart contract with a hello function',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
 
 #[contract]
@@ -53,7 +53,7 @@ impl HelloContract {
     // the symbols "Hello" and the 'to' parameter
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
 
 #[contract]
@@ -65,30 +65,55 @@ impl HelloContract {
         vec![&env, symbol_short!("Hello"), to]
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contract', message: 'Missing #[contract] attribute on your struct', description: '#[contract] attribute' },
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl] on your impl block', description: '#[contractimpl] attribute' },
-            { type: 'has_function', name: 'hello', params: ['env', 'to'], message: "Function 'hello' not found or missing parameters (env, to)" },
-            { type: 'returns_type', function: 'hello', returnType: 'Vec<Symbol>', message: "Function 'hello' should return Vec<Symbol>" },
-            { type: 'uses_type', typeName: 'Env', message: 'Must use the Env type' },
-            { type: 'contains_pattern', pattern: 'vec![', message: 'Use vec![] macro to create the return vector', description: 'vec![] macro usage' },
-        ],
-        hints: [
-            'Start with `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
-            'Use the `vec![]` macro with `&env` as the first argument',
-            'The full return line: `vec![&env, symbol_short!("Hello"), to]`',
-        ],
-        conceptsIntroduced: ['contract', 'contractimpl', 'Env', 'Symbol', 'Vec'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contract',
+        message: 'Missing #[contract] attribute on your struct',
+        description: '#[contract] attribute',
+      },
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl] on your impl block',
+        description: '#[contractimpl] attribute',
+      },
+      {
+        type: 'has_function',
+        name: 'hello',
+        params: ['env', 'to'],
+        message: "Function 'hello' not found or missing parameters (env, to)",
+      },
+      {
+        type: 'returns_type',
+        function: 'hello',
+        returnType: 'Vec<Symbol>',
+        message: "Function 'hello' should return Vec<Symbol>",
+      },
+      { type: 'uses_type', typeName: 'Env', message: 'Must use the Env type' },
+      {
+        type: 'contains_pattern',
+        pattern: 'vec![',
+        message: 'Use vec![] macro to create the return vector',
+        description: 'vec![] macro usage',
+      },
+    ],
+    hints: [
+      'Start with `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
+      'Use the `vec![]` macro with `&env` as the first argument',
+      'The full return line: `vec![&env, symbol_short!("Hello"), to]`',
+    ],
+    conceptsIntroduced: ['contract', 'contractimpl', 'Env', 'Symbol', 'Vec'],
+  },
 
-    {
-        id: 'greetings-protocol',
-        title: 'Greetings Protocol',
-        chapter: 1,
-        order: 2,
-        difficulty: 'beginner',
-        xpReward: 150,
-        story: `# 📡 The Signal Tower
+  {
+    id: 'greetings-protocol',
+    title: 'Greetings Protocol',
+    chapter: 1,
+    order: 2,
+    difficulty: 'beginner',
+    xpReward: 150,
+    story: `# 📡 The Signal Tower
 
 The first gate is open. You advance to the **Signal Tower**, where messages ripple across the Stellar network.
 
@@ -114,8 +139,8 @@ String              // Full string type in Soroban
 symbol_short!()     // Create a Symbol from a short literal
 u32                 // Unsigned 32-bit integer
 \`\`\``,
-        learningGoal: 'Build a multi-function contract with different return types',
-        template: `#![no_std]
+    learningGoal: 'Build a multi-function contract with different return types',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec, String};
 
 #[contract]
@@ -134,7 +159,7 @@ impl GreetingContract {
     // Should return the length of the text
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec, String};
 
 #[contract]
@@ -150,30 +175,59 @@ impl GreetingContract {
         text.len()
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl] attribute' },
-            { type: 'has_function', name: 'greet', params: ['env', 'name'], message: "Missing 'greet' function with (env, name) params" },
-            { type: 'returns_type', function: 'greet', returnType: 'Vec<Symbol>', message: "'greet' should return Vec<Symbol>" },
-            { type: 'has_function', name: 'count_chars', params: ['env', 'text'], message: "Missing 'count_chars' function" },
-            { type: 'returns_type', function: 'count_chars', returnType: 'u32', message: "'count_chars' should return u32" },
-            { type: 'uses_type', typeName: 'String', message: 'Must use the String type for count_chars' },
-        ],
-        hints: [
-            'The greet function signature: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
-            'For count_chars: `pub fn count_chars(env: Env, text: String) -> u32`',
-            'Use `text.len()` to get the string length',
-        ],
-        conceptsIntroduced: ['String', 'multiple functions', 'u32'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl] attribute',
+      },
+      {
+        type: 'has_function',
+        name: 'greet',
+        params: ['env', 'name'],
+        message: "Missing 'greet' function with (env, name) params",
+      },
+      {
+        type: 'returns_type',
+        function: 'greet',
+        returnType: 'Vec<Symbol>',
+        message: "'greet' should return Vec<Symbol>",
+      },
+      {
+        type: 'has_function',
+        name: 'count_chars',
+        params: ['env', 'text'],
+        message: "Missing 'count_chars' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'count_chars',
+        returnType: 'u32',
+        message: "'count_chars' should return u32",
+      },
+      {
+        type: 'uses_type',
+        typeName: 'String',
+        message: 'Must use the String type for count_chars',
+      },
+    ],
+    hints: [
+      'The greet function signature: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
+      'For count_chars: `pub fn count_chars(env: Env, text: String) -> u32`',
+      'Use `text.len()` to get the string length',
+    ],
+    conceptsIntroduced: ['String', 'multiple functions', 'u32'],
+  },
 
-    {
-        id: 'counter-vault',
-        title: 'The Counter Vault',
-        chapter: 2,
-        order: 3,
-        difficulty: 'beginner',
-        xpReward: 200,
-        story: `# 🔐 The Vault of Memory
+  {
+    id: 'counter-vault',
+    title: 'The Counter Vault',
+    chapter: 2,
+    order: 3,
+    difficulty: 'beginner',
+    xpReward: 200,
+    story: `# 🔐 The Vault of Memory
 
 You descend into the **Vault of Memory**, where the ancients stored wisdom that persists across time.
 
@@ -199,8 +253,8 @@ env.storage().instance().set(&key, &value)  // Write
 env.storage().instance().get(&key)          // Read (returns Option)
 .unwrap_or(default)                         // Default if None
 \`\`\``,
-        learningGoal: 'Use persistent storage to create a stateful counter contract',
-        template: `#![no_std]
+    learningGoal: 'Use persistent storage to create a stateful counter contract',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
 const COUNTER: Symbol = symbol_short!("COUNTER");
@@ -221,7 +275,7 @@ impl CounterContract {
     // Should: return the current count (default 0)
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
 const COUNTER: Symbol = symbol_short!("COUNTER");
@@ -242,31 +296,64 @@ impl CounterContract {
         env.storage().instance().get(&COUNTER).unwrap_or(0)
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
-            { type: 'has_function', name: 'increment', params: ['env'], message: "Missing 'increment' function" },
-            { type: 'returns_type', function: 'increment', returnType: 'u32', message: "'increment' should return u32" },
-            { type: 'has_function', name: 'get_count', params: ['env'], message: "Missing 'get_count' function" },
-            { type: 'returns_type', function: 'get_count', returnType: 'u32', message: "'get_count' should return u32" },
-            { type: 'storage_operation', operation: 'set', message: 'Must use storage set to persist the count' },
-            { type: 'storage_operation', operation: 'get', message: 'Must use storage get to read the count' },
-        ],
-        hints: [
-            'Use `env.storage().instance().get(&COUNTER)` to read the count',
-            'Use `.unwrap_or(0)` to default to 0 when no value exists',
-            'Use `env.storage().instance().set(&COUNTER, &new_count)` to store the new count',
-        ],
-        conceptsIntroduced: ['storage', 'instance', 'set', 'get', 'unwrap_or'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl]',
+      },
+      {
+        type: 'has_function',
+        name: 'increment',
+        params: ['env'],
+        message: "Missing 'increment' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'increment',
+        returnType: 'u32',
+        message: "'increment' should return u32",
+      },
+      {
+        type: 'has_function',
+        name: 'get_count',
+        params: ['env'],
+        message: "Missing 'get_count' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'get_count',
+        returnType: 'u32',
+        message: "'get_count' should return u32",
+      },
+      {
+        type: 'storage_operation',
+        operation: 'set',
+        message: 'Must use storage set to persist the count',
+      },
+      {
+        type: 'storage_operation',
+        operation: 'get',
+        message: 'Must use storage get to read the count',
+      },
+    ],
+    hints: [
+      'Use `env.storage().instance().get(&COUNTER)` to read the count',
+      'Use `.unwrap_or(0)` to default to 0 when no value exists',
+      'Use `env.storage().instance().set(&COUNTER, &new_count)` to store the new count',
+    ],
+    conceptsIntroduced: ['storage', 'instance', 'set', 'get', 'unwrap_or'],
+  },
 
-    {
-        id: 'guardian-ledger',
-        title: 'Guardian Ledger',
-        chapter: 2,
-        order: 4,
-        difficulty: 'intermediate',
-        xpReward: 250,
-        story: `# 📋 The Guardian Ledger
+  {
+    id: 'guardian-ledger',
+    title: 'Guardian Ledger',
+    chapter: 2,
+    order: 4,
+    difficulty: 'intermediate',
+    xpReward: 250,
+    story: `# 📋 The Guardian Ledger
 
 The Council Chamber glows with ancient light. Before you lies the **Guardian Ledger** — a registry of all who have proven themselves.
 
@@ -293,8 +380,8 @@ Address                     // Represents an account/identity
 address.require_auth()      // Ensures the caller is authorized
 Map<Address, Symbol>        // Key-value mapping
 \`\`\``,
-        learningGoal: 'Implement access control with Address and require_auth',
-        template: `#![no_std]
+    learningGoal: 'Implement access control with Address and require_auth',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
 
 const ADMIN: Symbol = symbol_short!("ADMIN");
@@ -319,7 +406,7 @@ impl LedgerContract {
     // Should: look up and return the guardian's name
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
 
 const ADMIN: Symbol = symbol_short!("ADMIN");
@@ -343,31 +430,56 @@ impl LedgerContract {
         env.storage().instance().get(&who).unwrap_or(symbol_short!("Unknown"))
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
-            { type: 'has_function', name: 'init', params: ['env', 'admin'], message: "Missing 'init' function with admin parameter" },
-            { type: 'has_function', name: 'register', params: ['env', 'who', 'name'], message: "Missing 'register' function" },
-            { type: 'has_function', name: 'get_guardian', params: ['env', 'who'], message: "Missing 'get_guardian' function" },
-            { type: 'uses_type', typeName: 'Address', message: 'Must use the Address type' },
-            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth() for access control', description: 'require_auth() call' },
-            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
-        ],
-        hints: [
-            'The init function stores the admin: `env.storage().instance().set(&ADMIN, &admin)`',
-            'In register, call `who.require_auth()` before storing',
-            'Store with: `env.storage().instance().set(&who, &name)`',
-        ],
-        conceptsIntroduced: ['Address', 'require_auth', 'Map', 'init pattern'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl]',
+      },
+      {
+        type: 'has_function',
+        name: 'init',
+        params: ['env', 'admin'],
+        message: "Missing 'init' function with admin parameter",
+      },
+      {
+        type: 'has_function',
+        name: 'register',
+        params: ['env', 'who', 'name'],
+        message: "Missing 'register' function",
+      },
+      {
+        type: 'has_function',
+        name: 'get_guardian',
+        params: ['env', 'who'],
+        message: "Missing 'get_guardian' function",
+      },
+      { type: 'uses_type', typeName: 'Address', message: 'Must use the Address type' },
+      {
+        type: 'contains_pattern',
+        pattern: 'require_auth()',
+        message: 'Must use require_auth() for access control',
+        description: 'require_auth() call',
+      },
+      { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+    ],
+    hints: [
+      'The init function stores the admin: `env.storage().instance().set(&ADMIN, &admin)`',
+      'In register, call `who.require_auth()` before storing',
+      'Store with: `env.storage().instance().set(&who, &name)`',
+    ],
+    conceptsIntroduced: ['Address', 'require_auth', 'Map', 'init pattern'],
+  },
 
-    {
-        id: 'token-forge',
-        title: 'Token Forge',
-        chapter: 3,
-        order: 5,
-        difficulty: 'intermediate',
-        xpReward: 300,
-        story: `# ⚒️ The Token Forge
+  {
+    id: 'token-forge',
+    title: 'Token Forge',
+    chapter: 3,
+    order: 5,
+    difficulty: 'intermediate',
+    xpReward: 300,
+    story: `# ⚒️ The Token Forge
 
 Deep within the Citadel lies the **Token Forge**, where digital assets are minted from pure logic.
 
@@ -396,8 +508,8 @@ admin.require_auth();
 // Balance management
 let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
 \`\`\``,
-        learningGoal: 'Build a basic token with mint, balance, and transfer functions',
-        template: `#![no_std]
+    learningGoal: 'Build a basic token with mint, balance, and transfer functions',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const ADMIN: Symbol = symbol_short!("ADMIN");
@@ -425,7 +537,7 @@ impl TokenContract {
     // Should: require auth from 'from', check balance, update both balances
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const ADMIN: Symbol = symbol_short!("ADMIN");
@@ -458,32 +570,62 @@ impl TokenContract {
         env.storage().persistent().set(&to, &(to_bal + amount));
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
-            { type: 'has_function', name: 'mint', params: ['env', 'to', 'amount'], message: "Missing 'mint' function" },
-            { type: 'has_function', name: 'balance', params: ['env', 'account'], message: "Missing 'balance' function" },
-            { type: 'returns_type', function: 'balance', returnType: 'i128', message: "'balance' should return i128" },
-            { type: 'has_function', name: 'transfer', params: ['env', 'from', 'to', 'amount'], message: "Missing 'transfer' function" },
-            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth() for authorization', description: 'require_auth()' },
-            { type: 'storage_operation', operation: 'set', message: 'Must use storage set for balances' },
-            { type: 'storage_operation', operation: 'get', message: 'Must use storage get for balances' },
-        ],
-        hints: [
-            'For mint: get admin from storage, call admin.require_auth(), then update balance',
-            'For balance: `env.storage().persistent().get(&account).unwrap_or(0)`',
-            'For transfer: require_auth from sender, read both balances, update both',
-        ],
-        conceptsIntroduced: ['token', 'mint', 'transfer', 'persistent storage', 'i128'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl]',
+      },
+      {
+        type: 'has_function',
+        name: 'mint',
+        params: ['env', 'to', 'amount'],
+        message: "Missing 'mint' function",
+      },
+      {
+        type: 'has_function',
+        name: 'balance',
+        params: ['env', 'account'],
+        message: "Missing 'balance' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'balance',
+        returnType: 'i128',
+        message: "'balance' should return i128",
+      },
+      {
+        type: 'has_function',
+        name: 'transfer',
+        params: ['env', 'from', 'to', 'amount'],
+        message: "Missing 'transfer' function",
+      },
+      {
+        type: 'contains_pattern',
+        pattern: 'require_auth()',
+        message: 'Must use require_auth() for authorization',
+        description: 'require_auth()',
+      },
+      { type: 'storage_operation', operation: 'set', message: 'Must use storage set for balances' },
+      { type: 'storage_operation', operation: 'get', message: 'Must use storage get for balances' },
+    ],
+    hints: [
+      'For mint: get admin from storage, call admin.require_auth(), then update balance',
+      'For balance: `env.storage().persistent().get(&account).unwrap_or(0)`',
+      'For transfer: require_auth from sender, read both balances, update both',
+    ],
+    conceptsIntroduced: ['token', 'mint', 'transfer', 'persistent storage', 'i128'],
+  },
 
-    {
-        id: 'time-lock',
-        title: 'The Time Lock',
-        chapter: 3,
-        order: 6,
-        difficulty: 'advanced',
-        xpReward: 350,
-        story: `# ⏳ The Chrono Gate
+  {
+    id: 'time-lock',
+    title: 'The Time Lock',
+    chapter: 3,
+    order: 6,
+    difficulty: 'advanced',
+    xpReward: 350,
+    story: `# ⏳ The Chrono Gate
 
 The **Chrono Gate** stands before you, its mechanisms ticking with the rhythm of the ledger.
 
@@ -509,8 +651,8 @@ Create a time-locked vault:
 env.ledger().sequence()  // Current ledger sequence number
 panic!("message")        // Abort with error
 \`\`\``,
-        learningGoal: 'Implement time-based conditional logic using ledger sequence',
-        template: `#![no_std]
+    learningGoal: 'Implement time-based conditional logic using ledger sequence',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const LOCKED_AMOUNT: Symbol = symbol_short!("LOCKED");
@@ -539,7 +681,7 @@ impl TimeLockContract {
     // Should return the locked amount and unlock_at time
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const LOCKED_AMOUNT: Symbol = symbol_short!("LOCKED");
@@ -576,32 +718,67 @@ impl TimeLockContract {
         env.storage().instance().get(&LOCKED_AMOUNT).unwrap_or(0)
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
-            { type: 'has_function', name: 'lock', params: ['env', 'owner', 'amount', 'unlock_at'], message: "Missing 'lock' function" },
-            { type: 'has_function', name: 'unlock', params: ['env', 'owner'], message: "Missing 'unlock' function" },
-            { type: 'has_function', name: 'get_lock_info', params: ['env'], message: "Missing 'get_lock_info' function" },
-            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
-            { type: 'contains_pattern', pattern: 'ledger()', message: 'Must use env.ledger() for time checks', description: 'ledger() access' },
-            { type: 'contains_pattern', pattern: 'panic!', message: 'Must panic if still locked', description: 'panic! for errors' },
-            { type: 'storage_operation', operation: 'set', message: 'Must store lock data' },
-        ],
-        hints: [
-            'Use `env.ledger().sequence()` to get the current ledger number',
-            'Compare: `if current_seq < unlock_at { panic!("Still locked"); }`',
-            'Clear storage after unlock: `env.storage().instance().remove(&key)`',
-        ],
-        conceptsIntroduced: ['ledger sequence', 'time-lock', 'conditional panic', 'remove storage'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl]',
+      },
+      {
+        type: 'has_function',
+        name: 'lock',
+        params: ['env', 'owner', 'amount', 'unlock_at'],
+        message: "Missing 'lock' function",
+      },
+      {
+        type: 'has_function',
+        name: 'unlock',
+        params: ['env', 'owner'],
+        message: "Missing 'unlock' function",
+      },
+      {
+        type: 'has_function',
+        name: 'get_lock_info',
+        params: ['env'],
+        message: "Missing 'get_lock_info' function",
+      },
+      {
+        type: 'contains_pattern',
+        pattern: 'require_auth()',
+        message: 'Must use require_auth()',
+        description: 'require_auth()',
+      },
+      {
+        type: 'contains_pattern',
+        pattern: 'ledger()',
+        message: 'Must use env.ledger() for time checks',
+        description: 'ledger() access',
+      },
+      {
+        type: 'contains_pattern',
+        pattern: 'panic!',
+        message: 'Must panic if still locked',
+        description: 'panic! for errors',
+      },
+      { type: 'storage_operation', operation: 'set', message: 'Must store lock data' },
+    ],
+    hints: [
+      'Use `env.ledger().sequence()` to get the current ledger number',
+      'Compare: `if current_seq < unlock_at { panic!("Still locked"); }`',
+      'Clear storage after unlock: `env.storage().instance().remove(&key)`',
+    ],
+    conceptsIntroduced: ['ledger sequence', 'time-lock', 'conditional panic', 'remove storage'],
+  },
 
-    {
-        id: 'multi-party-pact',
-        title: 'Multi-Party Pact',
-        chapter: 3,
-        order: 7,
-        difficulty: 'advanced',
-        xpReward: 400,
-        story: `# 🤝 The Hall of Pacts
+  {
+    id: 'multi-party-pact',
+    title: 'Multi-Party Pact',
+    chapter: 3,
+    order: 7,
+    difficulty: 'advanced',
+    xpReward: 400,
+    story: `# 🤝 The Hall of Pacts
 
 You have reached the **Hall of Pacts**, the final challenge before earning your place among the Guardians.
 
@@ -632,8 +809,8 @@ let count: u32 = env.storage().instance()
 // Store with dynamic keys
 env.storage().instance().set(&signer_key, &true);
 \`\`\``,
-        learningGoal: 'Build a multi-signature pact contract with complex state management',
-        template: `#![no_std]
+    learningGoal: 'Build a multi-signature pact contract with complex state management',
+    template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const REQUIRED: Symbol = symbol_short!("REQUIRED");
@@ -664,7 +841,7 @@ impl PactContract {
     // Should: return current number of signatures
     
 }`,
-        solution: `#![no_std]
+    solution: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
 const REQUIRED: Symbol = symbol_short!("REQUIRED");
@@ -699,22 +876,62 @@ impl PactContract {
         env.storage().instance().get(&SIGNED).unwrap_or(0)
     }
 }`,
-        checks: [
-            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
-            { type: 'has_function', name: 'create_pact', params: ['env', 'creator', 'description', 'required_sigs'], message: "Missing 'create_pact' function" },
-            { type: 'has_function', name: 'sign_pact', params: ['env', 'signer'], message: "Missing 'sign_pact' function" },
-            { type: 'has_function', name: 'is_complete', params: ['env'], message: "Missing 'is_complete' function" },
-            { type: 'returns_type', function: 'is_complete', returnType: 'bool', message: "'is_complete' should return bool" },
-            { type: 'has_function', name: 'get_signed_count', params: ['env'], message: "Missing 'get_signed_count' function" },
-            { type: 'returns_type', function: 'get_signed_count', returnType: 'u32', message: "'get_signed_count' should return u32" },
-            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
-            { type: 'storage_operation', operation: 'set', message: 'Must use storage operations' },
-        ],
-        hints: [
-            'In create_pact: store the description, required count, and initial signed count of 0',
-            'In sign_pact: read current count, increment by 1, store back',
-            'In is_complete: compare signed >= required',
-        ],
-        conceptsIntroduced: ['multi-sig', 'bool', 'governance pattern', 'complex state'],
-    },
+    checks: [
+      {
+        type: 'has_attribute',
+        attribute: 'contractimpl',
+        message: 'Missing #[contractimpl]',
+        description: '#[contractimpl]',
+      },
+      {
+        type: 'has_function',
+        name: 'create_pact',
+        params: ['env', 'creator', 'description', 'required_sigs'],
+        message: "Missing 'create_pact' function",
+      },
+      {
+        type: 'has_function',
+        name: 'sign_pact',
+        params: ['env', 'signer'],
+        message: "Missing 'sign_pact' function",
+      },
+      {
+        type: 'has_function',
+        name: 'is_complete',
+        params: ['env'],
+        message: "Missing 'is_complete' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'is_complete',
+        returnType: 'bool',
+        message: "'is_complete' should return bool",
+      },
+      {
+        type: 'has_function',
+        name: 'get_signed_count',
+        params: ['env'],
+        message: "Missing 'get_signed_count' function",
+      },
+      {
+        type: 'returns_type',
+        function: 'get_signed_count',
+        returnType: 'u32',
+        message: "'get_signed_count' should return u32",
+      },
+      {
+        type: 'contains_pattern',
+        pattern: 'require_auth()',
+        message: 'Must use require_auth()',
+        description: 'require_auth()',
+      },
+      { type: 'storage_operation', operation: 'set', message: 'Must use storage operations' },
+    ],
+    hints: [
+      'In create_pact: store the description, required count, and initial signed count of 0',
+      'In sign_pact: read current count, increment by 1, store back',
+      'In is_complete: compare signed >= required',
+    ],
+    conceptsIntroduced: ['multi-sig', 'bool', 'governance pattern', 'complex state'],
+  },
 ];
