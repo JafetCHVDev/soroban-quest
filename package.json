@@ -12,10 +12,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
-<<<<<<< HEAD
     "driver.js": "^1.4.0",
-=======
->>>>>>> 9a438ad13e5862d7f63b0447568aacbdb88da85a
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
