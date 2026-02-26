@@ -216,10 +216,7 @@ export default function MissionDetail() {
     }
   });
 
-  const resetTour = () => {
-    localStorage.removeItem("soroban_quest_tour_completed");
-    window.location.reload();
-  };
+ 
 
   return (
     <>
@@ -233,9 +230,7 @@ export default function MissionDetail() {
             <span className="mission-card-xp" style={{ marginLeft: "0.5rem" }}>
               ⚡ {mission.xpReward} XP
             </span>
-            <button className="reset-tour-btn" onClick={resetTour}>
-              ↺ Replay Tour
-            </button>
+           
           </div>
           <ReactMarkdown
             components={{
