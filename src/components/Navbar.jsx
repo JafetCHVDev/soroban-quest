@@ -33,7 +33,7 @@ export default function Navbar() {
             </ul>
 
             <div className="navbar-stats">
-                <div className="navbar-xp">
+                <div className="navbar-xp" id="navbar-xp">
                     ⚡ {state.xp} XP
                 </div>
                 <div className="navbar-level">
