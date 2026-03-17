@@ -1156,6 +1156,15 @@ button {
   color: var(--text-secondary);
   margin-bottom: var(--space-xl);
 }
+/* Hide Radio buttons on all screens  */
+.tab-radio {
+  display: none;
+}
+
+/* ---- Mobile tab bar: hidden on desktop ---- */
+.mobile-tabs {
+  display: none;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -1238,5 +1247,146 @@ button {
   
   .mission-map-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* MOBILE STYLES  (768px and below) */
+@media (max-width: 768px) {
+
+  /* Show the tab bar */
+  .mobile-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: 12px var(--space-md);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 70px; /* below the fixed navbar */
+    z-index: 50;
+  }
+
+  .mobile-tabs label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    padding: var(--space-xs) 0;
+    transition: color var(--transition-fast);
+    user-select: none;
+  }
+
+  .mobile-tabs label::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    border-radius: 1px;
+    transition: width var(--transition-base);
+  }
+
+  .mobile-tabs label:hover {
+    color: var(--text-primary);
+  }
+
+  /* Active tab indicator — driven entirely by :checked, no JS */
+  #tab-story:checked  ~ .mobile-tabs label[for="tab-story"],
+  #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"],
+  #tab-tests:checked  ~ .mobile-tabs label[for="tab-tests"] {
+    color: var(--cyan);
+  }
+
+  #tab-story:checked  ~ .mobile-tabs label[for="tab-story"]::after,
+  #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"]::after,
+  #tab-tests:checked  ~ .mobile-tabs label[for="tab-tests"]::after {
+    width: 100%;
+  }
+
+  /* Switch to single-column layout on mobile */
+  .mission-detail {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* --- Panel visibility via :checked — no JS, no !important --- */
+
+  /* By default on mobile, hide both main panels */
+  .mission-detail .mission-story,
+  .mission-detail .mission-editor-panel {
+    display: none;
+  }
+
+  /* Story tab active */
+  #tab-story:checked ~ .mission-detail .mission-story {
+    display: block;
+    min-height: calc(100vh - 70px - 44px);
+    overflow-y: auto;
+    border-right: none;
+  }
+
+  /* Editor tab active — show editor panel, hide terminal within it */
+  #tab-editor:checked ~ .mission-detail .mission-editor-panel {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px - 44px);
+  }
+
+  #tab-editor:checked ~ .mission-detail .mission-terminal-panel {
+    display: none;
+  }
+
+  #tab-editor:checked ~ .mission-detail .editor-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Tests tab active — show editor panel, hide editor/toolbar, show terminal */
+  #tab-tests:checked ~ .mission-detail .mission-editor-panel {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px - 44px);
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-editor-toolbar,
+  #tab-tests:checked ~ .mission-detail .editor-wrapper {
+    display: none;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    border-top: none;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel .terminal {
+    flex: 1;
+    border-radius: 0;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel .terminal-body {
+    max-height: none;
+  }
+
+  /* Toolbar wraps on small screens */
+  .mission-editor-toolbar {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .mission-editor-toolbar-right {
+    flex-wrap: wrap;
+  }
+
+  /* Run Tests button meets 44px minimum tap target */
+  .btn-sm {
+    min-height: 44px;
   }
 }
