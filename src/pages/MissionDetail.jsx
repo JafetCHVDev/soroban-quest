@@ -1,3 +1,4 @@
+// MissionDetail.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
@@ -8,9 +9,9 @@ import { loadProgress, saveProgress } from "../systems/storage";
 import {
   completeMission,
   recordAttempt,
-  getXPProgress,
   getRankTitle,
 } from "../systems/gameEngine";
+import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
 
 export default function MissionDetail() {
@@ -18,47 +19,66 @@ export default function MissionDetail() {
   const navigate = useNavigate();
   const mission = getMissionById(missionId);
 
+  // --------------------------- States ---------------------------
+  const [loading, setLoading] = useState(true); // Show skeleton while mission loads
   const [code, setCode] = useState("");
   const [testResults, setTestResults] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
+
   const terminalBodyRef = useRef(null);
   const { openInOkashi, toast } = useokashi();
 
+  // --------------------------- Load Mission ---------------------------
   useEffect(() => {
+    setLoading(true);
     if (mission) {
-      setCode(mission.template);
-      setTestResults([]);
-      setHintIndex(-1);
-      setShowVictory(false);
+      // Brief delay to display skeleton
+      setTimeout(() => {
+        setCode(mission.template);
+        setTestResults([]);
+        setHintIndex(-1);
+        setShowVictory(false);
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(false);
     }
-  }, [missionId]);
+  }, [missionId, mission]);
 
+  // --------------------------- Auto-scroll terminal ---------------------------
+  useEffect(() => {
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
+  }, [testResults]);
+
+  // --------------------------- Run Tests ---------------------------
   const handleRunTests = useCallback(async () => {
     if (isRunning || !mission) return;
     setIsRunning(true);
     setTestResults([]);
 
-    // Record attempt
+    // Record user attempt
     let state = loadProgress();
     state = recordAttempt(state, missionId);
     saveProgress(state);
 
-    // Run tests with progressive output
+    // Collect and display test results progressively
     const resultCollector = [];
     const addResult = (result) => {
       resultCollector.push(result);
       setTestResults([...resultCollector]);
     };
 
-    // Phase 1: Syntax
+    // Initial info message
     addResult({ phase: "info", message: "🔍 Running validation checks..." });
     await delay(400);
 
+    // Run mission tests
     const result = await runTests(code, mission);
-
     for (const r of result.results) {
       addResult(r);
       await delay(250);
@@ -67,6 +87,7 @@ export default function MissionDetail() {
     await delay(300);
     addResult({ phase: "summary", message: result.summary });
 
+    // Handle victory if all tests pass
     if (result.allPassed) {
       await delay(500);
       state = loadProgress();
@@ -92,12 +113,14 @@ export default function MissionDetail() {
     setIsRunning(false);
   }, [code, mission, missionId, isRunning]);
 
+  // --------------------------- Hints ---------------------------
   const handleHint = () => {
     if (mission && hintIndex < mission.hints.length - 1) {
       setHintIndex(hintIndex + 1);
     }
   };
 
+  // --------------------------- Reset ---------------------------
   const handleReset = () => {
     if (mission) {
       setCode(mission.template);
@@ -106,28 +129,24 @@ export default function MissionDetail() {
     }
   };
 
+  // --------------------------- Show Solution ---------------------------
   const handleShowSolution = () => {
     if (mission?.solution) {
       setCode(mission.solution);
     }
   };
 
+  // --------------------------- Navigate to Next Mission ---------------------------
   const handleNextMission = () => {
     const next = getNextMission(missionId);
-    if (next) {
-      navigate(`/mission/${next.id}`);
-    } else {
-      navigate("/missions");
-    }
+    if (next) navigate(`/mission/${next.id}`);
+    else navigate("/missions");
   };
 
-  // Auto-scroll terminal
-  useEffect(() => {
-    if (terminalBodyRef.current) {
-      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
-    }
-  }, [testResults]);
+  // --------------------------- Loading Skeleton ---------------------------
+  if (loading) return <MissionDetailSkeleton />;
 
+  // --------------------------- Mission Not Found ---------------------------
   if (!mission) {
     return (
       <div style={{ padding: "4rem", textAlign: "center" }}>
@@ -146,8 +165,10 @@ export default function MissionDetail() {
     );
   }
 
+  // --------------------------- Render Mission Detail ---------------------------
   return (
     <>
+      {/* Tabs for mobile */}
       <input
         type="radio"
         name="mission-tab"
@@ -168,14 +189,14 @@ export default function MissionDetail() {
         className="tab-radio"
       />
 
-      {/* Tab bar — visible only on mobile via CSS */}
       <div className="mobile-tabs">
         <label htmlFor="tab-story">Story</label>
         <label htmlFor="tab-editor">Editor</label>
         <label htmlFor="tab-tests">Tests</label>
       </div>
+
       <div className="mission-detail">
-        {/* Story Panel */}
+        {/* ---------------- Story Panel ---------------- */}
         <div className="mission-story">
           <div style={{ marginBottom: "var(--space-md)" }}>
             <span className={`badge badge-${mission.difficulty}`}>
@@ -185,24 +206,7 @@ export default function MissionDetail() {
               ⚡ {mission.xpReward} XP
             </span>
           </div>
-          <ReactMarkdown
-            components={{
-              code: ({ node, inline, className, children, ...props }) => {
-                if (inline) {
-                  return <code {...props}>{children}</code>;
-                }
-                return (
-                  <pre>
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  </pre>
-                );
-              },
-            }}
-          >
-            {mission.story}
-          </ReactMarkdown>
+          <ReactMarkdown>{mission.story}</ReactMarkdown>
 
           {/* Hints */}
           {hintIndex >= 0 && (
@@ -231,13 +235,12 @@ export default function MissionDetail() {
           )}
         </div>
 
-        {/* Editor Panel */}
+        {/* ---------------- Editor Panel ---------------- */}
         <div className="mission-editor-panel">
           <div className="mission-editor-toolbar">
             <div className="mission-editor-toolbar-left">
               <div className="editor-file-tab">
-                <span className="dot" />
-                lib.rs
+                <span className="dot" /> lib.rs
               </div>
             </div>
             <div className="mission-editor-toolbar-right">
@@ -307,7 +310,7 @@ export default function MissionDetail() {
             />
           </div>
 
-          {/* Terminal Panel */}
+          {/* ---------------- Terminal Panel ---------------- */}
           <div className="mission-terminal-panel">
             <div
               className="terminal"
@@ -331,11 +334,7 @@ export default function MissionDetail() {
                 {testResults.length === 0 ? (
                   <span
                     className="terminal-line info"
-                    style={{
-                      opacity: 1,
-                      animation: "none",
-                      color: "var(--text-muted)",
-                    }}
+                    style={{ color: "var(--text-muted)" }}
                   >
                     Click "Run Tests" to validate your code...
                   </span>
@@ -356,7 +355,7 @@ export default function MissionDetail() {
         </div>
       </div>
 
-      {/* Victory Modal — only shows when ALL tests pass */}
+      {/* ---------------- Victory Modal ---------------- */}
       {showVictory && victoryData && (
         <div className="modal-overlay" onClick={() => setShowVictory(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -387,7 +386,6 @@ export default function MissionDetail() {
               </p>
             )}
 
-            {/* Navigation Buttons */}
             <div
               style={{
                 display: "flex",
@@ -406,7 +404,7 @@ export default function MissionDetail() {
               </button>
             </div>
 
-            {/* ── Okashi Button ── only visible after mission completion ── */}
+            {/* Okashi Button & Toast */}
             <div
               style={{
                 marginTop: "1.25rem",
@@ -435,7 +433,7 @@ export default function MissionDetail() {
                 onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
                 onMouseLeave={(e) => (e.target.style.opacity = "1")}
               >
-                🚀 Try on Okashi — Compile &amp; Deploy
+                🚀 Try on Okashi — Compile & Deploy
               </button>
 
               <p
@@ -453,7 +451,6 @@ export default function MissionDetail() {
                 deploy to Testnet.
               </p>
 
-              {/* Toast notification */}
               {toast.state !== TOAST_STATES.IDLE && (
                 <div
                   style={{
@@ -489,6 +486,7 @@ export default function MissionDetail() {
   );
 }
 
+// --------------------------- Helper: Delay ---------------------------
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

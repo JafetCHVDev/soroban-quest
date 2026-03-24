@@ -5,6 +5,176 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
+
+.notfound-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #020617;
+  color: white;
+  padding: 30px;
+}
+
+.notfound-card {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 400px;
+  width: 100%;
+  animation: float 3s ease-in-out infinite;
+}
+
+.notfound-card h1 {
+  font-size: 70px;
+  color: #22c55e;
+}
+
+.home-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #22c55e;
+  color: black;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.home-btn:hover {
+  background: #16a34a;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/*foot style*/
+.footer {
+  background-color: #1e1e2f;
+  color: #a0a0b0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* default: 3 columns on desktop */
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-section h4 {
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section li {
+  margin: 0.5rem 0;
+}
+
+.footer-section a {
+  color: #a0a0b0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+  color: #00d4ff;
+  text-decoration: underline;
+}
+
+.footer-credits {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  border-top: 1px solid #2c2c3c;
+  padding-top: 1rem;
+  color: #888;
+}
+
+/* Mobile: 2 columns per row */
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Extra small screens: 1 column */
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Base skeleton style */
+.skeleton {
+  background-color: #374151; /* dark gray */
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer animation */
+.skeleton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -150px; }
+  100% { left: 100%; }
+}
+
+/* Fade-in animation for staggered effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Responsive container */
+.mission-detail-skeleton {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  width: 100%;
+  min-height: 80vh;
+  box-sizing: border-box;
+}
+
+.mission-detail-skeleton .container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 :root {
   /* Core palette */
   --bg-primary: #0a0e1a;
