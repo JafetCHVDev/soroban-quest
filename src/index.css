@@ -5,6 +5,73 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
+
+.footer {
+  background-color: #1e1e2f;
+  color: #a0a0b0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* default: 3 columns on desktop */
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-section h4 {
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section li {
+  margin: 0.5rem 0;
+}
+
+.footer-section a {
+  color: #a0a0b0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+  color: #00d4ff;
+  text-decoration: underline;
+}
+
+.footer-credits {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  border-top: 1px solid #2c2c3c;
+  padding-top: 1rem;
+  color: #888;
+}
+
+/* Mobile: 2 columns per row */
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Extra small screens: 1 column */
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Base skeleton style */
 .skeleton {
   background-color: #374151; /* dark gray */
