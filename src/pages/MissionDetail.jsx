@@ -13,6 +13,7 @@ import {
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import DiffViewer from "../components/DiffViewer";   
 
 export default function MissionDetail() {
   const { missionId } = useParams();
@@ -27,6 +28,8 @@ export default function MissionDetail() {
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
+  const [hasAttempted, setHasAttempted] = useState(false);
+  const [showDiff, setShowDiff] = useState(false);
 
   const terminalBodyRef = useRef(null);
   const { openInOkashi, toast } = useokashi();
@@ -41,6 +44,8 @@ export default function MissionDetail() {
         setTestResults([]);
         setHintIndex(-1);
         setShowVictory(false);
+        setHasAttempted(false);
+        setShowDiff(false);  
         setLoading(false);
       }, 1500);
     } else {
@@ -60,6 +65,7 @@ export default function MissionDetail() {
     if (isRunning || !mission) return;
     setIsRunning(true);
     setTestResults([]);
+    setHasAttempted(true);  
 
     // Record user attempt
     let state = loadProgress();
@@ -266,6 +272,16 @@ export default function MissionDetail() {
               >
                 👁️ Solution
               </button>
+             {hasAttempted && mission?.solution && (
+                <button
+                  className="btn btn-ghost btn-sm diff-compare-btn"
+                  onClick={() => setShowDiff(true)}
+                  title="Compare your code with the reference solution"
+                >
+                  ⧉ Compare
+                </button>
+              )}
+ 
               <button
                 className="btn btn-primary btn-sm"
                 onClick={handleRunTests}
@@ -273,10 +289,7 @@ export default function MissionDetail() {
               >
                 {isRunning ? (
                   <>
-                    <span
-                      className="spinner"
-                      style={{ width: 14, height: 14 }}
-                    />{" "}
+                    <span className="spinner" style={{ width: 14, height: 14 }} />{" "}
                     Running...
                   </>
                 ) : (
@@ -285,7 +298,7 @@ export default function MissionDetail() {
               </button>
             </div>
           </div>
-
+ 
           <div className="editor-wrapper">
             <Editor
               height="100%"
@@ -325,6 +338,16 @@ export default function MissionDetail() {
                 <span className="terminal-dot yellow" />
                 <span className="terminal-dot green" />
                 <span className="terminal-title">Test Output</span>
+             {/* ── Hint after failed attempt ── */}
+                {hasAttempted && !isRunning && testResults.length > 0 && (
+                  <span
+                    className="terminal-compare-hint"
+                    onClick={() => setShowDiff(true)}
+                    title="Open diff viewer"
+                  >
+                    ⧉ Compare with solution
+                  </span>
+                )}
               </div>
               <div
                 className="terminal-body"
@@ -354,7 +377,16 @@ export default function MissionDetail() {
           </div>
         </div>
       </div>
-
+ 
+      {/* ── Diff Viewer Overlay ── */}
+      {showDiff && (
+        <DiffViewer
+          userCode={code}
+          solutionCode={mission.solution}
+          onClose={() => setShowDiff(false)}
+        />
+      )}
+ 
       {/* ---------------- Victory Modal ---------------- */}
       {showVictory && victoryData && (
         <div className="modal-overlay" onClick={() => setShowVictory(false)}>
@@ -365,7 +397,7 @@ export default function MissionDetail() {
               You've completed <strong>{mission.title}</strong>
             </p>
             <div className="modal-xp">+{victoryData.xp} XP</div>
-
+ 
             {victoryData.leveledUp && (
               <p
                 style={{
@@ -378,21 +410,14 @@ export default function MissionDetail() {
                 {getRankTitle(victoryData.newLevel)}
               </p>
             )}
-
+ 
             {victoryData.newBadges?.length > 0 && (
               <p style={{ color: "var(--gold)", marginBottom: "1rem" }}>
-                🏅 New badge{victoryData.newBadges.length > 1 ? "s" : ""}{" "}
-                earned!
+                🏅 New badge{victoryData.newBadges.length > 1 ? "s" : ""} earned!
               </p>
             )}
-
-            <div
-              style={{
-                display: "flex",
-                gap: "0.75rem",
-                justifyContent: "center",
-              }}
-            >
+ 
+            <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
               <button className="btn btn-primary" onClick={handleNextMission}>
                 Next Mission →
               </button>

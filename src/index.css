@@ -1560,3 +1560,259 @@ button {
     min-height: 44px;
   }
 }
+
+/* ============================================================
+             DIFF VIEWER
+   ============================================================ */
+
+/* ── Full-screen overlay ── */
+.diff-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: calc(var(--z-modal) + 10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Modal card ── */
+.diff-modal {
+  width: min(98vw, 1300px);
+  height: min(92vh, 900px);
+  background: #0d1117;
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 0 60px rgba(6, 214, 160, 0.15), var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Header bar ── */
+.diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.diff-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.diff-icon {
+  font-size: 1rem;
+}
+
+.diff-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  text-transform: uppercase;
+}
+
+.diff-header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.diff-labels {
+  display: flex;
+  gap: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-code);
+}
+
+.diff-label.your-code  { color: #60a5fa; }   /* blue  */
+.diff-label.solution   { color: var(--cyan); } /* green */
+
+.diff-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Inline / Side-by-side toggle ── */
+.diff-toggle {
+  display: flex;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.diff-toggle-btn {
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+.diff-toggle-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.diff-toggle-btn.active {
+  color: var(--cyan);
+  background: var(--cyan-dim);
+}
+
+/* ── Column labels row ── */
+.diff-col-headers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #0a0e1a;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.diff-col-headers.inline-header {
+  grid-template-columns: 1fr;
+}
+
+.diff-col-header {
+  padding: 6px 20px;
+  font-family: var(--font-code);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.diff-col-header.your-code {
+  color: #60a5fa;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.diff-col-header.solution {
+  color: var(--cyan);
+  padding-left: 24px;
+}
+
+/* ── Monaco container ── */
+.diff-editor-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* ── Loading state ── */
+.diff-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  background: #0d1117;
+}
+
+/* ── Legend footer ── */
+.diff-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 7px 18px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-code);
+  font-size: 0.72rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.diff-legend-item       { color: var(--text-muted); }
+.diff-legend-item.added   { color: #4ade80; }
+.diff-legend-item.removed { color: #f87171; }
+.diff-legend-item.unchanged { color: var(--text-muted); }
+
+.diff-legend-hint {
+  margin-left: auto;
+  color: var(--text-muted);
+  opacity: 0.6;
+  font-size: 0.68rem;
+}
+
+/* ── "Compare" button in the toolbar ── */
+.diff-compare-btn {
+  color: var(--cyan) !important;
+  border: 1px solid rgba(6, 214, 160, 0.25) !important;
+  background: var(--cyan-dim) !important;
+}
+
+.diff-compare-btn:hover {
+  background: rgba(6, 214, 160, 0.2) !important;
+  border-color: var(--cyan) !important;
+}
+
+/* ── Clickable hint inside terminal header ── */
+.terminal-compare-hint {
+  margin-left: auto;
+  font-size: 0.72rem;
+  color: var(--cyan);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+  font-family: var(--font-code);
+  user-select: none;
+}
+
+.terminal-compare-hint:hover {
+  opacity: 1;
+}
+
+/* ── Mobile: full-screen diff modal ── */
+@media (max-width: 768px) {
+  .diff-modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .diff-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .diff-header-center {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .diff-col-headers {
+    display: none; /* too narrow for two column labels on mobile */
+  }
+
+  .diff-legend-hint {
+    display: none;
+  }
+}
