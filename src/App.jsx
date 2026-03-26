@@ -7,6 +7,7 @@ import MissionDetail from "./pages/MissionDetail";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
+import Glossary from "./pages/Glossary";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/missions" element={<MissionMap />} />
           <Route path="/mission/:missionId" element={<MissionDetail />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/glossary" element={<Glossary />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
