@@ -12,6 +12,7 @@ import {
   getRankTitle,
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
+import SDKReferencePanel from "../components/SDKReferencePanel";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
 
 export default function MissionDetail() {
@@ -27,6 +28,7 @@ export default function MissionDetail() {
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
+  const [showSDKPanel, setShowSDKPanel] = useState(false);
 
   const terminalBodyRef = useRef(null);
   const { openInOkashi, toast } = useokashi();
@@ -246,6 +248,12 @@ export default function MissionDetail() {
             <div className="mission-editor-toolbar-right">
               <button
                 className="btn btn-ghost btn-sm"
+                onClick={() => setShowSDKPanel(!showSDKPanel)}
+              >
+                📚 SDK Ref
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
                 onClick={handleReset}
                 disabled={isRunning}
               >
@@ -354,6 +362,13 @@ export default function MissionDetail() {
           </div>
         </div>
       </div>
+
+      {/* SDK Reference Panel */}
+      <SDKReferencePanel
+        isOpen={showSDKPanel}
+        onClose={() => setShowSDKPanel(false)}
+        conceptsIntroduced={mission?.conceptsIntroduced || []}
+      />
 
       {/* ---------------- Victory Modal ---------------- */}
       {showVictory && victoryData && (
