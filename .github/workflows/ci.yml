@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   validate:
@@ -23,12 +23,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint
+      - name: Eslint check
         run: |
           if npm run | grep -q "lint"; then
             npm run lint
           else
             echo "No lint script found, skipping linting check."
+          fi
+
+      - name: Check Prettier formatting
+        run: |
+          if npm run | grep -q "format:check"; then
+            npm run format:check
+          else
+            echo "No format:check script found, skipping format check."
           fi
 
       - name: Run build
