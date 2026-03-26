@@ -98,18 +98,18 @@ Use this schema for each mission object:
 
 The table below is based on `src/systems/codeValidator.js`. Every listed type currently exists in code.
 
-| Type | Required Fields | Example |
-|---|---|---|
-| `contains_pattern` | `pattern` | `{ type: 'contains_pattern', pattern: 'env.storage()' }` |
-| `has_function` | `name` (`params` optional) | `{ type: 'has_function', name: 'transfer', params: ['env', 'from', 'to', 'amount'] }` |
-| `returns_type` | `function`, `returnType` | `{ type: 'returns_type', function: 'hello', returnType: 'Vec<Symbol>' }` |
-| `has_attribute` | `attribute` | `{ type: 'has_attribute', attribute: 'contractimpl' }` |
-| `uses_type` | `typeName` | `{ type: 'uses_type', typeName: 'Address' }` |
-| `storage_operation` | `operation` (`get` \| `set` \| `has` \| `remove`) | `{ type: 'storage_operation', operation: 'set' }` |
-| `no_pattern` | `pattern` | `{ type: 'no_pattern', pattern: 'unwrap()' }` |
-| `has_struct` | `name` | `{ type: 'has_struct', name: 'Guardian' }` |
-| `balanced_braces` | _(none)_ | `{ type: 'balanced_braces' }` |
-| `has_import` | `module` | `{ type: 'has_import', module: 'soroban_sdk' }` |
+| Type                | Required Fields                                   | Example                                                                               |
+| ------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `contains_pattern`  | `pattern`                                         | `{ type: 'contains_pattern', pattern: 'env.storage()' }`                              |
+| `has_function`      | `name` (`params` optional)                        | `{ type: 'has_function', name: 'transfer', params: ['env', 'from', 'to', 'amount'] }` |
+| `returns_type`      | `function`, `returnType`                          | `{ type: 'returns_type', function: 'hello', returnType: 'Vec<Symbol>' }`              |
+| `has_attribute`     | `attribute`                                       | `{ type: 'has_attribute', attribute: 'contractimpl' }`                                |
+| `uses_type`         | `typeName`                                        | `{ type: 'uses_type', typeName: 'Address' }`                                          |
+| `storage_operation` | `operation` (`get` \| `set` \| `has` \| `remove`) | `{ type: 'storage_operation', operation: 'set' }`                                     |
+| `no_pattern`        | `pattern`                                         | `{ type: 'no_pattern', pattern: 'unwrap()' }`                                         |
+| `has_struct`        | `name`                                            | `{ type: 'has_struct', name: 'Guardian' }`                                            |
+| `balanced_braces`   | _(none)_                                          | `{ type: 'balanced_braces' }`                                                         |
+| `has_import`        | `module`                                          | `{ type: 'has_import', module: 'soroban_sdk' }`                                       |
 
 Notes:
 

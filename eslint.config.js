@@ -1,15 +1,13 @@
 import js from '@eslint/js';
-import reactHooks from 'eslint-plugin-react-hooks';
+import reactPlugin from 'eslint-plugin-react';
 import { defineConfig } from 'eslint/config';
-// import reactPlugin from 'eslint-plugin-react';
 import prettier from 'eslint-config-prettier';
 
 export default defineConfig([
   js.configs.recommended,
-  reactHooks.configs.recommended,
 
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.jsx'],
 
     languageOptions: {
       ecmaVersion: 'latest',
@@ -20,6 +18,14 @@ export default defineConfig([
         console: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        navigator: 'readonly',
+        localStorage: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        setTimeout: 'readonly',
+        Blob: 'readonly',
+        URL: 'readonly',
+        FileReader: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -29,7 +35,7 @@ export default defineConfig([
     },
 
     plugins: {
-      'react-hooks': reactHooksplugin,
+      react: reactPlugin,
     },
 
     settings: {
@@ -39,14 +45,12 @@ export default defineConfig([
     },
 
     rules: {
-      'react-hooks/exhaustive-deps': 'error',
-      'react-hooks/rules-of-hooks': 'error',
+      ...reactPlugin.configs.recommended.rules,
+
       'no-unused-vars': 'warn',
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'react/react-in-jsx-scope': 'off',
     },
   },
-
-  reactPlugin.configs.recommended,
 
   prettier,
 ]);

@@ -6,74 +6,74 @@ const LEVEL_BASE = 500;
 const LEVEL_EXPONENT = 1.5;
 
 const RANK_TITLES = [
-  "Initiate", // 0
-  "Apprentice", // 1
-  "Scribe", // 2
-  "Coder", // 3
-  "Architect", // 4
-  "Sentinel", // 5
-  "Guardian", // 6
-  "Master Guardian", // 7
-  "Elder", // 8
-  "Luminary", // 9
-  "Stellar Sovereign", // 10+
+  'Initiate', // 0
+  'Apprentice', // 1
+  'Scribe', // 2
+  'Coder', // 3
+  'Architect', // 4
+  'Sentinel', // 5
+  'Guardian', // 6
+  'Master Guardian', // 7
+  'Elder', // 8
+  'Luminary', // 9
+  'Stellar Sovereign', // 10+
 ];
 
 export const BADGES = [
   {
-    id: "first_contract",
-    name: "First Contract",
-    description: "Complete your first mission",
-    icon: "📜",
+    id: 'first_contract',
+    name: 'First Contract',
+    description: 'Complete your first mission',
+    icon: '📜',
     condition: (state) => state.completedMissions.length >= 1,
   },
   {
-    id: "triple_threat",
-    name: "Triple Threat",
-    description: "Complete 3 missions",
-    icon: "⚡",
+    id: 'triple_threat',
+    name: 'Triple Threat',
+    description: 'Complete 3 missions',
+    icon: '⚡',
     condition: (state) => state.completedMissions.length >= 3,
   },
   {
-    id: "five_star",
-    name: "Five Star",
-    description: "Complete 5 missions",
-    icon: "🌟",
+    id: 'five_star',
+    name: 'Five Star',
+    description: 'Complete 5 missions',
+    icon: '🌟',
     condition: (state) => state.completedMissions.length >= 5,
   },
   {
-    id: "completionist",
-    name: "Completionist",
-    description: "Complete all missions",
-    icon: "👑",
+    id: 'completionist',
+    name: 'Completionist',
+    description: 'Complete all missions',
+    icon: '👑',
     condition: (state) => state.completedMissions.length >= 7,
   },
   {
-    id: "level_3",
-    name: "Rising Star",
-    description: "Reach level 3",
-    icon: "🚀",
+    id: 'level_3',
+    name: 'Rising Star',
+    description: 'Reach level 3',
+    icon: '🚀',
     condition: (state) => state.level >= 3,
   },
   {
-    id: "level_5",
-    name: "Stellar Guardian",
-    description: "Reach level 5",
-    icon: "🛡️",
+    id: 'level_5',
+    name: 'Stellar Guardian',
+    description: 'Reach level 5',
+    icon: '🛡️',
     condition: (state) => state.level >= 5,
   },
   {
-    id: "xp_1000",
-    name: "XP Hoarder",
-    description: "Earn 1000 XP",
-    icon: "💰",
+    id: 'xp_1000',
+    name: 'XP Hoarder',
+    description: 'Earn 1000 XP',
+    icon: '💰',
     condition: (state) => state.xp >= 1000,
   },
   {
-    id: "speed_demon",
-    name: "Speed Demon",
-    description: "Complete a mission on first try",
-    icon: "⚡",
+    id: 'speed_demon',
+    name: 'Speed Demon',
+    description: 'Complete a mission on first try',
+    icon: '⚡',
     condition: (state) => state.firstTryMissions?.length >= 1,
   },
 ];

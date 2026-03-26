@@ -24,20 +24,10 @@ jobs:
         run: npm ci
 
       - name: Eslint check
-        run: |
-          if npm run | grep -q "lint"; then
-            npm run lint
-          else
-            echo "No lint script found, skipping linting check."
-          fi
+        run: npm run lint
 
       - name: Check Prettier formatting
-        run: |
-          if npm run | grep -q "format:check"; then
-            npm run format:check
-          else
-            echo "No format:check script found, skipping format check."
-          fi
+        run: npm run format:check
 
       - name: Run build
         run: npm run build

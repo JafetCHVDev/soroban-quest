@@ -1,12 +1,12 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import MissionMap from "./pages/MissionMap";
-import MissionDetail from "./pages/MissionDetail";
-import Profile from "./pages/Profile";
-import Footer from "./components/Footer";
-import NotFound from "./pages/NotFound";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import MissionMap from './pages/MissionMap';
+import MissionDetail from './pages/MissionDetail';
+import Profile from './pages/Profile';
+import Footer from './components/Footer';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
