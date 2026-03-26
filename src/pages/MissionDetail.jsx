@@ -19,9 +19,22 @@ export default function MissionDetail() {
   const navigate = useNavigate();
   const mission = getMissionById(missionId);
 
+  // --------------------------- Helpers ---------------------------
+  function getMissionFiles(m) {
+    if (m.files && m.files.length > 0) return m.files;
+    return [{ name: 'lib.rs', language: 'rust', template: m.template, solution: m.solution }];
+  }
+
+  function fileIcon(name) {
+    if (name.endsWith('.rs')) return '🦀';
+    if (name === 'Cargo.toml' || name.endsWith('.toml')) return '📦';
+    return '📄';
+  }
+
   // --------------------------- States ---------------------------
-  const [loading, setLoading] = useState(true); // Show skeleton while mission loads
-  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [activeFile, setActiveFile] = useState('lib.rs');
+  const [fileCodes, setFileCodes] = useState({});
   const [testResults, setTestResults] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [showVictory, setShowVictory] = useState(false);
@@ -35,9 +48,12 @@ export default function MissionDetail() {
   useEffect(() => {
     setLoading(true);
     if (mission) {
-      // Brief delay to display skeleton
       setTimeout(() => {
-        setCode(mission.template);
+        const files = getMissionFiles(mission);
+        const initial = {};
+        for (const f of files) initial[f.name] = f.template;
+        setFileCodes(initial);
+        setActiveFile(files[0].name);
         setTestResults([]);
         setHintIndex(-1);
         setShowVictory(false);
@@ -77,8 +93,8 @@ export default function MissionDetail() {
     addResult({ phase: "info", message: "🔍 Running validation checks..." });
     await delay(400);
 
-    // Run mission tests
-    const result = await runTests(code, mission);
+    // Run mission tests against all file codes
+    const result = await runTests(fileCodes, mission);
     for (const r of result.results) {
       addResult(r);
       await delay(250);
@@ -111,7 +127,7 @@ export default function MissionDetail() {
     }
 
     setIsRunning(false);
-  }, [code, mission, missionId, isRunning]);
+  }, [fileCodes, mission, missionId, isRunning]);
 
   // --------------------------- Hints ---------------------------
   const handleHint = () => {
@@ -123,7 +139,10 @@ export default function MissionDetail() {
   // --------------------------- Reset ---------------------------
   const handleReset = () => {
     if (mission) {
-      setCode(mission.template);
+      const files = getMissionFiles(mission);
+      const reset = {};
+      for (const f of files) reset[f.name] = f.template;
+      setFileCodes(reset);
       setTestResults([]);
       setHintIndex(-1);
     }
@@ -131,8 +150,11 @@ export default function MissionDetail() {
 
   // --------------------------- Show Solution ---------------------------
   const handleShowSolution = () => {
-    if (mission?.solution) {
-      setCode(mission.solution);
+    if (!mission) return;
+    const files = getMissionFiles(mission);
+    const file = files.find(f => f.name === activeFile);
+    if (file?.solution) {
+      setFileCodes(prev => ({ ...prev, [activeFile]: file.solution }));
     }
   };
 
@@ -239,9 +261,21 @@ export default function MissionDetail() {
         <div className="mission-editor-panel">
           <div className="mission-editor-toolbar">
             <div className="mission-editor-toolbar-left">
-              <div className="editor-file-tab">
-                <span className="dot" /> lib.rs
-              </div>
+              {getMissionFiles(mission).map((f) => (
+                <button
+                  key={f.name}
+                  className="editor-file-tab"
+                  onClick={() => setActiveFile(f.name)}
+                  style={{
+                    cursor: 'pointer',
+                    border: 'none',
+                    outline: activeFile === f.name ? '1px solid var(--cyan)' : 'none',
+                    opacity: activeFile === f.name ? 1 : 0.5,
+                  }}
+                >
+                  <span className="dot" /> {fileIcon(f.name)} {f.name}
+                </button>
+              ))}
             </div>
             <div className="mission-editor-toolbar-right">
               <button
@@ -289,9 +323,9 @@ export default function MissionDetail() {
           <div className="editor-wrapper">
             <Editor
               height="100%"
-              defaultLanguage="rust"
-              value={code}
-              onChange={(v) => setCode(v || "")}
+              language={getMissionFiles(mission).find(f => f.name === activeFile)?.language ?? 'rust'}
+              value={fileCodes[activeFile] ?? ''}
+              onChange={(v) => setFileCodes(prev => ({ ...prev, [activeFile]: v || '' }))}
               theme="vs-dark"
               options={{
                 fontSize: 14,
@@ -417,7 +451,7 @@ export default function MissionDetail() {
               }}
             >
               <button
-                onClick={() => openInOkashi(code)}
+                onClick={() => openInOkashi(fileCodes[getMissionFiles(mission)[0].name] ?? '')}
                 style={{
                   padding: "10px 22px",
                   borderRadius: "8px",

@@ -5,14 +5,25 @@
 
 import { validateCode } from './codeValidator';
 
-export async function runTests(code, mission) {
+export async function runTests(fileCodes, mission) {
+    // Backward compat: accept plain string (single-file missions)
+    if (typeof fileCodes === 'string') {
+        fileCodes = { 'lib.rs': fileCodes };
+    }
+
+    const files = mission.files && mission.files.length > 0
+        ? mission.files
+        : [{ name: 'lib.rs' }];
+    const primaryFileName = files[0].name;
+    const primaryCode = fileCodes[primaryFileName] ?? Object.values(fileCodes)[0] ?? '';
+
     const results = [];
 
-    // Step 1: Syntax basics
+    // Step 1: Syntax basics (primary file)
     results.push({
         phase: 'syntax',
         label: '🔍 Checking syntax...',
-        ...checkSyntaxBasics(code),
+        ...checkSyntaxBasics(primaryCode),
     });
 
     await delay(300);
@@ -21,26 +32,27 @@ export async function runTests(code, mission) {
     results.push({
         phase: 'structure',
         label: '🏗️ Validating structure...',
-        ...checkStructure(code, mission),
+        ...checkStructure(primaryCode),
     });
 
     await delay(300);
 
-    // Step 3: Mission-specific checks
-    const validation = validateCode(code, mission.checks);
-
-    for (let i = 0; i < validation.results.length; i++) {
+    // Step 3: Mission-specific checks — each check routed to its target file
+    for (let i = 0; i < mission.checks.length; i++) {
         await delay(200);
+        const check = mission.checks[i];
+        const targetFile = check.file || primaryFileName;
+        const code = fileCodes[targetFile] ?? primaryCode;
+        const validation = validateCode(code, [check]);
         results.push({
             phase: 'test',
-            label: `🧪 Test ${i + 1}/${validation.totalCount}`,
-            ...validation.results[i],
+            label: `🧪 Test ${i + 1}/${mission.checks.length}`,
+            ...validation.results[0],
         });
     }
 
     await delay(300);
 
-    // Final summary
     const allPassed = results.every(r => r.passed);
     const passedCount = results.filter(r => r.passed).length;
 
@@ -91,7 +103,7 @@ function checkSyntaxBasics(code) {
     return { passed: true, message: '✓ Basic syntax looks good' };
 }
 
-function checkStructure(code, mission) {
+function checkStructure(code) {
     // Must have at least one fn declaration
     if (!/fn\s+\w+/.test(code)) {
         return { passed: false, message: '✗ No function definitions found' };

@@ -65,6 +65,63 @@ impl HelloContract {
         vec![&env, symbol_short!("Hello"), to]
     }
 }`,
+        files: [
+            {
+                name: 'lib.rs',
+                language: 'rust',
+                template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    // TODO: Create a public function called 'hello'
+    // It should take two parameters: env: Env, to: Symbol
+    // It should return Vec<Symbol>
+    // The function should return a vector containing
+    // the symbols "Hello" and the 'to' parameter
+
+}`,
+                solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
+        vec![&env, symbol_short!("Hello"), to]
+    }
+}`,
+            },
+            {
+                name: 'Cargo.toml',
+                language: 'toml',
+                template: `[package]
+name = "hello-soroban"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = { version = "21.0.0", features = ["alloc"] }`,
+                solution: `[package]
+name = "hello-soroban"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = { version = "21.0.0", features = ["alloc"] }`,
+            },
+        ],
         checks: [
             { type: 'has_attribute', attribute: 'contract', message: 'Missing #[contract] attribute on your struct', description: '#[contract] attribute' },
             { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl] on your impl block', description: '#[contractimpl] attribute' },

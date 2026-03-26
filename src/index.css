@@ -1147,6 +1147,11 @@ button {
   background: var(--cyan);
 }
 
+.editor-file-tab:hover {
+  opacity: 0.8 !important;
+  background: var(--bg-secondary);
+}
+
 .editor-wrapper {
   flex: 1;
   overflow: hidden;
