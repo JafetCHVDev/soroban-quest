@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import MissionMap from "./pages/MissionMap";
 import MissionDetail from "./pages/MissionDetail";
+import Campaigns from "./pages/Campaigns";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
@@ -16,6 +17,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/missions" element={<MissionMap />} />
+          <Route path="/campaigns" element={<Campaigns />} />
           <Route path="/mission/:missionId" element={<MissionDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />

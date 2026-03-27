@@ -1,0 +1,178 @@
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loadProgress } from '../systems/storage';
+import { campaigns } from '../data/campaigns';
+import { getAllMissions } from '../systems/missionLoader';
+
+export default function Campaigns() {
+    const navigate = useNavigate();
+    const state = loadProgress();
+    const missions = getAllMissions();
+    const [selectedCampaign, setSelectedCampaign] = useState(null);
+    const [showLoreModal, setShowLoreModal] = useState(false);
+
+    const campaignStates = useMemo(() => {
+        return campaigns.map((campaign) => {
+            const campaignMissions = missions.filter(m => campaign.missionIds.includes(m.id));
+            const completedMissions = campaignMissions.filter(m => state.completedMissions.includes(m.id));
+            const progress = campaignMissions.length > 0 ? completedMissions.length / campaignMissions.length : 0;
+            const isCompleted = progress === 1;
+            const isUnlocked = state.level >= campaign.requiredLevel;
+            const isAccessible = isUnlocked || isCompleted;
+
+            return {
+                ...campaign,
+                progress,
+                completedCount: completedMissions.length,
+                totalCount: campaignMissions.length,
+                isCompleted,
+                isUnlocked,
+                isAccessible,
+            };
+        });
+    }, [state.completedMissions, state.level]);
+
+    const handleCampaignClick = (campaign) => {
+        if (campaign.isAccessible) {
+            setSelectedCampaign(campaign);
+            setShowLoreModal(true);
+        }
+    };
+
+    const handleStartCampaign = () => {
+        if (selectedCampaign) {
+            // Navigate to the first mission of the campaign
+            const firstMissionId = selectedCampaign.missionIds[0];
+            navigate(`/mission/${firstMissionId}`);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowLoreModal(false);
+        setSelectedCampaign(null);
+    };
+
+    return (
+        <div className="campaigns-page">
+            <div className="campaigns-header">
+                <h1 className="section-title">Campaigns</h1>
+                <p className="section-subtitle">
+                    Embark on epic journeys through the chapters of Soroban mastery
+                </p>
+            </div>
+
+            <div className="campaigns-grid">
+                {campaignStates.map((campaign) => (
+                    <div
+                        key={campaign.id}
+                        className={`campaign-card ${campaign.isCompleted ? 'completed' : campaign.isAccessible ? 'unlocked' : 'locked'}`}
+                        onClick={() => handleCampaignClick(campaign)}
+                        style={{ cursor: campaign.isAccessible ? 'pointer' : 'not-allowed' }}
+                    >
+                        {/* Hero Image Placeholder */}
+                        <div className="campaign-hero">
+                            <div className="campaign-hero-placeholder">
+                                <span className="campaign-chapter-number">Chapter {campaign.chapterNumber}</span>
+                                <div className="campaign-hero-icon">
+                                    {campaign.isCompleted ? '🏆' : campaign.isAccessible ? '🚀' : '🔒'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="campaign-content">
+                            <h3 className="campaign-title">{campaign.title}</h3>
+                            <p className="campaign-description">{campaign.description}</p>
+
+                            <div className="campaign-meta">
+                                <div className="campaign-missions">
+                                    {campaign.completedCount}/{campaign.totalCount} missions
+                                </div>
+                                <div className="campaign-xp">
+                                    {campaign.xpReward} XP
+                                </div>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="campaign-progress">
+                                <div className="progress-bar">
+                                    <div
+                                        className="progress-fill"
+                                        style={{ width: `${campaign.progress * 100}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Status Indicator */}
+                            <div className="campaign-status">
+                                {campaign.isCompleted ? (
+                                    <span className="status-completed">✓ Completed</span>
+                                ) : campaign.isAccessible ? (
+                                    <span className="status-unlocked">Ready to Start</span>
+                                ) : (
+                                    <span className="status-locked">🔒 Reach Level {campaign.requiredLevel}</span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Glow Effect for unlocked/completed */}
+                        {(campaign.isAccessible || campaign.isCompleted) && (
+                            <div className="campaign-glow" />
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Lore Modal */}
+            {showLoreModal && selectedCampaign && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content campaign-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="modal-title">{selectedCampaign.title}</h2>
+                            <button className="modal-close" onClick={handleCloseModal}>×</button>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="campaign-lore">
+                                {/* Render markdown-like content */}
+                                <div dangerouslySetInnerHTML={{
+                                    __html: selectedCampaign.lore
+                                        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                                        .replace(/^## (.+)$/gm, '<h2>$2</h2>')
+                                        .replace(/^### (.+)$/gm, '<h3>$3</h3>')
+                                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                        .replace(/`(.+?)`/g, '<code>$1</code>')
+                                }}></div>
+                            </div>
+
+                            <div className="campaign-details">
+                                <div className="detail-item">
+                                    <span className="detail-label">Missions:</span>
+                                    <span className="detail-value">{selectedCampaign.totalCount}</span>
+                                </div>
+                                <div className="detail-item">
+                                    <span className="detail-label">XP Reward:</span>
+                                    <span className="detail-value">{selectedCampaign.xpReward}</span>
+                                </div>
+                                <div className="detail-item">
+                                    <span className="detail-label">Estimated Time:</span>
+                                    <span className="detail-value">{selectedCampaign.estimatedTime}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="btn-secondary" onClick={handleCloseModal}>
+                                Close
+                            </button>
+                            <button className="btn-primary" onClick={handleStartCampaign}>
+                                {selectedCampaign.progress > 0 ? 'Continue Campaign' : 'Start Campaign'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+<parameter name="filePath">/workspaces/soroban-quest/src/pages/Campaigns.jsx

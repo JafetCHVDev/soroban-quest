@@ -28,6 +28,7 @@ export default function Navbar() {
 
             <ul className="navbar-links">
                 <li><Link to="/" className={isActive('/')}>Home</Link></li>
+                <li><Link to="/campaigns" className={isActive('/campaigns')}>Campaigns</Link></li>
                 <li><Link to="/missions" className={isActive('/missions')}>Missions</Link></li>
                 <li><Link to="/profile" className={isActive('/profile')}>Profile</Link></li>
             </ul>
