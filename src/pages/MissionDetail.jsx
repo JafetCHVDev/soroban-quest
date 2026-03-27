@@ -13,7 +13,90 @@ import {
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
-import DiffViewer from "../components/DiffViewer";   
+import DiffViewer from "../components/DiffViewer";
+
+// ─── Shortcut definitions ─── 
+const SHORTCUTS = [
+  {
+    keys: ["Ctrl", "Enter"],
+    macKeys: ["⌘", "Enter"],
+    label: "Run Tests",
+    description: "Execute all validation checks against your code",
+  },
+  {
+    keys: ["Ctrl", "Shift", "H"],
+    macKeys: ["⌘", "⇧", "H"],
+    label: "Toggle Hint",
+    description: "Reveal the next progressive hint",
+  },
+  {
+    keys: ["Ctrl", "Shift", "S"],
+    macKeys: ["⌘", "⇧", "S"],
+    label: "Compare with Solution",
+    description: "Open diff viewer (available after first test run)",
+  },
+  {
+    keys: ["Esc"],
+    macKeys: ["Esc"],
+    label: "Close Modal",
+    description: "Close the diff viewer or this shortcuts panel",
+  },
+];
+
+const isMac = () =>
+  typeof navigator !== "undefined" &&
+  /mac/i.test(navigator.platform || navigator.userAgent);
+ 
+// ─── Shortcuts reference modal ────────────────────────────────────────────────
+function ShortcutsModal({ onClose }) {
+  const mac = isMac();
+ 
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+ 
+  return (
+    <div className="shortcuts-overlay" onClick={onClose}>
+      <div className="shortcuts-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="shortcuts-modal-header">
+          <div className="shortcuts-modal-title-row">
+            <span className="shortcuts-modal-icon">⌨</span>
+            <span className="shortcuts-modal-title">Keyboard Shortcuts</span>
+          </div>
+          <button className="shortcuts-close-btn" onClick={onClose} aria-label="Close">✕</button>
+        </div>
+ 
+        <div className="shortcuts-list">
+          {SHORTCUTS.map((s, i) => {
+            const keys = mac ? s.macKeys : s.keys;
+            return (
+              <div key={i} className="shortcuts-row">
+                <div className="shortcuts-key-combo">
+                  {keys.map((k, j) => (
+                    <React.Fragment key={j}>
+                      <kbd className="kbd">{k}</kbd>
+                      {j < keys.length - 1 && <span className="kbd-plus">+</span>}
+                    </React.Fragment>
+                  ))}
+                </div>
+                <div className="shortcuts-row-right">
+                  <span className="shortcuts-label">{s.label}</span>
+                  <span className="shortcuts-desc">{s.description}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+ 
+        <div className="shortcuts-modal-footer">
+          Press <kbd className="kbd kbd-sm">Esc</kbd> to close
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function MissionDetail() {
   const { missionId } = useParams();
@@ -30,22 +113,38 @@ export default function MissionDetail() {
   const [hintIndex, setHintIndex] = useState(-1);
   const [hasAttempted, setHasAttempted] = useState(false);
   const [showDiff, setShowDiff] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const terminalBodyRef = useRef(null);
-  const { openInOkashi, toast } = useokashi();
 
-  // --------------------------- Load Mission ---------------------------
+   // stable refs so Monaco action closures never capture stale state
+  const handleRunTestsRef = useRef(null);
+  const handleHintRef     = useRef(null);
+  const hintIndexRef      = useRef(hintIndex);
+  const missionRef        = useRef(mission);
+  const hasAttemptedRef   = useRef(hasAttempted);
+  const showDiffRef       = useRef(showDiff);
+  const showShortcutsRef  = useRef(showShortcuts);
+  const showVictoryRef    = useRef(showVictory);
+ 
+  useEffect(() => { hintIndexRef.current     = hintIndex;     }, [hintIndex]);
+  useEffect(() => { missionRef.current       = mission;       }, [mission]);
+  useEffect(() => { hasAttemptedRef.current  = hasAttempted;  }, [hasAttempted]);
+  useEffect(() => { showDiffRef.current      = showDiff;      }, [showDiff]);
+  useEffect(() => { showShortcutsRef.current = showShortcuts; }, [showShortcuts]);
+  useEffect(() => { showVictoryRef.current   = showVictory;   }, [showVictory]);
+ 
+  // ── Load Mission ──────────────────────────────────────────────────────────
   useEffect(() => {
     setLoading(true);
     if (mission) {
-      // Brief delay to display skeleton
       setTimeout(() => {
         setCode(mission.template);
         setTestResults([]);
         setHintIndex(-1);
         setShowVictory(false);
         setHasAttempted(false);
-        setShowDiff(false);  
+        setShowDiff(false);
         setLoading(false);
       }, 1500);
     } else {
@@ -119,12 +218,22 @@ export default function MissionDetail() {
     setIsRunning(false);
   }, [code, mission, missionId, isRunning]);
 
+  // Assign handleRunTests to ref so Monaco actions can call it
+  useEffect(() => {
+    handleRunTestsRef.current = handleRunTests;
+  }, [handleRunTests]);
+
   // --------------------------- Hints ---------------------------
-  const handleHint = () => {
+  const handleHint = useCallback(() => {
     if (mission && hintIndex < mission.hints.length - 1) {
       setHintIndex(hintIndex + 1);
     }
-  };
+  }, [mission, hintIndex]);
+
+  // Assign handleHint to ref so Monaco actions can call it
+  useEffect(() => {
+    handleHintRef.current = handleHint;
+  }, [handleHint]);
 
   // --------------------------- Reset ---------------------------
   const handleReset = () => {
@@ -148,6 +257,64 @@ export default function MissionDetail() {
     if (next) navigate(`/mission/${next.id}`);
     else navigate("/missions");
   };
+
+  // ── Monaco onMount register all key bindings once ───────────────────────
+  //    Uses refs so closures are always stable and never stale.
+  const handleEditorMount = useCallback((editor, monaco) => {
+    // Ctrl or Cmd + Enter to Run Tests
+    editor.addAction({
+      id: "soroban-run-tests",
+      label: "Run Tests",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      run() { handleRunTestsRef.current?.(); },
+    });
+ 
+    // Ctrl or Cmd + Shift + H == Toggle next hint
+    editor.addAction({
+      id: "soroban-toggle-hint",
+      label: "Toggle Hint",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyH],
+      run() { handleHintRef.current?.(); },
+    });
+ 
+    // Ctrl or Cmd + Shift + this Opens diff viewer
+    editor.addAction({
+      id: "soroban-compare-solution",
+      label: "Compare with Solution",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyS],
+      run() {
+        if (hasAttemptedRef.current && missionRef.current?.solution) {
+          setShowDiff(true);
+        }
+      },
+    });
+ 
+    // Escape => close overlays in priority order
+    // precondition prevents firing while Monaco's own widgets are open
+    editor.addAction({
+      id: "soroban-escape",
+      label: "Close Modal",
+      keybindings: [monaco.KeyCode.Escape],
+      precondition: "!suggestWidgetVisible && !findWidgetVisible && !inSnippetMode",
+      run() {
+        if (showDiffRef.current)      { setShowDiff(false);      return; }
+        if (showShortcutsRef.current) { setShowShortcuts(false); return; }
+        if (showVictoryRef.current)   { setShowVictory(false);   return; }
+      },
+    });
+  }, []); // stable all dynamic values accessed via refs
+ 
+  // ── Global Escape (for clicks outside editor) ───────
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key !== "Escape") return;
+      if (showDiff)      { setShowDiff(false);      return; }
+      if (showShortcuts) { setShowShortcuts(false); return; }
+      if (showVictory)   { setShowVictory(false);   return; }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [showDiff, showShortcuts, showVictory]);
 
   // --------------------------- Loading Skeleton ---------------------------
   if (loading) return <MissionDetailSkeleton />;
@@ -281,11 +448,21 @@ export default function MissionDetail() {
                   ⧉ Compare
                 </button>
               )}
+              {/* ── keyboard shortcuts help button ── */}
+              <button
+                className="btn btn-ghost btn-sm shortcuts-help-btn"
+                onClick={() => setShowShortcuts(true)}
+                title="Keyboard shortcuts"
+                aria-label="Show keyboard shortcuts"
+              >
+                ⌨
+              </button>
  
               <button
                 className="btn btn-primary btn-sm"
                 onClick={handleRunTests}
                 disabled={isRunning}
+                title={`Run tests  (${isMac() ? "⌘Enter" : "Ctrl+Enter"})`}
               >
                 {isRunning ? (
                   <>
@@ -306,6 +483,7 @@ export default function MissionDetail() {
               value={code}
               onChange={(v) => setCode(v || "")}
               theme="vs-dark"
+              onMount={handleEditorMount}
               options={{
                 fontSize: 14,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -338,7 +516,8 @@ export default function MissionDetail() {
                 <span className="terminal-dot yellow" />
                 <span className="terminal-dot green" />
                 <span className="terminal-title">Test Output</span>
-             {/* ── Hint after failed attempt ── */}
+
+              {/* ── Hint after failed attempt ── */}
                 {hasAttempted && !isRunning && testResults.length > 0 && (
                   <span
                     className="terminal-compare-hint"
@@ -349,23 +528,20 @@ export default function MissionDetail() {
                   </span>
                 )}
               </div>
-              <div
-                className="terminal-body"
-                ref={terminalBodyRef}
-                style={{ flex: 1 }}
-              >
+               <div className="terminal-body" ref={terminalBodyRef} style={{ flex: 1 }}>
                 {testResults.length === 0 ? (
-                  <span
-                    className="terminal-line info"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    Click "Run Tests" to validate your code...
+                  <span className="terminal-line info" style={{ color: "var(--text-muted)" }}>
+                    Click "Run Tests" or press{" "}
+                    <kbd className="kbd kbd-inline">{isMac() ? "⌘" : "Ctrl"}</kbd>
+                    <kbd className="kbd kbd-inline">Enter</kbd> to validate your code…
                   </span>
                 ) : (
                   testResults.map((r, i) => (
                     <span
                       key={i}
-                      className={`terminal-line ${r.passed === true ? "pass" : r.passed === false ? "fail" : "info"}`}
+                      className={`terminal-line ${
+                        r.passed === true ? "pass" : r.passed === false ? "fail" : "info"
+                      }`}
                       style={{ animationDelay: `${i * 0.05}s` }}
                     >
                       {r.message}
@@ -377,7 +553,7 @@ export default function MissionDetail() {
           </div>
         </div>
       </div>
- 
+
       {/* ── Diff Viewer Overlay ── */}
       {showDiff && (
         <DiffViewer
@@ -386,6 +562,9 @@ export default function MissionDetail() {
           onClose={() => setShowDiff(false)}
         />
       )}
+
+       {/* ── Keyboard Shortcuts Modal ── */}
+      {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
  
       {/* ---------------- Victory Modal ---------------- */}
       {showVictory && victoryData && (

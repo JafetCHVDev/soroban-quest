@@ -1816,3 +1816,214 @@ button {
     display: none;
   }
 }
+
+
+
+
+/* ============================================================
+                    KEYBOARD SHORTCUTS
+   ============================================================ */
+
+/* ── <kbd> base style used inline in terminal and in the modal ── */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font-family: var(--font-code);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Slightly smaller variant for inline terminal use */
+.kbd-inline {
+  font-size: 0.65rem;
+  padding: 1px 5px;
+  vertical-align: middle;
+}
+
+/* Extra-small for footer hint */
+.kbd-sm {
+  font-size: 0.65rem;
+  padding: 1px 5px;
+}
+
+/* Plus sign between keys */
+.kbd-plus {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin: 0 2px;
+  user-select: none;
+}
+
+/* ── ⌨ help button in the toolbar ── */
+.shortcuts-help-btn {
+  font-size: 1rem;
+  padding: 0.45rem 0.65rem !important;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.shortcuts-help-btn:hover {
+  opacity: 1;
+  color: var(--cyan) !important;
+}
+
+/* ── Full-screen overlay (same pattern as diff-overlay) ── */
+.shortcuts-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: calc(var(--z-modal) + 20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Modal card ── */
+.shortcuts-modal {
+  width: min(92vw, 540px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glow-cyan), var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Header ── */
+.shortcuts-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.shortcuts-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shortcuts-modal-icon {
+  font-size: 1.2rem;
+}
+
+.shortcuts-modal-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.shortcuts-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+  line-height: 1;
+}
+
+.shortcuts-close-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Shortcuts list ── */
+.shortcuts-list {
+  padding: 8px 0;
+}
+
+.shortcuts-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  transition: background var(--transition-fast);
+}
+
+.shortcuts-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Key combo column — fixed width so labels always align */
+.shortcuts-key-combo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+/* Label + description column */
+.shortcuts-row-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.shortcuts-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.shortcuts-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── Footer ── */
+.shortcuts-modal-footer {
+  padding: 10px 20px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.01);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 768px) {
+  .shortcuts-modal {
+    width: 100vw;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+  }
+
+  .shortcuts-overlay {
+    align-items: flex-end;
+  }
+
+  .shortcuts-key-combo {
+    min-width: 110px;
+  }
+}
