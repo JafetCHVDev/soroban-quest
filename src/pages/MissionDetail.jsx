@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";
-import { loadProgress, saveProgress } from "../systems/storage";
+import { loadProgress, saveProgress, saveMissionStartTime, saveMissionCompletionTime} from "../systems/storage";
 import {
   completeMission,
   recordAttempt,
@@ -102,6 +102,7 @@ export default function MissionDetail() {
   const { missionId } = useParams();
   const navigate = useNavigate();
   const mission = getMissionById(missionId);
+  const { openInOkashi, toast } = useokashi();
 
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true); // Show skeleton while mission loads
@@ -134,7 +135,7 @@ export default function MissionDetail() {
   useEffect(() => { showShortcutsRef.current = showShortcuts; }, [showShortcuts]);
   useEffect(() => { showVictoryRef.current   = showVictory;   }, [showVictory]);
  
-  // ── Load Mission ──────────────────────────────────────────────────────────
+  // ── Load Mission and record start time ──────────────────────────────────────────────────────────
   useEffect(() => {
     setLoading(true);
     if (mission) {
@@ -146,6 +147,7 @@ export default function MissionDetail() {
         setHasAttempted(false);
         setShowDiff(false);
         setLoading(false);
+        saveMissionStartTime(missionId);
       }, 1500);
     } else {
       setLoading(false);
@@ -192,12 +194,15 @@ export default function MissionDetail() {
     await delay(300);
     addResult({ phase: "summary", message: result.summary });
 
-    // Handle victory if all tests pass
+    // handle victory if all tests pass
     if (result.allPassed) {
       await delay(500);
+
+    const completionTime = saveMissionCompletionTime(missionId);
+ 
       state = loadProgress();
       const newState = completeMission(state, missionId, mission.xpReward);
-
+ 
       if (!newState.alreadyCompleted) {
         saveProgress(newState);
         setVictoryData({
@@ -205,6 +210,7 @@ export default function MissionDetail() {
           leveledUp: newState.leveledUp,
           newLevel: newState.level,
           newBadges: newState.newBadges || [],
+          completionTime,  // pass through to victory modal
         });
         setShowVictory(true);
       } else {
@@ -214,12 +220,10 @@ export default function MissionDetail() {
         });
       }
     }
-
+ 
     setIsRunning(false);
   }, [code, mission, missionId, isRunning]);
-
-  // Assign handleRunTests to ref so Monaco actions can call it
-  useEffect(() => {
+    useEffect(() => {
     handleRunTestsRef.current = handleRunTests;
   }, [handleRunTests]);
 
@@ -230,7 +234,7 @@ export default function MissionDetail() {
     }
   }, [mission, hintIndex]);
 
-  // Assign handleHint to ref so Monaco actions can call it
+  // assigned handleHint to ref so Monaco actions can call it
   useEffect(() => {
     handleHintRef.current = handleHint;
   }, [handleHint]);
@@ -691,6 +695,20 @@ export default function MissionDetail() {
 }
 
 // --------------------------- Helper: Delay ---------------------------
+
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+ 
+/**
+ * Format seconds into "Xm Ys" (e.g. "2m 34s").
+ * Under 60 seconds renders as just "Xs".
+ */
+export function formatTime(seconds) {
+  if (seconds == null || isNaN(seconds)) return "—";
+  const s = Math.max(0, Math.round(seconds));
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  return rem === 0 ? `${m}m` : `${m}m ${rem}s`;
 }

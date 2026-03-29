@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { loadProgress, saveProgress, exportProgress, importProgress, resetProgress } from '../systems/storage';
+import { loadProgress, saveProgress, exportProgress, importProgress, resetProgress,loadMissionTimes } from '../systems/storage';
 import { getXPProgress, getRankTitle, BADGES, getDefaultState } from '../systems/gameEngine';
 import { getAllMissions } from '../systems/missionLoader';
+import TimeStats from '../components/TimeStats';
 
 export default function Profile() {
     const [state, setState] = useState(loadProgress());
+    const [missionTimes, setMissionTimes] = useState(loadMissionTimes());
     const [importStatus, setImportStatus] = useState('');
     const fileInputRef = useRef(null);
     const xpProgress = getXPProgress(state);
@@ -23,6 +25,7 @@ export default function Profile() {
         try {
             const newState = await importProgress(file);
             setState(newState);
+            setMissionTimes(loadMissionTimes());
             setImportStatus('✅ Progress imported successfully!');
         } catch (err) {
             setImportStatus('❌ Invalid file — could not import.');
@@ -34,6 +37,7 @@ export default function Profile() {
         if (window.confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
             const newState = resetProgress();
             setState(newState);
+            setMissionTimes({});
             setImportStatus('🗑️ Progress reset.');
             setTimeout(() => setImportStatus(''), 3000);
         }
@@ -108,6 +112,12 @@ export default function Profile() {
                     );
                 })}
             </div>
+
+              {/* Time Statistics Section */}
+            <TimeStats
+                missionTimes={missionTimes}
+                completedMissions={completedMissions}
+            />
 
             {/* Completed Missions */}
             <h2 className="profile-section-title">✅ Completed Missions</h2>

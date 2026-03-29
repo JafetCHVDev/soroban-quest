@@ -5,6 +5,7 @@
 import { getDefaultState } from './gameEngine';
 
 const STORAGE_KEY = 'soroban_quest_progress';
+const MISSION_TIMES_KEY = 'soroban_quest_mission_times';
 
 export function loadProgress() {
     try {
@@ -29,14 +30,63 @@ export function saveProgress(state) {
     }
 }
 
-export function resetProgress() {
-    localStorage.removeItem(STORAGE_KEY);
-    return getDefaultState();
+export function loadMissionTimes() {
+    try {
+        const data = localStorage.getItem(MISSION_TIMES_KEY);
+        if (!data) return {};
+        return JSON.parse(data);
+    } catch {
+        return {};
+    }
+}
+ 
+export function saveMissionStartTime(missionId) {
+    try {
+        const times = loadMissionTimes();
+        // only record a start time if we don't already have a completion record
+        if (!times[missionId]?.completionTime) {
+            times[missionId] = {
+                ...times[missionId],
+                startTime: Date.now(),
+            };
+            localStorage.setItem(MISSION_TIMES_KEY, JSON.stringify(times));
+        }
+    } catch (e) {
+        console.error('Failed to save mission start time:', e);
+    }
+}
+ 
+export function saveMissionCompletionTime(missionId) {
+    try {
+        const times = loadMissionTimes();
+        const entry = times[missionId] || {};
+        const startTime = entry.startTime || Date.now();
+        const completionTime = Math.round((Date.now() - startTime) / 1000); // seconds
+ 
+        times[missionId] = {
+            startTime,
+            completionTime,
+            completedAt: Date.now(),
+        };
+        localStorage.setItem(MISSION_TIMES_KEY, JSON.stringify(times));
+        return completionTime;
+    } catch (e) {
+        console.error('Failed to save mission completion time:', e);
+        return null;
+    }
 }
 
+export function resetProgress() {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(MISSION_TIMES_KEY);
+    return getDefaultState();
+}
+ 
 export function exportProgress() {
     const state = loadProgress();
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const times = loadMissionTimes();
+    const exportData = { ...state, missionTimes: times };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -51,7 +101,14 @@ export function importProgress(file) {
         reader.onload = (e) => {
             try {
                 const data = JSON.parse(e.target.result);
-                const state = { ...getDefaultState(), ...data };
+ 
+                // restore mission times if present in the export
+                if (data.missionTimes) {
+                    localStorage.setItem(MISSION_TIMES_KEY, JSON.stringify(data.missionTimes));
+                }
+ 
+                const { missionTimes: _stripped, ...rest } = data;
+                const state = { ...getDefaultState(), ...rest };
                 saveProgress(state);
                 resolve(state);
             } catch (err) {
