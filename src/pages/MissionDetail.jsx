@@ -9,15 +9,16 @@ import { loadProgress, saveProgress } from "../systems/storage";
 import {
   completeMission,
   recordAttempt,
-  getRankTitle,
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
-import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import { useokashi } from "../systems/useokashi";
+import MissionCelebrationModal from "../components/MissionCelebrationModal";
 
 export default function MissionDetail() {
   const { missionId } = useParams();
   const navigate = useNavigate();
   const mission = getMissionById(missionId);
+  const nextMission = getNextMission(missionId);
 
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true); // Show skeleton while mission loads
@@ -36,13 +37,16 @@ export default function MissionDetail() {
     setLoading(true);
     if (mission) {
       // Brief delay to display skeleton
-      setTimeout(() => {
+      const loadTimer = setTimeout(() => {
         setCode(mission.template);
         setTestResults([]);
         setHintIndex(-1);
         setShowVictory(false);
+        setVictoryData(null);
         setLoading(false);
       }, 1500);
+
+      return () => clearTimeout(loadTimer);
     } else {
       setLoading(false);
     }
@@ -138,8 +142,7 @@ export default function MissionDetail() {
 
   // --------------------------- Navigate to Next Mission ---------------------------
   const handleNextMission = () => {
-    const next = getNextMission(missionId);
-    if (next) navigate(`/mission/${next.id}`);
+    if (nextMission) navigate(`/mission/${nextMission.id}`);
     else navigate("/missions");
   };
 
@@ -357,130 +360,19 @@ export default function MissionDetail() {
 
       {/* ---------------- Victory Modal ---------------- */}
       {showVictory && victoryData && (
-        <div className="modal-overlay" onClick={() => setShowVictory(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-icon">🏆</div>
-            <h2 className="modal-title">Mission Complete!</h2>
-            <p className="modal-message">
-              You've completed <strong>{mission.title}</strong>
-            </p>
-            <div className="modal-xp">+{victoryData.xp} XP</div>
-
-            {victoryData.leveledUp && (
-              <p
-                style={{
-                  color: "var(--purple)",
-                  fontFamily: "var(--font-display)",
-                  marginBottom: "1rem",
-                }}
-              >
-                🎉 Level Up! You are now Level {victoryData.newLevel} —{" "}
-                {getRankTitle(victoryData.newLevel)}
-              </p>
-            )}
-
-            {victoryData.newBadges?.length > 0 && (
-              <p style={{ color: "var(--gold)", marginBottom: "1rem" }}>
-                🏅 New badge{victoryData.newBadges.length > 1 ? "s" : ""}{" "}
-                earned!
-              </p>
-            )}
-
-            <div
-              style={{
-                display: "flex",
-                gap: "0.75rem",
-                justifyContent: "center",
-              }}
-            >
-              <button className="btn btn-primary" onClick={handleNextMission}>
-                Next Mission →
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => navigate("/missions")}
-              >
-                Mission Map
-              </button>
-            </div>
-
-            {/* Okashi Button & Toast */}
-            <div
-              style={{
-                marginTop: "1.25rem",
-                paddingTop: "1.25rem",
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <button
-                onClick={() => openInOkashi(code)}
-                style={{
-                  padding: "10px 22px",
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "linear-gradient(135deg, #7c3aed, #2563eb)",
-                  color: "#fff",
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  boxShadow: "0 4px 14px rgba(124,58,237,0.4)",
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
-                onMouseLeave={(e) => (e.target.style.opacity = "1")}
-              >
-                🚀 Try on Okashi — Compile & Deploy
-              </button>
-
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "#94a3b8",
-                  textAlign: "center",
-                  maxWidth: "300px",
-                  margin: 0,
-                  lineHeight: "1.5",
-                }}
-              >
-                Opens okashi.dev in a new tab. Your code is copied to clipboard
-                — paste it there to compile with the real Soroban compiler and
-                deploy to Testnet.
-              </p>
-
-              {toast.state !== TOAST_STATES.IDLE && (
-                <div
-                  style={{
-                    padding: "10px 16px",
-                    borderRadius: "8px",
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    background:
-                      toast.state === TOAST_STATES.SUCCESS
-                        ? "#064e3b"
-                        : "#4c0519",
-                    color:
-                      toast.state === TOAST_STATES.SUCCESS
-                        ? "#6ee7b7"
-                        : "#fda4af",
-                    border:
-                      toast.state === TOAST_STATES.SUCCESS
-                        ? "1px solid #065f46"
-                        : "1px solid #881337",
-                    maxWidth: "340px",
-                    textAlign: "center",
-                    lineHeight: "1.5",
-                  }}
-                >
-                  {toast.message}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <MissionCelebrationModal
+          missionTitle={mission.title}
+          victoryData={victoryData}
+          onClose={() => {
+            setShowVictory(false);
+            setVictoryData(null);
+          }}
+          onNextMission={handleNextMission}
+          onBackToMap={() => navigate("/missions")}
+          openInOkashi={openInOkashi}
+          toast={toast}
+          code={code}
+        />
       )}
     </>
   );

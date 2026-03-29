@@ -184,4 +184,8 @@ export function checkBadges(state) {
   };
 }
 
+export function getBadgeById(badgeId) {
+  return BADGES.find((badge) => badge.id === badgeId);
+}
+
 export { getDefaultState };

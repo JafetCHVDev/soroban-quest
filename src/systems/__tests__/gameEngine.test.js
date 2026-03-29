@@ -7,6 +7,7 @@ import {
   awardXP,
   completeMission,
   checkBadges,
+  getBadgeById,
   getDefaultState,
 } from "../gameEngine.js";
 
@@ -159,6 +160,19 @@ describe("gameEngine", () => {
       };
       const newState = checkBadges(state);
       expect(newState.newBadges).not.toContain("first_contract");
+    });
+  });
+
+  describe("getBadgeById", () => {
+    it("returns badge metadata for a known badge", () => {
+      expect(getBadgeById("first_contract")).toMatchObject({
+        id: "first_contract",
+        name: "First Contract",
+      });
+    });
+
+    it("returns undefined for an unknown badge", () => {
+      expect(getBadgeById("missing_badge")).toBeUndefined();
     });
   });
 });

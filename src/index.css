@@ -1271,60 +1271,240 @@ button {
 }
 
 /* ============ VICTORY MODAL ============ */
-.modal-overlay {
+.celebration-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--space-lg);
+  background:
+    radial-gradient(circle at top, rgba(245, 158, 11, 0.12), transparent 30%),
+    rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
   z-index: var(--z-modal);
-  animation: fadeIn 0.3s ease;
+  animation: celebrationOverlayIn 0.25s ease forwards;
 }
 
-.modal-content {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-accent);
-  border-radius: var(--radius-xl);
+.celebration-overlay.is-closing {
+  animation: celebrationOverlayOut 0.22s ease forwards;
+}
+
+.celebration-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.celebration-confetti-piece {
+  position: absolute;
+  left: var(--confetti-left);
+  top: -10vh;
+  width: 12px;
+  height: 20px;
+  background: var(--confetti-color);
+  border-radius: 999px;
+  opacity: 0;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--confetti-color) 45%, transparent);
+  animation: confettiFall var(--confetti-duration) cubic-bezier(0.18, 0.84, 0.42, 1) var(--confetti-delay) forwards;
+}
+
+.celebration-panel {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: min(88vh, 760px);
   padding: var(--space-2xl);
-  max-width: 480px;
-  width: 90%;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.92)),
+    var(--bg-secondary);
+  box-shadow:
+    0 24px 80px rgba(2, 6, 23, 0.55),
+    0 0 0 1px rgba(6, 182, 212, 0.08) inset;
+  overflow-y: auto;
   text-align: center;
-  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: var(--shadow-glow-cyan);
+  animation: celebrationPanelIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.modal-icon {
-  font-size: 3rem;
-  margin-bottom: var(--space-md);
+.celebration-overlay.is-closing .celebration-panel {
+  animation: celebrationPanelOut 0.22s ease forwards;
 }
 
-.modal-title {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
+.celebration-header {
+  margin-bottom: var(--space-xl);
+}
+
+.celebration-icon {
+  font-size: 3.4rem;
   margin-bottom: var(--space-sm);
-  background: linear-gradient(135deg, var(--gold), var(--cyan));
+}
+
+.celebration-kicker {
+  margin: 0 0 0.35rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--cyan);
+}
+
+.celebration-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.45rem);
+  line-height: 1.05;
+  background: linear-gradient(135deg, #f8fafc, var(--gold), var(--cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.modal-xp {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  color: var(--gold);
-  font-weight: 800;
-  margin: var(--space-md) 0;
+.celebration-stat-card {
+  margin-bottom: var(--space-lg);
+  padding: 1.1rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(6, 182, 212, 0.12));
+  border: 1px solid rgba(245, 158, 11, 0.18);
 }
 
-.modal-message {
+.celebration-stat-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.celebration-stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--gold);
+}
+
+.celebration-section {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  text-align: left;
+}
+
+.celebration-section-label {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.celebration-section-copy {
+  margin: 0;
   color: var(--text-secondary);
-  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+.celebration-badge-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.celebration-badge-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(245, 158, 11, 0.14);
+}
+
+.celebration-badge-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.celebration-badge-name {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--text-primary);
+}
+
+.celebration-badge-description {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.celebration-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.celebration-okashi {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.celebration-okashi-button {
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  transition: opacity 0.2s ease;
+}
+
+.celebration-okashi-button:hover {
+  opacity: 0.85;
+}
+
+.celebration-okashi-copy {
+  margin: 0;
+  max-width: 320px;
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.celebration-toast {
+  max-width: 340px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.celebration-toast.success {
+  background: #064e3b;
+  color: #6ee7b7;
+  border: 1px solid #065f46;
+}
+
+.celebration-toast.error {
+  background: #4c0519;
+  color: #fda4af;
+  border: 1px solid #881337;
 }
 /* Hide Radio buttons on all screens  */
 .tab-radio {
@@ -1344,6 +1524,52 @@ button {
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.8); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes celebrationOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes celebrationOverlayOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes celebrationPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes celebrationPanelOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10vh, 0) rotate(0deg) scale(0.8);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 120vh, 0) rotate(var(--confetti-rotation)) scale(1);
+  }
 }
 
 /* ============ SCROLLBAR ============ */
@@ -1402,6 +1628,19 @@ button {
 }
 
 @media (max-width: 600px) {
+  .celebration-panel {
+    padding: 1.25rem;
+    border-radius: 22px;
+  }
+
+  .celebration-actions {
+    flex-direction: column;
+  }
+
+  .celebration-actions .btn {
+    width: 100%;
+  }
+
   .hero-title {
     font-size: 2rem;
   }
