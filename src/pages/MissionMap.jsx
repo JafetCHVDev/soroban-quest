@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
-import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import { getAllMissions, getChapterTitle, isMissionUnlocked } from '../systems/missionLoader';
 
 export default function MissionMap() {
     const navigate = useNavigate();
@@ -15,6 +15,23 @@ export default function MissionMap() {
             unlocked: isMissionUnlocked(m.id, state.completedMissions),
         }));
     }, [state.completedMissions]);
+
+    const chapterSections = useMemo(() => {
+        const grouped = missionStates.reduce((acc, mission) => {
+            const chapter = mission.chapter ?? 1;
+            if (!acc[chapter]) acc[chapter] = [];
+            acc[chapter].push(mission);
+            return acc;
+        }, {});
+
+        return Object.entries(grouped)
+            .sort(([left], [right]) => Number(left) - Number(right))
+            .map(([chapter, items]) => ({
+                chapter: Number(chapter),
+                title: getChapterTitle(Number(chapter)),
+                missions: items,
+            }));
+    }, [missionStates]);
 
     const handleMissionClick = (mission) => {
         if (mission.unlocked) {
@@ -122,36 +139,46 @@ export default function MissionMap() {
             </div>
 
             {/* Mission Cards Grid */}
-            <div className="mission-map-grid">
-                {missionStates.map((m) => (
-                    <div
-                        key={m.id}
-                        className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
-                        onClick={() => handleMissionClick(m)}
-                    >
-                        <div className="mission-card-header">
-                            <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
-                            <span className="mission-card-xp">⚡ {m.xpReward} XP</span>
+            <div className="mission-map-sections">
+                {chapterSections.map(({ chapter, title, missions: chapterMissions }) => (
+                    <section key={chapter} className="mission-chapter-section">
+                        <div className="mission-chapter-heading">
+                            <span className="mission-chapter-eyebrow">Chapter {chapter}</span>
+                            <h2>{title}</h2>
                         </div>
-                        <h3 className="mission-card-title">{m.title}</h3>
-                        <p className="mission-card-desc">{m.learningGoal}</p>
-                        <div className="mission-card-footer">
-                            <div className="mission-card-concepts">
-                                {m.conceptsIntroduced.slice(0, 3).map(c => (
-                                    <span key={c} className="concept-tag">{c}</span>
-                                ))}
-                            </div>
-                            <span className={`badge badge-${m.difficulty}`}>
-                                {m.difficulty}
-                            </span>
+                        <div className="mission-map-grid">
+                            {chapterMissions.map((m) => (
+                                <div
+                                    key={m.id}
+                                    className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
+                                    onClick={() => handleMissionClick(m)}
+                                >
+                                    <div className="mission-card-header">
+                                        <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
+                                        <span className="mission-card-xp">⚡ {m.xpReward} XP</span>
+                                    </div>
+                                    <h3 className="mission-card-title">{m.title}</h3>
+                                    <p className="mission-card-desc">{m.learningGoal}</p>
+                                    <div className="mission-card-footer">
+                                        <div className="mission-card-concepts">
+                                            {m.conceptsIntroduced.slice(0, 3).map(c => (
+                                                <span key={c} className="concept-tag">{c}</span>
+                                            ))}
+                                        </div>
+                                        <span className={`badge badge-${m.difficulty}`}>
+                                            {m.difficulty}
+                                        </span>
+                                    </div>
+                                    {m.completed && (
+                                        <div className="mission-card-status completed">✓ Completed</div>
+                                    )}
+                                    {!m.unlocked && (
+                                        <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}>🔒 Locked</div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-                        {m.completed && (
-                            <div className="mission-card-status completed">✓ Completed</div>
-                        )}
-                        {!m.unlocked && (
-                            <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}>🔒 Locked</div>
-                        )}
-                    </div>
+                    </section>
                 ))}
             </div>
         </div>

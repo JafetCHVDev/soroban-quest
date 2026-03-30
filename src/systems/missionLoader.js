@@ -4,6 +4,13 @@
 
 import { missions } from '../data/missions';
 
+export const chapterTitles = {
+    0: 'Rust Fundamentals',
+    1: 'First Contracts',
+    2: 'State and Access',
+    3: 'Advanced Contracts',
+};
+
 export function getAllMissions() {
     return missions;
 }
@@ -15,11 +22,15 @@ export function getMissionById(id) {
 export function getMissionsByChapter() {
     const chapters = {};
     for (const mission of missions) {
-        const ch = mission.chapter || 1;
+        const ch = mission.chapter ?? 1;
         if (!chapters[ch]) chapters[ch] = [];
         chapters[ch].push(mission);
     }
     return chapters;
+}
+
+export function getChapterTitle(chapter) {
+    return chapterTitles[chapter] || `Chapter ${chapter}`;
 }
 
 export function getNextMission(currentId) {
@@ -38,11 +49,11 @@ export function isMissionUnlocked(missionId, completedMissions) {
     const mission = getMissionById(missionId);
     if (!mission) return false;
 
-    // First mission is always unlocked
-    const idx = missions.findIndex(m => m.id === missionId);
-    if (idx === 0) return true;
+    if (mission.chapter === 0) return true;
 
-    // Subsequent missions require the previous one to be completed
-    const prevMission = missions[idx - 1];
-    return completedMissions.includes(prevMission.id);
+    const coreMissions = missions.filter(m => (m.chapter ?? 1) > 0);
+    const idx = coreMissions.findIndex(m => m.id === missionId);
+    if (idx <= 0) return true;
+
+    return completedMissions.includes(coreMissions[idx - 1].id);
 }

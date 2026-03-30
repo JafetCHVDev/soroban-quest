@@ -1005,6 +1005,38 @@ button {
   gap: var(--space-lg);
 }
 
+.mission-map-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.mission-chapter-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.mission-chapter-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mission-chapter-heading h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.mission-chapter-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--cyan);
+}
+
 /* Learning path SVG */
 .learning-path {
   width: 100%;

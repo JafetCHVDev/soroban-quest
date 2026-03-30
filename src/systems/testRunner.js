@@ -97,6 +97,18 @@ function checkStructure(code, mission) {
         return { passed: false, message: '✗ No function definitions found' };
     }
 
+    if (mission.chapter === 0) {
+        const hasSorobanMarkers =
+            code.includes('soroban_sdk') ||
+            code.includes('contractimpl') ||
+            code.includes('contract') ||
+            code.includes('Env');
+
+        return !hasSorobanMarkers
+            ? { passed: true, message: '✓ Rust fundamentals structure validated' }
+            : { passed: false, message: '✗ Chapter 0 missions must use pure Rust without Soroban SDK patterns' };
+    }
+
     // Should have Soroban-related content
     const hasSorobanMarkers =
         code.includes('soroban_sdk') ||
