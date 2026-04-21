@@ -1378,6 +1378,28 @@ button {
   to { transform: rotate(360deg); }
 }
 
+/* ============ PAGE TRANSITION ============ */
+.page-transition-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;
+}
+
+.page-enter {
+  animation: pageEnter 350ms ease-out forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 900px) {
   .mission-detail {

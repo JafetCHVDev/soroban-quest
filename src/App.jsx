@@ -7,6 +7,7 @@ import MissionDetail from "./pages/MissionDetail";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
+import PageTransition from "./components/PageTransition";
 
 export default function App() {
   return (
@@ -14,11 +15,46 @@ export default function App() {
       <Navbar />
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/missions" element={<MissionMap />} />
-          <Route path="/mission/:missionId" element={<MissionDetail />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="/"
+            element={
+              <PageTransition>
+                <Home />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/missions"
+            element={
+              <PageTransition>
+                <MissionMap />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/mission/:missionId"
+            element={
+              <PageTransition>
+                <MissionDetail />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PageTransition>
+                <Profile />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <PageTransition>
+                <NotFound />
+              </PageTransition>
+            }
+          />
         </Routes>
       </main>
       <Footer />
