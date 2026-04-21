@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { getRankTitle, getXPProgress } from '../systems/gameEngine';
@@ -7,6 +7,25 @@ export default function Navbar() {
     const location = useLocation();
     const state = loadProgress();
     const xpProgress = getXPProgress(state);
+
+
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('soroban_quest_theme') || 'dark';
+    });
+
+
+    useEffect(() => {
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+        localStorage.setItem('soroban_quest_theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    };
 
     const isActive = (path) => location.pathname === path ? 'active' : '';
 
@@ -39,6 +58,15 @@ export default function Navbar() {
                 <div className="navbar-level">
                     🛡️ Lv.{state.level}
                 </div>
+
+                <button
+                    onClick={toggleTheme}
+                    className="btn-ghost"
+                    aria-label="Toggle Theme"
+                    style={{ fontSize: '1.2rem', padding: '0.2rem 0.6rem', borderRadius: '50px' }}
+                >
+                    {theme === 'light' ? '🌙' : '☀️'}
+                </button>
             </div>
         </nav>
     );
