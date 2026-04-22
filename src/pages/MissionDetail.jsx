@@ -292,7 +292,7 @@ export default function MissionDetail() {
               defaultLanguage="rust"
               value={code}
               onChange={(v) => setCode(v || "")}
-              theme="vs-dark"
+              theme={document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'vs-dark'}
               options={{
                 fontSize: 14,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
