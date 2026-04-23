@@ -1,45 +1,23 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { loadProgress } from "../systems/storage";
 import { Menu, X } from "lucide-react";
+import { loadProfile } from "../systems/storage";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const state = loadProgress();
+  const profile = loadProfile();
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
-
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-  const closeMenu = () => setIsOpen(false);
 
   return (
     <nav className="navbar">
       {/* LOGO */}
       <Link to="/" className="navbar-logo">
-        <svg className="navbar-logo-icon" viewBox="0 0 36 36" fill="none">
-          <circle
-            cx="18"
-            cy="18"
-            r="16"
-            stroke="url(#navGrad)"
-            strokeWidth="2"
-          />
-          <path
-            d="M18 6L22 14L30 16L24 22L25 30L18 26L11 30L12 22L6 16L14 14L18 6Z"
-            fill="url(#navGrad)"
-          />
-          <defs>
-            <linearGradient id="navGrad" x1="0" y1="0" x2="36" y2="36">
-              <stop stopColor="#06d6a0" />
-              <stop offset="1" stopColor="#8b5cf6" />
-            </linearGradient>
-          </defs>
-        </svg>
         <span className="navbar-logo-text">SOROBAN QUEST</span>
       </Link>
 
-      {/* DESKTOP LINKS */}
+      {/* LINKS */}
       <ul className="navbar-links">
         <li>
           <Link to="/" className={isActive("/")}>
@@ -58,43 +36,36 @@ export default function Navbar() {
         </li>
       </ul>
 
-      {/* DESKTOP STATS */}
+      {/* PROFILE DISPLAY (DESKTOP) */}
       <div className="navbar-stats">
-        <div className="navbar-xp">⚡ {state.xp} XP</div>
-        <div className="navbar-level">🛡️ Lv.{state.level}</div>
+        <span className="text-xl">{profile.avatar}</span>
+        <span className="text-sm font-semibold">{profile.name}</span>
       </div>
 
       {/* HAMBURGER */}
-      <button className="hamburger-btn" onClick={toggleMenu}>
-        {isOpen ? <X size={26} /> : <Menu size={26} />}
+      <button onClick={() => setIsOpen(!isOpen)} className="hamburger-btn">
+        {isOpen ? <X /> : <Menu />}
       </button>
 
       {/* BACKDROP */}
-      {isOpen && <div className="backdrop" onClick={closeMenu} />}
+      {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
-      {/* MOBILE MENU */}
+      {/* MOBILE */}
       <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
-        <Link to="/" onClick={closeMenu} className={isActive("/")}>
+        <Link to="/" onClick={() => setIsOpen(false)}>
           Home
         </Link>
-        <Link
-          to="/missions"
-          onClick={closeMenu}
-          className={isActive("/missions")}
-        >
+        <Link to="/missions" onClick={() => setIsOpen(false)}>
           Missions
         </Link>
-        <Link
-          to="/profile"
-          onClick={closeMenu}
-          className={isActive("/profile")}
-        >
+        <Link to="/profile" onClick={() => setIsOpen(false)}>
           Profile
         </Link>
 
+        {/* MOBILE PROFILE */}
         <div className="mobile-stats">
-          <div>⚡ {state.xp} XP</div>
-          <div>🛡️ Lv.{state.level}</div>
+          <span>{profile.avatar}</span>
+          <span>{profile.name}</span>
         </div>
       </div>
     </nav>
