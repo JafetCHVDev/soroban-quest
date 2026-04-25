@@ -15,6 +15,7 @@ import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
 import CodeRecorder from "../systems/codeRecorder";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
+import SimulatorPanel from "../components/SimulatorPanel";
 
 export default function MissionDetail() {
   const { missionId } = useParams();
@@ -31,6 +32,7 @@ export default function MissionDetail() {
   const [hintIndex, setHintIndex] = useState(-1);
   const [showReplay, setShowReplay] = useState(false);
   const [replayData, setReplayData] = useState(null);
+  const [showSimulator, setShowSimulator] = useState(false);
 
   const terminalBodyRef = useRef(null);
   const recorderRef = useRef(null);
@@ -198,6 +200,15 @@ export default function MissionDetail() {
     setReplayData(null);
   };
 
+  // --------------------------- Simulator Functions ---------------------------
+  const handleOpenSimulator = () => {
+    setShowSimulator(true);
+  };
+
+  const handleCloseSimulator = () => {
+    setShowSimulator(false);
+  };
+
   // --------------------------- Loading Skeleton ---------------------------
   if (loading) return <MissionDetailSkeleton />;
 
@@ -233,6 +244,17 @@ export default function MissionDetail() {
           missionId={missionId}
           recording={replayData}
           onClose={handleCloseReplay}
+        />
+      </div>
+    );
+  }
+
+  if (showSimulator) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <SimulatorPanel
+          code={code}
+          onClose={handleCloseSimulator}
         />
       </div>
     );
@@ -348,6 +370,13 @@ export default function MissionDetail() {
                 onClick={handleShowSolution}
               >
                 👁️ Solution
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={handleOpenSimulator}
+                style={{ background: 'var(--purple-dim)', border: '1px solid var(--purple)' }}
+              >
+                🔬 Simulate
               </button>
               <button
                 className="btn btn-primary btn-sm"
