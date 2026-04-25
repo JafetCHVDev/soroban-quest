@@ -13,6 +13,8 @@ import {
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import CodeRecorder from "../systems/codeRecorder";
+import CodeReplayPlayer from "../components/CodeReplayPlayer";
 
 export default function MissionDetail() {
   const { missionId } = useParams();
@@ -27,8 +29,11 @@ export default function MissionDetail() {
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
+  const [showReplay, setShowReplay] = useState(false);
+  const [replayData, setReplayData] = useState(null);
 
   const terminalBodyRef = useRef(null);
+  const recorderRef = useRef(null);
   const { openInOkashi, toast } = useokashi();
 
   // --------------------------- Load Mission ---------------------------
@@ -42,6 +47,10 @@ export default function MissionDetail() {
         setHintIndex(-1);
         setShowVictory(false);
         setLoading(false);
+        
+        // Initialize recorder
+        recorderRef.current = new CodeRecorder(missionId);
+        recorderRef.current.startRecording(mission.template);
       }, 1500);
     } else {
       setLoading(false);
@@ -55,11 +64,32 @@ export default function MissionDetail() {
     }
   }, [testResults]);
 
+  // --------------------------- Code Change Recording ---------------------------
+  useEffect(() => {
+    if (recorderRef.current) {
+      recorderRef.current.recordCodeEdit(code);
+    }
+  }, [code]);
+
+  // --------------------------- Cleanup Recording on Unmount ---------------------------
+  useEffect(() => {
+    return () => {
+      if (recorderRef.current) {
+        recorderRef.current.stopRecording();
+      }
+    };
+  }, []);
+
   // --------------------------- Run Tests ---------------------------
   const handleRunTests = useCallback(async () => {
     if (isRunning || !mission) return;
     setIsRunning(true);
     setTestResults([]);
+
+    // Record run tests event
+    if (recorderRef.current) {
+      recorderRef.current.recordRunTests();
+    }
 
     // Record user attempt
     let state = loadProgress();
@@ -116,7 +146,13 @@ export default function MissionDetail() {
   // --------------------------- Hints ---------------------------
   const handleHint = () => {
     if (mission && hintIndex < mission.hints.length - 1) {
-      setHintIndex(hintIndex + 1);
+      const newHintIndex = hintIndex + 1;
+      setHintIndex(newHintIndex);
+      
+      // Record hint event
+      if (recorderRef.current) {
+        recorderRef.current.recordHint(newHintIndex);
+      }
     }
   };
 
@@ -126,6 +162,11 @@ export default function MissionDetail() {
       setCode(mission.template);
       setTestResults([]);
       setHintIndex(-1);
+      
+      // Record reset event
+      if (recorderRef.current) {
+        recorderRef.current.recordReset();
+      }
     }
   };
 
@@ -141,6 +182,20 @@ export default function MissionDetail() {
     const next = getNextMission(missionId);
     if (next) navigate(`/mission/${next.id}`);
     else navigate("/missions");
+  };
+
+  // --------------------------- Replay Functions ---------------------------
+  const handleWatchReplay = () => {
+    const recording = CodeRecorder.loadRecording(missionId);
+    if (recording) {
+      setReplayData(recording);
+      setShowReplay(true);
+    }
+  };
+
+  const handleCloseReplay = () => {
+    setShowReplay(false);
+    setReplayData(null);
   };
 
   // --------------------------- Loading Skeleton ---------------------------
@@ -165,7 +220,24 @@ export default function MissionDetail() {
     );
   }
 
+  // Check if mission is completed and has replay
+  const progress = loadProgress();
+  const isCompleted = progress.completedMissions.includes(missionId);
+  const hasReplay = CodeRecorder.hasRecording(missionId);
+
   // --------------------------- Render Mission Detail ---------------------------
+  if (showReplay) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <CodeReplayPlayer
+          missionId={missionId}
+          recording={replayData}
+          onClose={handleCloseReplay}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       {/* Tabs for mobile */}
@@ -188,11 +260,22 @@ export default function MissionDetail() {
         id="tab-tests"
         className="tab-radio"
       />
+      {isCompleted && hasReplay && (
+        <input
+          type="radio"
+          name="mission-tab"
+          id="tab-replay"
+          className="tab-radio"
+        />
+      )}
 
       <div className="mobile-tabs">
         <label htmlFor="tab-story">Story</label>
         <label htmlFor="tab-editor">Editor</label>
         <label htmlFor="tab-tests">Tests</label>
+        {isCompleted && hasReplay && (
+          <label htmlFor="tab-replay">📹 Replay</label>
+        )}
       </div>
 
       <div className="mission-detail">
@@ -353,6 +436,31 @@ export default function MissionDetail() {
             </div>
           </div>
         </div>
+
+        {/* ---------------- Replay Panel ---------------- */}
+        {isCompleted && hasReplay && (
+          <div className="mission-replay-panel" style={{
+            display: 'none',
+            padding: '2rem',
+            textAlign: 'center',
+            background: 'var(--bg-secondary)',
+            borderTop: '1px solid var(--border-subtle)'
+          }}>
+            <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
+              📹 Watch Your Solution
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+              Review your problem-solving process step by step.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={handleWatchReplay}
+              style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}
+            >
+              ▶️ Start Replay
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ---------------- Victory Modal ---------------- */}

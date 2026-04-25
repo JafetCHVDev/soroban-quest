@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { loadProgress, saveProgress, exportProgress, importProgress, resetProgress } from '../systems/storage';
 import { getXPProgress, getRankTitle, BADGES, getDefaultState } from '../systems/gameEngine';
 import { getAllMissions } from '../systems/missionLoader';
+import CodeRecorder from '../systems/codeRecorder';
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [state, setState] = useState(loadProgress());
     const [importStatus, setImportStatus] = useState('');
     const fileInputRef = useRef(null);
@@ -40,6 +43,13 @@ export default function Profile() {
     };
 
     const completedMissions = missions.filter(m => state.completedMissions.includes(m.id));
+
+    const handleWatchReplay = (missionId) => {
+        // Navigate to mission detail with replay tab
+        navigate(`/mission/${missionId}`);
+        // We'll need to add a way to automatically switch to replay tab
+        // For now, just navigate to the mission
+    };
 
     return (
         <div className="profile-page">
@@ -117,19 +127,33 @@ export default function Profile() {
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', marginBottom: 'var(--space-2xl)' }}>
-                    {completedMissions.map((m) => (
-                        <div key={m.id} className="card" style={{ padding: 'var(--space-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <strong>{m.title}</strong>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginLeft: '0.75rem' }}>
-                                    Chapter {m.chapter}
-                                </span>
+                    {completedMissions.map((m) => {
+                        const hasReplay = CodeRecorder.hasRecording(m.id);
+                        return (
+                            <div key={m.id} className="card" style={{ padding: 'var(--space-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                    <strong>{m.title}</strong>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginLeft: '0.75rem' }}>
+                                        Chapter {m.chapter}
+                                    </span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    {hasReplay && (
+                                        <button
+                                            className="btn btn-ghost btn-sm"
+                                            onClick={() => handleWatchReplay(m.id)}
+                                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem' }}
+                                        >
+                                            📹 Watch Replay
+                                        </button>
+                                    )}
+                                    <span style={{ color: 'var(--gold)', fontFamily: 'var(--font-display)', fontSize: '0.8rem' }}>
+                                        +{m.xpReward} XP
+                                    </span>
+                                </div>
                             </div>
-                            <span style={{ color: 'var(--gold)', fontFamily: 'var(--font-display)', fontSize: '0.8rem' }}>
-                                +{m.xpReward} XP
-                            </span>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
 
