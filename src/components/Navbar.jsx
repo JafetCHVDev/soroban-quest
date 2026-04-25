@@ -11,9 +11,9 @@ export default function Navbar() {
     const isActive = (path) => location.pathname === path ? 'active' : '';
 
     return (
-        <nav className="navbar">
+        <nav className="navbar" role="navigation" aria-label="Main navigation">
             <Link to="/" className="navbar-logo">
-                <svg className="navbar-logo-icon" viewBox="0 0 36 36" fill="none">
+                <svg className="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
                     <circle cx="18" cy="18" r="16" stroke="url(#navGrad)" strokeWidth="2" />
                     <path d="M18 6L22 14L30 16L24 22L25 30L18 26L11 30L12 22L6 16L14 14L18 6Z" fill="url(#navGrad)" />
                     <defs>

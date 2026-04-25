@@ -33,7 +33,7 @@ export default function MissionMap() {
 
             {/* SVG Learning Path */}
             <div className="learning-path">
-                <svg viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mission Map Learning Path">
                     {missionStates.map((m, i) => {
                         const cols = 4;
                         const row = Math.floor(i / cols);
@@ -73,6 +73,10 @@ export default function MissionMap() {
                                     className="path-node"
                                     onClick={() => handleMissionClick(m)}
                                     style={{ cursor: m.unlocked ? 'pointer' : 'not-allowed' }}
+                                    tabIndex={m.unlocked ? 0 : -1}
+                                    onKeyDown={(e) => { if (e.key === 'Enter') handleMissionClick(m); }}
+                                    role="button"
+                                    aria-label={`Mission ${m.order}: ${m.title}`}
                                 >
                                     <circle
                                         className="path-node-circle"
@@ -128,6 +132,10 @@ export default function MissionMap() {
                         key={m.id}
                         className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
                         onClick={() => handleMissionClick(m)}
+                        tabIndex={m.unlocked ? 0 : -1}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleMissionClick(m); }}
+                        role="button"
+                        aria-label={`Mission ${m.chapter}.${m.order}: ${m.title}`}
                     >
                         <div className="mission-card-header">
                             <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
