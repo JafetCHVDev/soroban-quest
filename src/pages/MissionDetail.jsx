@@ -1,4 +1,3 @@
-// MissionDetail.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
@@ -13,6 +12,12 @@ import {
 } from "../systems/gameEngine";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import {
+  createDebouncedValidator,
+} from "../systems/liveValidator";
+
+// ─── Monaco marker model name (must be consistent across calls) ──────────────
+const LIVE_MARKER_OWNER = "soroban-quest-live";
 
 export default function MissionDetail() {
   const { missionId } = useParams();
@@ -20,7 +25,7 @@ export default function MissionDetail() {
   const mission = getMissionById(missionId);
 
   // --------------------------- States ---------------------------
-  const [loading, setLoading] = useState(true); // Show skeleton while mission loads
+  const [loading, setLoading] = useState(true);
   const [code, setCode] = useState("");
   const [testResults, setTestResults] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -28,19 +33,28 @@ export default function MissionDetail() {
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
 
+  // Live validation state
+  const [livePassCount, setLivePassCount] = useState(0);
+  const [liveTotalCount, setLiveTotalCount] = useState(0);
+
   const terminalBodyRef = useRef(null);
+  const editorRef = useRef(null);       // Monaco editor instance
+  const monacoRef = useRef(null);       // Monaco global (for setModelMarkers)
+  const validatorRef = useRef(null);    // Debounced validator handle
+
   const { openInOkashi, toast } = useokashi();
 
   // --------------------------- Load Mission ---------------------------
   useEffect(() => {
     setLoading(true);
     if (mission) {
-      // Brief delay to display skeleton
       setTimeout(() => {
         setCode(mission.template);
         setTestResults([]);
         setHintIndex(-1);
         setShowVictory(false);
+        setLivePassCount(0);
+        setLiveTotalCount(0);
         setLoading(false);
       }, 1500);
     } else {
@@ -55,29 +69,116 @@ export default function MissionDetail() {
     }
   }, [testResults]);
 
+  // ─── Set up debounced validator once ────────────────────────────────────────
+  useEffect(() => {
+    const validator = createDebouncedValidator(500, (result) => {
+      setLivePassCount(result.passCount);
+      setLiveTotalCount(result.totalCount);
+      applyMonacoMarkers(result.markers);
+    });
+    validatorRef.current = validator;
+
+    return () => {
+      validator.cancel();
+      // Clear any lingering markers on unmount
+      clearMonacoMarkers();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ─── Re-run live validation when code or mission changes ────────────────────
+  useEffect(() => {
+    if (!mission || loading) return;
+    validatorRef.current?.call(code, mission);
+  }, [code, mission, loading]);
+
+  // ─── Monaco helpers ─────────────────────────────────────────────────────────
+  const handleEditorMount = useCallback((editor, monaco) => {
+    editorRef.current = editor;
+    monacoRef.current = monaco;
+  }, []);
+
+  /** Apply an array of Monaco-compatible marker objects to the current model */
+  function applyMonacoMarkers(markers) {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+
+    const model = editor.getModel();
+    if (!model) return;
+
+    monaco.editor.setModelMarkers(model, LIVE_MARKER_OWNER, markers);
+  }
+
+  /** Remove all live-validation markers from the current model */
+  function clearMonacoMarkers() {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+
+    const model = editor.getModel();
+    if (model) monaco.editor.setModelMarkers(model, LIVE_MARKER_OWNER, []);
+  }
+
+  // ─── Status bar helpers ──────────────────────────────────────────────────────
+
+  /**
+   * Returns the visual state of the live-check status bar.
+   * @returns {{ label: string, color: string, barColor: string, pct: number }}
+   */
+  function statusBarState() {
+    if (liveTotalCount === 0) {
+      return {
+        label: "Checking…",
+        color: "var(--text-muted)",
+        barColor: "rgba(255,255,255,0.08)",
+        pct: 0,
+      };
+    }
+    const pct = Math.round((livePassCount / liveTotalCount) * 100);
+    if (livePassCount === liveTotalCount) {
+      return {
+        label: `${livePassCount}/${liveTotalCount} checks passing ✓`,
+        color: "#34d399",
+        barColor: "#059669",
+        pct,
+      };
+    }
+    if (livePassCount === 0) {
+      return {
+        label: `${livePassCount}/${liveTotalCount} checks passing`,
+        color: "#f87171",
+        barColor: "#dc2626",
+        pct,
+      };
+    }
+    return {
+      label: `${livePassCount}/${liveTotalCount} checks passing`,
+      color: "#fbbf24",
+      barColor: "#d97706",
+      pct,
+    };
+  }
+
   // --------------------------- Run Tests ---------------------------
   const handleRunTests = useCallback(async () => {
     if (isRunning || !mission) return;
     setIsRunning(true);
     setTestResults([]);
 
-    // Record user attempt
     let state = loadProgress();
     state = recordAttempt(state, missionId);
     saveProgress(state);
 
-    // Collect and display test results progressively
     const resultCollector = [];
     const addResult = (result) => {
       resultCollector.push(result);
       setTestResults([...resultCollector]);
     };
 
-    // Initial info message
     addResult({ phase: "info", message: "🔍 Running validation checks..." });
     await delay(400);
 
-    // Run mission tests
     const result = await runTests(code, mission);
     for (const r of result.results) {
       addResult(r);
@@ -87,7 +188,6 @@ export default function MissionDetail() {
     await delay(300);
     addResult({ phase: "summary", message: result.summary });
 
-    // Handle victory if all tests pass
     if (result.allPassed) {
       await delay(500);
       state = loadProgress();
@@ -164,6 +264,8 @@ export default function MissionDetail() {
       </div>
     );
   }
+
+  const sbState = statusBarState();
 
   // --------------------------- Render Mission Detail ---------------------------
   return (
@@ -293,6 +395,7 @@ export default function MissionDetail() {
               value={code}
               onChange={(v) => setCode(v || "")}
               theme="vs-dark"
+              onMount={handleEditorMount}
               options={{
                 fontSize: 14,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -306,9 +409,66 @@ export default function MissionDetail() {
                 wordWrap: "on",
                 tabSize: 4,
                 suggestOnTriggerCharacters: true,
+                // Gutter icons require glyphMargin
+                glyphMargin: true,
               }}
             />
           </div>
+
+          {/* ── Live Validation Status Bar ─────────────────────────────────── */}
+          {liveTotalCount > 0 && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "6px 14px",
+                background: "rgba(0,0,0,0.35)",
+                borderTop: "1px solid rgba(255,255,255,0.06)",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
+                fontSize: "11.5px",
+                fontFamily: "'JetBrains Mono', monospace",
+                userSelect: "none",
+              }}
+            >
+              {/* Progress bar */}
+              <div
+                style={{
+                  flex: 1,
+                  height: "4px",
+                  borderRadius: "2px",
+                  background: "rgba(255,255,255,0.08)",
+                  overflow: "hidden",
+                  maxWidth: "120px",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${sbState.pct}%`,
+                    background: sbState.barColor,
+                    borderRadius: "2px",
+                    transition: "width 0.3s ease, background 0.3s ease",
+                  }}
+                />
+              </div>
+
+              {/* Label */}
+              <span style={{ color: sbState.color, transition: "color 0.3s" }}>
+                {sbState.label}
+              </span>
+
+              {/* Separator */}
+              <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "10px" }}>
+                |
+              </span>
+
+              {/* Clarifier */}
+              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "10.5px" }}>
+                live checks · full suite on Run Tests
+              </span>
+            </div>
+          )}
 
           {/* ---------------- Terminal Panel ---------------- */}
           <div className="mission-terminal-panel">
