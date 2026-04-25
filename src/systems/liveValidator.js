@@ -1,21 +1,27 @@
-
+// Constants
 export const Severity = {
   Error: 8,   // monaco.MarkerSeverity.Error
   Warning: 4, // monaco.MarkerSeverity.Warning
-  Info: 2,    // monaco.MarkerSeverity.Info
-  Hint: 1,    // monaco.MarkerSeverity.Hint
+  Info: 2,
+  Hint: 1,
 };
-
 
 const LIVE_CHECK_TYPES = new Set([
   "has_function",
   "has_attribute",
   "uses_type",
   "balanced_braces",
+  "has_struct",
+  "has_import",
 ]);
 
-// Internal helpers
-function locateText(code, searchText) {
+
+// Helpers
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function locateLine(code, searchText) {
   const lines = code.split("\n");
   for (let i = 0; i < lines.length; i++) {
     const col = lines[i].indexOf(searchText);
@@ -27,10 +33,8 @@ function locateText(code, searchText) {
       };
     }
   }
-  // Default: highlight line 1
-  return { lineNumber: 1, startColumn: 1, endColumn: lines[0]?.length + 1 || 2 };
+  return { lineNumber: 1, startColumn: 1, endColumn: 2 };
 }
-
 
 function checkBraces(code) {
   const lines = code.split("\n");
@@ -47,84 +51,160 @@ function checkBraces(code) {
   return { ok: depth === 0, line: lines.length };
 }
 
-// Per-check-type validators
+
 function validateCheck(check, code) {
   switch (check.type) {
-    
+
+    // ── has_function 
     case "has_function": {
-      const fnName = check.value;
-      const pattern = new RegExp(`\\bfn\\s+${fnName}\\b`);
+      const escaped = escapeRegex(check.name);
+      const pattern = new RegExp(`(pub\\s+)?fn\\s+${escaped}\\s*\\(`, "gm");
+      const match = pattern.exec(code);
+
+      if (!match) {
+        return {
+          severity: Severity.Warning,
+          message: check.message || `Missing function \`${check.name}\``,
+          startLineNumber: 1,
+          startColumn: 1,
+          endLineNumber: 1,
+          endColumn: 2,
+          source: "SorobanQuest",
+          code: check.type,
+        };
+      }
+
+      // If params specified, validate them too
+      if (check.params?.length > 0) {
+        const fullPattern = new RegExp(
+          `(pub\\s+)?fn\\s+${escaped}\\s*\\(([^)]*)\\)`,
+          "gm"
+        );
+        const fullMatch = fullPattern.exec(code);
+        const paramStr = fullMatch?.[2]?.replace(/\s+/g, " ").trim() || "";
+        const allPresent = check.params.every((p) =>
+          new RegExp(escapeRegex(p).replace(/\s+/g, "\\s*")).test(paramStr)
+        );
+
+        if (!allPresent) {
+          const loc = locateLine(code, `fn ${check.name}`);
+          return {
+            severity: Severity.Warning,
+            message:
+              check.message ||
+              `Function \`${check.name}\` has incorrect parameters. Expected: ${check.params.join(", ")}`,
+            startLineNumber: loc.lineNumber,
+            startColumn: loc.startColumn,
+            endLineNumber: loc.lineNumber,
+            endColumn: loc.endColumn,
+            source: "SorobanQuest",
+            code: check.type,
+          };
+        }
+      }
+
+      return null; // pass
+    }
+
+    // ── has_attribute 
+    case "has_attribute": {
+      const escaped = escapeRegex(check.attribute);
+      const pattern = new RegExp(`#\\[${escaped}[^\\]]*\\]`, "gm");
+
       if (pattern.test(code)) return null; // pass
 
-      const loc = { lineNumber: 1, startColumn: 1, endColumn: 2 };
-      return {
-        severity: Severity.Warning,
-        message: `Missing function \`${fnName}\` — define it with \`fn ${fnName}(...)\``,
-        startLineNumber: loc.lineNumber,
-        startColumn: loc.startColumn,
-        endLineNumber: loc.lineNumber,
-        endColumn: loc.endColumn,
-        source: "SorobanQuest",
-        code: check.id || check.type,
-      };
-    }
-    case "has_attribute": {
-      const attr = check.value; 
-      if (code.includes(attr)) return null; 
-
-      const loc = locateText(code, "pub struct") || { lineNumber: 1, startColumn: 1, endColumn: 2 };
+      const loc = locateLine(code, "pub struct");
       return {
         severity: Severity.Error,
-        message: `Missing required attribute \`${attr}\`. Add it immediately before the relevant struct or impl block.`,
+        message:
+          check.message ||
+          `Missing required attribute \`#[${check.attribute}]\``,
         startLineNumber: loc.lineNumber,
         startColumn: loc.startColumn,
         endLineNumber: loc.lineNumber,
         endColumn: loc.endColumn,
         source: "SorobanQuest",
-        code: check.id || check.type,
+        code: check.type,
       };
     }
 
+    // ── uses_type 
     case "uses_type": {
-      const typeName = check.value; 
-      const pattern = new RegExp(`\\b${typeName}\\b`);
-      if (pattern.test(code)) return null; 
+      const pattern = new RegExp(`\\b${escapeRegex(check.typeName)}\\b`, "gm");
+      if (pattern.test(code)) return null; // pass
 
       return {
         severity: Severity.Warning,
-        message: `Type \`${typeName}\` is not used. The mission expects this type to appear in your code.`,
+        message: check.message || `Must use type \`${check.typeName}\``,
         startLineNumber: 1,
         startColumn: 1,
         endLineNumber: 1,
         endColumn: 2,
         source: "SorobanQuest",
-        code: check.id || check.type,
+        code: check.type,
       };
     }
 
-    
+    // ── balanced_braces 
     case "balanced_braces": {
       const { ok, line } = checkBraces(code);
       if (ok) return null; 
 
       const lines = code.split("\n");
-      const endCol = lines[line - 1]?.length + 1 || 2;
+      const endCol = (lines[line - 1]?.length || 0) + 1;
       return {
         severity: Severity.Error,
-        message: "Unbalanced braces `{}` — check that every `{` has a matching `}`.",
+        message:
+          check.message ||
+          "Unbalanced braces — check that every `{` has a matching `}`",
         startLineNumber: line,
         startColumn: 1,
         endLineNumber: line,
         endColumn: endCol,
         source: "SorobanQuest",
-        code: check.id || check.type,
+        code: check.type,
       };
     }
 
-   
+    // ── has_struct 
+    case "has_struct": {
+      const escaped = escapeRegex(check.name);
+      const pattern = new RegExp(`(pub\\s+)?struct\\s+${escaped}`, "gm");
+      if (pattern.test(code)) return null; // pass
+
+      return {
+        severity: Severity.Warning,
+        message: check.message || `Missing struct \`${check.name}\``,
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 2,
+        source: "SorobanQuest",
+        code: check.type,
+      };
+    }
+
+    // ── has_import 
+    case "has_import": {
+      const escaped = escapeRegex(check.module);
+      const pattern = new RegExp(`use\\s+${escaped}`, "gm");
+      if (pattern.test(code)) return null; // pass
+
+      const loc = locateLine(code, "use ");
+      return {
+        severity: Severity.Warning,
+        message: check.message || `Missing import: \`use ${check.module}\``,
+        startLineNumber: loc.lineNumber,
+        startColumn: loc.startColumn,
+        endLineNumber: loc.lineNumber,
+        endColumn: loc.endColumn,
+        source: "SorobanQuest",
+        code: check.type,
+      };
+    }
+
     default:
-      
-      return null;
+      return null; // deferred to Run Tests
   }
 }
 
@@ -132,7 +212,7 @@ function validateCheck(check, code) {
 // Public API
 export function runLiveValidation(code, mission) {
   if (!mission?.checks) {
-    return { markers: [], passCount: 0, totalCount: 0, liveCheckIds: [] };
+    return { markers: [], passCount: 0, totalCount: 0 };
   }
 
   const liveChecks = mission.checks.filter((c) => LIVE_CHECK_TYPES.has(c.type));
@@ -148,12 +228,7 @@ export function runLiveValidation(code, mission) {
     }
   }
 
-  return {
-    markers,
-    passCount,
-    totalCount: liveChecks.length,
-    liveCheckIds: liveChecks.map((c) => c.id || c.type),
-  };
+  return { markers, passCount, totalCount: liveChecks.length };
 }
 
 export function createDebouncedValidator(waitMs = 500, onResult) {
@@ -162,17 +237,13 @@ export function createDebouncedValidator(waitMs = 500, onResult) {
   function call(code, mission) {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
-      const result = runLiveValidation(code, mission);
-      onResult(result);
+      onResult(runLiveValidation(code, mission));
       timer = null;
     }, waitMs);
   }
 
   function cancel() {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
+    if (timer) { clearTimeout(timer); timer = null; }
   }
 
   return { call, cancel };
