@@ -8,72 +8,35 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 
-/**
- * PageTransition
- * Wraps any page content and plays a fade-in + subtle slide-up animation
- */
-function PageTransition({ children }) {
-  return <div className="page-transition">{children}</div>;
-}
+// 1. Import the ErrorBoundary
+import { ErrorBoundary } from "./components/ErrorBoundary";
+
+// 2. Import Toast Provider and Styles
+import { ToastProvider } from "./systems/ToastContext";
+import "./systems/Toast.css";
 
 export default function App() {
   // useLocation gives us a stable key that changes on every navigation.
   const location = useLocation();
 
   return (
-    <div className="app">
-      <Navbar />
-      <main className="main-content">
-        {/*
-          The `key` on <Routes> is intentionally set to location.key.
-          When the key changes React tears down the old Routes tree and
-          mounts a fresh one, which remounts PageTransition and replays
-          the CSS animation cleanly on every route change.
-        */}
-        <Routes location={location} key={location.key}>
-          <Route
-            path="/"
-            element={
-              <PageTransition>
-                <Home />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="/missions"
-            element={
-              <PageTransition>
-                <MissionMap />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="/mission/:missionId"
-            element={
-              <PageTransition>
-                <MissionDetail />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PageTransition>
-                <Profile />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <PageTransition>
-                <NotFound />
-              </PageTransition>
-            }
-          />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <ErrorBoundary>
+      {/* 3. Wraped everything in ToastProvider */}
+      <ToastProvider>
+        <div className="app">
+          <Navbar />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/missions" element={<MissionMap />} />
+              <Route path="/mission/:missionId" element={<MissionDetail />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
