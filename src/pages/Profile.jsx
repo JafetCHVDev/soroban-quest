@@ -149,7 +149,8 @@ export default function Profile() {
 
           {/* NAME */}
           <input
-            className="w-full p-2 mb-3 rounded bg-[#111827] text-white"
+            className="w-full p-2 mb-3 rounded"
+            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
@@ -161,9 +162,11 @@ export default function Profile() {
               <button
                 key={a}
                 onClick={() => setAvatar(a)}
-                className={`text-2xl p-2 rounded transition ${
-                  avatar === a ? "bg-cyan-500/30 scale-110" : "bg-white/5"
-                }`}
+                className="text-2xl p-2 rounded transition"
+                style={{
+                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                  transform: avatar === a ? "scale(1.1)" : "none",
+                }}
               >
                 {a}
               </button>
@@ -234,7 +237,7 @@ export default function Profile() {
           Import
         </button>
 
-        <button className="btn btn-ghost text-red-500" onClick={handleReset}>
+        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
           Reset
         </button>
 

@@ -54,8 +54,8 @@ export default function MissionMap() {
                             nextCy = 60 + nextRow * 140;
                         }
 
-                        const nodeColor = m.completed ? '#22c55e' : m.unlocked ? '#06d6a0' : '#374151';
-                        const textColor = m.completed ? '#22c55e' : m.unlocked ? '#f1f5f9' : '#4b5563';
+                        const nodeColor = m.completed ? 'var(--green)' : m.unlocked ? 'var(--cyan)' : 'var(--bg-tertiary)';
+                        const textColor = m.completed ? 'var(--green)' : m.unlocked ? 'var(--text-primary)' : 'var(--text-muted)';
                         const glowFilter = m.completed ? 'url(#glowGreen)' : m.unlocked ? 'url(#glowCyan)' : '';
 
                         return (
@@ -63,7 +63,7 @@ export default function MissionMap() {
                                 {nextCx !== undefined && (
                                     <line
                                         x1={cx} y1={cy} x2={nextCx} y2={nextCy}
-                                        stroke={m.completed ? '#22c55e' : '#1f2937'}
+                                        stroke={m.completed ? 'var(--green)' : 'var(--border-subtle)'}
                                         strokeWidth="2"
                                         strokeDasharray={m.completed ? '' : '6 4'}
                                         className={m.completed ? 'path-line completed' : 'path-line'}
@@ -77,13 +77,13 @@ export default function MissionMap() {
                                     <circle
                                         className="path-node-circle"
                                         cx={cx} cy={cy} r="24"
-                                        fill={m.completed ? 'rgba(34,197,94,0.15)' : m.unlocked ? 'rgba(6,214,160,0.1)' : 'rgba(31,41,55,0.5)'}
+                                        fill={m.completed ? 'var(--green-dim)' : m.unlocked ? 'var(--cyan-dim)' : 'var(--bg-glass)'}
                                         stroke={nodeColor}
                                         strokeWidth="2"
                                         filter={glowFilter}
                                     />
                                     <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
-                                        fill={m.completed ? '#22c55e' : m.unlocked ? '#06d6a0' : '#6b7280'}
+                                        fill={m.completed ? 'var(--green)' : m.unlocked ? 'var(--cyan)' : 'var(--text-muted)'}
                                         fontSize="14" fontWeight="bold"
                                     >
                                         {m.completed ? '✓' : m.unlocked ? m.order : '🔒'}
@@ -95,7 +95,7 @@ export default function MissionMap() {
                                         {m.title}
                                     </text>
                                     <text x={cx} y={cy + 56} textAnchor="middle"
-                                        fill={m.completed ? '#22c55e' : '#f59e0b'}
+                                        fill={m.completed ? 'var(--green)' : 'var(--gold)'}
                                         fontSize="9" fontWeight="600" fontFamily="Orbitron, sans-serif"
                                     >
                                         {m.completed ? 'COMPLETED' : `${m.xpReward} XP`}
@@ -107,13 +107,13 @@ export default function MissionMap() {
                     <defs>
                         <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                            <feFlood floodColor="#06d6a0" floodOpacity="0.4" />
+                            <feFlood floodColor="var(--cyan)" floodOpacity="0.4" />
                             <feComposite in2="blur" operator="in" />
                             <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
                         </filter>
                         <filter id="glowGreen" x="-50%" y="-50%" width="200%" height="200%">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                            <feFlood floodColor="#22c55e" floodOpacity="0.4" />
+                            <feFlood floodColor="var(--green)" floodOpacity="0.4" />
                             <feComposite in2="blur" operator="in" />
                             <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
                         </filter>

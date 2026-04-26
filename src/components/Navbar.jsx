@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { loadProfile } from "../systems/storage";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const profile = loadProfile();
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('soroban_quest_theme') || 
+      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('soroban_quest_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
@@ -36,10 +50,13 @@ export default function Navbar() {
         </li>
       </ul>
 
-      {/* PROFILE DISPLAY (DESKTOP) */}
+      {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
       <div className="navbar-stats">
+        <button onClick={toggleTheme} className="btn-ghost" style={{ padding: '0.5rem', borderRadius: '50%' }} aria-label="Toggle theme">
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
         <span className="text-xl">{profile.avatar}</span>
-        <span className="text-sm font-semibold">{profile.name}</span>
+        <span className="text-sm font-semibold">{ profile.name}</span>
       </div>
 
       {/* HAMBURGER */}
@@ -62,8 +79,11 @@ export default function Navbar() {
           Profile
         </Link>
 
-        {/* MOBILE PROFILE */}
+        {/* MOBILE EXTRAS */}
         <div className="mobile-stats">
+          <button onClick={toggleTheme} className="btn-ghost" style={{ padding: '0.5rem', borderRadius: '50%' }} aria-label="Toggle theme">
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
           <span>{profile.avatar}</span>
           <span>{profile.name}</span>
         </div>
