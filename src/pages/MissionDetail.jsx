@@ -246,6 +246,7 @@ export default function MissionDetail() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleReset}
                 disabled={isRunning}
+                aria-label="Reset code"
               >
                 ↺ Reset
               </button>
@@ -255,12 +256,14 @@ export default function MissionDetail() {
                 disabled={
                   !mission.hints || hintIndex >= mission.hints.length - 1
                 }
+                aria-label="Show hint"
               >
                 💡 Hint
               </button>
               <button
                 className="btn btn-ghost btn-sm"
                 onClick={handleShowSolution}
+                aria-label="Show solution"
               >
                 👁️ Solution
               </button>
@@ -268,6 +271,7 @@ export default function MissionDetail() {
                 className="btn btn-primary btn-sm"
                 onClick={handleRunTests}
                 disabled={isRunning}
+                aria-label="Run tests"
               >
                 {isRunning ? "Running..." : "▶ Run Tests"}
               </button>
@@ -311,6 +315,8 @@ export default function MissionDetail() {
                 className="terminal-body"
                 ref={terminalBodyRef}
                 style={{ flex: 1 }}
+                role="log"
+                aria-live="polite"
               >
                 {testResults.length === 0 ? (
                   <span

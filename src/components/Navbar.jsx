@@ -4,9 +4,9 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { loadProfile } from "../systems/storage";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const profile = loadProfile();
+	const [isOpen, setIsOpen] = useState(false);
+	const location = useLocation();
+	const profile = loadProfile();
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('soroban_quest_theme') || 
@@ -24,31 +24,31 @@ export default function Navbar() {
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
-  return (
-    <nav className="navbar">
-      {/* LOGO */}
-      <Link to="/" className="navbar-logo">
-        <span className="navbar-logo-text">SOROBAN QUEST</span>
-      </Link>
+	return (
+		<nav className="navbar" role="navigation" aria-label="Main navigation">
+			{/* LOGO */}
+			<Link to="/" className="navbar-logo">
+				<span className="navbar-logo-text">SOROBAN QUEST</span>
+			</Link>
 
-      {/* LINKS */}
-      <ul className="navbar-links">
-        <li>
-          <Link to="/" className={isActive("/")}>
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to="/missions" className={isActive("/missions")}>
-            Missions
-          </Link>
-        </li>
-        <li>
-          <Link to="/profile" className={isActive("/profile")}>
-            Profile
-          </Link>
-        </li>
-      </ul>
+			{/* LINKS */}
+			<ul className="navbar-links">
+				<li>
+					<Link to="/" className={isActive("/")}>
+						Home
+					</Link>
+				</li>
+				<li>
+					<Link to="/missions" className={isActive("/missions")}>
+						Missions
+					</Link>
+				</li>
+				<li>
+					<Link to="/profile" className={isActive("/profile")}>
+						Profile
+					</Link>
+				</li>
+			</ul>
 
       {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
       <div className="navbar-stats">
@@ -59,25 +59,25 @@ export default function Navbar() {
         <span className="text-sm font-semibold">{ profile.name}</span>
       </div>
 
-      {/* HAMBURGER */}
-      <button onClick={() => setIsOpen(!isOpen)} className="hamburger-btn">
-        {isOpen ? <X /> : <Menu />}
-      </button>
+			{/* HAMBURGER */}
+			<button onClick={() => setIsOpen(!isOpen)} className="hamburger-btn">
+				{isOpen ? <X /> : <Menu />}
+			</button>
 
-      {/* BACKDROP */}
-      {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
+			{/* BACKDROP */}
+			{isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
-      {/* MOBILE */}
-      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
-        <Link to="/" onClick={() => setIsOpen(false)}>
-          Home
-        </Link>
-        <Link to="/missions" onClick={() => setIsOpen(false)}>
-          Missions
-        </Link>
-        <Link to="/profile" onClick={() => setIsOpen(false)}>
-          Profile
-        </Link>
+			{/* MOBILE */}
+			<div className={`mobile-menu ${isOpen ? "open" : ""}`}>
+				<Link to="/" onClick={() => setIsOpen(false)}>
+					Home
+				</Link>
+				<Link to="/missions" onClick={() => setIsOpen(false)}>
+					Missions
+				</Link>
+				<Link to="/profile" onClick={() => setIsOpen(false)}>
+					Profile
+				</Link>
 
         {/* MOBILE EXTRAS */}
         <div className="mobile-stats">
