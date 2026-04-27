@@ -112,9 +112,9 @@ export default function SkillTree() {
         </div>
         <p className="category-description">{categoryData.description}</p>
         <div className="concept-grid">
-          {concepts.map((concept, conceptIndex) => 
-            renderConceptNode(concept, index, conceptIndex)
-          )}
+          {concepts.map((concept, conceptIndex) => {
+            return renderConceptNode(concept, index, conceptIndex);
+          })}
         </div>
       </div>
     );
@@ -147,9 +147,9 @@ export default function SkillTree() {
       </div>
 
       <div className="skill-categories">
-        {Object.entries(conceptCategories).map(([key, data], index) => 
-          renderCategory(key, data, index)
-        ))}
+        {Object.entries(conceptCategories).map(([key, data], index) => {
+          return renderCategory(key, data, index);
+        })}
       </div>
 
       {selectedConcept && (
