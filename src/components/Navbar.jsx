@@ -48,6 +48,11 @@ export default function Navbar() {
             Profile
           </Link>
         </li>
+        <li>
+          <Link to="/journal" className={isActive("/journal")}>
+            Journal
+          </Link>
+        </li>
       </ul>
 
       {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
@@ -77,6 +82,9 @@ export default function Navbar() {
         </Link>
         <Link to="/profile" onClick={() => setIsOpen(false)}>
           Profile
+        </Link>
+        <Link to="/journal" onClick={() => setIsOpen(false)}>
+          Journal
         </Link>
 
         {/* MOBILE EXTRAS */}
