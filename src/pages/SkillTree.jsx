@@ -147,9 +147,9 @@ export default function SkillTree() {
       </div>
 
       <div className="skill-categories">
-        {Object.entries(conceptCategories).map(([key, data], index) => {
-          return renderCategory(key, data, index);
-        })}
+        {Object.entries(conceptCategories).map(([key, data], index) => 
+          renderCategory(key, data, index)
+        )}
       </div>
 
       {selectedConcept && (
