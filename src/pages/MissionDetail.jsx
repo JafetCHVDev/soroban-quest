@@ -5,11 +5,8 @@ import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";
 import { loadProgress, saveProgress } from "../systems/storage";
-import {
-  completeMission,
-  recordAttempt,
-  getRankTitle,
-} from "../systems/gameEngine";
+import { completeMission, recordAttempt, getRankTitle } from "../systems/gameEngine";
+import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
@@ -60,6 +57,7 @@ export default function MissionDetail() {
         setLivePassCount(0);
         setLiveTotalCount(0);
         setLoading(false);
+        logActivity(ACTIVITY_TYPES.MISSION_STARTED, { missionId, title: mission.title }, `Started mission: ${mission.title}`);
       }, 1500);
     } else {
       setLoading(false);
@@ -215,6 +213,7 @@ export default function MissionDetail() {
       const nextIndex = hintIndex + 1;
       setHintIndex(nextIndex);
       if (showToast) showToast(`Hint ${nextIndex + 1} unlocked`, "info");
+      logActivity(ACTIVITY_TYPES.HINT_USED, { missionId, hintIndex: nextIndex }, `Used hint ${nextIndex + 1} for ${mission.title}`);
     }
   };
 
