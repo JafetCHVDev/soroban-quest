@@ -33,6 +33,9 @@ export default function MissionDetail() {
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
+  const [showReplay, setShowReplay] = useState(false);
+  const [replayData, setReplayData] = useState(null);
+  const [showSimulator, setShowSimulator] = useState(false);
 
   // Live validation state
   const [livePassCount, setLivePassCount] = useState(0);
@@ -288,11 +291,22 @@ export default function MissionDetail() {
         id="tab-tests"
         className="tab-radio"
       />
+      {isCompleted && hasReplay && (
+        <input
+          type="radio"
+          name="mission-tab"
+          id="tab-replay"
+          className="tab-radio"
+        />
+      )}
 
       <div className="mobile-tabs">
         <label htmlFor="tab-story">Story</label>
         <label htmlFor="tab-editor">Editor</label>
         <label htmlFor="tab-tests">Tests</label>
+        {isCompleted && hasReplay && (
+          <label htmlFor="tab-replay">📹 Replay</label>
+        )}
       </div>
 
       <div className="mission-detail">
@@ -364,6 +378,13 @@ export default function MissionDetail() {
                 onClick={handleShowSolution}
               >
                 👁️ Solution
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={handleOpenSimulator}
+                style={{ background: 'var(--purple-dim)', border: '1px solid var(--purple)' }}
+              >
+                🔬 Simulate
               </button>
               <button
                 className="btn btn-primary btn-sm"
@@ -497,6 +518,31 @@ export default function MissionDetail() {
             </div>
           </div>
         </div>
+
+        {/* ---------------- Replay Panel ---------------- */}
+        {isCompleted && hasReplay && (
+          <div className="mission-replay-panel" style={{
+            display: 'none',
+            padding: '2rem',
+            textAlign: 'center',
+            background: 'var(--bg-secondary)',
+            borderTop: '1px solid var(--border-subtle)'
+          }}>
+            <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
+              📹 Watch Your Solution
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+              Review your problem-solving process step by step.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={handleWatchReplay}
+              style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}
+            >
+              ▶️ Start Replay
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ---------------- Victory Modal ---------------- */}
