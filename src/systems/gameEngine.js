@@ -1,6 +1,8 @@
 /* ==========================================
    Game Engine — XP, Levels, Badges
    ========================================== */
+import { logActivity, ACTIVITY_TYPES } from "./activityLogger";
+
 
 const LEVEL_BASE = 500;
 const LEVEL_EXPONENT = 1.5;
@@ -87,6 +89,8 @@ function getDefaultState() {
     firstTryMissions: [],
     currentMission: null,
     missionAttempts: {},
+    streak: 0,
+    lastLogin: null,
   };
 }
 
@@ -129,6 +133,10 @@ export function awardXP(state, amount) {
   const newLevel = getLevelFromXP(newXP);
   const leveledUp = newLevel > state.level;
 
+  if (leveledUp) {
+    logActivity(ACTIVITY_TYPES.LEVEL_UP, { level: newLevel }, `Reached Level ${newLevel}!`);
+  }
+
   return {
     ...state,
     xp: newXP,
@@ -156,6 +164,8 @@ export function completeMission(state, missionId, xpReward) {
   newState = awardXP(newState, xpReward);
   newState = checkBadges(newState);
 
+  logActivity(ACTIVITY_TYPES.MISSION_COMPLETED, { missionId }, `Successfully completed mission: ${missionId}`);
+
   return newState;
 }
 
@@ -174,6 +184,7 @@ export function checkBadges(state) {
   for (const badge of BADGES) {
     if (!state.badges.includes(badge.id) && badge.condition(state)) {
       newBadges.push(badge.id);
+      logActivity(ACTIVITY_TYPES.BADGE_EARNED, { badgeId: badge.id, badgeName: badge.name }, `Earned the "${badge.name}" badge!`);
     }
   }
 
@@ -181,6 +192,33 @@ export function checkBadges(state) {
     ...state,
     badges: [...state.badges, ...newBadges],
     newBadges,
+  };
+}
+
+export function updateStreak(state) {
+  const today = new Date().toISOString().split("T")[0];
+  const lastLogin = state.lastLogin;
+
+  if (lastLogin === today) return state;
+
+  let newStreak = 1;
+  if (lastLogin) {
+    const last = new Date(lastLogin);
+    const now = new Date(today);
+    const diffTime = Math.abs(now - last);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      newStreak = (state.streak || 0) + 1;
+    }
+  }
+
+  logActivity(ACTIVITY_TYPES.STREAK, { streak: newStreak }, `Daily streak: ${newStreak} day${newStreak > 1 ? 's' : ''}!`);
+
+  return {
+    ...state,
+    streak: newStreak,
+    lastLogin: today,
   };
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   loadProgress,
   importProgress,
@@ -11,6 +12,7 @@ import {
 import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
+import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 
 export default function Profile() {
   const [state, setState] = useState(loadProgress());
@@ -52,6 +54,7 @@ export default function Profile() {
   const handleExport = () => {
     exportProgress();
     setImportStatus("✅ Progress exported!");
+    logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
     setTimeout(() => setImportStatus(""), 3000);
   };
 
@@ -63,6 +66,7 @@ export default function Profile() {
       const newState = await importProgress(file);
       setState(newState);
       setImportStatus("✅ Progress imported successfully!");
+      logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
     } catch {
       setImportStatus("❌ Invalid file — could not import.");
     }
@@ -112,10 +116,15 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* EDIT BUTTON */}
-          <button className="btn btn-secondary mt-3" onClick={openEdit}>
-            ✏️ Edit Profile
-          </button>
+          {/* ACTIONS */}
+          <div className="flex gap-2 mt-3">
+            <button className="btn btn-secondary" onClick={openEdit}>
+              ✏️ Edit Profile
+            </button>
+            <Link to="/journal" className="btn btn-ghost">
+              📖 View Journal
+            </Link>
+          </div>
         </div>
 
         {/* STATS */}
