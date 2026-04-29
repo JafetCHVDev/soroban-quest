@@ -178,6 +178,44 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <section className="ctf-home-section">
+                <div className="ctf-home-inner">
+                    <div className="ctf-home-text">
+                        <div className="ctf-home-eyebrow">🚩 New Mode</div>
+                        <h2 className="ctf-home-title">CTF Security Challenges</h2>
+                        <p className="ctf-home-desc">
+                            Think like an attacker. Each CTF challenge presents an intentionally
+                            vulnerable Soroban contract — your job is to find the bug and write
+                            the fix. Earn separate XP and exclusive security badges.
+                        </p>
+                        <ul className="ctf-home-list">
+                            <li>🔄 Reentrancy exploits</li>
+                            <li>💥 Integer overflow / underflow</li>
+                            <li>🔓 Access control bypass</li>
+                            <li>⏱️ Front-running vulnerabilities</li>
+                            <li>🧨 Unchecked input attacks</li>
+                        </ul>
+                        <button className="btn btn-primary btn-lg" onClick={() => navigate('/ctf')}>
+                            🚩 Enter CTF Mode
+                        </button>
+                    </div>
+                    <div className="ctf-home-badges">
+                        <div className="ctf-home-badge-card">
+                            <span className="ctf-home-badge-icon">🩸</span>
+                            <span>First Blood</span>
+                        </div>
+                        <div className="ctf-home-badge-card">
+                            <span className="ctf-home-badge-icon">🎯</span>
+                            <span>Exploit Hunter</span>
+                        </div>
+                        <div className="ctf-home-badge-card">
+                            <span className="ctf-home-badge-icon">🔐</span>
+                            <span>Security Master</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

@@ -1998,3 +1998,413 @@ button {
     padding: 0 16px;
   }
 }
+
+/* ==========================================
+   CTF MODE STYLES
+   ========================================== */
+
+/* ── Page layout ── */
+.ctf-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.ctf-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ctf-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.ctf-subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ctf-header-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ctf-stat {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.ctf-stat strong {
+  color: var(--cyan);
+}
+
+/* ── Challenge grid ── */
+.ctf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ctf-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.ctf-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(6, 214, 160, 0.15);
+}
+
+.ctf-card--active {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(6, 214, 160, 0.3);
+}
+
+.ctf-card--done {
+  border-color: var(--green, #06d6a0);
+}
+
+.ctf-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.ctf-card-icon {
+  font-size: 1.75rem;
+}
+
+.ctf-card-badge {
+  background: var(--cyan);
+  color: var(--bg-primary);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ctf-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem;
+}
+
+.ctf-difficulty {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.ctf-difficulty--cyan  { background: rgba(6,214,160,0.15); color: var(--cyan); }
+.ctf-difficulty--gold  { background: rgba(255,190,11,0.15); color: #ffbe0b; }
+.ctf-difficulty--red   { background: rgba(239,71,111,0.15); color: #ef476f; }
+
+.ctf-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.ctf-card-category {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.ctf-card-xp {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+/* ── Workspace split view ── */
+.ctf-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .ctf-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ctf-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ctf-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.ctf-panel-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ctf-panel-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.ctf-panel-tag--danger  { background: rgba(239,71,111,0.2); color: #ef476f; }
+.ctf-panel-tag--success { background: rgba(6,214,160,0.2);  color: var(--cyan); }
+
+.ctf-description {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.ctf-description p { margin: 0 0 0.5rem; }
+.ctf-description p:last-child { margin: 0; }
+
+.ctf-objective {
+  color: var(--text-primary) !important;
+}
+
+/* ── Action bar ── */
+.ctf-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+/* ── Terminal ── */
+.ctf-terminal {
+  background: #0d1117;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  padding: 0.75rem 1rem;
+  min-height: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.ctf-terminal-placeholder {
+  color: #555;
+}
+
+.ctf-terminal-line { margin-bottom: 2px; }
+.ctf-terminal-line--info    { color: #8b949e; }
+.ctf-terminal-line--pass    { color: #3fb950; }
+.ctf-terminal-line--fail    { color: #f85149; }
+.ctf-terminal-line--success { color: #58a6ff; font-weight: 600; }
+.ctf-terminal-line--xp      { color: #ffbe0b; }
+.ctf-terminal-line--badge   { color: #d2a8ff; }
+.ctf-terminal-line--hint    { color: #ffa657; }
+
+/* ── Intro Modal ── */
+.ctf-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.ctf-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.ctf-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ctf-modal-icon {
+  font-size: 2rem;
+}
+
+.ctf-modal-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ctf-modal-body {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.ctf-modal-body p { margin: 0 0 1rem; }
+
+.ctf-modal-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ctf-modal-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.ctf-step-num {
+  background: var(--cyan);
+  color: var(--bg-primary);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ctf-modal-note {
+  background: rgba(6, 214, 160, 0.08);
+  border-left: 3px solid var(--cyan);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0 !important;
+}
+
+/* ── Home CTF section ── */
+.ctf-home-section {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(135deg, rgba(6,214,160,0.05) 0%, rgba(131,56,236,0.05) 100%);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ctf-home-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .ctf-home-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ctf-home-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  margin-bottom: 0.5rem;
+}
+
+.ctf-home-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+}
+
+.ctf-home-desc {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  max-width: 520px;
+}
+
+.ctf-home-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.ctf-home-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ctf-home-badge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 180px;
+}
+
+.ctf-home-badge-icon {
+  font-size: 1.5rem;
+}
