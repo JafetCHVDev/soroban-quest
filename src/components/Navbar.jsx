@@ -1,46 +1,115 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { loadProgress } from '../systems/storage';
-import { getRankTitle, getXPProgress } from '../systems/gameEngine';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { loadProfile } from "../systems/storage";
 
 export default function Navbar() {
-    const location = useLocation();
-    const state = loadProgress();
-    const xpProgress = getXPProgress(state);
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const profile = loadProfile();
 
-    const isActive = (path) => location.pathname === path ? 'active' : '';
-
+  const [theme, setTheme] = useState(() => {
     return (
-        <nav className="navbar">
-            <Link to="/" className="navbar-logo">
-                <svg className="navbar-logo-icon" viewBox="0 0 36 36" fill="none">
-                    <circle cx="18" cy="18" r="16" stroke="url(#navGrad)" strokeWidth="2" />
-                    <path d="M18 6L22 14L30 16L24 22L25 30L18 26L11 30L12 22L6 16L14 14L18 6Z" fill="url(#navGrad)" />
-                    <defs>
-                        <linearGradient id="navGrad" x1="0" y1="0" x2="36" y2="36">
-                            <stop stopColor="#06d6a0" />
-                            <stop offset="1" stopColor="#8b5cf6" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <span className="navbar-logo-text">SOROBAN QUEST</span>
-            </Link>
-
-            <ul className="navbar-links">
-                <li><Link to="/" className={isActive('/')}>Home</Link></li>
-                <li><Link to="/missions" className={isActive('/missions')}>Missions</Link></li>
-                <li><Link to="/skill-tree" className={isActive('/skill-tree')}>Skill Tree</Link></li>
-                <li><Link to="/profile" className={isActive('/profile')}>Profile</Link></li>
-            </ul>
-
-            <div className="navbar-stats">
-                <div className="navbar-xp">
-                    ⚡ {state.xp} XP
-                </div>
-                <div className="navbar-level">
-                    🛡️ Lv.{state.level}
-                </div>
-            </div>
-        </nav>
+      localStorage.getItem("soroban_quest_theme") ||
+      (window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark")
     );
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("soroban_quest_theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  const isActive = (path) => (location.pathname === path ? "active" : "");
+
+  return (
+    <nav className="navbar">
+      {/* LOGO */}
+      <Link to="/" className="navbar-logo">
+        <span className="navbar-logo-text">SOROBAN QUEST</span>
+      </Link>
+
+      {/* LINKS */}
+      <ul className="navbar-links">
+        <li>
+          <Link to="/" className={isActive("/")}>
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/campaigns" className={isActive("/campaigns")}>
+            Campaigns
+          </Link>
+        </li>
+        <li>
+          <Link to="/missions" className={isActive("/missions")}>
+            Missions
+          </Link>
+        </li>
+        <li>
+          <Link to="/profile" className={isActive("/profile")}>
+            Profile
+          </Link>
+        </li>
+      </ul>
+
+      {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
+      <div className="navbar-stats">
+        <button
+          onClick={toggleTheme}
+          className="btn-ghost"
+          style={{ padding: "0.5rem", borderRadius: "50%" }}
+          aria-label="Toggle theme"
+        >
+          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+        <span className="text-xl">{profile.avatar}</span>
+        <span className="text-sm font-semibold">{profile.name}</span>
+      </div>
+
+      {/* HAMBURGER */}
+      <button onClick={() => setIsOpen(!isOpen)} className="hamburger-btn">
+        {isOpen ? <X /> : <Menu />}
+      </button>
+
+      {/* BACKDROP */}
+      {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
+
+      {/* MOBILE */}
+      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
+        <Link to="/" onClick={() => setIsOpen(false)}>
+          Home
+        </Link>
+        <Link to="/campaigns" onClick={() => setIsOpen(false)}>
+          Campaigns
+        </Link>
+        <Link to="/missions" onClick={() => setIsOpen(false)}>
+          Missions
+        </Link>
+        <Link to="/profile" onClick={() => setIsOpen(false)}>
+          Profile
+        </Link>
+
+        {/* MOBILE EXTRAS */}
+        <div className="mobile-stats">
+          <button
+            onClick={toggleTheme}
+            className="btn-ghost"
+            style={{ padding: "0.5rem", borderRadius: "50%" }}
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <span>{profile.avatar}</span>
+          <span>{profile.name}</span>
+        </div>
+      </div>
+    </nav>
+  );
 }
