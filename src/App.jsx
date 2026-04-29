@@ -1,13 +1,22 @@
+
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { loadProgress, saveProgress } from "./systems/storage";
 import { updateStreak } from "./systems/gameEngine";
+
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import MissionMap from "./pages/MissionMap";
 import MissionDetail from "./pages/MissionDetail";
 import Profile from "./pages/Profile";
+
 import Journal from "./pages/Journal";
+
+import Campaigns from "./pages/Campaigns";
+
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 
@@ -19,11 +28,16 @@ import { ToastProvider } from "./systems/ToastContext";
 import "./systems/Toast.css";
 
 export default function App() {
+
   useEffect(() => {
     const state = loadProgress();
     const newState = updateStreak(state);
     saveProgress(newState);
   }, []);
+
+  // useLocation gives us a stable key that changes on every navigation.
+  const location = useLocation();
+
 
   return (
     <ErrorBoundary>
@@ -35,6 +49,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/missions" element={<MissionMap />} />
+              <Route path="/campaigns" element={<Campaigns />} />
               <Route path="/mission/:missionId" element={<MissionDetail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/journal" element={<Journal />} />
