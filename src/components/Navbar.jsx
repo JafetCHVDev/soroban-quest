@@ -53,6 +53,11 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
+          <Link to="/ctf" className={isActive("/ctf")}>
+            CTF
+          </Link>
+        </li>
+        <li>
           <Link to="/profile" className={isActive("/profile")}>
             Profile
           </Link>
@@ -91,6 +96,9 @@ export default function Navbar() {
         </Link>
         <Link to="/missions" onClick={() => setIsOpen(false)}>
           Missions
+        </Link>
+        <Link to="/ctf" onClick={() => setIsOpen(false)}>
+          CTF
         </Link>
         <Link to="/profile" onClick={() => setIsOpen(false)}>
           Profile

@@ -6,6 +6,7 @@ import MissionMap from "./pages/MissionMap";
 import MissionDetail from "./pages/MissionDetail";
 import Profile from "./pages/Profile";
 import Campaigns from "./pages/Campaigns";
+import CTFMode from "./pages/CTFMode";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="/campaigns" element={<Campaigns />} />
               <Route path="/mission/:missionId" element={<MissionDetail />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/ctf" element={<CTFMode />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

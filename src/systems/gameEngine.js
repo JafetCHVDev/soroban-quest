@@ -76,6 +76,31 @@ export const BADGES = [
     icon: "⚡",
     condition: (state) => state.firstTryMissions?.length >= 1,
   },
+  // CTF badges
+  {
+    id: "ctf_first_blood",
+    name: "First Blood",
+    description: "Solve your first CTF challenge",
+    icon: "🩸",
+    category: "ctf",
+    condition: (state) => (state.completedCTFs || []).length >= 1,
+  },
+  {
+    id: "ctf_triple",
+    name: "Exploit Hunter",
+    description: "Solve 3 CTF challenges",
+    icon: "🎯",
+    category: "ctf",
+    condition: (state) => (state.completedCTFs || []).length >= 3,
+  },
+  {
+    id: "ctf_master",
+    name: "Security Master",
+    description: "Solve all 5 CTF challenges",
+    icon: "🔐",
+    category: "ctf",
+    condition: (state) => (state.completedCTFs || []).length >= 5,
+  },
 ];
 
 function getDefaultState() {
@@ -83,6 +108,7 @@ function getDefaultState() {
     xp: 0,
     level: 1,
     completedMissions: [],
+    completedCTFs: [],
     badges: [],
     firstTryMissions: [],
     currentMission: null,
@@ -156,6 +182,19 @@ export function completeMission(state, missionId, xpReward) {
   newState = awardXP(newState, xpReward);
   newState = checkBadges(newState);
 
+  return newState;
+}
+
+export function completeCTF(state, challengeId, xpReward) {
+  if ((state.completedCTFs || []).includes(challengeId)) {
+    return { ...state, alreadyCompleted: true };
+  }
+  let newState = {
+    ...state,
+    completedCTFs: [...(state.completedCTFs || []), challengeId],
+  };
+  newState = awardXP(newState, xpReward);
+  newState = checkBadges(newState);
   return newState;
 }
 
