@@ -9,6 +9,9 @@ export default function MissionMap() {
     const missions = getAllMissions();
     const learningPathRef = useRef(null);
     const [learningPathWidth, setLearningPathWidth] = useState(800);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+    const [selectedChapter, setSelectedChapter] = useState('all');
 
     const missionStates = useMemo(() => {
         return missions.map((m) => ({
@@ -17,6 +20,17 @@ export default function MissionMap() {
             unlocked: isMissionUnlocked(m.id, state.completedMissions),
         }));
     }, [state.completedMissions]);
+
+    const filteredMissions = useMemo(() => {
+        return missionStates.filter((mission) => {
+            const matchesSearch = searchTerm === '' ||
+                mission.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                mission.learningGoal.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesDifficulty = selectedDifficulty === 'all' || mission.difficulty === selectedDifficulty;
+            const matchesChapter = selectedChapter === 'all' || mission.chapter === selectedChapter;
+            return matchesSearch && matchesDifficulty && matchesChapter;
+        });
+    }, [missionStates, searchTerm, selectedDifficulty, selectedChapter]);
 
     const handleMissionClick = (mission) => {
         if (mission.unlocked) {
@@ -49,7 +63,7 @@ export default function MissionMap() {
     const desktopPathLayout = useMemo(() => {
         const width = Math.max(learningPathWidth, 320);
         const cols = width >= 1024 ? 4 : width >= 860 ? 3 : 2;
-        const rows = Math.ceil(missionStates.length / cols);
+        const rows = Math.ceil(filteredMissions.length / cols);
         const topPadding = 70;
         const horizontalPadding = cols === 2 ? 72 : 80;
         const rowSpacing = 140;
@@ -57,7 +71,7 @@ export default function MissionMap() {
         const usableWidth = Math.max(width - horizontalPadding * 2, 1);
         const colSpacing = cols > 1 ? usableWidth / (cols - 1) : 0;
 
-        const points = missionStates.map((m, i) => {
+        const points = filteredMissions.map((m, i) => {
             const row = Math.floor(i / cols);
             const colInRow = i % cols;
             const isReverse = row % 2 === 1;
@@ -78,7 +92,7 @@ export default function MissionMap() {
             height: Math.round(Math.max(height, 280)),
             points,
         };
-    }, [learningPathWidth, missionStates]);
+    }, [learningPathWidth, filteredMissions]);
 
     return (
         <div className="mission-map-page">
@@ -198,7 +212,7 @@ export default function MissionMap() {
                 </svg>
             </div>
             <div className="learning-path-mobile" aria-label="Mission timeline">
-                {missionStates.map((m, i) => (
+                {filteredMissions.map((m, i) => (
                     <button
                         type="button"
                         key={m.id}
@@ -211,7 +225,7 @@ export default function MissionMap() {
                             <span className="timeline-node">
                                 {m.completed ? '✓' : m.unlocked ? m.order : '🔒'}
                             </span>
-                            {i < missionStates.length - 1 && (
+                            {i < filteredMissions.length - 1 && (
                                 <span className={`timeline-line ${m.completed ? 'completed' : ''}`} />
                             )}
                         </span>
@@ -230,37 +244,108 @@ export default function MissionMap() {
             </div>
 
             {/* Mission Cards Grid */}
-            <div className="mission-map-grid">
-                {missionStates.map((m) => (
-                    <div
-                        key={m.id}
-                        className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
-                        onClick={() => handleMissionClick(m)}
-                    >
-                        <div className="mission-card-header">
-                            <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
-                            <span className="mission-card-xp">⚡ {m.xpReward} XP</span>
-                        </div>
-                        <h3 className="mission-card-title">{m.title}</h3>
-                        <p className="mission-card-desc">{m.learningGoal}</p>
-                        <div className="mission-card-footer">
-                            <div className="mission-card-concepts">
-                                {m.conceptsIntroduced.slice(0, 3).map(c => (
-                                    <span key={c} className="concept-tag">{c}</span>
-                                ))}
-                            </div>
-                            <span className={`badge badge-${m.difficulty}`}>
-                                {m.difficulty}
-                            </span>
-                        </div>
-                        {m.completed && (
-                            <div className="mission-card-status completed">✓ Completed</div>
-                        )}
-                        {!m.unlocked && (
-                            <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}>🔒 Locked</div>
-                        )}
+            <div className="mission-map-filters">
+                <div className="search-bar">
+                    <input
+                        type="text"
+                        placeholder="Search missions..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="search-input"
+                    />
+                </div>
+                <div className="filter-chips">
+                    <div className="difficulty-filters">
+                        <button
+                            className={`filter-chip ${selectedDifficulty === 'all' ? 'active' : ''}`}
+                            onClick={() => setSelectedDifficulty('all')}
+                        >
+                            All
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedDifficulty === 'beginner' ? 'active' : ''}`}
+                            onClick={() => setSelectedDifficulty('beginner')}
+                        >
+                            Beginner
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedDifficulty === 'intermediate' ? 'active' : ''}`}
+                            onClick={() => setSelectedDifficulty('intermediate')}
+                        >
+                            Intermediate
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedDifficulty === 'advanced' ? 'active' : ''}`}
+                            onClick={() => setSelectedDifficulty('advanced')}
+                        >
+                            Advanced
+                        </button>
                     </div>
-                ))}
+                    <div className="chapter-filters">
+                        <button
+                            className={`filter-chip ${selectedChapter === 'all' ? 'active' : ''}`}
+                            onClick={() => setSelectedChapter('all')}
+                        >
+                            All Chapters
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedChapter === 1 ? 'active' : ''}`}
+                            onClick={() => setSelectedChapter(1)}
+                        >
+                            Chapter 1
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedChapter === 2 ? 'active' : ''}`}
+                            onClick={() => setSelectedChapter(2)}
+                        >
+                            Chapter 2
+                        </button>
+                        <button
+                            className={`filter-chip ${selectedChapter === 3 ? 'active' : ''}`}
+                            onClick={() => setSelectedChapter(3)}
+                        >
+                            Chapter 3
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className="mission-map-grid">
+                {filteredMissions.length === 0 ? (
+                    <div className="no-missions-found">
+                        <p>No missions found matching your filters.</p>
+                    </div>
+                ) : (
+                    filteredMissions.map((m) => (
+                        <div
+                            key={m.id}
+                            className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
+                            onClick={() => handleMissionClick(m)}
+                        >
+                            <div className="mission-card-header">
+                                <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
+                                <span className="mission-card-xp">⚡ {m.xpReward} XP</span>
+                            </div>
+                            <h3 className="mission-card-title">{m.title}</h3>
+                            <p className="mission-card-desc">{m.learningGoal}</p>
+                            <div className="mission-card-footer">
+                                <div className="mission-card-concepts">
+                                    {m.conceptsIntroduced.slice(0, 3).map(c => (
+                                        <span key={c} className="concept-tag">{c}</span>
+                                    ))}
+                                </div>
+                                <span className={`badge badge-${m.difficulty}`}>
+                                    {m.difficulty}
+                                </span>
+                            </div>
+                            {m.completed && (
+                                <div className="mission-card-status completed">✓ Completed</div>
+                            )}
+                            {!m.unlocked && (
+                                <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}>🔒 Locked</div>
+                            )}
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

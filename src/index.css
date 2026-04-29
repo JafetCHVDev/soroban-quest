@@ -1103,6 +1103,76 @@ button {
   gap: var(--space-lg);
 }
 
+.mission-map-filters {
+  margin-bottom: var(--space-xl);
+}
+
+.search-bar {
+  margin-bottom: var(--space-lg);
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: border-color var(--transition-base);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.difficulty-filters,
+.chapter-filters {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.filter-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filter-chip.active {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  color: var(--bg-primary);
+}
+
+.no-missions-found {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
 /* Learning path SVG */
 .learning-path {
   width: 100%;
@@ -1850,7 +1920,6 @@ button {
 
 /* =========================
    HAMBURGER BUTTON
-========================= */
 .hamburger-btn {
   display: none;
   background: transparent;
@@ -1867,7 +1936,6 @@ button {
 
 /* =========================
    BACKDROP
-========================= */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -1878,7 +1946,6 @@ button {
 
 /* =========================
    MOBILE MENU
-========================= */
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -1911,7 +1978,6 @@ button {
 
 /* =========================
    MOBILE STATS
-========================= */
 .mobile-stats {
   margin-top: 20px;
   padding: 16px;
@@ -1922,7 +1988,6 @@ button {
 
 /* =========================
    RESPONSIVE FIX
-========================= */
 @media (max-width: 768px) {
   .navbar-links,
   .navbar-stats {
