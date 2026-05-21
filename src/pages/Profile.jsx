@@ -13,8 +13,10 @@ import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function Profile() {
+  useDocumentTitle('Profile');
   const [state, setState] = useState(loadProgress());
 
   // ✅ IMPORTANT: safe profile init
