@@ -217,24 +217,45 @@ export default function MissionDetail() {
   }, [code, mission, missionId, isRunning, showToast]);
 
   // --------------------------- Hints ---------------------------
-  const handleHint = () => {
+  const handleHint = useCallback(() => {
     if (mission?.hints && hintIndex < mission.hints.length - 1) {
       const nextIndex = hintIndex + 1;
       setHintIndex(nextIndex);
       if (showToast) showToast(`Hint ${nextIndex + 1} unlocked`, "info");
       logActivity(ACTIVITY_TYPES.HINT_USED, { missionId, hintIndex: nextIndex }, `Used hint ${nextIndex + 1} for ${mission.title}`);
     }
-  };
+  }, [mission, hintIndex, showToast]);
+
+  // --------------------------- Keyboard Shortcuts ---------------------------
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const isMod = e.ctrlKey || e.metaKey;
+      if (isMod && e.key === "Enter") {
+        e.preventDefault();
+        handleRunTests();
+      }
+      if (isMod && e.shiftKey && e.key === "R") {
+        e.preventDefault();
+        handleReset();
+      }
+      if (isMod && e.shiftKey && e.key === "H") {
+        e.preventDefault();
+        handleHint();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleRunTests, handleReset, handleHint]);
 
   // --------------------------- Reset ---------------------------
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     if (mission?.template) {
       setCode(mission.template);
       setTestResults([]);
       setHintIndex(-1);
       if (showToast) showToast("Code reset to template", "warning");
     }
-  };
+  }, [mission, showToast]);
 
   // --------------------------- Show Solution ---------------------------
   const handleShowSolution = () => {
@@ -393,6 +414,7 @@ export default function MissionDetail() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleReset}
                 disabled={isRunning}
+                title="Reset Code (Ctrl+Shift+R)"
               >
                 ↺ Reset
               </button>
@@ -402,6 +424,7 @@ export default function MissionDetail() {
                 disabled={
                   !mission.hints || hintIndex >= mission.hints.length - 1
                 }
+                title="Show Next Hint (Ctrl+Shift+H)"
               >
                 💡 Hint
               </button>
@@ -415,6 +438,7 @@ export default function MissionDetail() {
                 className="btn btn-primary btn-sm"
                 onClick={handleRunTests}
                 disabled={isRunning}
+                title="Run Tests (Ctrl+Enter)"
               >
                 {isRunning ? "Running..." : "▶ Run Tests"}
               </button>
