@@ -47,6 +47,17 @@
   }
 }
 
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
 .toast-content {
   display: flex;
   align-items: center;
@@ -63,7 +74,11 @@
   background: rgba(255, 255, 255, 0.2);
   width: 100%;
   transform-origin: left;
-  animation: shrink linear forwards;
+  animation: shrink 3s linear forwards;
+}
+
+.toast-leaving {
+  animation: slideOut 0.3s ease-out forwards;
 }
 
 @keyframes shrink {

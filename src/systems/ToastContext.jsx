@@ -1,9 +1,23 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const ToastContext = createContext(null);
+const TOAST_DURATION = 3000;
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
+  const [leaving, setLeaving] = useState(new Set());
+
+  const dismissToast = useCallback((id) => {
+    setLeaving((prev) => new Set(prev).add(id));
+    setTimeout(() => {
+      setLeaving((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+      setToasts((prev) => (prev || []).filter((t) => t.id !== id));
+    }, 300);
+  }, []);
 
   const showToast = useCallback((message, type = 'info') => {
     const id = Date.now();
@@ -11,29 +25,27 @@ export const ToastProvider = ({ children }) => {
     
     setToasts((prev) => [...(prev || []), newToast]);
 
-    // Auto-remove after 3 seconds
     setTimeout(() => {
-      setToasts((prev) => (prev || []).filter((t) => t.id !== id));
-    }, 3000);
-  }, []);
+      dismissToast(id);
+    }, TOAST_DURATION);
+  }, [dismissToast]);
 
-  const removeToast = (id) => {
-    setToasts((prev) => (prev || []).filter((t) => t.id !== id));
-  };
+  const removeToast = useCallback((id) => {
+    dismissToast(id);
+  }, [dismissToast]);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {/* The Toast Container */}
       <div className="toast-container">
         {(toasts || []).map((toast) => (
           <div 
             key={toast.id} 
-            className={`toast toast-${toast.type}`}
+            className={`toast toast-${toast.type}${leaving.has(toast.id) ? ' toast-leaving' : ''}`}
             onClick={() => removeToast(toast.id)}
           >
             <div className="toast-content">{toast.message}</div>
-            <div className="toast-progress" />
+            {!leaving.has(toast.id) && <div className="toast-progress" />}
           </div>
         ))}
       </div>
