@@ -8,6 +8,7 @@ import {
   loadProfile,
   saveProfile,
 } from "../systems/storage";
+import "./Profile.css";
 
 import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";

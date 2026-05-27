@@ -1,0 +1,265 @@
+.mission-detail {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  grid-template-rows: 1fr auto;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}
+
+.mission-story {
+  grid-row: 1 / -1;
+  padding: var(--space-xl);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.mission-story h1 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: var(--space-md);
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mission-story h2 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.mission-story p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.mission-story code {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  padding: 1px 6px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--cyan);
+}
+
+.mission-story pre {
+  background: var(--bg-primary);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  margin-bottom: var(--space-md);
+}
+
+.mission-story pre code {
+  background: none;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.mission-editor-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mission-editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mission-editor-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.mission-editor-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.editor-file-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.editor-file-tab .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+.editor-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.mission-terminal-panel {
+  height: 220px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Mobile Tabs */
+.mobile-tabs {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mission-detail {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .mission-story {
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    padding: 12px var(--space-md);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 70px;
+    z-index: 50;
+  }
+
+  .mobile-tabs label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    padding: var(--space-xs) 0;
+    transition: color var(--transition-fast);
+    user-select: none;
+  }
+
+  .mobile-tabs label::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    border-radius: 1px;
+    transition: width var(--transition-base);
+  }
+
+  .mobile-tabs label:hover {
+    color: var(--text-primary);
+  }
+
+  #tab-story:checked ~ .mobile-tabs label[for="tab-story"],
+  #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"],
+  #tab-tests:checked ~ .mobile-tabs label[for="tab-tests"] {
+    color: var(--cyan);
+  }
+
+  #tab-story:checked ~ .mobile-tabs label[for="tab-story"]::after,
+  #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"]::after,
+  #tab-tests:checked ~ .mobile-tabs label[for="tab-tests"]::after {
+    width: 100%;
+  }
+
+  .mission-detail {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+
+  .mission-detail .mission-story,
+  .mission-detail .mission-editor-panel {
+    display: none;
+  }
+
+  #tab-story:checked ~ .mission-detail .mission-story {
+    display: block;
+    min-height: calc(100vh - 70px - 44px);
+    overflow-y: auto;
+    border-right: none;
+  }
+
+  #tab-editor:checked ~ .mission-detail .mission-editor-panel {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px - 44px);
+  }
+
+  #tab-editor:checked ~ .mission-detail .mission-terminal-panel {
+    display: none;
+  }
+
+  #tab-editor:checked ~ .mission-detail .editor-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-editor-panel {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px - 44px);
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-editor-toolbar,
+  #tab-tests:checked ~ .mission-detail .editor-wrapper {
+    display: none;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    border-top: none;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel .terminal {
+    flex: 1;
+    border-radius: 0;
+  }
+
+  #tab-tests:checked ~ .mission-detail .mission-terminal-panel .terminal-body {
+    max-height: none;
+  }
+
+  .mission-editor-toolbar {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .mission-editor-toolbar-right {
+    flex-wrap: wrap;
+  }
+
+  .btn-sm {
+    min-height: 44px;
+  }
+}
