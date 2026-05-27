@@ -5,23 +5,23 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #020617; /* Darkest slate */
-  color: #f1f5f9;
+  background-color: var(--bg-primary); /* Darkest slate */
+  color: var(--text-primary);
   text-align: center;
   padding: 20px;
   font-family: 'Inter', sans-serif;
 }
 
 .error-icon { font-size: 4rem; margin-bottom: 1rem; }
-.error-title { color: #6366f1; font-size: 2rem; margin-bottom: 0.5rem; }
-.error-text { color: #94a3b8; margin-bottom: 2rem; max-width: 400px; }
+.error-title { color: var(--purple); font-size: 2rem; margin-bottom: 0.5rem; }
+.error-text { color: var(--text-secondary); margin-bottom: 2rem; max-width: 400px; }
 
 /* Buttons */
 .error-button-group { display: flex; gap: 15px; }
 
 .btn-reload {
-  background-color: #4f46e5;
-  color: white;
+  background-color: var(--cyan);
+  color: var(--bg-primary);
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
@@ -31,9 +31,9 @@
 
 .btn-report {
   background: transparent;
-  color: #94a3b8;
+  color: var(--text-secondary);
   padding: 12px 24px;
-  border: 1px solid #1e293b;
+  border: 1px solid var(--border-accent);
   border-radius: 6px;
   text-decoration: none;
 }
@@ -42,8 +42,8 @@
 .editor-fallback {
   height: 100%;
   width: 100%;
-  background-color: #0f172a;
-  border: 2px dashed #7f1d1d;
+  background-color: var(--bg-secondary);
+  border: 2px dashed var(--red);
   display: flex;
   flex-direction: column;
   align-items: center;

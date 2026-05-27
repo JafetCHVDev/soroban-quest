@@ -1,0 +1,200 @@
+/* ==========================================
+   Journal / Activity Log Styles
+   ========================================== */
+
+.journal-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.journal-header {
+  margin-bottom: var(--space-xl);
+}
+
+.journal-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Summary Card */
+.adventure-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.summary-stat {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.summary-stat:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyan-dim);
+}
+
+.summary-stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+
+.summary-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Filters */
+.journal-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+.filter-chip.active {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    var(--cyan) 0%, 
+    var(--purple) 50%, 
+    var(--gold) 100%);
+  opacity: 0.3;
+}
+
+.date-group {
+  margin-bottom: var(--space-xl);
+}
+
+.date-header {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.timeline-event {
+  position: relative;
+  padding-bottom: var(--space-xl);
+}
+
+.event-dot {
+  position: absolute;
+  left: -2rem;
+  top: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  z-index: 2;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.event-content {
+  background: var(--bg-glass);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.event-content:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+  transform: translateX(5px);
+}
+
+.event-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.event-message {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.event-details {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Event Types Colors */
+.event-dot.mission { border-color: var(--cyan); color: var(--cyan); }
+.event-dot.badge { border-color: var(--gold); color: var(--gold); }
+.event-dot.level { border-color: var(--purple); color: var(--purple); }
+.event-dot.hint { border-color: var(--red); color: var(--red); }
+.event-dot.system { border-color: var(--text-muted); color: var(--text-muted); }
+
+@media (max-width: 600px) {
+  .journal-title { font-size: 2rem; }
+  .adventure-summary { grid-template-columns: 1fr 1fr; }
+}
