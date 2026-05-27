@@ -1339,6 +1339,22 @@ button {
 }
 
 /* ============ MISSION DETAIL ============ */
+.mission-not-found {
+  padding: 4rem;
+  text-align: center;
+}
+
+.mission-not-found-text {
+  color: var(--text-secondary);
+  margin-top: 1rem;
+}
+
+.mission-replay-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .mission-detail {
   display: grid;
   grid-template-columns: 380px 1fr;
