@@ -1,4 +1,7 @@
 import React, { useState, useRef } from "react";
+// Import the fixed custom layout definitions directly
+import "./Profile.css";
+
 import {
   loadProgress,
   importProgress,
@@ -38,7 +41,6 @@ export default function Profile() {
 
     saveProfile(updated);
     setProfile(updated);
-
     setEditing(false);
   };
 
@@ -80,7 +82,7 @@ export default function Profile() {
   };
 
   const completedMissions = missions.filter((m) =>
-    state.completedMissions.includes(m.id),
+    state.completedMissions.includes(m.id)
   );
 
   return (
@@ -119,9 +121,7 @@ export default function Profile() {
         </div>
 
         {/* STATS */}
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
               {state.completedMissions.length}
@@ -147,22 +147,23 @@ export default function Profile() {
         <div className="card mt-4">
           <h3 className="mb-3">Edit Profile</h3>
 
-          {/* NAME */}
+          {/* NAME INPUT */}
           <input
-            className="w-full p-2 mb-3 rounded bg-[#111827] text-white"
+            className="profile-input-full"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
           />
 
-          {/* AVATARS */}
-          <div className="grid grid-cols-6 gap-2 mb-3">
+          {/* AVATAR SELECTOR WITH NATIVE 6-COLUMN RESPONSIVE GRID */}
+          <div className="avatar-grid-6col">
             {avatars.map((a) => (
               <button
                 key={a}
+                type="button"
                 onClick={() => setAvatar(a)}
-                className={`text-2xl p-2 rounded transition ${
-                  avatar === a ? "bg-cyan-500/30 scale-110" : "bg-white/5"
+                className={`avatar-btn-node text-2xl ${
+                  avatar === a ? "active" : ""
                 }`}
               >
                 {a}
@@ -170,8 +171,8 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
+          {/* ACTION BUTTON CONTAINER */}
+          <div className="profile-flex-row">
             <button className="btn btn-primary" onClick={saveUserProfile}>
               Save
             </button>
@@ -205,21 +206,21 @@ export default function Profile() {
         })}
       </div>
 
-      {/* MISSIONS */}
+      {/* COMPLETED MISSIONS LIST */}
       <h2 className="profile-section-title">✅ Completed Missions</h2>
 
       {completedMissions.length === 0 ? (
         <div className="card text-center p-6">No missions completed yet.</div>
       ) : (
         completedMissions.map((m) => (
-          <div key={m.id} className="card flex justify-between">
+          <div key={m.id} className="card profile-space-between">
             <span>{m.title}</span>
             <span className="text-gold">+{m.xpReward} XP</span>
           </div>
         ))
       )}
 
-      {/* DATA */}
+      {/* CONFIGURATION DATA MANAGEMENT */}
       <h2 className="profile-section-title">⚙️ Data</h2>
 
       <div className="profile-actions">
