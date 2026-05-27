@@ -13,6 +13,7 @@ import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
+import { useDocumentTitle } from "../systems/useDocumentTitle";
 
 export default function Profile() {
   const [state, setState] = useState(loadProgress());
@@ -30,6 +31,8 @@ export default function Profile() {
   const xpProgress = getXPProgress(state);
   const rankTitle = getRankTitle(state.level);
   const missions = getAllMissions();
+
+  useDocumentTitle("Profile");
 
   /* ---------------- SAVE PROFILE ---------------- */
   const saveUserProfile = () => {
@@ -66,7 +69,11 @@ export default function Profile() {
       const newState = await importProgress(file);
       setState(newState);
       setImportStatus("✅ Progress imported successfully!");
-      logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
+      logActivity(
+        ACTIVITY_TYPES.IMPORT,
+        {},
+        "Imported adventure progress from file",
+      );
     } catch {
       setImportStatus("❌ Invalid file — could not import.");
     }
@@ -159,7 +166,10 @@ export default function Profile() {
           {/* NAME */}
           <input
             className="w-full p-2 mb-3 rounded"
-            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            style={{
+              backgroundColor: "var(--bg-secondary)",
+              color: "var(--text-primary)",
+            }}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
@@ -173,7 +183,8 @@ export default function Profile() {
                 onClick={() => setAvatar(a)}
                 className="text-2xl p-2 rounded transition"
                 style={{
-                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                  backgroundColor:
+                    avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
                   transform: avatar === a ? "scale(1.1)" : "none",
                 }}
               >
@@ -246,7 +257,11 @@ export default function Profile() {
           Import
         </button>
 
-        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
+        <button
+          className="btn btn-ghost"
+          style={{ color: "var(--red)" }}
+          onClick={handleReset}
+        >
           Reset
         </button>
 

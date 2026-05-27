@@ -5,6 +5,7 @@ import { missions } from "../data/missions.js";
 import { campaigns, getCampaignProgress } from "../data/campaigns.js";
 import { loadProgress } from "../systems/storage.js";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
+import { useDocumentTitle } from "../systems/useDocumentTitle";
 
 import "./Campaigns.css";
 
@@ -13,6 +14,8 @@ export default function Campaigns() {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [firstVisit, setFirstVisit] = useState(false);
+
+  useDocumentTitle("Campaigns");
 
   useEffect(() => {
     // Listen for storage changes (profile updates)
@@ -161,7 +164,9 @@ export default function Campaigns() {
                   >
                     <div className="mission-order">#{mission.order}</div>
                     <div className="mission-title">{mission.title}</div>
-                    <div className={`mission-badge badge-${mission.difficulty}`}>
+                    <div
+                      className={`mission-badge badge-${mission.difficulty}`}
+                    >
                       {mission.difficulty}
                     </div>
                     {missionCompleted ? (

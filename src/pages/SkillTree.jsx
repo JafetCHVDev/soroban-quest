@@ -1,34 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { missions } from '../data/missions';
-import { loadProgress } from '../systems/storage';
-import './SkillTree.css';
+import React, { useState, useEffect } from "react";
+import { missions } from "../data/missions";
+import { loadProgress } from "../systems/storage";
+import { useDocumentTitle } from "../systems/useDocumentTitle";
+import "./SkillTree.css";
 
 const conceptCategories = {
   Core: {
-    title: 'Core Concepts',
-    description: 'Fundamental Soroban building blocks',
-    concepts: ['contract', 'contractimpl', 'Env', 'Symbol']
+    title: "Core Concepts",
+    description: "Fundamental Soroban building blocks",
+    concepts: ["contract", "contractimpl", "Env", "Symbol"],
   },
   Storage: {
-    title: 'Storage & State',
-    description: 'Managing persistent data',
-    concepts: ['storage', 'instance', 'persistent storage', 'set', 'get', 'remove', 'unwrap_or']
+    title: "Storage & State",
+    description: "Managing persistent data",
+    concepts: [
+      "storage",
+      "instance",
+      "persistent storage",
+      "set",
+      "get",
+      "remove",
+      "unwrap_or",
+    ],
   },
   Types: {
-    title: 'Data Types',
-    description: 'Working with different data types',
-    concepts: ['Address', 'Vec', 'Map', 'String', 'i128', 'u32', 'bool']
+    title: "Data Types",
+    description: "Working with different data types",
+    concepts: ["Address", "Vec", "Map", "String", "i128", "u32", "bool"],
   },
   Auth: {
-    title: 'Authorization',
-    description: 'Access control and security',
-    concepts: ['require_auth', 'init pattern', 'admin patterns']
+    title: "Authorization",
+    description: "Access control and security",
+    concepts: ["require_auth", "init pattern", "admin patterns"],
   },
   Advanced: {
-    title: 'Advanced Patterns',
-    description: 'Complex contract patterns',
-    concepts: ['token', 'mint', 'transfer', 'ledger sequence', 'time-lock', 'multi-sig', 'governance pattern', 'conditional panic', 'complex state', 'multiple functions']
-  }
+    title: "Advanced Patterns",
+    description: "Complex contract patterns",
+    concepts: [
+      "token",
+      "mint",
+      "transfer",
+      "ledger sequence",
+      "time-lock",
+      "multi-sig",
+      "governance pattern",
+      "conditional panic",
+      "complex state",
+      "multiple functions",
+    ],
+  },
 };
 
 export default function SkillTree() {
@@ -36,22 +56,24 @@ export default function SkillTree() {
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
 
+  useDocumentTitle("Skill Tree");
+
   useEffect(() => {
     const progress = loadProgress();
     setCompletedMissions(progress.completedMissions || []);
   }, []);
 
   const getConceptStatus = (concept) => {
-    const teachingMission = missions.find(mission => 
-      mission.conceptsIntroduced?.includes(concept)
+    const teachingMission = missions.find((mission) =>
+      mission.conceptsIntroduced?.includes(concept),
     );
-    
-    if (!teachingMission) return { status: 'locked', mission: null };
-    
+
+    if (!teachingMission) return { status: "locked", mission: null };
+
     const isCompleted = completedMissions.includes(teachingMission.id);
     return {
-      status: isCompleted ? 'unlocked' : 'locked',
-      mission: teachingMission
+      status: isCompleted ? "unlocked" : "locked",
+      mission: teachingMission,
     };
   };
 
@@ -65,8 +87,8 @@ export default function SkillTree() {
     const isHovered = hoveredConcept === concept;
     const isSelected = selectedConcept?.concept === concept;
 
-    const nodeClass = `concept-node ${status} ${isHovered ? 'hovered' : ''} ${isSelected ? 'selected' : ''}`;
-    
+    const nodeClass = `concept-node ${status} ${isHovered ? "hovered" : ""} ${isSelected ? "selected" : ""}`;
+
     return (
       <div
         key={concept}
@@ -75,9 +97,7 @@ export default function SkillTree() {
         onMouseEnter={() => setHoveredConcept(concept)}
         onMouseLeave={() => setHoveredConcept(null)}
       >
-        <div className="concept-icon">
-          {status === 'locked' ? '🔒' : '✨'}
-        </div>
+        <div className="concept-icon">{status === "locked" ? "🔒" : "✨"}</div>
         <div className="concept-name">{concept}</div>
         {isHovered && mission && (
           <div className="concept-tooltip">
@@ -91,8 +111,8 @@ export default function SkillTree() {
 
   const renderCategory = (categoryKey, categoryData, index) => {
     const concepts = categoryData.concepts;
-    const unlockedCount = concepts.filter(concept => 
-      getConceptStatus(concept).status === 'unlocked'
+    const unlockedCount = concepts.filter(
+      (concept) => getConceptStatus(concept).status === "unlocked",
     ).length;
     const progress = (unlockedCount / concepts.length) * 100;
 
@@ -102,27 +122,37 @@ export default function SkillTree() {
           <h3 className="category-title">{categoryData.title}</h3>
           <div className="category-progress">
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="progress-text">{unlockedCount}/{concepts.length}</span>
+            <span className="progress-text">
+              {unlockedCount}/{concepts.length}
+            </span>
           </div>
         </div>
         <p className="category-description">{categoryData.description}</p>
         <div className="concept-grid">
-          {concepts.map((concept, conceptIndex) => 
-            renderConceptNode(concept, index, conceptIndex)
+          {concepts.map((concept, conceptIndex) =>
+            renderConceptNode(concept, index, conceptIndex),
           )}
         </div>
       </div>
     );
   };
 
-  const totalConcepts = Object.values(conceptCategories).reduce((sum, cat) => sum + cat.concepts.length, 0);
-  const totalUnlocked = Object.values(conceptCategories).reduce((sum, cat) => 
-    sum + cat.concepts.filter(concept => getConceptStatus(concept).status === 'unlocked').length, 0
+  const totalConcepts = Object.values(conceptCategories).reduce(
+    (sum, cat) => sum + cat.concepts.length,
+    0,
+  );
+  const totalUnlocked = Object.values(conceptCategories).reduce(
+    (sum, cat) =>
+      sum +
+      cat.concepts.filter(
+        (concept) => getConceptStatus(concept).status === "unlocked",
+      ).length,
+    0,
   );
   const overallProgress = (totalUnlocked / totalConcepts) * 100;
 
@@ -135,8 +165,8 @@ export default function SkillTree() {
         </p>
         <div className="overall-progress">
           <div className="progress-bar large">
-            <div 
-              className="progress-fill" 
+            <div
+              className="progress-fill"
               style={{ width: `${overallProgress}%` }}
             />
           </div>
@@ -147,16 +177,19 @@ export default function SkillTree() {
       </div>
 
       <div className="skill-categories">
-        {Object.entries(conceptCategories).map(([key, data], index) => 
-          renderCategory(key, data, index)
+        {Object.entries(conceptCategories).map(([key, data], index) =>
+          renderCategory(key, data, index),
         )}
       </div>
 
       {selectedConcept && (
-        <div className="concept-detail-modal" onClick={() => setSelectedConcept(null)}>
+        <div
+          className="concept-detail-modal"
+          onClick={() => setSelectedConcept(null)}
+        >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close" 
+            <button
+              className="modal-close"
               onClick={() => setSelectedConcept(null)}
             >
               ×
@@ -165,9 +198,16 @@ export default function SkillTree() {
             {selectedConcept.mission ? (
               <div className="mission-info">
                 <h4>Taught in: {selectedConcept.mission.title}</h4>
-                <p><strong>Chapter:</strong> {selectedConcept.mission.chapter}</p>
-                <p><strong>Difficulty:</strong> {selectedConcept.mission.difficulty}</p>
-                <p><strong>XP Reward:</strong> {selectedConcept.mission.xpReward}</p>
+                <p>
+                  <strong>Chapter:</strong> {selectedConcept.mission.chapter}
+                </p>
+                <p>
+                  <strong>Difficulty:</strong>{" "}
+                  {selectedConcept.mission.difficulty}
+                </p>
+                <p>
+                  <strong>XP Reward:</strong> {selectedConcept.mission.xpReward}
+                </p>
                 <div className="mission-learning-goal">
                   <strong>Learning Goal:</strong>
                   <p>{selectedConcept.mission.learningGoal}</p>
@@ -180,7 +220,7 @@ export default function SkillTree() {
                   )}
                 </div>
                 {!completedMissions.includes(selectedConcept.mission.id) && (
-                  <a 
+                  <a
                     href={`/mission/${selectedConcept.mission.id}`}
                     className="start-mission-btn"
                   >

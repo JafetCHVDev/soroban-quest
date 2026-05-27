@@ -5,7 +5,11 @@ import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";
 import { loadProgress, saveProgress } from "../systems/storage";
-import { completeMission, recordAttempt, getRankTitle } from "../systems/gameEngine";
+import {
+  completeMission,
+  recordAttempt,
+  getRankTitle,
+} from "../systems/gameEngine";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
@@ -14,6 +18,7 @@ import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
+import { useDocumentTitle } from "../systems/useDocumentTitle";
 
 // ─── Monaco marker model name (must be consistent across calls) ──────────────
 const LIVE_MARKER_OWNER = "soroban-quest-live";
@@ -26,6 +31,8 @@ export default function MissionDetail() {
   // Safe fallback in case ToastContext is not provided
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
+
+  useDocumentTitle(mission ? `Mission: ${mission.title}` : "Mission");
 
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true);
@@ -43,9 +50,9 @@ export default function MissionDetail() {
   const [liveTotalCount, setLiveTotalCount] = useState(0);
 
   const terminalBodyRef = useRef(null);
-  const editorRef = useRef(null);       // Monaco editor instance
-  const monacoRef = useRef(null);       // Monaco global (for setModelMarkers)
-  const validatorRef = useRef(null);    // Debounced validator handle
+  const editorRef = useRef(null); // Monaco editor instance
+  const monacoRef = useRef(null); // Monaco global (for setModelMarkers)
+  const validatorRef = useRef(null); // Debounced validator handle
 
   const { openInOkashi, toast } = useokashi();
 
@@ -66,7 +73,11 @@ export default function MissionDetail() {
         setLivePassCount(0);
         setLiveTotalCount(0);
         setLoading(false);
-        logActivity(ACTIVITY_TYPES.MISSION_STARTED, { missionId, title: mission.title }, `Started mission: ${mission.title}`);
+        logActivity(
+          ACTIVITY_TYPES.MISSION_STARTED,
+          { missionId, title: mission.title },
+          `Started mission: ${mission.title}`,
+        );
       }, 1500);
     } else {
       setLoading(false);
@@ -222,7 +233,11 @@ export default function MissionDetail() {
       const nextIndex = hintIndex + 1;
       setHintIndex(nextIndex);
       if (showToast) showToast(`Hint ${nextIndex + 1} unlocked`, "info");
-      logActivity(ACTIVITY_TYPES.HINT_USED, { missionId, hintIndex: nextIndex }, `Used hint ${nextIndex + 1} for ${mission.title}`);
+      logActivity(
+        ACTIVITY_TYPES.HINT_USED,
+        { missionId, hintIndex: nextIndex },
+        `Used hint ${nextIndex + 1} for ${mission.title}`,
+      );
     }
   };
 
@@ -292,7 +307,9 @@ export default function MissionDetail() {
   // --------------------------- Render Mission Detail ---------------------------
   if (showReplay) {
     return (
-      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      >
         <CodeReplayPlayer
           missionId={missionId}
           recording={replayData}
@@ -486,10 +503,14 @@ export default function MissionDetail() {
               <span style={{ color: sbState.color, transition: "color 0.3s" }}>
                 {sbState.label}
               </span>
-              <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "10px" }}>
+              <span
+                style={{ color: "rgba(255,255,255,0.15)", fontSize: "10px" }}
+              >
                 |
               </span>
-              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "10.5px" }}>
+              <span
+                style={{ color: "rgba(255,255,255,0.3)", fontSize: "10.5px" }}
+              >
                 live checks · full suite on Run Tests
               </span>
             </div>
@@ -531,8 +552,8 @@ export default function MissionDetail() {
                         r.passed === true
                           ? "pass"
                           : r.passed === false
-                          ? "fail"
-                          : "info"
+                            ? "fail"
+                            : "info"
                       }`}
                     >
                       {r.message}
@@ -546,23 +567,28 @@ export default function MissionDetail() {
 
         {/* ---------------- Replay Panel ---------------- */}
         {isCompleted && hasReplay && (
-          <div className="mission-replay-panel" style={{
-            display: 'none',
-            padding: '2rem',
-            textAlign: 'center',
-            background: 'var(--bg-secondary)',
-            borderTop: '1px solid var(--border-subtle)'
-          }}>
-            <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
+          <div
+            className="mission-replay-panel"
+            style={{
+              display: "none",
+              padding: "2rem",
+              textAlign: "center",
+              background: "var(--bg-secondary)",
+              borderTop: "1px solid var(--border-subtle)",
+            }}
+          >
+            <h3 style={{ marginBottom: "1rem", color: "var(--text-primary)" }}>
               📹 Watch Your Solution
             </h3>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+            <p
+              style={{ color: "var(--text-secondary)", marginBottom: "1.5rem" }}
+            >
               Review your problem-solving process step by step.
             </p>
             <button
               className="btn btn-primary"
               onClick={handleWatchReplay}
-              style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}
+              style={{ fontSize: "1rem", padding: "0.75rem 2rem" }}
             >
               ▶️ Start Replay
             </button>
@@ -596,7 +622,8 @@ export default function MissionDetail() {
 
             {victoryData.newBadges?.length > 0 && (
               <p style={{ color: "var(--gold)", marginBottom: "1rem" }}>
-                🏅 New badge{victoryData.newBadges.length > 1 ? "s" : ""} earned!
+                🏅 New badge{victoryData.newBadges.length > 1 ? "s" : ""}{" "}
+                earned!
               </p>
             )}
 
@@ -657,9 +684,13 @@ export default function MissionDetail() {
                     fontSize: "13px",
                     fontWeight: "500",
                     background:
-                      toast.state === TOAST_STATES.SUCCESS ? "#064e3b" : "#4c0519",
+                      toast.state === TOAST_STATES.SUCCESS
+                        ? "#064e3b"
+                        : "#4c0519",
                     color:
-                      toast.state === TOAST_STATES.SUCCESS ? "#6ee7b7" : "#fda4af",
+                      toast.state === TOAST_STATES.SUCCESS
+                        ? "#6ee7b7"
+                        : "#fda4af",
                     border:
                       toast.state === TOAST_STATES.SUCCESS
                         ? "1px solid #065f46"

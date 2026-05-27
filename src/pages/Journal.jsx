@@ -1,11 +1,24 @@
 import React, { useState, useMemo } from "react";
-import { getActivityLog, ACTIVITY_TYPES, clearLog } from "../systems/activityLogger";
+import {
+  getActivityLog,
+  ACTIVITY_TYPES,
+  clearLog,
+} from "../systems/activityLogger";
 import { loadProgress } from "../systems/storage";
+import { useDocumentTitle } from "../systems/useDocumentTitle";
 import "./Journal.css";
 
 const EVENT_CONFIG = {
-  [ACTIVITY_TYPES.MISSION_STARTED]: { icon: "⚔️", class: "mission", label: "Mission" },
-  [ACTIVITY_TYPES.MISSION_COMPLETED]: { icon: "🗡️", class: "mission", label: "Mission" },
+  [ACTIVITY_TYPES.MISSION_STARTED]: {
+    icon: "⚔️",
+    class: "mission",
+    label: "Mission",
+  },
+  [ACTIVITY_TYPES.MISSION_COMPLETED]: {
+    icon: "🗡️",
+    class: "mission",
+    label: "Mission",
+  },
   [ACTIVITY_TYPES.BADGE_EARNED]: { icon: "🏅", class: "badge", label: "Badge" },
   [ACTIVITY_TYPES.LEVEL_UP]: { icon: "⬆️", class: "level", label: "Level Up" },
   [ACTIVITY_TYPES.HINT_USED]: { icon: "💡", class: "hint", label: "Hint" },
@@ -19,9 +32,11 @@ export default function Journal() {
   const [filter, setFilter] = useState("ALL");
   const progress = loadProgress();
 
+  useDocumentTitle("Journal");
+
   const filteredLog = useMemo(() => {
     if (filter === "ALL") return log;
-    return log.filter(entry => {
+    return log.filter((entry) => {
       const config = EVENT_CONFIG[entry.type];
       return config && config.label.toUpperCase() === filter;
     });
@@ -30,7 +45,7 @@ export default function Journal() {
   // Group by date
   const groupedLog = useMemo(() => {
     const groups = {};
-    filteredLog.forEach(entry => {
+    filteredLog.forEach((entry) => {
       const date = new Date(entry.timestamp);
       const dateStr = formatDateHeader(date);
       if (!groups[dateStr]) groups[dateStr] = [];
@@ -51,9 +66,15 @@ export default function Journal() {
       <div className="journal-header flex justify-between items-end">
         <div>
           <h1 className="journal-title">Adventure Journal</h1>
-          <p className="text-secondary">Your journey through the Soroban realm, recorded for eternity.</p>
+          <p className="text-secondary">
+            Your journey through the Soroban realm, recorded for eternity.
+          </p>
         </div>
-        <button className="btn btn-ghost btn-sm" style={{ color: "var(--red)" }} onClick={handleClear}>
+        <button
+          className="btn btn-ghost btn-sm"
+          style={{ color: "var(--red)" }}
+          onClick={handleClear}
+        >
           🗑️ Clear Log
         </button>
       </div>
@@ -61,7 +82,9 @@ export default function Journal() {
       {/* Summary Stats */}
       <div className="adventure-summary">
         <div className="summary-stat">
-          <span className="summary-stat-value">{progress.completedMissions.length}</span>
+          <span className="summary-stat-value">
+            {progress.completedMissions.length}
+          </span>
           <span className="summary-stat-label">Missions</span>
         </div>
         <div className="summary-stat">
@@ -84,9 +107,9 @@ export default function Journal() {
 
       {/* Filters */}
       <div className="journal-filters">
-        {["ALL", "MISSION", "BADGE", "LEVEL UP", "HINT", "SYSTEM"].map(f => (
-          <button 
-            key={f} 
+        {["ALL", "MISSION", "BADGE", "LEVEL UP", "HINT", "SYSTEM"].map((f) => (
+          <button
+            key={f}
             className={`filter-chip ${filter === f ? "active" : ""}`}
             onClick={() => setFilter(f)}
           >
@@ -98,18 +121,28 @@ export default function Journal() {
       {/* Timeline */}
       {Object.keys(groupedLog).length === 0 ? (
         <div className="card text-center p-12">
-          <div style={{ fontSize: "3rem", marginBottom: "1rem", opacity: 0.3 }}>📖</div>
-          <p className="text-secondary">No activities recorded yet. Start your first mission!</p>
+          <div style={{ fontSize: "3rem", marginBottom: "1rem", opacity: 0.3 }}>
+            📖
+          </div>
+          <p className="text-secondary">
+            No activities recorded yet. Start your first mission!
+          </p>
         </div>
       ) : (
         <div className="timeline">
           {Object.entries(groupedLog).map(([date, entries]) => (
             <div key={date} className="date-group">
               <div className="date-header">{date}</div>
-              {entries.map(entry => {
-                const config = EVENT_CONFIG[entry.type] || { icon: "❓", class: "system" };
-                const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
+              {entries.map((entry) => {
+                const config = EVENT_CONFIG[entry.type] || {
+                  icon: "❓",
+                  class: "system",
+                };
+                const time = new Date(entry.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+
                 return (
                   <div key={entry.id} className="timeline-event">
                     <div className={`event-dot ${config.class}`}>
@@ -120,8 +153,10 @@ export default function Journal() {
                       <div className="event-message">{entry.message}</div>
                       {entry.data && Object.keys(entry.data).length > 0 && (
                         <div className="event-details">
-                          {entry.type === ACTIVITY_TYPES.LEVEL_UP && `Target XP reached: ${progress.xp}`}
-                          {entry.type === ACTIVITY_TYPES.MISSION_COMPLETED && `Earned ${entry.data.xp || ""} XP`}
+                          {entry.type === ACTIVITY_TYPES.LEVEL_UP &&
+                            `Target XP reached: ${progress.xp}`}
+                          {entry.type === ACTIVITY_TYPES.MISSION_COMPLETED &&
+                            `Earned ${entry.data.xp || ""} XP`}
                         </div>
                       )}
                     </div>
@@ -144,15 +179,17 @@ function formatDateHeader(date) {
   if (isSameDay(date, today)) return "Today";
   if (isSameDay(date, yesterday)) return "Yesterday";
 
-  return date.toLocaleDateString("en-US", { 
-    month: "long", 
-    day: "numeric", 
-    year: date.getFullYear() !== today.getFullYear() ? "numeric" : undefined 
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: date.getFullYear() !== today.getFullYear() ? "numeric" : undefined,
   });
 }
 
 function isSameDay(d1, d2) {
-  return d1.getFullYear() === d2.getFullYear() &&
-         d1.getMonth() === d2.getMonth() &&
-         d1.getDate() === d2.getDate();
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
 }
