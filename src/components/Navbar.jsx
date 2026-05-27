@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Download } from "lucide-react";
 import { loadProfile } from "../systems/storage";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const profile = loadProfile();
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstallable, setIsInstallable] = useState(false);
 
   const [theme, setTheme] = useState(() => {
     return (
@@ -21,6 +23,33 @@ export default function Navbar() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("soroban_quest_theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      setIsInstallable(false);
+    }
+
+    setDeferredPrompt(null);
+  };
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -66,6 +95,17 @@ export default function Navbar() {
 
       {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
       <div className="navbar-stats">
+        {isInstallable && (
+          <button
+            onClick={handleInstall}
+            className="btn-primary"
+            style={{ padding: "0.5rem 1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
+            aria-label="Install app"
+          >
+            <Download size={16} />
+            <span>Install App</span>
+          </button>
+        )}
         <button
           onClick={toggleTheme}
           className="btn-ghost"
@@ -106,6 +146,17 @@ export default function Navbar() {
 
         {/* MOBILE EXTRAS */}
         <div className="mobile-stats">
+          {isInstallable && (
+            <button
+              onClick={handleInstall}
+              className="btn-primary"
+              style={{ padding: "0.5rem 1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
+              aria-label="Install app"
+            >
+              <Download size={16} />
+              <span>Install App</span>
+            </button>
+          )}
           <button
             onClick={toggleTheme}
             className="btn-ghost"
