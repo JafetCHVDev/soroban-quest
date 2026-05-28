@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import "./Profile.css";
 import { useToast } from '../systems/ToastContext';
 
+import { Link } from "react-router-dom";
 import {
   loadProgress,
   importProgress,
@@ -15,6 +16,7 @@ import {
 import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
+import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 
 export default function Profile() {
   const { showToast } = useToast();
@@ -59,6 +61,9 @@ export default function Profile() {
     exportProgress();
     // Replaced local status state with unified system toast alerts
     showToast("Progress configuration data exported!", "success");
+    setImportStatus("✅ Progress exported!");
+    logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
+    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleImport = async (e) => {
@@ -69,6 +74,8 @@ export default function Profile() {
       const newState = await importProgress(file);
       setState(newState);
       showToast("Progress state imported successfully!", "success");
+      setImportStatus("✅ Progress imported successfully!");
+      logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
     } catch {
       showToast("Invalid data payload — backup corrupted.", "error");
     }
@@ -115,10 +122,15 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* EDIT BUTTON */}
-          <button className="btn btn-secondary mt-3" onClick={openEdit}>
-            ✏️ Edit Profile
-          </button>
+          {/* ACTIONS */}
+          <div className="flex gap-2 mt-3">
+            <button className="btn btn-secondary" onClick={openEdit}>
+              ✏️ Edit Profile
+            </button>
+            <Link to="/journal" className="btn btn-ghost">
+              📖 View Journal
+            </Link>
+          </div>
         </div>
 
         {/* STATS */}
@@ -151,6 +163,8 @@ export default function Profile() {
           {/* NAME INPUT */}
           <input
             className="profile-input-full"
+            className="w-full p-2 mb-3 rounded"
+            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
@@ -166,6 +180,11 @@ export default function Profile() {
                 className={`avatar-btn-node text-2xl ${
                   avatar === a ? "active" : ""
                 }`}
+                className="text-2xl p-2 rounded transition"
+                style={{
+                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                  transform: avatar === a ? "scale(1.1)" : "none",
+                }}
               >
                 {a}
               </button>
@@ -236,7 +255,7 @@ export default function Profile() {
           Import
         </button>
 
-        <button className="btn btn-ghost text-red-500" onClick={handleReset}>
+        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
           Reset
         </button>
 
