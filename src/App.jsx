@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { loadProgress, saveProgress } from "./systems/storage";
 import { updateStreak } from "./systems/gameEngine";
 
@@ -17,6 +17,7 @@ import SkillTree from "./pages/SkillTree";
 
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 // 1. Import the ErrorBoundary
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -33,10 +34,6 @@ export default function App() {
     saveProgress(newState);
   }, []);
 
-  // useLocation gives us a stable key that changes on every navigation.
-  const location = useLocation();
-
-
   return (
     <ErrorBoundary>
       {/* 3. Wraped everything in ToastProvider */}
@@ -44,6 +41,7 @@ export default function App() {
         <div className="app">
           <Navbar />
           <main className="main-content">
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/missions" element={<MissionMap />} />
