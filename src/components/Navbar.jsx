@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
 import { loadProfile } from "../systems/storage";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
   const profile = loadProfile();
+  const langRef = useRef(null);
+
+  const { t, language, setLanguage, languages } = useTranslation();
 
   const [theme, setTheme] = useState(() => {
     return (
@@ -22,11 +27,89 @@ export default function Navbar() {
     localStorage.setItem("soroban_quest_theme", theme);
   }, [theme]);
 
+  // Close the language dropdown on outside click or Escape
+  useEffect(() => {
+    if (!langOpen) return;
+    const onClick = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setLangOpen(false);
+      }
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setLangOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [langOpen]);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const handleLanguageChange = (code) => {
+    setLanguage(code);
+    setLangOpen(false);
+  };
+
   const isActive = (path) => (location.pathname === path ? "active" : "");
+
+  // Reusable language selector — renders the same control on desktop & mobile
+  const LanguageSelector = ({ idSuffix = "desktop" }) => {
+    const currentLang =
+      languages.find((l) => l.code === language) || languages[0];
+
+    return (
+      <div className="language-selector" ref={idSuffix === "desktop" ? langRef : null}>
+        <button
+          type="button"
+          className="btn-ghost language-selector-trigger"
+          aria-haspopup="listbox"
+          aria-expanded={langOpen}
+          aria-label={t("common.selectLanguage")}
+          onClick={() => setLangOpen((v) => !v)}
+        >
+          <Globe size={18} />
+          <span className="language-selector-code">
+            {currentLang.code.toUpperCase()}
+          </span>
+          <ChevronDown size={14} aria-hidden="true" />
+        </button>
+
+        {langOpen && (
+          <ul
+            className="language-selector-menu"
+            role="listbox"
+            aria-label={t("common.selectLanguage")}
+          >
+            {languages.map((lang) => (
+              <li key={lang.code}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={lang.code === language}
+                  className={`language-selector-option ${
+                    lang.code === language ? "active" : ""
+                  }`}
+                  onClick={() => handleLanguageChange(lang.code)}
+                >
+                  <span className="language-selector-option-code">
+                    {lang.code.toUpperCase()}
+                  </span>
+                  <span className="language-selector-option-name">
+                    {lang.name}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
 
   return (
     <nav className="navbar">
@@ -39,38 +122,40 @@ export default function Navbar() {
       <ul className="navbar-links">
         <li>
           <Link to="/" className={isActive("/")}>
-            Home
+            {t("navbar.home")}
           </Link>
         </li>
         <li>
           <Link to="/campaigns" className={isActive("/campaigns")}>
-            Campaigns
+            {t("navbar.campaigns")}
           </Link>
         </li>
         <li>
           <Link to="/missions" className={isActive("/missions")}>
-            Missions
+            {t("navbar.missions")}
           </Link>
         </li>
         <li>
           <Link to="/profile" className={isActive("/profile")}>
-            Profile
+            {t("navbar.profile")}
           </Link>
         </li>
         <li>
           <Link to="/journal" className={isActive("/journal")}>
-            Journal
+            {t("navbar.journal")}
           </Link>
         </li>
       </ul>
 
-      {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
+      {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
       <div className="navbar-stats">
+        <LanguageSelector idSuffix="desktop" />
+
         <button
           onClick={toggleTheme}
           className="btn-ghost"
           style={{ padding: "0.5rem", borderRadius: "50%" }}
-          aria-label="Toggle theme"
+          aria-label={t("common.toggleTheme")}
         >
           {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
         </button>
@@ -89,28 +174,30 @@ export default function Navbar() {
       {/* MOBILE */}
       <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
         <Link to="/" onClick={() => setIsOpen(false)}>
-          Home
+          {t("navbar.home")}
         </Link>
         <Link to="/campaigns" onClick={() => setIsOpen(false)}>
-          Campaigns
+          {t("navbar.campaigns")}
         </Link>
         <Link to="/missions" onClick={() => setIsOpen(false)}>
-          Missions
+          {t("navbar.missions")}
         </Link>
         <Link to="/profile" onClick={() => setIsOpen(false)}>
-          Profile
+          {t("navbar.profile")}
         </Link>
         <Link to="/journal" onClick={() => setIsOpen(false)}>
-          Journal
+          {t("navbar.journal")}
         </Link>
 
         {/* MOBILE EXTRAS */}
         <div className="mobile-stats">
+          <LanguageSelector idSuffix="mobile" />
+
           <button
             onClick={toggleTheme}
             className="btn-ghost"
             style={{ padding: "0.5rem", borderRadius: "50%" }}
-            aria-label="Toggle theme"
+            aria-label={t("common.toggleTheme")}
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>

@@ -1,0 +1,412 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español"
+  },
+  "common": {
+    "selectLanguage": "Seleccionar idioma",
+    "toggleTheme": "Cambiar tema",
+    "back": "Volver",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando…",
+    "all": "Todas",
+    "level": "Nivel",
+    "xp": "XP",
+    "chapter": "Capítulo",
+    "mission": "Misión",
+    "complete": "Completa",
+    "completed": "Completada",
+    "locked": "Bloqueada",
+    "unlocked": "Desbloqueada"
+  },
+  "navbar": {
+    "home": "Inicio",
+    "campaigns": "Campañas",
+    "missions": "Misiones",
+    "profile": "Perfil",
+    "journal": "Diario"
+  },
+  "home": {
+    "badge": "✨ Sin configuración • Sin billetera • Código abierto",
+    "title": {
+      "lead": "Domina",
+      "brand": "Soroban",
+      "tail": "Contratos Inteligentes"
+    },
+    "subtitle": "Embárcate en una épica aventura para aprender la plataforma de contratos inteligentes de Stellar. Escribe código real de Soroban en tu navegador, resuelve desafíos y mejora tus habilidades en blockchain — sin instalación.",
+    "cta": {
+      "continueQuest": "⚔️ Continuar misión",
+      "viewProgress": "📊 Ver progreso",
+      "beginJourney": "🚀 Comienza tu aventura",
+      "viewMissionMap": "🗺️ Ver mapa de misiones"
+    },
+    "stats": {
+      "missions": "Misiones",
+      "totalXp": "XP total",
+      "backendNeeded": "Backend necesario"
+    },
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "subtitle": "Tu camino desde cero hasta dominar Soroban, todo desde el navegador."
+    },
+    "features": {
+      "read": {
+        "title": "Lee la misión",
+        "body": "Cada misión despliega una historia mientras enseña los conceptos esenciales de Soroban. Aprende sobre contratos, almacenamiento, tokens y más a través de desafíos narrativos."
+      },
+      "write": {
+        "title": "Escribe el código",
+        "body": "Usa el editor Monaco integrado con resaltado de sintaxis de Rust y autocompletado de Soroban. Las plantillas te dan un punto de partida — tú completas la lógica."
+      },
+      "test": {
+        "title": "Ejecuta las pruebas",
+        "body": "Valida tu código con retroalimentación instantánea. Cada misión tiene verificaciones ocultas que comprueban la estructura, las funciones y los patrones de tu contrato."
+      },
+      "xp": {
+        "title": "Gana XP y sube de nivel",
+        "body": "Obtén puntos de experiencia por cada misión completada. Desbloquea insignias, escala rangos y sigue tu viaje desde Iniciado hasta Soberano Estelar."
+      },
+      "zeroBackend": {
+        "title": "Cero backend",
+        "body": "Todo se ejecuta en tu navegador. Sin servidores, sin bases de datos, sin cuentas. Tu progreso se guarda localmente — expórtalo cuando quieras como un archivo JSON."
+      },
+      "path": {
+        "title": "Camino progresivo",
+        "body": "Desde \"Hello World\" hasta contratos multi-firma. Cada misión se apoya en la anterior, creando una ruta estructurada hacia el dominio de Soroban."
+      }
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "Plataforma",
+      "home": "Inicio",
+      "missions": "Misiones",
+      "profile": "Perfil",
+      "glossary": "Glosario"
+    },
+    "resources": {
+      "heading": "Recursos",
+      "docs": "Documentación de Soroban",
+      "sdk": "SDK de Stellar",
+      "github": "GitHub"
+    },
+    "community": {
+      "heading": "Comunidad",
+      "discord": "Discord",
+      "telegram": "Telegram"
+    },
+    "credits": {
+      "tagline": "Construido para el ecosistema Stellar",
+      "license": "Licencia MIT"
+    }
+  },
+  "notFound": {
+    "title": "Esta misión no existe",
+    "body": "Parece que te has perdido en el espacio profundo",
+    "back": "Volver a la base"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "Algo salió mal",
+      "body": "La misión encontró un error en tiempo de ejecución. Revisa la consola para más detalles.",
+      "reload": "Recargar",
+      "report": "Reportar problema"
+    },
+    "editor": {
+      "body": "El editor no se pudo cargar",
+      "reset": "Reiniciar editor"
+    },
+    "mission": {
+      "title": "Misión no disponible",
+      "retry": "Reintentar"
+    }
+  },
+  "profile": {
+    "edit": "✏️ Editar perfil",
+    "viewJournal": "📖 Ver diario",
+    "editPanel": {
+      "title": "Editar perfil",
+      "namePlaceholder": "Ingresa tu nombre"
+    },
+    "stats": {
+      "missions": "Misiones",
+      "badges": "Insignias"
+    },
+    "sections": {
+      "badges": "🏅 Insignias",
+      "completedMissions": "✅ Misiones completadas",
+      "data": "⚙️ Datos"
+    },
+    "noMissions": "Aún no has completado ninguna misión.",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "Total: {{xp}} XP"
+    },
+    "data": {
+      "export": "Exportar",
+      "import": "Importar",
+      "reset": "Restablecer",
+      "confirmReset": "¿Restablecer todo el progreso? Esto no se puede deshacer.",
+      "status": {
+        "exported": "✅ ¡Progreso exportado!",
+        "imported": "✅ ¡Progreso importado correctamente!",
+        "importFailed": "❌ Archivo inválido — no se pudo importar.",
+        "resetDone": "🗑️ Progreso restablecido."
+      },
+      "log": {
+        "exported": "Progreso de la aventura exportado",
+        "imported": "Progreso de la aventura importado desde archivo"
+      }
+    }
+  },
+  "journal": {
+    "title": "Diario de aventura",
+    "subtitle": "Tu viaje a través del reino de Soroban, registrado para la eternidad.",
+    "clearLog": "🗑️ Borrar registro",
+    "confirmClear": "¿Borrar todo el historial de actividad?",
+    "summary": {
+      "missions": "Misiones",
+      "badges": "Insignias",
+      "level": "Nivel",
+      "totalXp": "XP total",
+      "streak": "Días de racha"
+    },
+    "filters": {
+      "all": "Todo",
+      "mission": "Misión",
+      "badge": "Insignia",
+      "levelUp": "Subida de nivel",
+      "hint": "Pista",
+      "system": "Sistema"
+    },
+    "empty": "Aún no hay actividades registradas. ¡Comienza tu primera misión!",
+    "dates": {
+      "today": "Hoy",
+      "yesterday": "Ayer"
+    },
+    "events": {
+      "missionStarted": "Misión iniciada: {{title}}",
+      "missionCompleted": "Misión completada: {{title}}",
+      "badgeEarned": "¡Ganaste la insignia \"{{name}}\"!",
+      "levelUp": "¡Alcanzaste el Nivel {{level}}!",
+      "hintUsed": "Usaste la pista {{index}}",
+      "export": "Progreso de la aventura exportado",
+      "import": "Progreso de la aventura importado desde archivo",
+      "streakOne": "Racha diaria: ¡1 día!",
+      "streakMany": "Racha diaria: ¡{{count}} días!"
+    },
+    "details": {
+      "targetXp": "XP objetivo alcanzado: {{xp}}",
+      "earnedXp": "Ganaste {{xp}} XP"
+    },
+    "eventLabels": {
+      "mission": "Misión",
+      "badge": "Insignia",
+      "levelUp": "Subida de nivel",
+      "hint": "Pista",
+      "system": "Sistema",
+      "streak": "Racha"
+    }
+  },
+  "campaigns": {
+    "title": "Campañas",
+    "subtitle": "Capítulos épicos con historia | Nivel {{level}} | {{completed}}/{{total}} misiones totales",
+    "chapter": "Capítulo {{number}}",
+    "missionCount": "{{completed}}/{{total}} misiones",
+    "lockedAt": "🔒 Alcanza el nivel {{level}} para desbloquear",
+    "chapterComplete": "✓ ¡Capítulo completado!",
+    "back": "← Volver a campañas",
+    "completeOf": "{{completed}}/{{total}} completadas",
+    "lore": {
+      "modalTitle": "Introducción del capítulo",
+      "beginChapter": "Comenzar capítulo {{number}}"
+    }
+  },
+  "missionMap": {
+    "title": "Mapa de misiones",
+    "subtitle": "{{completed}} de {{total}} misiones completadas",
+    "searchPlaceholder": "Buscar misiones…",
+    "difficulty": {
+      "all": "Todas",
+      "beginner": "Principiante",
+      "intermediate": "Intermedia",
+      "advanced": "Avanzada"
+    },
+    "chapters": {
+      "all": "Todos los capítulos",
+      "n": "Capítulo {{number}}"
+    },
+    "card": {
+      "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ Completada",
+      "locked": "🔒 Bloqueada"
+    },
+    "noResults": "No hay misiones que coincidan con tus filtros.",
+    "aria": {
+      "missionPath": "Gráfico del camino de misiones",
+      "missionTimeline": "Línea de tiempo de misiones",
+      "missionItem": "Misión {{order}}: {{title}}",
+      "missionItemCompleted": "Misión {{order}}: {{title}}, completada",
+      "missionItemUnlocked": "Misión {{order}}: {{title}}, desbloqueada",
+      "missionItemLocked": "Misión {{order}}: {{title}}, bloqueada"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "Historia",
+      "editor": "Editor",
+      "tests": "Pruebas",
+      "replay": "📹 Repetición"
+    },
+    "notFound": {
+      "title": "Misión no encontrada",
+      "body": "La misión \"{{id}}\" no existe.",
+      "back": "← Volver al mapa de misiones"
+    },
+    "editor": {
+      "reset": "↺ Reiniciar",
+      "hint": "💡 Pista",
+      "solution": "👁️ Solución",
+      "run": "▶ Ejecutar pruebas",
+      "running": "Ejecutando…"
+    },
+    "terminal": {
+      "title": "Salida de pruebas",
+      "placeholder": "Haz clic en \"Ejecutar pruebas\" para validar tu código…",
+      "runningChecks": "🔍 Ejecutando verificaciones…",
+      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional."
+    },
+    "status": {
+      "checking": "Verificando…",
+      "passing": "{{passed}}/{{total}} verificaciones pasando",
+      "allPassing": "{{passed}}/{{total}} verificaciones pasando ✓",
+      "note": "verificaciones en vivo · suite completa al ejecutar pruebas"
+    },
+    "toasts": {
+      "validated": "¡Parámetros de la misión validados!",
+      "validationFailed": "Validación fallida. Revisa la terminal.",
+      "hintUnlocked": "Pista {{index}} desbloqueada",
+      "codeReset": "Código restablecido a la plantilla",
+      "solutionLoaded": "Solución cargada en el editor"
+    },
+    "hint": {
+      "label": "💡 Pista {{index}}:"
+    },
+    "victory": {
+      "title": "¡Misión completada!",
+      "youCompleted": "Has completado",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 ¡Subiste de nivel! Ahora eres Nivel {{level}} — {{rank}}",
+      "badgeEarnedOne": "🏅 ¡Nueva insignia obtenida!",
+      "badgeEarnedMany": "🏅 ¡Nuevas insignias obtenidas!",
+      "next": "Siguiente misión →",
+      "map": "Mapa de misiones"
+    },
+    "replay": {
+      "header": "📹 Mira tu solución",
+      "body": "Revisa paso a paso tu proceso de resolución.",
+      "start": "▶️ Iniciar repetición"
+    },
+    "okashi": {
+      "button": "🚀 Probar en Okashi — Compilar e implementar",
+      "help": "Abre okashi.dev en una pestaña nueva. Tu código se copia al portapapeles — pégalo allí para compilarlo con el compilador real de Soroban e implementarlo en Testnet."
+    }
+  },
+  "skillTree": {
+    "title": "Árbol de habilidades de Soroban",
+    "subtitle": "Sigue tu dominio de los conceptos de contratos inteligentes de Soroban",
+    "overall": "{{unlocked}}/{{total}} conceptos dominados",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": {
+        "title": "Conceptos básicos",
+        "description": "Componentes fundamentales de Soroban"
+      },
+      "Storage": {
+        "title": "Almacenamiento y estado",
+        "description": "Gestión de datos persistentes"
+      },
+      "Types": {
+        "title": "Tipos de datos",
+        "description": "Trabajando con diferentes tipos de datos"
+      },
+      "Auth": {
+        "title": "Autorización",
+        "description": "Control de acceso y seguridad"
+      },
+      "Advanced": {
+        "title": "Patrones avanzados",
+        "description": "Patrones de contratos complejos"
+      }
+    },
+    "tooltip": {
+      "chapter": "Capítulo {{chapter}}"
+    },
+    "modal": {
+      "taughtIn": "Enseñado en: {{title}}",
+      "chapterLabel": "Capítulo:",
+      "difficultyLabel": "Dificultad:",
+      "xpLabel": "Recompensa XP:",
+      "learningGoal": "Objetivo de aprendizaje:",
+      "completed": "✅ Completada",
+      "notCompleted": "🔒 Aún no completada",
+      "startMission": "Iniciar misión",
+      "notCovered": "Este concepto aún no está cubierto en las misiones disponibles."
+    }
+  },
+  "ranks": {
+    "0": "Iniciado",
+    "1": "Aprendiz",
+    "2": "Escriba",
+    "3": "Programador",
+    "4": "Arquitecto",
+    "5": "Centinela",
+    "6": "Guardián",
+    "7": "Maestro Guardián",
+    "8": "Anciano",
+    "9": "Luminaria",
+    "10": "Soberano Estelar"
+  },
+  "difficulty": {
+    "beginner": "principiante",
+    "intermediate": "intermedia",
+    "advanced": "avanzada"
+  },
+  "badges": {
+    "first_contract": {
+      "name": "Primer Contrato",
+      "description": "Completa tu primera misión"
+    },
+    "triple_threat": {
+      "name": "Triple Amenaza",
+      "description": "Completa 3 misiones"
+    },
+    "five_star": {
+      "name": "Cinco Estrellas",
+      "description": "Completa 5 misiones"
+    },
+    "completionist": {
+      "name": "Completista",
+      "description": "Completa todas las misiones"
+    },
+    "level_3": {
+      "name": "Estrella Naciente",
+      "description": "Alcanza el nivel 3"
+    },
+    "level_5": {
+      "name": "Guardián Estelar",
+      "description": "Alcanza el nivel 5"
+    },
+    "xp_1000": {
+      "name": "Acumulador de XP",
+      "description": "Gana 1000 XP"
+    },
+    "speed_demon": {
+      "name": "Demonio Veloz",
+      "description": "Completa una misión en el primer intento"
+    }
+  }
+}

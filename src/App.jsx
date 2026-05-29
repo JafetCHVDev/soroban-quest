@@ -25,6 +25,11 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./systems/ToastContext";
 import "./systems/Toast.css";
 
+// 3. Import Language Provider
+//    Placed OUTSIDE the ErrorBoundary so the boundary's fallback
+//    UI can still call useTranslation() when something in the tree throws.
+import { LanguageProvider } from "./i18n";
+
 export default function App() {
 
   useEffect(() => {
@@ -38,26 +43,27 @@ export default function App() {
 
 
   return (
-    <ErrorBoundary>
-      {/* 3. Wraped everything in ToastProvider */}
-      <ToastProvider>
-        <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/missions" element={<MissionMap />} />
-              <Route path="/campaigns" element={<Campaigns />} />
-              <Route path="/mission/:missionId" element={<MissionDetail />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/journal" element={<Journal />} />
-              <Route path="/skills" element={<SkillTree />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </ToastProvider>
-    </ErrorBoundary>
+    <LanguageProvider>
+      <ErrorBoundary>
+        <ToastProvider>
+          <div className="app">
+            <Navbar />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/missions" element={<MissionMap />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/mission/:missionId" element={<MissionDetail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/journal" element={<Journal />} />
+                <Route path="/skills" element={<SkillTree />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </ToastProvider>
+      </ErrorBoundary>
+    </LanguageProvider>
   );
 }

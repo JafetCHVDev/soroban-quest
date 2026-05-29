@@ -1,18 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
-import { missions } from "../data/missions.js";
-import { campaigns, getCampaignProgress } from "../data/campaigns.js";
+import { missions, localizeMissions } from "../data/missions.js";
+import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns.js";
 import { loadProgress } from "../systems/storage.js";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
+import { useTranslation } from "../i18n/useTranslation";
 
 import "./Campaigns.css";
 
 export default function Campaigns() {
+  const { t, language } = useTranslation();
   const [progress, setProgress] = useState(loadProgress());
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [firstVisit, setFirstVisit] = useState(false);
+
+  const localizedCampaigns = useMemo(
+    () => localizeCampaigns(campaigns, language),
+    [language],
+  );
+  const localizedMissions = useMemo(
+    () => localizeMissions(missions, language),
+    [language],
+  );
+  const selectedCampaign = useMemo(
+    () => localizedCampaigns.find((c) => c.id === selectedCampaignId) || null,
+    [localizedCampaigns, selectedCampaignId],
+  );
 
   useEffect(() => {
     // Listen for storage changes (profile updates)
@@ -29,7 +44,7 @@ export default function Campaigns() {
       setFirstVisit(true);
       setShowLoreModal(true);
     }
-    setSelectedCampaign(campaign);
+    setSelectedCampaignId(campaign.id);
   };
 
   const closeModal = () => {
@@ -47,15 +62,18 @@ export default function Campaigns() {
   return (
     <div className="campaigns-page">
       <div className="page-header">
-        <h1 className="section-title">Campaigns</h1>
+        <h1 className="section-title">{t("campaigns.title")}</h1>
         <p className="section-subtitle">
-          Epic story-driven chapters | Level {currentLevel} |{" "}
-          {progress.completedMissions.length}/{missions.length} total missions
+          {t("campaigns.subtitle", {
+            level: currentLevel,
+            completed: progress.completedMissions.length,
+            total: missions.length,
+          })}
         </p>
       </div>
 
       <div className="campaigns-grid">
-        {campaigns.map((campaign) => {
+        {localizedCampaigns.map((campaign) => {
           const stats = getCampaignProgress(
             campaign.id,
             progress.completedMissions,
@@ -77,7 +95,7 @@ export default function Campaigns() {
                 }}
               >
                 <div className="campaign-badge">
-                  Chapter {campaign.chapterNumber}
+                  {t("campaigns.chapter", { number: campaign.chapterNumber })}
                 </div>
               </div>
 
@@ -87,7 +105,10 @@ export default function Campaigns() {
 
                 <div className="campaign-progress">
                   <div className="progress-label">
-                    {stats.completed}/{stats.total} missions
+                    {t("campaigns.missionCount", {
+                      completed: stats.completed,
+                      total: stats.total,
+                    })}
                   </div>
                   <div className="xp-bar-container">
                     <div className="xp-bar-track">
@@ -101,13 +122,13 @@ export default function Campaigns() {
 
                 {!unlocked && (
                   <div className="campaign-lock">
-                    🔒 Reach Level {campaign.requiredLevel} to unlock
+                    {t("campaigns.lockedAt", { level: campaign.requiredLevel })}
                   </div>
                 )}
 
                 {completed && (
                   <div className="campaign-status completed">
-                    ✓ Chapter Complete!
+                    {t("campaigns.chapterComplete")}
                   </div>
                 )}
               </div>
@@ -121,29 +142,29 @@ export default function Campaigns() {
           <div className="campaign-detail">
             <button
               className="detail-back"
-              onClick={() => setSelectedCampaign(null)}
+              onClick={() => setSelectedCampaignId(null)}
             >
-              ← Back to Campaigns
+              {t("campaigns.back")}
             </button>
 
             <div className="detail-header">
               <h2>{selectedCampaign.title}</h2>
               <div className="detail-stats">
                 <span>
-                  {
-                    getCampaignProgress(
+                  {t("campaigns.completeOf", {
+                    completed: getCampaignProgress(
                       selectedCampaign.id,
                       progress.completedMissions,
-                    ).completed
-                  }
-                  /{selectedCampaign.missionIds.length} Complete
+                    ).completed,
+                    total: selectedCampaign.missionIds.length,
+                  })}
                 </span>
               </div>
             </div>
 
             <div className="missions-list">
               {selectedCampaign.missionIds.map((missionId) => {
-                const mission = missions.find((m) => m.id === missionId);
+                const mission = localizedMissions.find((m) => m.id === missionId);
                 if (!mission) return null;
 
                 const missionCompleted =
@@ -162,7 +183,7 @@ export default function Campaigns() {
                     <div className="mission-order">#{mission.order}</div>
                     <div className="mission-title">{mission.title}</div>
                     <div className={`mission-badge badge-${mission.difficulty}`}>
-                      {mission.difficulty}
+                      {t(`difficulty.${mission.difficulty}`)}
                     </div>
                     {missionCompleted ? (
                       <span className="mission-status">✓</span>
@@ -181,12 +202,14 @@ export default function Campaigns() {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-icon">📜</div>
-            <h2 className="modal-title">Chapter Introduction</h2>
+            <h2 className="modal-title">{t("campaigns.lore.modalTitle")}</h2>
             <div className="modal-lore">
               <ReactMarkdown>{selectedCampaign.lore}</ReactMarkdown>
             </div>
             <button className="btn btn-primary" onClick={closeModal}>
-              Begin Chapter {selectedCampaign.chapterNumber}
+              {t("campaigns.lore.beginChapter", {
+                number: selectedCampaign.chapterNumber,
+              })}
             </button>
           </div>
         </div>

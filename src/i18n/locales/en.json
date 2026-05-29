@@ -1,0 +1,412 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español"
+  },
+  "common": {
+    "selectLanguage": "Select language",
+    "toggleTheme": "Toggle theme",
+    "back": "Back",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "all": "All",
+    "level": "Level",
+    "xp": "XP",
+    "chapter": "Chapter",
+    "mission": "Mission",
+    "complete": "Complete",
+    "completed": "Completed",
+    "locked": "Locked",
+    "unlocked": "Unlocked"
+  },
+  "navbar": {
+    "home": "Home",
+    "campaigns": "Campaigns",
+    "missions": "Missions",
+    "profile": "Profile",
+    "journal": "Journal"
+  },
+  "home": {
+    "badge": "✨ Zero setup • No wallet needed • Open source",
+    "title": {
+      "lead": "Master",
+      "brand": "Soroban",
+      "tail": "Smart Contracts"
+    },
+    "subtitle": "Embark on an epic quest to learn Stellar's smart contract platform. Write real Soroban code in your browser, solve challenges, and level up your blockchain skills — no installation required.",
+    "cta": {
+      "continueQuest": "⚔️ Continue Quest",
+      "viewProgress": "📊 View Progress",
+      "beginJourney": "🚀 Begin Your Journey",
+      "viewMissionMap": "🗺️ View Mission Map"
+    },
+    "stats": {
+      "missions": "Missions",
+      "totalXp": "Total XP",
+      "backendNeeded": "Backend Needed"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Your path from zero to Soroban mastery, entirely in the browser."
+    },
+    "features": {
+      "read": {
+        "title": "Read the Quest",
+        "body": "Each mission unfolds a story while teaching core Soroban concepts. Learn about contracts, storage, tokens, and more through narrative-driven challenges."
+      },
+      "write": {
+        "title": "Write the Code",
+        "body": "Use the built-in Monaco editor with Rust syntax highlighting and Soroban autocomplete. Templates get you started — you fill in the logic."
+      },
+      "test": {
+        "title": "Run the Tests",
+        "body": "Validate your code with instant feedback. Each mission has hidden checks that verify your contract structure, functions, and patterns."
+      },
+      "xp": {
+        "title": "Earn XP & Level Up",
+        "body": "Gain experience points for each completed mission. Unlock badges, climb ranks, and track your journey from Initiate to Stellar Sovereign."
+      },
+      "zeroBackend": {
+        "title": "Zero Backend",
+        "body": "Everything runs in your browser. No servers, no databases, no accounts. Your progress is saved locally — export it anytime as a JSON file."
+      },
+      "path": {
+        "title": "Progressive Path",
+        "body": "From \"Hello World\" to multi-signature contracts. Each mission builds on the last, creating a structured path to Soroban mastery."
+      }
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "Platform",
+      "home": "Home",
+      "missions": "Missions",
+      "profile": "Profile",
+      "glossary": "Glossary"
+    },
+    "resources": {
+      "heading": "Resources",
+      "docs": "Soroban Docs",
+      "sdk": "Stellar SDK",
+      "github": "GitHub"
+    },
+    "community": {
+      "heading": "Community",
+      "discord": "Discord",
+      "telegram": "Telegram"
+    },
+    "credits": {
+      "tagline": "Built for the Stellar ecosystem",
+      "license": "MIT License"
+    }
+  },
+  "notFound": {
+    "title": "This quest does not exist",
+    "body": "You seem to have wandered into deep space",
+    "back": "Return to Base"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "Something went wrong",
+      "body": "The quest encountered a runtime error. Check the console for details.",
+      "reload": "Reload",
+      "report": "Report Issue"
+    },
+    "editor": {
+      "body": "Editor failed to load",
+      "reset": "Reset Editor"
+    },
+    "mission": {
+      "title": "Mission unavailable",
+      "retry": "Try again"
+    }
+  },
+  "profile": {
+    "edit": "✏️ Edit Profile",
+    "viewJournal": "📖 View Journal",
+    "editPanel": {
+      "title": "Edit Profile",
+      "namePlaceholder": "Enter name"
+    },
+    "stats": {
+      "missions": "Missions",
+      "badges": "Badges"
+    },
+    "sections": {
+      "badges": "🏅 Badges",
+      "completedMissions": "✅ Completed Missions",
+      "data": "⚙️ Data"
+    },
+    "noMissions": "No missions completed yet.",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "Total: {{xp}} XP"
+    },
+    "data": {
+      "export": "Export",
+      "import": "Import",
+      "reset": "Reset",
+      "confirmReset": "Reset all progress? This cannot be undone.",
+      "status": {
+        "exported": "✅ Progress exported!",
+        "imported": "✅ Progress imported successfully!",
+        "importFailed": "❌ Invalid file — could not import.",
+        "resetDone": "🗑️ Progress reset."
+      },
+      "log": {
+        "exported": "Exported adventure progress",
+        "imported": "Imported adventure progress from file"
+      }
+    }
+  },
+  "journal": {
+    "title": "Adventure Journal",
+    "subtitle": "Your journey through the Soroban realm, recorded for eternity.",
+    "clearLog": "🗑️ Clear Log",
+    "confirmClear": "Clear all activity history?",
+    "summary": {
+      "missions": "Missions",
+      "badges": "Badges",
+      "level": "Level",
+      "totalXp": "Total XP",
+      "streak": "Day Streak"
+    },
+    "filters": {
+      "all": "All",
+      "mission": "Mission",
+      "badge": "Badge",
+      "levelUp": "Level Up",
+      "hint": "Hint",
+      "system": "System"
+    },
+    "empty": "No activities recorded yet. Start your first mission!",
+    "dates": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "events": {
+      "missionStarted": "Started mission: {{title}}",
+      "missionCompleted": "Completed mission: {{title}}",
+      "badgeEarned": "Earned the \"{{name}}\" badge!",
+      "levelUp": "Reached Level {{level}}!",
+      "hintUsed": "Used hint {{index}}",
+      "export": "Exported adventure progress",
+      "import": "Imported adventure progress from file",
+      "streakOne": "Daily streak: 1 day!",
+      "streakMany": "Daily streak: {{count}} days!"
+    },
+    "details": {
+      "targetXp": "Target XP reached: {{xp}}",
+      "earnedXp": "Earned {{xp}} XP"
+    },
+    "eventLabels": {
+      "mission": "Mission",
+      "badge": "Badge",
+      "levelUp": "Level Up",
+      "hint": "Hint",
+      "system": "System",
+      "streak": "Streak"
+    }
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "subtitle": "Epic story-driven chapters | Level {{level}} | {{completed}}/{{total}} total missions",
+    "chapter": "Chapter {{number}}",
+    "missionCount": "{{completed}}/{{total}} missions",
+    "lockedAt": "🔒 Reach Level {{level}} to unlock",
+    "chapterComplete": "✓ Chapter Complete!",
+    "back": "← Back to Campaigns",
+    "completeOf": "{{completed}}/{{total}} Complete",
+    "lore": {
+      "modalTitle": "Chapter Introduction",
+      "beginChapter": "Begin Chapter {{number}}"
+    }
+  },
+  "missionMap": {
+    "title": "Mission Map",
+    "subtitle": "{{completed}} of {{total}} missions completed",
+    "searchPlaceholder": "Search missions…",
+    "difficulty": {
+      "all": "All",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "chapters": {
+      "all": "All Chapters",
+      "n": "Chapter {{number}}"
+    },
+    "card": {
+      "chapterMission": "Chapter {{chapter}} • Mission {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ Completed",
+      "locked": "🔒 Locked"
+    },
+    "noResults": "No missions found matching your filters.",
+    "aria": {
+      "missionPath": "Mission path graph",
+      "missionTimeline": "Mission timeline",
+      "missionItem": "Mission {{order}}: {{title}}",
+      "missionItemCompleted": "Mission {{order}}: {{title}}, completed",
+      "missionItemUnlocked": "Mission {{order}}: {{title}}, unlocked",
+      "missionItemLocked": "Mission {{order}}: {{title}}, locked"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "Story",
+      "editor": "Editor",
+      "tests": "Tests",
+      "replay": "📹 Replay"
+    },
+    "notFound": {
+      "title": "Mission Not Found",
+      "body": "The mission \"{{id}}\" doesn't exist.",
+      "back": "← Back to Mission Map"
+    },
+    "editor": {
+      "reset": "↺ Reset",
+      "hint": "💡 Hint",
+      "solution": "👁️ Solution",
+      "run": "▶ Run Tests",
+      "running": "Running…"
+    },
+    "terminal": {
+      "title": "Test Output",
+      "placeholder": "Click \"Run Tests\" to validate your code…",
+      "runningChecks": "🔍 Running validation checks…",
+      "alreadyCompleted": "🏅 Already completed — no additional XP awarded."
+    },
+    "status": {
+      "checking": "Checking…",
+      "passing": "{{passed}}/{{total}} checks passing",
+      "allPassing": "{{passed}}/{{total}} checks passing ✓",
+      "note": "live checks · full suite on Run Tests"
+    },
+    "toasts": {
+      "validated": "Mission Parameters Validated!",
+      "validationFailed": "Validation failed. Check terminal.",
+      "hintUnlocked": "Hint {{index}} unlocked",
+      "codeReset": "Code reset to template",
+      "solutionLoaded": "Solution loaded into editor"
+    },
+    "hint": {
+      "label": "💡 Hint {{index}}:"
+    },
+    "victory": {
+      "title": "Mission Complete!",
+      "youCompleted": "You've completed",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 Level Up! You are now Level {{level}} — {{rank}}",
+      "badgeEarnedOne": "🏅 New badge earned!",
+      "badgeEarnedMany": "🏅 New badges earned!",
+      "next": "Next Mission →",
+      "map": "Mission Map"
+    },
+    "replay": {
+      "header": "📹 Watch Your Solution",
+      "body": "Review your problem-solving process step by step.",
+      "start": "▶️ Start Replay"
+    },
+    "okashi": {
+      "button": "🚀 Try on Okashi — Compile & Deploy",
+      "help": "Opens okashi.dev in a new tab. Your code is copied to clipboard — paste it there to compile with the real Soroban compiler and deploy to Testnet."
+    }
+  },
+  "skillTree": {
+    "title": "Soroban Skill Tree",
+    "subtitle": "Track your mastery of Soroban smart contract concepts",
+    "overall": "{{unlocked}}/{{total}} Concepts Mastered",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": {
+        "title": "Core Concepts",
+        "description": "Fundamental Soroban building blocks"
+      },
+      "Storage": {
+        "title": "Storage & State",
+        "description": "Managing persistent data"
+      },
+      "Types": {
+        "title": "Data Types",
+        "description": "Working with different data types"
+      },
+      "Auth": {
+        "title": "Authorization",
+        "description": "Access control and security"
+      },
+      "Advanced": {
+        "title": "Advanced Patterns",
+        "description": "Complex contract patterns"
+      }
+    },
+    "tooltip": {
+      "chapter": "Chapter {{chapter}}"
+    },
+    "modal": {
+      "taughtIn": "Taught in: {{title}}",
+      "chapterLabel": "Chapter:",
+      "difficultyLabel": "Difficulty:",
+      "xpLabel": "XP Reward:",
+      "learningGoal": "Learning Goal:",
+      "completed": "✅ Completed",
+      "notCompleted": "🔒 Not yet completed",
+      "startMission": "Start Mission",
+      "notCovered": "This concept is not yet covered in available missions."
+    }
+  },
+  "ranks": {
+    "0": "Initiate",
+    "1": "Apprentice",
+    "2": "Scribe",
+    "3": "Coder",
+    "4": "Architect",
+    "5": "Sentinel",
+    "6": "Guardian",
+    "7": "Master Guardian",
+    "8": "Elder",
+    "9": "Luminary",
+    "10": "Stellar Sovereign"
+  },
+  "difficulty": {
+    "beginner": "beginner",
+    "intermediate": "intermediate",
+    "advanced": "advanced"
+  },
+  "badges": {
+    "first_contract": {
+      "name": "First Contract",
+      "description": "Complete your first mission"
+    },
+    "triple_threat": {
+      "name": "Triple Threat",
+      "description": "Complete 3 missions"
+    },
+    "five_star": {
+      "name": "Five Star",
+      "description": "Complete 5 missions"
+    },
+    "completionist": {
+      "name": "Completionist",
+      "description": "Complete all missions"
+    },
+    "level_3": {
+      "name": "Rising Star",
+      "description": "Reach level 3"
+    },
+    "level_5": {
+      "name": "Stellar Guardian",
+      "description": "Reach level 5"
+    },
+    "xp_1000": {
+      "name": "XP Hoarder",
+      "description": "Earn 1000 XP"
+    },
+    "speed_demon": {
+      "name": "Speed Demon",
+      "description": "Complete a mission on first try"
+    }
+  }
+}

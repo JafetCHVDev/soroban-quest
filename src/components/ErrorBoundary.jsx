@@ -1,5 +1,70 @@
 import React from "react";
+import { useTranslation } from "../i18n/useTranslation";
 import "./ErrorBoundary.css";
+
+/* ---------- Functional fallback subcomponents ---------- */
+/* They live inside the LanguageProvider tree (the provider is above
+   the ErrorBoundary in App.jsx), so they can safely use useTranslation. */
+
+function GenericErrorFallback() {
+  const { t } = useTranslation();
+  return (
+    <div className="error-boundary-overlay">
+      <div className="error-icon">⚠️</div>
+      <h1 className="error-title">{t("errorBoundary.generic.title")}</h1>
+      <p className="error-text">{t("errorBoundary.generic.body")}</p>
+      <div className="error-button-group">
+        <button
+          className="btn-reload"
+          onClick={() => window.location.reload()}
+        >
+          {t("errorBoundary.generic.reload")}
+        </button>
+        <a
+          className="btn-report"
+          href="https://github.com/JafetCHVDev/soroban-quest/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t("errorBoundary.generic.report")}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function EditorErrorFallback() {
+  const { t } = useTranslation();
+  return (
+    <div className="editor-fallback">
+      <p style={{ color: "#f87171" }}>{t("errorBoundary.editor.body")}</p>
+      <button
+        className="btn-reload"
+        style={{ scale: "0.8" }}
+        onClick={() => window.location.reload()}
+      >
+        {t("errorBoundary.editor.reset")}
+      </button>
+    </div>
+  );
+}
+
+function MissionErrorFallback() {
+  const { t } = useTranslation();
+  return (
+    <div
+      className="error-boundary-overlay"
+      style={{ minHeight: "auto", padding: "40px" }}
+    >
+      <h3 style={{ color: "#6366f1" }}>{t("errorBoundary.mission.title")}</h3>
+      <button onClick={() => window.location.reload()}>
+        {t("errorBoundary.mission.retry")}
+      </button>
+    </div>
+  );
+}
+
+/* ---------- Class boundaries ---------- */
 
 /**
  * 1. Generic Error Boundary
@@ -20,31 +85,7 @@ export class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div className="error-boundary-overlay">
-          <div className="error-icon">⚠️</div>
-          <h1 className="error-title">Something went wrong</h1>
-          <p className="error-text">
-            The quest encountered a runtime error. Check the console for
-            details.
-          </p>
-          <div className="error-button-group">
-            <button
-              className="btn-reload"
-              onClick={() => window.location.reload()}
-            >
-              Reload
-            </button>
-            <a
-              className="btn-report"
-              href="https://github.com/JafetCHVDev/soroban-quest/issues"
-              target="_blank"
-            >
-              Report Issue
-            </a>
-          </div>
-        </div>
-      );
+      return <GenericErrorFallback />;
     }
     return this.props.children;
   }
@@ -65,18 +106,7 @@ export class EditorErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div className="editor-fallback">
-          <p style={{ color: "#f87171" }}>Editor failed to load</p>
-          <button
-            className="btn-reload"
-            style={{ scale: "0.8" }}
-            onClick={() => window.location.reload()}
-          >
-            Reset Editor
-          </button>
-        </div>
-      );
+      return <EditorErrorFallback />;
     }
     return this.props.children;
   }
@@ -97,15 +127,7 @@ export class MissionErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div
-          className="error-boundary-overlay"
-          style={{ minHeight: "auto", padding: "40px" }}
-        >
-          <h3 style={{ color: "#6366f1" }}>Mission unavailable</h3>
-          <button onClick={() => window.location.reload()}>Try again</button>
-        </div>
-      );
+      return <MissionErrorFallback />;
     }
     return this.props.children;
   }

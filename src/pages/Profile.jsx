@@ -9,15 +9,19 @@ import {
   saveProfile,
 } from "../systems/storage";
 
-import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
+import { getXPProgress, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
+import { useTranslation } from "../i18n/useTranslation";
+
+// Total rank entries: 0..10. Anything >= 10 maps to the last rank.
+const MAX_RANK_INDEX = 10;
 
 export default function Profile() {
-  const [state, setState] = useState(loadProgress());
+  const { t, language } = useTranslation();
 
-  // ✅ IMPORTANT: safe profile init
+  const [state, setState] = useState(loadProgress());
   const [profile, setProfile] = useState(() => loadProfile());
 
   const [editing, setEditing] = useState(false);
@@ -28,8 +32,9 @@ export default function Profile() {
   const fileInputRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
-  const rankTitle = getRankTitle(state.level);
-  const missions = getAllMissions();
+  const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
+  const rankTitle = t(`ranks.${rankIndex}`);
+  const missions = getAllMissions(language);
 
   /* ---------------- SAVE PROFILE ---------------- */
   const saveUserProfile = () => {
@@ -53,8 +58,8 @@ export default function Profile() {
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
     exportProgress();
-    setImportStatus("✅ Progress exported!");
-    logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
+    setImportStatus(t("profile.data.status.exported"));
+    logActivity(ACTIVITY_TYPES.EXPORT, {}, t("profile.data.log.exported"));
     setTimeout(() => setImportStatus(""), 3000);
   };
 
@@ -65,20 +70,20 @@ export default function Profile() {
     try {
       const newState = await importProgress(file);
       setState(newState);
-      setImportStatus("✅ Progress imported successfully!");
-      logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
+      setImportStatus(t("profile.data.status.imported"));
+      logActivity(ACTIVITY_TYPES.IMPORT, {}, t("profile.data.log.imported"));
     } catch {
-      setImportStatus("❌ Invalid file — could not import.");
+      setImportStatus(t("profile.data.status.importFailed"));
     }
 
     setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleReset = () => {
-    if (window.confirm("Reset all progress? This cannot be undone.")) {
+    if (window.confirm(t("profile.data.confirmReset"))) {
       const newState = resetProgress();
       setState(newState);
-      setImportStatus("🗑️ Progress reset.");
+      setImportStatus(t("profile.data.status.resetDone"));
       setTimeout(() => setImportStatus(""), 3000);
     }
   };
@@ -110,19 +115,22 @@ export default function Profile() {
 
             <div className="xp-bar-label">
               <span>
-                {xpProgress.current} / {xpProgress.needed} XP
+                {t("profile.xpBar.current", {
+                  current: xpProgress.current,
+                  needed: xpProgress.needed,
+                })}
               </span>
-              <span>Total: {state.xp} XP</span>
+              <span>{t("profile.xpBar.total", { xp: state.xp })}</span>
             </div>
           </div>
 
           {/* ACTIONS */}
           <div className="flex gap-2 mt-3">
             <button className="btn btn-secondary" onClick={openEdit}>
-              ✏️ Edit Profile
+              {t("profile.edit")}
             </button>
             <Link to="/journal" className="btn btn-ghost">
-              📖 View Journal
+              {t("profile.viewJournal")}
             </Link>
           </div>
         </div>
@@ -136,7 +144,7 @@ export default function Profile() {
               {state.completedMissions.length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-              Missions
+              {t("profile.stats.missions")}
             </div>
           </div>
 
@@ -145,7 +153,7 @@ export default function Profile() {
               {state.badges.length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-              Badges
+              {t("profile.stats.badges")}
             </div>
           </div>
         </div>
@@ -154,15 +162,18 @@ export default function Profile() {
       {/* EDIT PANEL */}
       {editing && (
         <div className="card mt-4">
-          <h3 className="mb-3">Edit Profile</h3>
+          <h3 className="mb-3">{t("profile.editPanel.title")}</h3>
 
           {/* NAME */}
           <input
             className="w-full p-2 mb-3 rounded"
-            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            style={{
+              backgroundColor: "var(--bg-secondary)",
+              color: "var(--text-primary)",
+            }}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter name"
+            placeholder={t("profile.editPanel.namePlaceholder")}
           />
 
           {/* AVATARS */}
@@ -173,7 +184,8 @@ export default function Profile() {
                 onClick={() => setAvatar(a)}
                 className="text-2xl p-2 rounded transition"
                 style={{
-                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                  backgroundColor:
+                    avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
                   transform: avatar === a ? "scale(1.1)" : "none",
                 }}
               >
@@ -185,18 +197,18 @@ export default function Profile() {
           {/* ACTIONS */}
           <div className="flex gap-2">
             <button className="btn btn-primary" onClick={saveUserProfile}>
-              Save
+              {t("common.save")}
             </button>
 
             <button className="btn btn-ghost" onClick={() => setEditing(false)}>
-              Cancel
+              {t("common.cancel")}
             </button>
           </div>
         </div>
       )}
 
       {/* BADGES */}
-      <h2 className="profile-section-title">🏅 Badges</h2>
+      <h2 className="profile-section-title">{t("profile.sections.badges")}</h2>
 
       <div className="profile-badges-grid">
         {BADGES.map((badge) => {
@@ -209,8 +221,8 @@ export default function Profile() {
             >
               <div className="profile-badge-icon">{badge.icon}</div>
               <div className="profile-badge-info">
-                <h4>{badge.name}</h4>
-                <p>{badge.description}</p>
+                <h4>{t(`badges.${badge.id}.name`)}</h4>
+                <p>{t(`badges.${badge.id}.description`)}</p>
               </div>
             </div>
           );
@@ -218,10 +230,12 @@ export default function Profile() {
       </div>
 
       {/* MISSIONS */}
-      <h2 className="profile-section-title">✅ Completed Missions</h2>
+      <h2 className="profile-section-title">
+        {t("profile.sections.completedMissions")}
+      </h2>
 
       {completedMissions.length === 0 ? (
-        <div className="card text-center p-6">No missions completed yet.</div>
+        <div className="card text-center p-6">{t("profile.noMissions")}</div>
       ) : (
         completedMissions.map((m) => (
           <div key={m.id} className="card flex justify-between">
@@ -232,22 +246,26 @@ export default function Profile() {
       )}
 
       {/* DATA */}
-      <h2 className="profile-section-title">⚙️ Data</h2>
+      <h2 className="profile-section-title">{t("profile.sections.data")}</h2>
 
       <div className="profile-actions">
         <button className="btn btn-secondary" onClick={handleExport}>
-          Export
+          {t("profile.data.export")}
         </button>
 
         <button
           className="btn btn-secondary"
           onClick={() => fileInputRef.current?.click()}
         >
-          Import
+          {t("profile.data.import")}
         </button>
 
-        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
-          Reset
+        <button
+          className="btn btn-ghost"
+          style={{ color: "var(--red)" }}
+          onClick={handleReset}
+        >
+          {t("profile.data.reset")}
         </button>
 
         <input

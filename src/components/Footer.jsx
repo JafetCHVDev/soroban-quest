@@ -1,40 +1,43 @@
 import React from "react";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h4>Platform</h4>
+          <h4>{t("footer.platform.heading")}</h4>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/missions">Missions</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/">{t("footer.platform.home")}</a></li>
+            <li><a href="/missions">{t("footer.platform.missions")}</a></li>
+            <li><a href="/profile">{t("footer.platform.profile")}</a></li>
+            <li><a href="/glossary">{t("footer.platform.glossary")}</a></li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h4>Resources</h4>
+          <h4>{t("footer.resources.heading")}</h4>
           <ul>
-            <li><a href="https://soroban.stellar.org" target="_blank" rel="noopener">Soroban Docs</a></li>
-            <li><a href="https://stellar.org/developers" target="_blank" rel="noopener">Stellar SDK</a></li>
-            <li><a href="https://github.com/JafetCHVDev/soroban-quest" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://soroban.stellar.org" target="_blank" rel="noopener">{t("footer.resources.docs")}</a></li>
+            <li><a href="https://stellar.org/developers" target="_blank" rel="noopener">{t("footer.resources.sdk")}</a></li>
+            <li><a href="https://github.com/JafetCHVDev/soroban-quest" target="_blank" rel="noopener">{t("footer.resources.github")}</a></li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h4>Community</h4>
+          <h4>{t("footer.community.heading")}</h4>
           <ul>
-            <li><a href="#" target="_blank" rel="noopener">Discord</a></li>
-            <li><a href="#" target="_blank" rel="noopener">Telegram</a></li>
+            <li><a href="#" target="_blank" rel="noopener">{t("footer.community.discord")}</a></li>
+            <li><a href="#" target="_blank" rel="noopener">{t("footer.community.telegram")}</a></li>
           </ul>
         </div>
       </div>
 
       <div className="footer-credits">
-        <p>Built for the Stellar ecosystem</p>
-        <p>MIT License</p>
+        <p>{t("footer.credits.tagline")}</p>
+        <p>{t("footer.credits.license")}</p>
       </div>
     </footer>
   );
