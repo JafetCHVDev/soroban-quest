@@ -14,6 +14,11 @@ import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
+import {
+  KEYBOARD_SHORTCUTS,
+  SHORTCUT_IDS,
+  getShortcutTitle,
+} from "../data/keyboardShortcuts";
 
 // ─── Monaco marker model name (must be consistent across calls) ──────────────
 const LIVE_MARKER_OWNER = "soroban-quest-live";
@@ -244,6 +249,30 @@ export default function MissionDetail() {
     }
   };
 
+  // --------------------------- Keyboard Shortcuts ---------------------------
+  // Keep the latest handler refs so the keydown listener (registered once) always
+  // calls the current closure without needing to rebind on every render.
+  const shortcutHandlersRef = useRef({});
+  shortcutHandlersRef.current = {
+    [SHORTCUT_IDS.RUN_TESTS]: handleRunTests,
+    [SHORTCUT_IDS.RESET]: handleReset,
+    [SHORTCUT_IDS.HINT]: handleHint,
+  };
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      for (const shortcut of KEYBOARD_SHORTCUTS) {
+        if (shortcut.matches(e)) {
+          e.preventDefault();
+          shortcutHandlersRef.current[shortcut.id]?.();
+          return;
+        }
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   // --------------------------- Navigate to Next Mission ---------------------------
   const handleNextMission = () => {
     const next = getNextMission(missionId);
@@ -393,6 +422,7 @@ export default function MissionDetail() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleReset}
                 disabled={isRunning}
+                title={getShortcutTitle(SHORTCUT_IDS.RESET)}
               >
                 ↺ Reset
               </button>
@@ -402,6 +432,7 @@ export default function MissionDetail() {
                 disabled={
                   !mission.hints || hintIndex >= mission.hints.length - 1
                 }
+                title={getShortcutTitle(SHORTCUT_IDS.HINT)}
               >
                 💡 Hint
               </button>
@@ -415,6 +446,7 @@ export default function MissionDetail() {
                 className="btn btn-primary btn-sm"
                 onClick={handleRunTests}
                 disabled={isRunning}
+                title={getShortcutTitle(SHORTCUT_IDS.RUN_TESTS)}
               >
                 {isRunning ? "Running..." : "▶ Run Tests"}
               </button>
