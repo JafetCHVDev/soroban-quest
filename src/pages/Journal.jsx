@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { getActivityLog, ACTIVITY_TYPES, clearLog } from "../systems/activityLogger";
-import { loadProgress } from "../systems/storage";
+import { useGameState } from "../systems/GameContext";
 import "./Journal.css";
 
 const EVENT_CONFIG = {
@@ -17,7 +17,7 @@ const EVENT_CONFIG = {
 export default function Journal() {
   const [log, setLog] = useState(() => getActivityLog());
   const [filter, setFilter] = useState("ALL");
-  const progress = loadProgress();
+  const progress = useGameState();
 
   const filteredLog = useMemo(() => {
     if (filter === "ALL") return log;

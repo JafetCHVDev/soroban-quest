@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { missions } from '../data/missions';
-import { loadProgress } from '../systems/storage';
+import { useGameState } from '../systems/GameContext';
 import './SkillTree.css';
 
 const conceptCategories = {
@@ -32,14 +32,9 @@ const conceptCategories = {
 };
 
 export default function SkillTree() {
-  const [completedMissions, setCompletedMissions] = useState([]);
+  const { completedMissions = [] } = useGameState();
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
-
-  useEffect(() => {
-    const progress = loadProgress();
-    setCompletedMissions(progress.completedMissions || []);
-  }, []);
 
   const getConceptStatus = (concept) => {
     const teachingMission = missions.find(mission => 

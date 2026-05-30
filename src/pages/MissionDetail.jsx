@@ -4,8 +4,12 @@ import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";
-import { loadProgress, saveProgress } from "../systems/storage";
-import { completeMission, recordAttempt, getRankTitle } from "../systems/gameEngine";
+import { getRankTitle } from "../systems/gameEngine";
+import {
+  useGameState,
+  useGameDispatch,
+  gameActions,
+} from "../systems/GameContext";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useokashi, TOAST_STATES } from "../systems/useokashi";
@@ -32,6 +36,10 @@ export default function MissionDetail() {
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
 
+  // Centralized game state — single source of truth.
+  const gameState = useGameState();
+  const dispatch = useGameDispatch();
+
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true);
   const [code, setCode] = useState("");
@@ -42,6 +50,9 @@ export default function MissionDetail() {
   const [hintIndex, setHintIndex] = useState(-1);
   const [showReplay, setShowReplay] = useState(false);
   const [replayData, setReplayData] = useState(null);
+  // Set when a completion dispatch is in flight; an effect below reads the
+  // resulting state to populate the victory modal once it lands.
+  const [pendingVictory, setPendingVictory] = useState(false);
 
   // Live validation state
   const [livePassCount, setLivePassCount] = useState(0);
@@ -54,9 +65,8 @@ export default function MissionDetail() {
 
   const { openInOkashi, toast } = useokashi();
 
-  // Compute replay & completion state
-  const progressState = loadProgress();
-  const isCompleted = progressState.completedMissions.includes(missionId);
+  // Compute replay & completion state from the live store.
+  const isCompleted = gameState.completedMissions.includes(missionId);
   const hasReplay = CodeRecorder.hasRecording(missionId);
 
   // --------------------------- Load Mission ---------------------------
@@ -171,9 +181,7 @@ export default function MissionDetail() {
     setIsRunning(true);
     setTestResults([]);
 
-    let state = loadProgress();
-    state = recordAttempt(state, missionId);
-    saveProgress(state);
+    dispatch(gameActions.recordAttempt(missionId));
 
     const resultCollector = [];
     const addResult = (result) => {
@@ -196,30 +204,46 @@ export default function MissionDetail() {
     if (result.allPassed) {
       if (showToast) showToast("Mission Parameters Validated!", "success");
       await delay(500);
-      state = loadProgress();
-      const newState = completeMission(state, missionId, mission.xpReward);
 
-      if (!newState.alreadyCompleted) {
-        saveProgress(newState);
-        setVictoryData({
-          xp: mission.xpReward,
-          leveledUp: newState.leveledUp,
-          newLevel: newState.level,
-          newBadges: newState.newBadges || [],
-        });
-        setShowVictory(true);
-      } else {
+      const alreadyCompleted = gameState.completedMissions.includes(missionId);
+      if (alreadyCompleted) {
         addResult({
           phase: "info",
           message: "🏅 Already completed — no additional XP awarded.",
         });
+      } else {
+        setPendingVictory(true);
+        dispatch(gameActions.completeMission(missionId, mission.xpReward));
       }
     } else {
       if (showToast) showToast("Validation failed. Check terminal.", "error");
     }
 
     setIsRunning(false);
-  }, [code, mission, missionId, isRunning, showToast]);
+  }, [code, mission, missionId, isRunning, showToast, dispatch, gameState.completedMissions]);
+
+  // Open the victory modal once the COMPLETE_MISSION dispatch has settled and
+  // the new XP/level/badges are visible in state.
+  useEffect(() => {
+    if (!pendingVictory) return;
+    if (!gameState.completedMissions.includes(missionId)) return;
+    setVictoryData({
+      xp: mission.xpReward,
+      leveledUp: !!gameState.leveledUp,
+      newLevel: gameState.level,
+      newBadges: gameState.newBadges || [],
+    });
+    setShowVictory(true);
+    setPendingVictory(false);
+  }, [
+    pendingVictory,
+    gameState.completedMissions,
+    gameState.leveledUp,
+    gameState.level,
+    gameState.newBadges,
+    missionId,
+    mission,
+  ]);
 
   // --------------------------- Hints ---------------------------
   const handleHint = () => {

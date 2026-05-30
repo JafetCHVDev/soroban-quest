@@ -1,8 +1,6 @@
 
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { loadProgress, saveProgress } from "./systems/storage";
-import { updateStreak } from "./systems/gameEngine";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -18,46 +16,52 @@ import SkillTree from "./pages/SkillTree";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 
-// 1. Import the ErrorBoundary
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
-// 2. Import Toast Provider and Styles
 import { ToastProvider } from "./systems/ToastContext";
 import "./systems/Toast.css";
 
-export default function App() {
+import {
+  GameProvider,
+  gameActions,
+  useGameDispatch,
+} from "./systems/GameContext";
 
+function DailyStreakBootstrap() {
+  const dispatch = useGameDispatch();
   useEffect(() => {
-    const state = loadProgress();
-    const newState = updateStreak(state);
-    saveProgress(newState);
-  }, []);
+    dispatch(gameActions.updateStreak());
+  }, [dispatch]);
+  return null;
+}
 
+export default function App() {
   // useLocation gives us a stable key that changes on every navigation.
   const location = useLocation();
 
-
   return (
     <ErrorBoundary>
-      {/* 3. Wraped everything in ToastProvider */}
-      <ToastProvider>
-        <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/missions" element={<MissionMap />} />
-              <Route path="/campaigns" element={<Campaigns />} />
-              <Route path="/mission/:missionId" element={<MissionDetail />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/journal" element={<Journal />} />
-              <Route path="/skills" element={<SkillTree />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </ToastProvider>
+      <GameProvider>
+        <ToastProvider>
+          <DailyStreakBootstrap />
+          <div className="app">
+            <Navbar />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/missions" element={<MissionMap />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/mission/:missionId" element={<MissionDetail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/journal" element={<Journal />} />
+                <Route path="/skills" element={<SkillTree />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </ToastProvider>
+      </GameProvider>
     </ErrorBoundary>
   );
 }

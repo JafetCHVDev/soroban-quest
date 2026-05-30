@@ -1,13 +1,16 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  loadProgress,
   importProgress,
   exportProgress,
-  resetProgress,
   loadProfile,
   saveProfile,
 } from "../systems/storage";
+import {
+  useGameState,
+  useGameDispatch,
+  gameActions,
+} from "../systems/GameContext";
 
 import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
@@ -15,9 +18,9 @@ import { avatars } from "../data/avatars";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 
 export default function Profile() {
-  const [state, setState] = useState(loadProgress());
+  const state = useGameState();
+  const dispatch = useGameDispatch();
 
-  // ✅ IMPORTANT: safe profile init
   const [profile, setProfile] = useState(() => loadProfile());
 
   const [editing, setEditing] = useState(false);
@@ -52,7 +55,7 @@ export default function Profile() {
 
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
-    exportProgress();
+    exportProgress(state, profile);
     setImportStatus("✅ Progress exported!");
     logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
     setTimeout(() => setImportStatus(""), 3000);
@@ -63,8 +66,14 @@ export default function Profile() {
     if (!file) return;
 
     try {
-      const newState = await importProgress(file);
-      setState(newState);
+      const data = await importProgress(file);
+      if (data.state) {
+        dispatch(gameActions.importProgress(data.state));
+      }
+      if (data.profile) {
+        saveProfile(data.profile);
+        setProfile(data.profile);
+      }
       setImportStatus("✅ Progress imported successfully!");
       logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
     } catch {
@@ -76,8 +85,7 @@ export default function Profile() {
 
   const handleReset = () => {
     if (window.confirm("Reset all progress? This cannot be undone.")) {
-      const newState = resetProgress();
-      setState(newState);
+      dispatch(gameActions.resetProgress());
       setImportStatus("🗑️ Progress reset.");
       setTimeout(() => setImportStatus(""), 3000);
     }

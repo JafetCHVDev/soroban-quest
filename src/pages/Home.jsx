@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loadProgress } from '../systems/storage';
+import { useGameState } from '../systems/GameContext';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
 
 export default function Home() {
     const navigate = useNavigate();
-    const state = loadProgress();
+    const state = useGameState();
     const canvasRef = useRef(null);
     const missions = getAllMissions();
     const completedCount = state.completedMissions.length;

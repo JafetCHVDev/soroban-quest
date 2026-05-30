@@ -7,7 +7,7 @@ const PROGRESS_KEY = "soroban_quest_progress";
 const PROFILE_KEY = "soroban_quest_profile";
 
 /* =========================
-   PROGRESS
+   PROGRESS — pure load/save
 ========================= */
 export function loadProgress() {
   try {
@@ -68,11 +68,10 @@ export function resetProfile() {
 
 /* =========================
    EXPORT / IMPORT
+   Pure serializers — no business logic, no implicit reads. Callers pass in
+   the live in-memory state (from GameContext) and profile.
 ========================= */
-export function exportProgress() {
-  const state = loadProgress();
-  const profile = loadProfile();
-
+export function exportProgress(state, profile) {
   const blob = new Blob(
     [JSON.stringify({ state, profile }, null, 2)],
     { type: "application/json" }
@@ -95,19 +94,12 @@ export function importProgress(file) {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-
-        if (data.state) {
-          saveProgress({ ...getDefaultState(), ...data.state });
-        }
-
-        if (data.profile) {
-          saveProfile({
-            ...defaultProfile,
-            ...data.profile,
-          });
-        }
-
-        resolve(data);
+        resolve({
+          state: data.state ? { ...getDefaultState(), ...data.state } : null,
+          profile: data.profile
+            ? { ...defaultProfile, ...data.profile }
+            : null,
+        });
       } catch {
         reject(new Error("Invalid file"));
       }

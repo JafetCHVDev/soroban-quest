@@ -1,25 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { missions } from "../data/missions.js";
 import { campaigns, getCampaignProgress } from "../data/campaigns.js";
-import { loadProgress } from "../systems/storage.js";
+import { useGameState } from "../systems/GameContext";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
 
 import "./Campaigns.css";
 
 export default function Campaigns() {
-  const [progress, setProgress] = useState(loadProgress());
+  const progress = useGameState();
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [firstVisit, setFirstVisit] = useState(false);
-
-  useEffect(() => {
-    // Listen for storage changes (profile updates)
-    const handleStorageChange = () => setProgress(loadProgress());
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
 
   const handleCampaignClick = (campaign) => {
     // Check first visit

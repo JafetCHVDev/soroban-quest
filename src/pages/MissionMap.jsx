@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import { useGameState } from '../systems/GameContext';
 
 export default function MissionMap() {
     const navigate = useNavigate();
-    const state = loadProgress();
+    const state = useGameState();
     const missions = getAllMissions();
     const learningPathRef = useRef(null);
     const [learningPathWidth, setLearningPathWidth] = useState(800);

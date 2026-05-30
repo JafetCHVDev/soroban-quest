@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { loadProfile } from "../systems/storage";
+import { useGameState } from "../systems/GameContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const profile = loadProfile();
+  const { level, xp } = useGameState();
 
   const [theme, setTheme] = useState(() => {
     return (
@@ -74,6 +76,12 @@ export default function Navbar() {
         >
           {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
         </button>
+        <span className="navbar-level" aria-label={`Level ${level}`}>
+          Lv {level}
+        </span>
+        <span className="navbar-xp" aria-label={`${xp} XP`}>
+          ⚡ {xp} XP
+        </span>
         <span className="text-xl">{profile.avatar}</span>
         <span className="text-sm font-semibold">{profile.name}</span>
       </div>
@@ -114,6 +122,8 @@ export default function Navbar() {
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
+          <span className="navbar-level">Lv {level}</span>
+          <span className="navbar-xp">⚡ {xp} XP</span>
           <span>{profile.avatar}</span>
           <span>{profile.name}</span>
         </div>
