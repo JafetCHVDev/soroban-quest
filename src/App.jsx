@@ -16,8 +16,7 @@ import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
 
 import Footer from "./components/Footer";
-import OfflineIndicator from "./components/OfflineIndicator";
-import ServiceWorkerUpdate from "./components/ServiceWorkerUpdate";
+import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 
 // 1. Import the ErrorBoundary
@@ -43,6 +42,7 @@ export default function App() {
     <ErrorBoundary>
       {/* 3. Wraped everything in ToastProvider */}
       <ToastProvider>
+        <ScrollToTop />
         <div className="app">
           <Navbar />
           <main className="main-content">
