@@ -10,7 +10,6 @@ import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import NotFound from "./pages/NotFound";
 
 // 1. Import the ErrorBoundary
 import { ErrorBoundary } from "./components/ErrorBoundary";
