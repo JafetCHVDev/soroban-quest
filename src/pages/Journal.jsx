@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { getActivityLog, ACTIVITY_TYPES, clearLog } from "../systems/activityLogger";
 import { loadProgress } from "../systems/storage";
 import "./Journal.css";
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 const EVENT_CONFIG = {
   [ACTIVITY_TYPES.MISSION_STARTED]: { icon: "⚔️", class: "mission", label: "Mission" },
@@ -15,6 +16,7 @@ const EVENT_CONFIG = {
 };
 
 export default function Journal() {
+  useDocumentTitle('Journal');
   const [log, setLog] = useState(() => getActivityLog());
   const [filter, setFilter] = useState("ALL");
   const progress = loadProgress();

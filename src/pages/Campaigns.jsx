@@ -7,8 +7,10 @@ import { loadProgress } from "../systems/storage.js";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
 
 import "./Campaigns.css";
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function Campaigns() {
+  useDocumentTitle('Campaigns');
   const [progress, setProgress] = useState(loadProgress());
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);

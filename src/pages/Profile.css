@@ -1,0 +1,106 @@
+/* --- Core Profile Component Utilities --- */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* --- Margins and Helper Fallbacks --- */
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.text-center { text-align: center; }
+.text-5xl { font-size: 3rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-sm { font-size: 0.875rem; }
+
+/* --- Edit Form Elements --- */
+.profile-input-full {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  background-color: #111827;
+  border: 1px solid var(--border-color, #1e242e);
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.profile-input-full:focus {
+  outline: none;
+  border-color: var(--gold, #C9A84C);
+}
+
+/* --- Avatar Selector 6-Column CSS Grid Layout --- */
+.avatar-grid-6col {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 columns mobile */
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .avatar-grid-6col {
+    grid-template-columns: repeat(6, minmax(0, 1fr)); /* 6 columns desktop */
+  }
+}
+
+.avatar-btn-node {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.avatar-btn-node:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.avatar-btn-node.active {
+  background-color: rgba(6, 182, 212, 0.3); /* Cyan translucent accent matching your scale */
+  border-color: rgba(6, 182, 212, 0.8);
+  transform: scale(1.1);
+}
+
+/* --- Flexible Component Rows --- */
+.profile-flex-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* --- Padded Containers --- */
+.p-6 {
+  padding: 1.5rem;
+}
+
+/* --- Specific Text Coloring Fallbacks --- */
+.text-red-500 {
+  color: var(--err, #ef4444);
+}
+
+.text-gray-400 {
+  color: var(--text-muted, #9ca3af);
+}
+
+.text-gold {
+  color: var(--gold, #C9A84C);
+}
