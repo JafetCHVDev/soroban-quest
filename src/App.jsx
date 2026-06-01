@@ -1,29 +1,22 @@
-
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { loadProgress, saveProgress } from "./systems/storage";
-import { updateStreak } from "./systems/gameEngine";
-
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import MissionMap from "./pages/MissionMap";
 import MissionDetail from "./pages/MissionDetail";
 import Profile from "./pages/Profile";
-
 import Journal from "./pages/Journal";
-
 import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
-
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import NotFound from "./pages/NotFound";
 
 // 1. Import the ErrorBoundary
 import { ErrorBoundary } from "./components/ErrorBoundary";
-
-// 2. Import Toast Provider and Styles
 import { ToastProvider } from "./systems/ToastContext";
+import LoadingScreen from "./components/LoadingScreen";
+import { loadProgress, saveProgress } from "./systems/storage";
+import { updateStreak } from "./systems/gameEngine";
 import "./systems/Toast.css";
 
 // 3. Import Language Provider
@@ -32,26 +25,30 @@ import "./systems/Toast.css";
 import { LanguageProvider } from "./i18n";
 
 export default function App() {
+// Lazy load page components
+const NotFound = lazy(() => import("./pages/NotFound"));
 
+export default function App() {
   useEffect(() => {
     const state = loadProgress();
     const newState = updateStreak(state);
     saveProgress(newState);
   }, []);
 
-  // useLocation gives us a stable key that changes on every navigation.
   const location = useLocation();
 
-
   return (
-<LanguageProvider>
+
+    <LanguageProvider>
       <ErrorBoundary>
-        {/* 3. Wraped everything in ToastProvider */}
-        <ToastProvider>
-          <ScrollToTop />
-          <div className="app">
-            <Navbar />
-            <main className="main-content">
+       {/* 3. Wraped everything in ToastProvider */}
+       <ToastProvider>
+        <ScrollToTop />
+        <div className="app">
+          <Navbar />
+          <main className="main-content">
+            <Suspense fallback={<LoadingScreen />}>
+
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/missions" element={<MissionMap />} />
@@ -62,11 +59,13 @@ export default function App() {
                 <Route path="/skills" element={<SkillTree />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </main>
-            <Footer />
-          </div>
-        </ToastProvider>
-      </ErrorBoundary>
-    </LanguageProvider>
+
+            </Suspense>
+          </main>
+          <Footer />
+        </div>
+      </ToastProvider>
+    </ErrorBoundary>
+  </LanguageProvider>
   );
 }

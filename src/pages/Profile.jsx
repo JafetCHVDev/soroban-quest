@@ -1,4 +1,8 @@
 import React, { useState, useRef } from "react";
+// Import the fixed custom layout definitions directly
+import "./Profile.css";
+import { useToast } from '../systems/ToastContext';
+
 import { Link } from "react-router-dom";
 import {
   loadProgress,
@@ -20,6 +24,7 @@ import { useTranslation } from "../i18n/useTranslation";
 const MAX_RANK_INDEX = 10;
 
 export default function Profile() {
+  const { showToast } = useToast();
   useDocumentTitle('Profile');
   const { t, language } = useTranslation();
   const [state, setState] = useState(loadProgress());
@@ -30,7 +35,6 @@ export default function Profile() {
   const [name, setName] = useState(profile.name || "");
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
 
-  const [importStatus, setImportStatus] = useState("");
   const fileInputRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
@@ -47,8 +51,10 @@ export default function Profile() {
 
     saveProfile(updated);
     setProfile(updated);
-
     setEditing(false);
+    
+    // Wire up success notification
+    showToast("Profile credentials synchronized!", "success");
   };
 
   const openEdit = () => {
@@ -60,8 +66,10 @@ export default function Profile() {
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
     exportProgress();
+    showToast(t("profile.data.toast.exported"), "success");
     setImportStatus(t("profile.data.status.exported"));
     logActivity(ACTIVITY_TYPES.EXPORT, {}, t("profile.data.log.exported"));
+
     setTimeout(() => setImportStatus(""), 3000);
   };
 
@@ -72,26 +80,29 @@ export default function Profile() {
     try {
       const newState = await importProgress(file);
       setState(newState);
+      
+      showToast(t("profile.data.toast.imported"), "success");
       setImportStatus(t("profile.data.status.imported"));
       logActivity(ACTIVITY_TYPES.IMPORT, {}, t("profile.data.log.imported"));
     } catch {
+      showToast(t("profile.data.toast.importFailed"), "error");
       setImportStatus(t("profile.data.status.importFailed"));
     }
-
-    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleReset = () => {
     if (window.confirm(t("profile.data.confirmReset"))) {
       const newState = resetProgress();
       setState(newState);
+
+      showToast(t("profile.data.toast.resetDone"), "warning");
       setImportStatus(t("profile.data.status.resetDone"));
       setTimeout(() => setImportStatus(""), 3000);
     }
   };
 
   const completedMissions = missions.filter((m) =>
-    state.completedMissions.includes(m.id),
+    state.completedMissions.includes(m.id)
   );
 
   return (
@@ -138,9 +149,7 @@ export default function Profile() {
         </div>
 
         {/* STATS */}
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
               {state.completedMissions.length}
@@ -166,8 +175,9 @@ export default function Profile() {
         <div className="card mt-4">
           <h3 className="mb-3">{t("profile.editPanel.title")}</h3>
 
-          {/* NAME */}
+          {/* NAME INPUT */}
           <input
+            className="profile-input-full"
             className="w-full p-2 mb-3 rounded"
             style={{
               backgroundColor: "var(--bg-secondary)",
@@ -178,12 +188,16 @@ export default function Profile() {
             placeholder={t("profile.editPanel.namePlaceholder")}
           />
 
-          {/* AVATARS */}
-          <div className="grid grid-cols-6 gap-2 mb-3">
+          {/* AVATAR SELECTOR WITH NATIVE 6-COLUMN RESPONSIVE GRID */}
+          <div className="avatar-grid-6col">
             {avatars.map((a) => (
               <button
                 key={a}
+                type="button"
                 onClick={() => setAvatar(a)}
+                className={`avatar-btn-node text-2xl ${
+                  avatar === a ? "active" : ""
+                }`}
                 className="text-2xl p-2 rounded transition"
                 style={{
                   backgroundColor:
@@ -196,8 +210,8 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
+          {/* ACTION BUTTON CONTAINER */}
+          <div className="profile-flex-row">
             <button className="btn btn-primary" onClick={saveUserProfile}>
               {t("common.save")}
             </button>
@@ -240,7 +254,7 @@ export default function Profile() {
         <div className="card text-center p-6">{t("profile.noMissions")}</div>
       ) : (
         completedMissions.map((m) => (
-          <div key={m.id} className="card flex justify-between">
+          <div key={m.id} className="card profile-space-between">
             <span>{m.title}</span>
             <span className="text-gold">+{m.xpReward} XP</span>
           </div>
@@ -278,10 +292,6 @@ export default function Profile() {
           onChange={handleImport}
         />
       </div>
-
-      {importStatus && (
-        <p className="mt-3 text-sm text-gray-400">{importStatus}</p>
-      )}
     </div>
   );
 }
