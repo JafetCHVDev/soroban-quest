@@ -15,6 +15,9 @@ export default function Footer() {
             <li><Link to="/missions">Missions</Link></li>
             <li><Link to="/profile">Profile</Link></li>
             {/* Removed the non-existent /glossary link per acceptance criteria */}
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/missions">Missions</Link></li>
+            <li><Link to="/profile">Profile</Link></li>
           </ul>
         </div>
 

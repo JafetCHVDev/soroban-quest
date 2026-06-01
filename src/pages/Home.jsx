@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function Home() {
+    useDocumentTitle('Home');
     const navigate = useNavigate();
     const state = loadProgress();
     const canvasRef = useRef(null);

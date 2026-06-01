@@ -14,11 +14,13 @@ import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 // ─── Monaco marker model name (must be consistent across calls) ──────────────
 const LIVE_MARKER_OWNER = "soroban-quest-live";
 
 export default function MissionDetail() {
+  useDocumentTitle('Mission Detail');
   const { missionId } = useParams();
   const navigate = useNavigate();
   const mission = getMissionById(missionId);
