@@ -170,18 +170,23 @@ export default function Profile() {
       {/* EDIT PANEL */}
       {editing && (
         <div className="card mt-4" role="form" aria-labelledby="edit-profile-heading">
-          <h3 id="edit-profile-heading" className="mb-3">Edit Profile</h3>
+          <h3 id="edit-profile-heading" className="mb-3">
+            Edit Profile
+          </h3>
 
-<<<<<<< feature/comprehensive-a11y-102
           {/* NAME */}
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             <label htmlFor="profile-name-edit-input" className="text-sm font-semibold">
               Adventurer Character Name
             </label>
+
             <input
               id="profile-name-edit-input"
-              className="w-full p-2 mb-3 rounded"
-              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+              className="profile-input-full w-full p-2 mb-3 rounded"
+              style={{
+                backgroundColor: "var(--bg-secondary)",
+                color: "var(--text-primary)",
+              }}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter name"
@@ -190,18 +195,24 @@ export default function Profile() {
 
           {/* AVATARS */}
           <fieldset className="mb-3" style={{ border: "none", padding: 0, margin: 0 }}>
-            <legend className="text-sm font-semibold mb-2">Select Character Emblem Avatar</legend>
-            <div className="grid grid-cols-6 gap-2">
+            <legend className="text-sm font-semibold mb-2">
+              Select Character Emblem Avatar
+            </legend>
+
+            <div className="avatar-grid-6col grid grid-cols-6 gap-2">
               {avatars.map((a) => (
                 <button
-                  type="button"
                   key={a}
+                  type="button"
                   onClick={() => setAvatar(a)}
-                  className="text-2xl p-2 rounded transition"
+                  className={`avatar-btn-node text-2xl p-2 rounded transition ${
+                    avatar === a ? "active" : ""
+                  }`}
                   aria-label={`Select avatar icon character ${a}`}
                   aria-pressed={avatar === a}
                   style={{
-                    backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                    backgroundColor:
+                      avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
                     transform: avatar === a ? "scale(1.1)" : "none",
                   }}
                 >
@@ -212,49 +223,20 @@ export default function Profile() {
           </fieldset>
 
           {/* ACTIONS */}
-          <div className="flex gap-2">
-            <button type="button" className="btn btn-primary" onClick={saveUserProfile}>
+          <div className="profile-flex-row flex gap-2">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={saveUserProfile}
+            >
               Save Profile Changes
-=======
-          {/* NAME INPUT */}
-          <input
-            className="profile-input-full"
-            className="w-full p-2 mb-3 rounded"
-            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter name"
-          />
-
-          {/* AVATAR SELECTOR WITH NATIVE 6-COLUMN RESPONSIVE GRID */}
-          <div className="avatar-grid-6col">
-            {avatars.map((a) => (
-              <button
-                key={a}
-                type="button"
-                onClick={() => setAvatar(a)}
-                className={`avatar-btn-node text-2xl ${
-                  avatar === a ? "active" : ""
-                }`}
-                className="text-2xl p-2 rounded transition"
-                style={{
-                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
-                  transform: avatar === a ? "scale(1.1)" : "none",
-                }}
-              >
-                {a}
-              </button>
-            ))}
-          </div>
-
-          {/* ACTION BUTTON CONTAINER */}
-          <div className="profile-flex-row">
-            <button className="btn btn-primary" onClick={saveUserProfile}>
-              Save
->>>>>>> main
             </button>
 
-            <button type="button" className="btn btn-ghost" onClick={() => setEditing(false)}>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setEditing(false)}
+            >
               Cancel Changes
             </button>
           </div>
@@ -284,26 +266,6 @@ export default function Profile() {
         })}
       </div>
 
-<<<<<<< feature/comprehensive-a11y-102
-      {/* MISSIONS */}
-      <h2 className="profile-section-title">✅ Completed Missions Catalog</h2>
-
-      <div className="flex flex-col gap-2" role="region" aria-label="Completed missions listing log">
-        {completedMissions.length === 0 ? (
-          <div className="card text-center p-6" role="status">No missions completed yet on this adventure.</div>
-        ) : (
-          completedMissions.map((m) => (
-            <div key={m.id} className="card flex justify-between" aria-label={`Completed mission entry: ${m.title}. Reward gathered: ${m.xpReward} XP.`}>
-              <span aria-hidden="true">{m.title}</span>
-              <span className="text-gold" aria-hidden="true">+{m.xpReward} XP</span>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* DATA */}
-      <h2 className="profile-section-title">⚙️ Local Progression Management Data</h2>
-=======
       {/* COMPLETED MISSIONS LIST */}
       <h2 className="profile-section-title">✅ Completed Missions</h2>
 
@@ -320,7 +282,6 @@ export default function Profile() {
 
       {/* CONFIGURATION DATA MANAGEMENT */}
       <h2 className="profile-section-title">⚙️ Data</h2>
->>>>>>> main
 
       <div className="profile-actions" role="group" aria-label="Game progress backup controls">
         <button type="button" className="btn btn-secondary" onClick={handleExport}>
@@ -349,13 +310,12 @@ export default function Profile() {
           aria-label="Hidden file progress backup uploader tool"
         />
       </div>
-<<<<<<< feature/comprehensive-a11y-102
+
 
       {importStatus && (
         <p className="mt-3 text-sm text-gray-400" role="status">{importStatus}</p>
       )}
-=======
->>>>>>> main
+
     </div>
   );
 }
