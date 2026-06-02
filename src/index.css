@@ -2003,4 +2003,159 @@ button {
     padding: 0 16px;
   }
 }
+/* ==========================================================================
+   Quest Loading Screen Overlay Styles (Issue #98)
+   ========================================================================== */
 
+
+ .quest-loading-overlay {
+  position: fixed !important; /* Overrides any relative layouts */
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;  /* Forces full viewport width on large monitors */
+  height: 100vh !important; /* Forces full viewport height on large monitors */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  background-color: #0a1720 !important; /* Prevents background leaking */
+  color: #ffffff;
+  z-index: 999999 !important; /* Pushes it past any high-index desktop layouts */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+<<<<<<< feature/comprehensive-a11y-102
+/* ==========================================
+   GLOBAL ACCESSIBILITY & KEYBOARD FOCUS STYLES (#102)
+   ========================================== */
+
+/* High contrast outline rings only targeting active keyboard tab navigation */
+*:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  box-shadow: 0 0 12px var(--cyan-glow);
+}
+
+/* Disable standard fallback blur rings when click actions happen via mouse */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Visually Hidden Utility for Skip-Links & Screen Reader helper texts */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 24px;
+  background: linear-gradient(135deg, var(--cyan), #05b88a);
+  color: #0a0e1a;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glow-cyan);
+  z-index: 99999;
+  transition: top var(--transition-fast) ease;
+}
+
+/* Snap into visible boundary layout area upon initial tab interaction focus state */
+.skip-to-content:focus-visible {
+  top: 16px;
+  outline: 3px solid #f1f5f9;
+}
+
+/* Visually hides assistive text snippets completely off screen for sighted users */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+=======
+
+/* Ambient Pulse Glow background element */
+.quest-loading-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-color:  #020617;
+  opacity: 0.04;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: questPulse 2s ease-in-out infinite alternate;
+}
+
+.quest-loading-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Spinner Framework Structure */
+.quest-loading-spinner-container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.quest-loading-spinner-bg {
+  position: absolute;
+  inset: 0;
+  border: 4px solid rgba(207, 253, 237, 0.15);
+  border-radius: 50%;
+}
+
+.quest-loading-spinner-active {
+  position: absolute;
+  inset: 0;
+  border: 4px solid transparent;
+  border-top-color: #273d72; /* Branded gold accent indicator */
+  border-radius: 50%;
+  animation: questSpin 1s linear infinite;
+}
+
+/* Typography Adjustments */
+.quest-loading-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.quest-loading-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  color: #CFFDED;
+  text-transform: uppercase;
+  animation: questPulse 1.5s ease-in-out infinite alternate;
+}
+
+.quest-loading-subtitle {
+  margin: 6px 0 0 0;
+  font-size: 0.75rem;
+  color: #8a939b;
+  font-family: monospace;
+}
+
+/* Keyframes Definitions */
+@keyframes questSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes questPulse {
+  0% { opacity: 0.6; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1.02); }
+}
+>>>>>>> main

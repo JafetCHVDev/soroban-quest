@@ -11,6 +11,8 @@
 
 .toast {
   min-width: 280px;
+  max-width: 420px;
+  background: rgba(15, 23, 42, 0.9);
   background: var(--bg-card);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border-subtle);
