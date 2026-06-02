@@ -40,14 +40,20 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {/* The Toast Container Layout */}
-      <div className="toast-container">
+      {/* The Toast Container — Updated invalid role to standard semantic role status (#102) */}
+      <div 
+        className="toast-container" 
+        aria-live="polite" 
+        role="status"
+      >
         {(toasts || []).map((toast) => (
           <div
             key={toast.id}
             className={`toast toast-${toast.type} ${toast.isExiting ? "toast-exiting" : ""}`}
-            onClick={() => dismissToast(toast.id)}
-            style={{ "--toast-duration": `${TOAST_LIFETIME}ms` }} // Sync timing metric safely to CSS
+            onClick={() => removeToast(toast.id)}
+            role="alert"
+            aria-atomic="true"
+            style={{ cursor: "pointer" }}
           >
             <div className="toast-content">{toast.message}</div>
             <div className="toast-progress" />
