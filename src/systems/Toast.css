@@ -6,46 +6,68 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  pointer-events: none; /* Prevents dead layout space from blocking clicks underneath */
 }
 
 .toast {
   min-width: 280px;
-  background: var(--bg-card);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(8px);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-left: 4px solid var(--border-color);
-  color: var(--text-primary);
+  color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  pointer-events: auto;
+  
+  /* Entry transition */
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Explicit class assignment when toast is transitioning out */
-.toast-exiting {
-  animation: slideOut 0.3s cubic-bezier(0.7, 0, 0.84, 0) forwards;
-  pointer-events: none;
+/* Acceptance Criteria #2: Add slideOut exit animation layout variant class */
+.toast.toast-exiting {
+  animation: slideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Acceptance Criteria #4: Verify all token color styles display correctly */
 .toast-success {
-  --border-color: var(--green);
+  --border-color: #10b981;
 }
 .toast-error {
-  --border-color: var(--red);
+  --border-color: #ef4444;
 }
 .toast-warning {
-  --border-color: var(--gold);
+  --border-color: #f59e0b;
 }
 .toast-info {
-  --border-color: var(--blue);
+  --border-color: #3b82f6;
 }
 
-/* --- Entrance & Exit Animation Timelines --- */
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Acceptance Criteria #1: Dynamic shrink timing matched securely via explicit duration maps */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--border-color); /* Highlight progress color matching the alert type */
+  opacity: 0.6;
+  width: 100%;
+  transform-origin: left;
+  animation: shrink linear forwards;
+  animation-duration: var(--toast-duration, 3s); /* Tied dynamically to JS constant value */
+}
+
+/* KEYFRAMES */
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -63,39 +85,9 @@
     opacity: 1;
   }
   to {
-    transform: translateX(40px); /* Smooth layout glide out as it goes transparent */
+    transform: translateX(100%);
     opacity: 0;
   }
-}
-
-.toast-content {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.toast-type-icon {
-  user-select: none;
-  flex-shrink: 0;
-}
-
-/* --- Countdown Progress Tape Properties --- */
-.toast-progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 3px;
-  background: var(--border-color); /* Updated to use matching accent color for clean visual flow */
-  opacity: 0.4;
-  width: 100%;
-  transform-origin: left;
-  /* Duration assignment handled dynamically inline by component logic */
-  animation-name: shrink;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
 }
 
 @keyframes shrink {

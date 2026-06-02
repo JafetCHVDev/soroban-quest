@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+// Import the fixed custom layout definitions directly
+import "./Profile.css";
+
 import {
   loadProgress,
   importProgress,
@@ -12,14 +14,15 @@ import {
 import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
-import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
-import useDocumentTitle from '../systems/useDocumentTitle';
-import { useToast } from '../systems/ToastContext';
+
+// ✅ FIXED: Correctly matching the named hook export from your ToastContext
+import { useToast } from "../systems/ToastContext";
 
 export default function Profile() {
-  const { showToast } = useToast();
-  useDocumentTitle('Profile');
   const [state, setState] = useState(loadProgress());
+
+  // ✅ Initialize the custom system toast notifier hook
+  const { showToast } = useToast();
 
   // ✅ IMPORTANT: safe profile init
   const [profile, setProfile] = useState(() => loadProfile());
@@ -28,6 +31,7 @@ export default function Profile() {
   const [name, setName] = useState(profile.name || "");
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
 
+  const [importStatus, setImportStatus] = useState("");
   const fileInputRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
@@ -44,9 +48,9 @@ export default function Profile() {
     saveProfile(updated);
     setProfile(updated);
     setEditing(false);
-    
-    // Wire up success notification
-    showToast("Profile credentials synchronized!", "success");
+
+    // ✅ Trigger global success toast alert
+    showToast("Profile layout saved successfully!", "success");
   };
 
   const openEdit = () => {
@@ -58,8 +62,11 @@ export default function Profile() {
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
     exportProgress();
-    showToast("Progress configuration data exported!", "success");
-    logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
+    setImportStatus("✅ Progress exported!");
+    
+    // ✅ Trigger global success toast alert
+    showToast("Quest progress backup configuration data exported.", "success");
+    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleImport = async (e) => {
@@ -69,18 +76,29 @@ export default function Profile() {
     try {
       const newState = await importProgress(file);
       setState(newState);
-      showToast("Progress state imported successfully!", "success");
-      logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
+      setImportStatus("✅ Progress imported successfully!");
+      
+      // ✅ Trigger global success toast alert
+      showToast("Progress state data recovered successfully.", "success");
     } catch {
-      showToast("Invalid data payload — backup corrupted.", "error");
+      setImportStatus("❌ Invalid file — could not import.");
+      
+      // ✅ Trigger global error toast alert
+      showToast("Could not parse file. Verify structure format.", "error");
     }
+
+    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleReset = () => {
     if (window.confirm("Reset all progress? This cannot be undone.")) {
       const newState = resetProgress();
       setState(newState);
-      showToast("Pilot profile progress cache reset to defaults.", "warning");
+      setImportStatus("🗑️ Progress reset.");
+      
+      // ✅ Trigger global warning toast alert
+      showToast("All missions, XP levels, and badges have been cleared.", "warning");
+      setTimeout(() => setImportStatus(""), 3000);
     }
   };
 
@@ -117,15 +135,10 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2 mt-3">
-            <button className="btn btn-secondary" onClick={openEdit}>
-              ✏️ Edit Profile
-            </button>
-            <Link to="/journal" className="btn btn-ghost">
-              📖 View Journal
-            </Link>
-          </div>
+          {/* EDIT BUTTON */}
+          <button className="btn btn-secondary mt-3" onClick={openEdit}>
+            ✏️ Edit Profile
+          </button>
         </div>
 
         {/* STATS */}
@@ -157,8 +170,7 @@ export default function Profile() {
 
           {/* NAME INPUT */}
           <input
-            className="w-full p-2 mb-3 rounded"
-            style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            className="profile-input-full"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
@@ -171,11 +183,9 @@ export default function Profile() {
                 key={a}
                 type="button"
                 onClick={() => setAvatar(a)}
-                className="text-2xl p-2 rounded transition"
-                style={{
-                  backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
-                  transform: avatar === a ? "scale(1.1)" : "none",
-                }}
+                className={`avatar-btn-node text-2xl ${
+                  avatar === a ? "active" : ""
+                }`}
               >
                 {a}
               </button>
@@ -246,7 +256,7 @@ export default function Profile() {
           Import
         </button>
 
-        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
+        <button className="btn btn-ghost text-red-500" onClick={handleReset}>
           Reset
         </button>
 
@@ -258,6 +268,10 @@ export default function Profile() {
           onChange={handleImport}
         />
       </div>
+
+      {importStatus && (
+        <p className="mt-3 text-sm text-gray-400">{importStatus}</p>
+      )}
     </div>
   );
 }

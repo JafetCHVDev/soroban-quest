@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
+import "./Toast.css"; // Ensure the styles are loaded alongside the context
 
 const ToastContext = createContext(null);
 
-// Shared architectural constant keeping animations and JavaScript timeouts synchronized
-export const TOAST_LIFETIME = 3000;
-// Duration matching the CSS slideOut fade animation (in milliseconds)
-const EXIT_ANIMATION_DURATION = 300;
+// Shared Timing Configuration Constants (Acceptance Criteria #3)
+export const TOAST_LIFETIME = 3000; // 3 seconds visibility countdown
+const EXIT_ANIMATION_DURATION = 300; // 300ms matches CSS slideOut duration
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const removeToast = useCallback((id) => {
-    // 1. First trigger the exit CSS animation state
+  const dismissToast = useCallback((id) => {
+    // 1. Trigger exit class name animation state
     setToasts((prev) =>
       (prev || []).map((t) => (t.id === id ? { ...t, isExiting: true } : t)),
     );
 
-    // 2. Clear the toast from the React state once the slideOut ends
+    // 2. Safely remove node from memory structure once exit animation finishes playing
     setTimeout(() => {
       setToasts((prev) => (prev || []).filter((t) => t.id !== id));
     }, EXIT_ANIMATION_DURATION);
@@ -29,42 +29,28 @@ export const ToastProvider = ({ children }) => {
 
       setToasts((prev) => [...(prev || []), newToast]);
 
-      // Request removal phase cleanly right at the 3-second lifecycle milestone
+      // Automatically trigger dismissal flow after lifetime limit completes
       setTimeout(() => {
-        removeToast(id);
+        dismissToast(id);
       }, TOAST_LIFETIME);
     },
-    [removeToast],
+    [dismissToast],
   );
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {/* The Toast Container */}
+      {/* The Toast Container Layout */}
       <div className="toast-container">
         {(toasts || []).map((toast) => (
           <div
             key={toast.id}
             className={`toast toast-${toast.type} ${toast.isExiting ? "toast-exiting" : ""}`}
-            onClick={() => removeToast(toast.id)}
+            onClick={() => dismissToast(toast.id)}
+            style={{ "--toast-duration": `${TOAST_LIFETIME}ms` }} // Sync timing metric safely to CSS
           >
-            <div className="toast-content">
-              <span className="toast-type-icon">
-                {toast.type === "success" && "✅ "}
-                {toast.type === "error" && "❌ "}
-                {toast.type === "warning" && "⚠️ "}
-                {toast.type === "info" && "ℹ️ "}
-              </span>
-              {toast.message}
-            </div>
-
-            {/* Visual Progress Countdown Bar with synchronized runtime length */}
-            {!toast.isExiting && (
-              <div
-                className="toast-progress"
-                style={{ animationDuration: `${TOAST_LIFETIME}ms` }}
-              />
-            )}
+            <div className="toast-content">{toast.message}</div>
+            <div className="toast-progress" />
           </div>
         ))}
       </div>
@@ -74,6 +60,7 @@ export const ToastProvider = ({ children }) => {
 
 export const useToast = () => {
   const context = useContext(ToastContext);
+  // Fallback pattern to gracefully bypass runtime destructuring faults if context is missing
   if (!context) {
     return {
       showToast: (msg) => console.warn("ToastProvider missing. Message:", msg),
