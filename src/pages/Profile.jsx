@@ -1,4 +1,8 @@
 import React, { useState, useRef } from "react";
+// Import the fixed custom layout definitions directly
+import "./Profile.css";
+import { useToast } from '../systems/ToastContext';
+
 import { Link } from "react-router-dom";
 import {
   loadProgress,
@@ -16,17 +20,15 @@ import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function Profile() {
+  const { showToast } = useToast();
   useDocumentTitle('Profile');
   const [state, setState] = useState(loadProgress());
-
-  // ✅ IMPORTANT: safe profile init
   const [profile, setProfile] = useState(() => loadProfile());
 
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile.name || "");
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
 
-  const [importStatus, setImportStatus] = useState("");
   const fileInputRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
@@ -42,8 +44,10 @@ export default function Profile() {
 
     saveProfile(updated);
     setProfile(updated);
-
     setEditing(false);
+    
+    // Wire up success notification
+    showToast("Profile credentials synchronized!", "success");
   };
 
   const openEdit = () => {
@@ -55,6 +59,8 @@ export default function Profile() {
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
     exportProgress();
+    // Replaced local status state with unified system toast alerts
+    showToast("Progress configuration data exported!", "success");
     setImportStatus("✅ Progress exported!");
     logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
     setTimeout(() => setImportStatus(""), 3000);
@@ -67,42 +73,48 @@ export default function Profile() {
     try {
       const newState = await importProgress(file);
       setState(newState);
+      showToast("Progress state imported successfully!", "success");
       setImportStatus("✅ Progress imported successfully!");
       logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
     } catch {
-      setImportStatus("❌ Invalid file — could not import.");
+      showToast("Invalid data payload — backup corrupted.", "error");
     }
-
-    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleReset = () => {
     if (window.confirm("Reset all progress? This cannot be undone.")) {
       const newState = resetProgress();
       setState(newState);
-      setImportStatus("🗑️ Progress reset.");
-      setTimeout(() => setImportStatus(""), 3000);
+      showToast("Pilot profile progress cache reset to defaults.", "warning");
     }
   };
 
   const completedMissions = missions.filter((m) =>
-    state.completedMissions.includes(m.id),
+    state.completedMissions.includes(m.id)
   );
 
   return (
-    <div className="profile-page">
+    <div id="main-content" className="profile-page">
       {/* HEADER */}
       <div className="profile-header">
         {/* AVATAR */}
-        <div className="profile-avatar text-5xl">{profile.avatar}</div>
+        <div className="profile-avatar text-5xl" role="img" aria-label={`Active avatar character: ${profile.avatar}`}>
+          {profile.avatar}
+        </div>
 
         {/* INFO */}
         <div className="profile-info" style={{ flex: 1 }}>
-          <h1 className="profile-name">{profile.name}</h1>
+          <h1 className="profile-name">
+            <span className="sr-only">Adventurer Name: </span>
+            {profile.name}
+          </h1>
 
-          <div className="profile-rank">{rankTitle}</div>
+          <div className="profile-rank">
+            <span className="sr-only">Rank Title: </span>
+            {rankTitle}
+          </div>
 
-          <div className="xp-bar-container">
+          <div className="xp-bar-container" aria-label={`XP progress bar: ${xpProgress.percentage}% complete`}>
             <div className="xp-bar-track">
               <div
                 className="xp-bar-fill"
@@ -112,19 +124,19 @@ export default function Profile() {
 
             <div className="xp-bar-label">
               <span>
-                {xpProgress.current} / {xpProgress.needed} XP
+                {xpProgress.current} / {xpProgress.needed} XP needed for next level
               </span>
-              <span>Total: {state.xp} XP</span>
+              <span>Total cumulative: {state.xp} XP</span>
             </div>
           </div>
 
           {/* ACTIONS */}
           <div className="flex gap-2 mt-3">
-            <button className="btn btn-secondary" onClick={openEdit}>
-              ✏️ Edit Profile
+            <button type="button" className="btn btn-secondary" onClick={openEdit}>
+              ✏️ Edit Character Profile
             </button>
             <Link to="/journal" className="btn btn-ghost">
-              📖 View Journal
+              📖 View Quest Journal
             </Link>
           </div>
         </div>
@@ -132,13 +144,15 @@ export default function Profile() {
         {/* STATS */}
         <div
           style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          role="region"
+          aria-label="Adventurer stats dashboard"
         >
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
               {state.completedMissions.length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-              Missions
+              Missions Completed
             </div>
           </div>
 
@@ -147,7 +161,7 @@ export default function Profile() {
               {state.badges.length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-              Badges
+              Badges Earned
             </div>
           </div>
         </div>
@@ -155,11 +169,56 @@ export default function Profile() {
 
       {/* EDIT PANEL */}
       {editing && (
-        <div className="card mt-4">
-          <h3 className="mb-3">Edit Profile</h3>
+        <div className="card mt-4" role="form" aria-labelledby="edit-profile-heading">
+          <h3 id="edit-profile-heading" className="mb-3">Edit Profile</h3>
 
+<<<<<<< feature/comprehensive-a11y-102
           {/* NAME */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <label htmlFor="profile-name-edit-input" className="text-sm font-semibold">
+              Adventurer Character Name
+            </label>
+            <input
+              id="profile-name-edit-input"
+              className="w-full p-2 mb-3 rounded"
+              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter name"
+            />
+          </div>
+
+          {/* AVATARS */}
+          <fieldset className="mb-3" style={{ border: "none", padding: 0, margin: 0 }}>
+            <legend className="text-sm font-semibold mb-2">Select Character Emblem Avatar</legend>
+            <div className="grid grid-cols-6 gap-2">
+              {avatars.map((a) => (
+                <button
+                  type="button"
+                  key={a}
+                  onClick={() => setAvatar(a)}
+                  className="text-2xl p-2 rounded transition"
+                  aria-label={`Select avatar icon character ${a}`}
+                  aria-pressed={avatar === a}
+                  style={{
+                    backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
+                    transform: avatar === a ? "scale(1.1)" : "none",
+                  }}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* ACTIONS */}
+          <div className="flex gap-2">
+            <button type="button" className="btn btn-primary" onClick={saveUserProfile}>
+              Save Profile Changes
+=======
+          {/* NAME INPUT */}
           <input
+            className="profile-input-full"
             className="w-full p-2 mb-3 rounded"
             style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
             value={name}
@@ -167,12 +226,16 @@ export default function Profile() {
             placeholder="Enter name"
           />
 
-          {/* AVATARS */}
-          <div className="grid grid-cols-6 gap-2 mb-3">
+          {/* AVATAR SELECTOR WITH NATIVE 6-COLUMN RESPONSIVE GRID */}
+          <div className="avatar-grid-6col">
             {avatars.map((a) => (
               <button
                 key={a}
+                type="button"
                 onClick={() => setAvatar(a)}
+                className={`avatar-btn-node text-2xl ${
+                  avatar === a ? "active" : ""
+                }`}
                 className="text-2xl p-2 rounded transition"
                 style={{
                   backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
@@ -184,23 +247,24 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
+          {/* ACTION BUTTON CONTAINER */}
+          <div className="profile-flex-row">
             <button className="btn btn-primary" onClick={saveUserProfile}>
               Save
+>>>>>>> main
             </button>
 
-            <button className="btn btn-ghost" onClick={() => setEditing(false)}>
-              Cancel
+            <button type="button" className="btn btn-ghost" onClick={() => setEditing(false)}>
+              Cancel Changes
             </button>
           </div>
         </div>
       )}
 
       {/* BADGES */}
-      <h2 className="profile-section-title">🏅 Badges</h2>
+      <h2 className="profile-section-title">🏅 Earned Honor Badges</h2>
 
-      <div className="profile-badges-grid">
+      <div className="profile-badges-grid" role="region" aria-label="Badges progression collection">
         {BADGES.map((badge) => {
           const earned = state.badges.includes(badge.id);
 
@@ -208,9 +272,10 @@ export default function Profile() {
             <div
               key={badge.id}
               className={`profile-badge-card ${earned ? "earned" : "locked"}`}
+              aria-label={`Badge record: ${badge.name}. Description: ${badge.description}. Status: ${earned ? 'Earned' : 'Locked'}`}
             >
-              <div className="profile-badge-icon">{badge.icon}</div>
-              <div className="profile-badge-info">
+              <div className="profile-badge-icon" aria-hidden="true">{badge.icon}</div>
+              <div className="profile-badge-info" aria-hidden="true">
                 <h4>{badge.name}</h4>
                 <p>{badge.description}</p>
               </div>
@@ -219,51 +284,78 @@ export default function Profile() {
         })}
       </div>
 
+<<<<<<< feature/comprehensive-a11y-102
       {/* MISSIONS */}
+      <h2 className="profile-section-title">✅ Completed Missions Catalog</h2>
+
+      <div className="flex flex-col gap-2" role="region" aria-label="Completed missions listing log">
+        {completedMissions.length === 0 ? (
+          <div className="card text-center p-6" role="status">No missions completed yet on this adventure.</div>
+        ) : (
+          completedMissions.map((m) => (
+            <div key={m.id} className="card flex justify-between" aria-label={`Completed mission entry: ${m.title}. Reward gathered: ${m.xpReward} XP.`}>
+              <span aria-hidden="true">{m.title}</span>
+              <span className="text-gold" aria-hidden="true">+{m.xpReward} XP</span>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* DATA */}
+      <h2 className="profile-section-title">⚙️ Local Progression Management Data</h2>
+=======
+      {/* COMPLETED MISSIONS LIST */}
       <h2 className="profile-section-title">✅ Completed Missions</h2>
 
       {completedMissions.length === 0 ? (
         <div className="card text-center p-6">No missions completed yet.</div>
       ) : (
         completedMissions.map((m) => (
-          <div key={m.id} className="card flex justify-between">
+          <div key={m.id} className="card profile-space-between">
             <span>{m.title}</span>
             <span className="text-gold">+{m.xpReward} XP</span>
           </div>
         ))
       )}
 
-      {/* DATA */}
+      {/* CONFIGURATION DATA MANAGEMENT */}
       <h2 className="profile-section-title">⚙️ Data</h2>
+>>>>>>> main
 
-      <div className="profile-actions">
-        <button className="btn btn-secondary" onClick={handleExport}>
-          Export
+      <div className="profile-actions" role="group" aria-label="Game progress backup controls">
+        <button type="button" className="btn btn-secondary" onClick={handleExport}>
+          Export Progress File
         </button>
 
         <button
+          type="button"
           className="btn btn-secondary"
           onClick={() => fileInputRef.current?.click()}
         >
-          Import
+          Import Progress File
         </button>
 
-        <button className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
-          Reset
+        <button type="button" className="btn btn-ghost" style={{ color: "var(--red)" }} onClick={handleReset}>
+          Reset Progress
         </button>
 
         <input
           ref={fileInputRef}
           type="file"
+          id="progress-import-hidden-file"
           accept=".json"
           hidden
           onChange={handleImport}
+          aria-label="Hidden file progress backup uploader tool"
         />
       </div>
+<<<<<<< feature/comprehensive-a11y-102
 
       {importStatus && (
-        <p className="mt-3 text-sm text-gray-400">{importStatus}</p>
+        <p className="mt-3 text-sm text-gray-400" role="status">{importStatus}</p>
       )}
+=======
+>>>>>>> main
     </div>
   );
 }

@@ -58,94 +58,49 @@ export default function Navbar() {
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
   return (
-    <nav className="navbar">
-      {/* LOGO */}
-      <Link to="/" className="navbar-logo">
-        <span className="navbar-logo-text">SOROBAN QUEST</span>
-      </Link>
+    <>
+      {/* SKIP TO CONTENT LINK (#102) */}
+      <a href="#main-content" className="skip-to-content">
+        Skip to content
+      </a>
 
-      {/* LINKS */}
-      <ul className="navbar-links">
-        <li>
-          <Link to="/" className={isActive("/")}>
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to="/campaigns" className={isActive("/campaigns")}>
-            Campaigns
-          </Link>
-        </li>
-        <li>
-          <Link to="/missions" className={isActive("/missions")}>
-            Missions
-          </Link>
-        </li>
-        <li>
-          <Link to="/profile" className={isActive("/profile")}>
-            Profile
-          </Link>
-        </li>
-        <li>
-          <Link to="/journal" className={isActive("/journal")}>
-            Journal
-          </Link>
-        </li>
-      </ul>
-
-      {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
-      <div className="navbar-stats">
-        {isInstallable && (
-          <button
-            onClick={handleInstall}
-            className="btn-primary"
-            style={{ padding: "0.5rem 1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
-            aria-label="Install app"
-          >
-            <Download size={16} />
-            <span>Install App</span>
-          </button>
-        )}
-        <button
-          onClick={toggleTheme}
-          className="btn-ghost"
-          style={{ padding: "0.5rem", borderRadius: "50%" }}
-          aria-label="Toggle theme"
-        >
-          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-        </button>
-        <span className="text-xl">{profile.avatar}</span>
-        <span className="text-sm font-semibold">{profile.name}</span>
-      </div>
-
-      {/* HAMBURGER */}
-      <button onClick={() => setIsOpen(!isOpen)} className="hamburger-btn">
-        {isOpen ? <X /> : <Menu />}
-      </button>
-
-      {/* BACKDROP */}
-      {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
-
-      {/* MOBILE */}
-      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
-        <Link to="/" onClick={() => setIsOpen(false)}>
-          Home
-        </Link>
-        <Link to="/campaigns" onClick={() => setIsOpen(false)}>
-          Campaigns
-        </Link>
-        <Link to="/missions" onClick={() => setIsOpen(false)}>
-          Missions
-        </Link>
-        <Link to="/profile" onClick={() => setIsOpen(false)}>
-          Profile
-        </Link>
-        <Link to="/journal" onClick={() => setIsOpen(false)}>
-          Journal
+      <nav className="navbar" aria-label="Main Navigation">
+        {/* LOGO */}
+        <Link to="/" className="navbar-logo" aria-label="Soroban Quest Home">
+          <span className="navbar-logo-text">SOROBAN QUEST</span>
         </Link>
 
-        {/* MOBILE EXTRAS */}
-        <div className="mobile-stats">
+        {/* LINKS */}
+        <ul className="navbar-links">
+          <li>
+            <Link to="/" className={isActive("/")}>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/campaigns" className={isActive("/campaigns")}>
+              Campaigns
+            </Link>
+          </li>
+          <li>
+            <Link to="/missions" className={isActive("/missions")}>
+              Missions
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className={isActive("/profile")}>
+              Profile
+            </Link>
+          </li>
+          <li>
+            <Link to="/journal" className={isActive("/journal")}>
+              Journal
+            </Link>
+          </li>
+        </ul>
+
+        {/* PROFILE DISPLAY & THEME TOGGLE (DESKTOP) */}
+        <div className="navbar-stats">
           {isInstallable && (
             <button
               onClick={handleInstall}
@@ -161,14 +116,79 @@ export default function Navbar() {
             onClick={toggleTheme}
             className="btn-ghost"
             style={{ padding: "0.5rem", borderRadius: "50%" }}
-            aria-label="Toggle theme"
+            aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
-          <span>{profile.avatar}</span>
-          <span>{profile.name}</span>
+          <span className="text-xl" aria-hidden="true">
+            {profile.avatar}
+          </span>
+          <span className="text-sm font-semibold">
+            <span className="sr-only">User profile: </span>
+            {profile.name}
+          </span>
         </div>
-      </div>
-    </nav>
+
+        {/* HAMBURGER */}
+        <button 
+          onClick={() => setIsOpen(!isOpen)} 
+          className="hamburger-btn"
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
+        >
+          {isOpen ? <X /> : <Menu />}
+        </button>
+
+        {/* BACKDROP */}
+        {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
+
+        {/* MOBILE MENU */}
+        <div 
+          className={`mobile-menu ${isOpen ? "open" : ""}`}
+          aria-label="Mobile Navigation Drawer"
+        >
+          <Link to="/" onClick={() => setIsOpen(false)}>
+            Home
+          </Link>
+          <Link to="/campaigns" onClick={() => setIsOpen(false)}>
+            Campaigns
+          </Link>
+          <Link to="/missions" onClick={() => setIsOpen(false)}>
+            Missions
+          </Link>
+          <Link to="/profile" onClick={() => setIsOpen(false)}>
+            Profile
+          </Link>
+          <Link to="/journal" onClick={() => setIsOpen(false)}>
+            Journal
+          </Link>
+
+          {/* MOBILE EXTRAS */}
+          <div className="mobile-stats">
+            {isInstallable && (
+              <button
+                onClick={handleInstall}
+                className="btn-primary"
+                style={{ padding: "0.5rem 1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
+                aria-label="Install app"
+              >
+                <Download size={16} />
+                <span>Install App</span>
+              </button>
+            )}
+            <button
+              onClick={toggleTheme}
+              className="btn-ghost"
+              style={{ padding: "0.5rem", borderRadius: "50%" }}
+              aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+            >
+              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+            <span aria-hidden="true">{profile.avatar}</span>
+            <span>{profile.name}</span>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 }
