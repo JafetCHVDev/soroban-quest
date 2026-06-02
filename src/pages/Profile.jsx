@@ -28,6 +28,7 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile.name || "");
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
+  const [importStatus, setImportStatus] = useState("");
 
   const fileInputRef = useRef(null);
 
