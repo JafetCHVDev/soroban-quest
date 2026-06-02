@@ -11,7 +11,7 @@ import SkillTree from "./pages/SkillTree";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 
-// 1. Import the ErrorBoundary
+// Import components and providers
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./systems/ToastContext";
 import LoadingScreen from "./components/LoadingScreen";
