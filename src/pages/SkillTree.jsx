@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { missions } from '../data/missions';
 import { loadProgress } from '../systems/storage';
 import './SkillTree.css';
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 const conceptCategories = {
   Core: {
@@ -32,6 +33,7 @@ const conceptCategories = {
 };
 
 export default function SkillTree() {
+  useDocumentTitle('Skill Tree');
   const [completedMissions, setCompletedMissions] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);

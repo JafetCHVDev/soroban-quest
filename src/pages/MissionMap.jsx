@@ -2,8 +2,10 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function MissionMap() {
+    useDocumentTitle('Mission Map');
     const navigate = useNavigate();
     const state = loadProgress();
     const missions = getAllMissions();

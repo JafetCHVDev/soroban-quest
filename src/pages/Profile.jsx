@@ -1,4 +1,8 @@
 import React, { useState, useRef } from "react";
+// Import the fixed custom layout definitions directly
+import "./Profile.css";
+import { useToast } from '../systems/ToastContext';
+
 import { Link } from "react-router-dom";
 import {
   loadProgress,
@@ -13,8 +17,11 @@ import { getXPProgress, getRankTitle, BADGES } from "../systems/gameEngine";
 import { getAllMissions } from "../systems/missionLoader";
 import { avatars } from "../data/avatars";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function Profile() {
+  const { showToast } = useToast();
+  useDocumentTitle('Profile');
   const [state, setState] = useState(loadProgress());
 
   // ✅ IMPORTANT: safe profile init
@@ -24,7 +31,6 @@ export default function Profile() {
   const [name, setName] = useState(profile.name || "");
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
 
-  const [importStatus, setImportStatus] = useState("");
   const fileInputRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
@@ -40,8 +46,10 @@ export default function Profile() {
 
     saveProfile(updated);
     setProfile(updated);
-
     setEditing(false);
+    
+    // Wire up success notification
+    showToast("Profile credentials synchronized!", "success");
   };
 
   const openEdit = () => {
@@ -53,6 +61,8 @@ export default function Profile() {
   /* ---------------- PROGRESS ACTIONS ---------------- */
   const handleExport = () => {
     exportProgress();
+    // Replaced local status state with unified system toast alerts
+    showToast("Progress configuration data exported!", "success");
     setImportStatus("✅ Progress exported!");
     logActivity(ACTIVITY_TYPES.EXPORT, {}, "Exported adventure progress");
     setTimeout(() => setImportStatus(""), 3000);
@@ -65,26 +75,24 @@ export default function Profile() {
     try {
       const newState = await importProgress(file);
       setState(newState);
+      showToast("Progress state imported successfully!", "success");
       setImportStatus("✅ Progress imported successfully!");
       logActivity(ACTIVITY_TYPES.IMPORT, {}, "Imported adventure progress from file");
     } catch {
-      setImportStatus("❌ Invalid file — could not import.");
+      showToast("Invalid data payload — backup corrupted.", "error");
     }
-
-    setTimeout(() => setImportStatus(""), 3000);
   };
 
   const handleReset = () => {
     if (window.confirm("Reset all progress? This cannot be undone.")) {
       const newState = resetProgress();
       setState(newState);
-      setImportStatus("🗑️ Progress reset.");
-      setTimeout(() => setImportStatus(""), 3000);
+      showToast("Pilot profile progress cache reset to defaults.", "warning");
     }
   };
 
   const completedMissions = missions.filter((m) =>
-    state.completedMissions.includes(m.id),
+    state.completedMissions.includes(m.id)
   );
 
   return (
@@ -128,9 +136,7 @@ export default function Profile() {
         </div>
 
         {/* STATS */}
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
               {state.completedMissions.length}
@@ -156,8 +162,9 @@ export default function Profile() {
         <div className="card mt-4">
           <h3 className="mb-3">Edit Profile</h3>
 
-          {/* NAME */}
+          {/* NAME INPUT */}
           <input
+            className="profile-input-full"
             className="w-full p-2 mb-3 rounded"
             style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
             value={name}
@@ -165,12 +172,16 @@ export default function Profile() {
             placeholder="Enter name"
           />
 
-          {/* AVATARS */}
-          <div className="grid grid-cols-6 gap-2 mb-3">
+          {/* AVATAR SELECTOR WITH NATIVE 6-COLUMN RESPONSIVE GRID */}
+          <div className="avatar-grid-6col">
             {avatars.map((a) => (
               <button
                 key={a}
+                type="button"
                 onClick={() => setAvatar(a)}
+                className={`avatar-btn-node text-2xl ${
+                  avatar === a ? "active" : ""
+                }`}
                 className="text-2xl p-2 rounded transition"
                 style={{
                   backgroundColor: avatar === a ? "var(--cyan-dim)" : "var(--bg-glass)",
@@ -182,8 +193,8 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
+          {/* ACTION BUTTON CONTAINER */}
+          <div className="profile-flex-row">
             <button className="btn btn-primary" onClick={saveUserProfile}>
               Save
             </button>
@@ -217,21 +228,21 @@ export default function Profile() {
         })}
       </div>
 
-      {/* MISSIONS */}
+      {/* COMPLETED MISSIONS LIST */}
       <h2 className="profile-section-title">✅ Completed Missions</h2>
 
       {completedMissions.length === 0 ? (
         <div className="card text-center p-6">No missions completed yet.</div>
       ) : (
         completedMissions.map((m) => (
-          <div key={m.id} className="card flex justify-between">
+          <div key={m.id} className="card profile-space-between">
             <span>{m.title}</span>
             <span className="text-gold">+{m.xpReward} XP</span>
           </div>
         ))
       )}
 
-      {/* DATA */}
+      {/* CONFIGURATION DATA MANAGEMENT */}
       <h2 className="profile-section-title">⚙️ Data</h2>
 
       <div className="profile-actions">
@@ -258,10 +269,6 @@ export default function Profile() {
           onChange={handleImport}
         />
       </div>
-
-      {importStatus && (
-        <p className="mt-3 text-sm text-gray-400">{importStatus}</p>
-      )}
     </div>
   );
 }
