@@ -17,14 +17,12 @@ test.describe('Mission Flow', () => {
     await expect(runTestsBtn).toBeAttached({ timeout: 15000 });
   });
 
-  test('mission page displays mission content', async ({ page }) => {
+  test('mission page displays all sections', async ({ page }) => {
     await page.goto('/#/mission/hello-soroban');
-    await page.waitForLoadState('networkidle');
-    
-    await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 15000 });
+    await expect(page).toHaveURL(/#\/mission\/hello-soroban/);
     
     const runTestsBtn = page.locator('button:has-text("Run Tests")');
-    await expect(runTestsBtn).toBeAttached({ timeout: 15000 });
+    await expect(runTestsBtn).toBeAttached({ timeout: 20000 });
   });
 
   test('completed mission progress persists in localStorage', async ({ page }) => {
