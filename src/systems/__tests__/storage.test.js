@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
-  loadProgress,
-  saveProgress,
-  resetProgress,
   getDefaultState,
 } from "../gameEngine.js";
 import {

@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import MissionMap from "./pages/MissionMap";
@@ -28,8 +28,6 @@ export default function App() {
     const newState = updateStreak(state);
     saveProgress(newState);
   }, []);
-
-  const location = useLocation();
 
   return (
     <ErrorBoundary>

@@ -50,7 +50,7 @@ export const ToastProvider = ({ children }) => {
           <div
             key={toast.id}
             className={`toast toast-${toast.type} ${toast.isExiting ? "toast-exiting" : ""}`}
-            onClick={() => removeToast(toast.id)}
+            onClick={() => dismissToast(toast.id)}
             role="alert"
             aria-atomic="true"
             style={{ cursor: "pointer" }}

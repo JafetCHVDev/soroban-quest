@@ -8,4 +8,7 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
   },
+  test: {
+    exclude: ['e2e/**', 'node_modules/**'],
+  },
 });
