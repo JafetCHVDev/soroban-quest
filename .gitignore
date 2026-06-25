@@ -34,3 +34,9 @@ pnpm-debug.log*
 
 # Test results
 test-results/
+
+# Playwright
+playwright-report/
+# NOTE: e2e/snapshots/ is intentionally NOT ignored – baseline PNGs are committed.
+# Temporary diff images generated during a failed run are stored in test-results/
+# which is already excluded above.

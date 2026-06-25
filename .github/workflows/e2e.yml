@@ -1,4 +1,4 @@
-name: E2E Tests
+name: E2E & Visual Regression Tests
 
 on:
   pull_request:
@@ -6,16 +6,132 @@ on:
     branches:
       - main
       - master
+  # Allow manual snapshot updates from the GitHub Actions UI.
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: 'Regenerate baseline snapshots and open a PR'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  # Tunable thresholds – override in the repo settings if needed.
+  SNAPSHOT_THRESHOLD: '0.1'
+  SNAPSHOT_MAX_DIFF: '0.005'
 
 jobs:
+  # ── Functional E2E tests ─────────────────────────────────────────────────
   e2e:
+    name: Functional E2E (Chromium)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run functional E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ── Visual regression tests ──────────────────────────────────────────────
+  visual-regression:
+    name: Visual Regression (Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run visual regression tests
+        run: npm run test:visual
+        env:
+          SNAPSHOT_THRESHOLD: ${{ env.SNAPSHOT_THRESHOLD }}
+          SNAPSHOT_MAX_DIFF: ${{ env.SNAPSHOT_MAX_DIFF }}
+
+      - name: Upload visual diff artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-diffs
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ── Update snapshots (manual trigger only) ───────────────────────────────
+  update-snapshots:
+    name: Update Baseline Snapshots
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_snapshots == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Regenerate baseline snapshots
+        run: npm run test:visual:update
+
+      - name: Create Pull Request with updated snapshots
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/update-visual-snapshots
+          commit-message: 'chore: update visual regression baseline snapshots'
+          title: 'chore: update visual regression snapshots'
+          body: |
+            Automated PR to update Playwright visual regression baseline snapshots.
+
+            **Triggered by:** @${{ github.actor }}
+
+            Please review the screenshot diffs before merging.
+          labels: visual-regression, automated
+

@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "npx playwright test"
+    "test:e2e": "npx playwright test --project=chromium",
+    "test:visual": "npx playwright test --project=visual-chromium",
+    "test:visual:update": "npx playwright test --project=visual-chromium --update-snapshots"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
@@ -23,6 +25,7 @@
     "@playwright/test": "^1.44.0",
     "@types/react": "^18.3.12",
     "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.4.5",
     "vite": "^6.0.0",
     "vitest": "^4.0.18"
   }
