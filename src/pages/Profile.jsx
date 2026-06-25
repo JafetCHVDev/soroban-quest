@@ -9,6 +9,9 @@ import {
   resetProgress,
   loadProfile,
   saveProfile,
+  readAndValidateFile,
+  getDefaultState,
+  defaultProfile,
 } from "../systems/storage";
 
 import { getXPProgress, BADGES } from "../systems/gameEngine";
@@ -40,6 +43,8 @@ export default function Profile() {
   const [importStatus, setImportStatus] = useState("");
   const fileInputRef = useRef(null);
 
+  const [importPreview, setImportPreview] = useState(null);
+
   const xpProgress = getXPProgress(state);
   const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
   const rankTitle = t(`ranks.${rankIndex}`);
@@ -67,9 +72,9 @@ export default function Profile() {
   };
 
   /* ---------------- PROGRESS ACTIONS ---------------- */
-  const handleExport = () => {
-    exportProgress();
-    setImportStatus("✅ Progress exported!");
+  const handleExport = async () => {
+    await exportProgress();
+    setImportStatus(" Progress exported!");
     
     // Trigger global success toast alert
     showToast("Progress configuration data exported!", "success");
@@ -80,14 +85,40 @@ export default function Profile() {
     setTimeout(() => setImportStatus(""), 3000);
   };
 
-  const handleImport = async (e) => {
+  const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const result = await readAndValidateFile(file);
+    
+    if (result.success) {
+      setImportPreview(result.data);
+    } else {
+      setImportStatus("Invalid file — could not import.");
+      showToast(result.errors.join("\n"), "error");
+      showToast(t("profile.data.toast.importFailed"), "error");
+      setImportStatus(t("profile.data.status.importFailed"));
+      setTimeout(() => setImportStatus(""), 3000);
+    }
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const confirmImport = async () => {
+    if (!importPreview) return;
+
     try {
-      const newState = await importProgress(file);
-      setState(newState);
-      setImportStatus("✅ Progress imported successfully!");
+      await importProgress(importPreview);
+      if (importPreview.state) {
+        setState({ ...getDefaultState(), ...importPreview.state });
+      }
+      if (importPreview.profile) {
+        setProfile({ ...defaultProfile, ...importPreview.profile });
+      }
+      setImportStatus("Progress imported successfully!");
       
       // Trigger global success toast alert
       showToast("Progress state imported successfully!", "success");
@@ -95,13 +126,18 @@ export default function Profile() {
       setImportStatus(t("profile.data.status.imported"));
       logActivity(ACTIVITY_TYPES.IMPORT, {}, t("profile.data.log.imported"));
     } catch {
-      setImportStatus("❌ Invalid file — could not import.");
+      setImportStatus("Invalid file — could not import.");
       showToast("Could not parse file. Verify structure format.", "error");
       showToast(t("profile.data.toast.importFailed"), "error");
       setImportStatus(t("profile.data.status.importFailed"));
     }
 
+    setImportPreview(null);
     setTimeout(() => setImportStatus(""), 3000);
+  };
+
+  const cancelImport = () => {
+    setImportPreview(null);
   };
 
   const handleReset = () => {
@@ -315,15 +351,56 @@ export default function Profile() {
           ref={fileInputRef}
           type="file"
           id="progress-import-hidden-file"
-          accept=".json"
+          accept=".json,.json.gz"
           hidden
-          onChange={handleImport}
+          onChange={handleFileSelect}
           aria-label="Hidden file progress backup uploader tool"
         />
       </div>
 
       {importStatus && (
         <p className="mt-3 text-sm text-gray-400">{importStatus}</p>
+      )}
+
+      {/* IMPORT PREVIEW MODAL */}
+      {importPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="card max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-bold mb-4">Import Preview</h3>
+            
+            {importPreview.state && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Game State</h4>
+                <ul className="list-disc list-inside text-sm">
+                  <li>XP: {importPreview.state.xp}</li>
+                  <li>Level: {importPreview.state.level}</li>
+                  <li>Completed Missions: {importPreview.state.completedMissions?.length || 0}</li>
+                  <li>Badges: {importPreview.state.badges?.length || 0}</li>
+                  <li>Skill Points: {importPreview.state.skillPoints?.length || 0}</li>
+                </ul>
+              </div>
+            )}
+            
+            {importPreview.profile && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Profile</h4>
+                <ul className="list-disc list-inside text-sm">
+                  <li>Name: {importPreview.profile.name}</li>
+                  <li>Avatar: {importPreview.profile.avatar}</li>
+                </ul>
+              </div>
+            )}
+            
+            <div className="flex gap-2 mt-4">
+              <button type="button" className="btn btn-primary" onClick={confirmImport}>
+                Confirm Import
+              </button>
+              <button type="button" className="btn btn-ghost" onClick={cancelImport}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
