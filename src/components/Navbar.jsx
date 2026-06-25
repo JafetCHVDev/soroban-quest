@@ -1,8 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, ChevronDown, Check } from "lucide-react";
 import { loadProfile } from "../systems/storage";
 import { useTranslation } from "../i18n/useTranslation";
+
+/* Safe localStorage helpers — work in private/incognito mode too */
+const _mem = new Map();
+function safeStorageGet(key, fallback = null) {
+  try {
+    const v = localStorage.getItem(key);
+    if (v !== null) return v;
+  } catch { /* blocked */ }
+  return _mem.get(key) ?? fallback;
+}
+function safeStorageSet(key, value) {
+  try { localStorage.setItem(key, value); return; } catch { /* blocked */ }
+  _mem.set(key, value);
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +29,7 @@ export default function Navbar() {
 
   const [theme, setTheme] = useState(() => {
     return (
-      localStorage.getItem("soroban_quest_theme") ||
+      safeStorageGet("soroban_quest_theme") ||
       (window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
         : "dark")
@@ -24,7 +38,7 @@ export default function Navbar() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("soroban_quest_theme", theme);
+    safeStorageSet("soroban_quest_theme", theme);
   }, [theme]);
 
   // Close the language dropdown on outside click or Escape
@@ -216,11 +230,20 @@ function LanguageSelector({
         aria-label={t("common.selectLanguage")}
         onClick={() => setLangOpen((v) => !v)}
       >
-        <Globe size={18} />
+        <Globe size={18} aria-hidden="true" />
         <span className="language-selector-code">
           {currentLang.code.toUpperCase()}
         </span>
-        <ChevronDown size={14} aria-hidden="true" />
+        {/* Active language badge — always visible so the current language
+            is obvious without opening the dropdown */}
+        <span className="language-selector-active-badge" aria-hidden="true">
+          {currentLang.name}
+        </span>
+        <ChevronDown
+          size={14}
+          aria-hidden="true"
+          className={`language-selector-chevron ${langOpen ? "open" : ""}`}
+        />
       </button>
 
       {langOpen && (
@@ -229,26 +252,31 @@ function LanguageSelector({
           role="listbox"
           aria-label={t("common.selectLanguage")}
         >
-          {languages.map((lang) => (
-            <li key={lang.code}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={lang.code === language}
-                className={`language-selector-option ${
-                  lang.code === language ? "active" : ""
-                }`}
-                onClick={() => handleLanguageChange(lang.code)}
-              >
-                <span className="language-selector-option-code">
-                  {lang.code.toUpperCase()}
-                </span>
-                <span className="language-selector-option-name">
-                  {lang.name}
-                </span>
-              </button>
-            </li>
-          ))}
+          {languages.map((lang) => {
+            const isActive = lang.code === language;
+            return (
+              <li key={lang.code}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  className={`language-selector-option ${isActive ? "active" : ""}`}
+                  onClick={() => handleLanguageChange(lang.code)}
+                >
+                  {/* Checkmark slot — always reserve space so text doesn't shift */}
+                  <span className="language-selector-check" aria-hidden="true">
+                    {isActive && <Check size={13} strokeWidth={3} />}
+                  </span>
+                  <span className="language-selector-option-code">
+                    {lang.code.toUpperCase()}
+                  </span>
+                  <span className="language-selector-option-name">
+                    {lang.name}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

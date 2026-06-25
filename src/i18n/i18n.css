@@ -36,11 +36,42 @@
   font-family: var(--font-display);
 }
 
+/* Active language badge — shows the full language name next to the code
+   so the active language is obvious without opening the dropdown */
+.language-selector-active-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--cyan-dim, rgba(6, 214, 160, 0.15));
+  color: var(--cyan);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  border: 1px solid var(--cyan-dim, rgba(6, 214, 160, 0.25));
+  transition: background var(--transition-fast);
+}
+
+.language-selector-trigger:hover .language-selector-active-badge {
+  background: var(--cyan-dim, rgba(6, 214, 160, 0.22));
+}
+
+/* Chevron rotates when dropdown is open */
+.language-selector-chevron {
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.language-selector-chevron.open {
+  transform: rotate(180deg);
+}
+
 .language-selector-menu {
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  min-width: 160px;
+  min-width: 170px;
   list-style: none;
   margin: 0;
   padding: 0.35rem;
@@ -66,7 +97,7 @@
 .language-selector-option {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.5rem 0.65rem;
   border-radius: var(--radius-sm, 6px);
@@ -85,6 +116,17 @@
 .language-selector-option.active {
   color: var(--cyan);
   background: var(--cyan-dim, rgba(6, 214, 160, 0.1));
+  font-weight: 600;
+}
+
+/* Fixed-width slot so text columns stay aligned regardless of checkmark */
+.language-selector-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex-shrink: 0;
+  color: var(--cyan);
 }
 
 .language-selector-option-code {
@@ -104,5 +146,10 @@
   .mobile-stats .language-selector-menu {
     right: auto;
     left: 0;
+  }
+
+  /* On small screens the badge text can be hidden to save space */
+  .language-selector-active-badge {
+    display: none;
   }
 }
