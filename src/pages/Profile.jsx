@@ -3,12 +3,8 @@ import { Link } from "react-router-dom";
 import "./Profile.css";
 
 import {
-  loadProgress,
   importProgress,
   exportProgress,
-  resetProgress,
-  loadProfile,
-  saveProfile,
 } from "../systems/storage";
 
 import { getXPProgress, BADGES } from "../systems/gameEngine";
@@ -17,6 +13,7 @@ import { avatars } from "../data/avatars";
 
 // Hooks and Utilities
 import { useToast } from "../systems/ToastContext";
+import { useGameState } from "../systems/GameStateContext";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from "../i18n/useTranslation";
@@ -28,10 +25,13 @@ export default function Profile() {
   useDocumentTitle('Profile');
   const { showToast } = useToast();
   const { t, language } = useTranslation();
-  const [state, setState] = useState(loadProgress());
-
-  // Safe profile initialization
-  const [profile, setProfile] = useState(() => loadProfile());
+  const {
+    progress: state,
+    profile,
+    updateProgress,
+    updateProfile,
+    resetProgress,
+  } = useGameState();
 
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile.name || "");
@@ -52,8 +52,7 @@ export default function Profile() {
       avatar,
     };
 
-    saveProfile(updated);
-    setProfile(updated);
+    updateProfile(updated);
     setEditing(false);
 
     // Trigger global success toast alert
@@ -86,7 +85,12 @@ export default function Profile() {
 
     try {
       const newState = await importProgress(file);
-      setState(newState);
+      if (newState.state) {
+        updateProgress(newState.state);
+      }
+      if (newState.profile) {
+        updateProfile(newState.profile);
+      }
       setImportStatus("✅ Progress imported successfully!");
       
       // Trigger global success toast alert
@@ -104,10 +108,9 @@ export default function Profile() {
     setTimeout(() => setImportStatus(""), 3000);
   };
 
-  const handleReset = () => {
-    if (window.confirm(t("profile.data.confirmReset"))) {
-      const newState = resetProgress();
-      setState(newState);
+  const handleReset = async () => {
+    const confirmed = await resetProgress();
+    if (confirmed) {
       setImportStatus("🗑️ Progress reset.");
       
       // Trigger global warning toast alert

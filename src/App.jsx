@@ -14,6 +14,7 @@ import ScrollToTop from "./components/ScrollToTop";
 // 1. Import the ErrorBoundary
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./systems/ToastContext";
+import { GameStateProvider } from "./systems/GameStateContext";
 import LoadingScreen from "./components/LoadingScreen";
 import { loadProgress, saveProgress } from "./systems/storage";
 import { updateStreak } from "./systems/gameEngine";
@@ -32,25 +33,27 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <ScrollToTop />
-        <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <Suspense fallback={<LoadingScreen />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/missions" element={<MissionMap />} />
-                <Route path="/campaigns" element={<Campaigns />} />
-                <Route path="/mission/:missionId" element={<MissionDetail />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/journal" element={<Journal />} />
-                <Route path="/skills" element={<SkillTree />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer />
-        </div>
+        <GameStateProvider>
+          <ScrollToTop />
+          <div className="app">
+            <Navbar />
+            <main className="main-content">
+              <Suspense fallback={<LoadingScreen />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/missions" element={<MissionMap />} />
+                  <Route path="/campaigns" element={<Campaigns />} />
+                  <Route path="/mission/:missionId" element={<MissionDetail />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/journal" element={<Journal />} />
+                  <Route path="/skills" element={<SkillTree />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </main>
+            <Footer />
+          </div>
+        </GameStateProvider>
       </ToastProvider>
     </ErrorBoundary>
   );
