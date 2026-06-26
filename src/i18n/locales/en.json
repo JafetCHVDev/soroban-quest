@@ -19,14 +19,21 @@
     "complete": "Complete",
     "completed": "Completed",
     "locked": "Locked",
-    "unlocked": "Unlocked"
+    "unlocked": "Unlocked",
+    "skipToContent": "Skip to main content"
   },
   "navbar": {
     "home": "Home",
     "campaigns": "Campaigns",
     "missions": "Missions",
     "profile": "Profile",
-    "journal": "Journal"
+    "journal": "Journal",
+    "ariaMain": "Main navigation",
+    "ariaHome": "Go to home page",
+    "ariaMobile": "Mobile navigation menu",
+    "userProfile": "User profile:",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -158,6 +165,12 @@
       "log": {
         "exported": "Exported adventure progress",
         "imported": "Imported adventure progress from file"
+      },
+      "toast": {
+        "exported": "Progress exported successfully!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import file. Check the format.",
+        "resetDone": "🗑️ Progress reset."
       }
     }
   },
@@ -220,6 +233,7 @@
     "back": "← Back to Campaigns",
     "completeOf": "{{completed}}/{{total}} Complete",
     "lore": {
+      "iconLabel": "Chapter lore scroll",
       "modalTitle": "Chapter Introduction",
       "beginChapter": "Begin Chapter {{number}}"
     }
