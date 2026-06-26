@@ -11,6 +11,7 @@ import { missions, localizeMissions } from "../data/missions.js";
 import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns.js";
 import { loadProgress } from "../systems/storage.js";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
+import { getLevelFromXP } from "../systems/gameEngine.js";
 import { useTranslation } from "../i18n/useTranslation";
 
 import "./Campaigns.css";
@@ -23,7 +24,7 @@ export default function Campaigns() {
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [firstVisit, setFirstVisit] = useState(false);
-
+  const [loading, setLoading] = useState(true);
 
   const localizedCampaigns = useMemo(
     () => localizeCampaigns(campaigns, language),
@@ -39,6 +40,12 @@ export default function Campaigns() {
   );
   const loreModalRef = useRef(null);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleStorageChange = () => setProgress(loadProgress());
@@ -97,11 +104,34 @@ export default function Campaigns() {
     setFirstVisit(false);
   };
 
-  const getLevelFromXP = (xp) => {
-    return Math.floor(xp / 300) + 1;
-  };
-
   const currentLevel = getLevelFromXP(progress.xp || 0);
+
+  if (loading) {
+    return (
+      <div id="main-content" className="campaigns-page">
+        <div className="page-header">
+          <div className="skeleton-title skeleton-pulse" />
+          <div className="skeleton-subtitle skeleton-pulse" />
+        </div>
+
+        <div className="campaigns-grid">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="campaign-card skeleton-card">
+              <div className="campaign-hero skeleton-hero skeleton-pulse" />
+              <div className="campaign-info">
+                <div className="skeleton-line skeleton-title skeleton-pulse" />
+                <div className="skeleton-line skeleton-desc skeleton-pulse" />
+                <div className="skeleton-line skeleton-desc skeleton-pulse" style={{ width: "80%" }} />
+                <div className="skeleton-skills-label skeleton-pulse" />
+                <div className="skeleton-skills skeleton-pulse" />
+                <div className="skeleton-progress skeleton-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div id="main-content" className="campaigns-page">
@@ -124,6 +154,14 @@ export default function Campaigns() {
           );
           const unlocked = currentLevel >= campaign.requiredLevel;
           const completed = stats.completed === stats.total;
+
+          const campaignMissions = campaign.missionIds
+            .map((id) => localizedMissions.find((m) => m.id === id))
+            .filter(Boolean);
+          const unlockableSkills = Array.from(
+            new Set(campaignMissions.flatMap((m) => m.conceptsIntroduced || [])),
+          );
+          const skillsTitle = language === "es" ? "Habilidades a desbloquear:" : "Skills to unlock:";
 
           return (
             <div
@@ -157,6 +195,15 @@ export default function Campaigns() {
               <div className="campaign-info">
                 <h3 className="campaign-title">{campaign.title}</h3>
                 <p className="campaign-desc">{campaign.description}</p>
+
+                <div className="campaign-skills">
+                  <span className="skills-label">{skillsTitle}</span>
+                  <div className="skills-list">
+                    {unlockableSkills.map((skill) => (
+                      <span key={skill} className="skill-badge">{skill}</span>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="campaign-progress" aria-label={`Chapter progress: ${stats.percentage}% complete`}>
                   <div className="progress-label">

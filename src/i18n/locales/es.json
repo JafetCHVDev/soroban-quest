@@ -10,6 +10,7 @@
     "close": "Cerrar",
     "save": "Guardar",
     "cancel": "Cancelar",
+    "confirm": "Confirmar",
     "loading": "Cargando…",
     "all": "Todas",
     "level": "Nivel",
@@ -166,6 +167,11 @@
     "subtitle": "Tu viaje a través del reino de Soroban, registrado para la eternidad.",
     "clearLog": "🗑️ Borrar registro",
     "confirmClear": "¿Borrar todo el historial de actividad?",
+    "controlsLabel": "Búsqueda y filtros del diario",
+    "searchLabel": "Buscar entradas del diario",
+    "searchPlaceholder": "Buscar entradas del diario...",
+    "typeFilterLabel": "Filtrar por tipo de actividad",
+    "dateFilterLabel": "Filtrar por fecha",
     "summary": {
       "missions": "Misiones",
       "badges": "Insignias",
@@ -180,6 +186,12 @@
       "levelUp": "Subida de nivel",
       "hint": "Pista",
       "system": "Sistema"
+    },
+    "dateFilters": {
+      "all": "Cualquier fecha",
+      "today": "Hoy",
+      "week": "Últimos 7 días",
+      "month": "Este mes"
     },
     "empty": "Aún no hay actividades registradas. ¡Comienza tu primera misión!",
     "dates": {
@@ -271,7 +283,8 @@
       "hint": "💡 Pista",
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
-      "running": "Ejecutando…"
+      "running": "Ejecutando…",
+      "themeLabel": "Tema del editor"
     },
     "terminal": {
       "title": "Salida de pruebas",
