@@ -271,7 +271,8 @@
       "hint": "💡 Hint",
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
-      "running": "Running…"
+      "running": "Running…",
+      "themeLabel": "Editor theme"
     },
     "terminal": {
       "title": "Test Output",

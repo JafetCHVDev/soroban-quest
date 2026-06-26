@@ -271,7 +271,8 @@
       "hint": "💡 Pista",
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
-      "running": "Ejecutando…"
+      "running": "Ejecutando…",
+      "themeLabel": "Tema del editor"
     },
     "terminal": {
       "title": "Salida de pruebas",
