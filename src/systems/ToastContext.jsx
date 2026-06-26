@@ -41,19 +41,18 @@ export const ToastProvider = ({ children }) => {
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {/* The Toast Container — Updated invalid role to standard semantic role status (#102) */}
-      <div 
-        className="toast-container" 
-        aria-live="polite" 
-        role="status"
-      >
+      <div className="toast-container" aria-live="polite" role="status">
         {(toasts || []).map((toast) => (
           <div
             key={toast.id}
             className={`toast toast-${toast.type} ${toast.isExiting ? "toast-exiting" : ""}`}
-            onClick={() => dismissToast(toast.id)}
+            onClick={() => dismissToast(toast.id)} // FIX: Changed from invalid removeToast to dismissToast
             role="alert"
             aria-atomic="true"
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              "--duration": `${TOAST_LIFETIME}ms`, // Pass duration dynamically to CSS
+            }}
           >
             <div className="toast-content">{toast.message}</div>
             <div className="toast-progress" />
