@@ -191,6 +191,32 @@
   gap: 1.5rem;
 }
 
+/* Home Skeleton Styles */
+.home-skeleton {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
+.hero-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: var(--space-3xl);
+}
+
+.features-section-skeleton {
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
 :root {
   /* Core palette */
   --bg-primary: #0a0e1a;
