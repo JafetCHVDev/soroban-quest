@@ -34,8 +34,7 @@ export default function Footer() {
         <div className="footer-section">
           <h4>{t("footer.community.heading")}</h4>
           <ul>
-            <li><a href="#" target="_blank" rel="noopener noreferrer">{t("footer.community.discord")}</a></li>
-            <li><a href="#" target="_blank" rel="noopener noreferrer">{t("footer.community.telegram")}</a></li>
+            <li><a href="https://discord.gg/stellarcomm" target="_blank" rel="noopener noreferrer">{t("footer.community.discord")}</a></li>
           </ul>
         </div>
       </div>

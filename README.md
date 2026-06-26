@@ -119,6 +119,37 @@ npm run dev
 
 Open **http://localhost:5173/** in your browser and begin your quest! ⚔️
 
+### Development Commands
+
+Use these commands during local development:
+
+```bash
+# Start local dev server
+npm run dev
+
+# Run unit/system tests (Vitest)
+npm run test
+
+# Run end-to-end tests (Playwright)
+npm run test:e2e
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+### Typical Setup Flow
+
+If you are contributing, this sequence mirrors the project workflow:
+
+```bash
+npm install
+npm run test
+npm run build
+```
+
 ### Production Build
 
 ```bash
@@ -174,6 +205,14 @@ soroban-quest/
 | Markdown    | react-markdown                     |
 | Persistence | localStorage                       |
 | Styling     | Vanilla CSS with custom properties |
+
+## 🔗 Useful Links
+
+- Live demo: https://soroban-quest.vercel.app/
+- Contributing guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- CI workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
+- E2E workflow: [.github/workflows/e2e.yml](.github/workflows/e2e.yml)
+- Soroban docs: https://soroban.stellar.org/docs
 
 ---
 

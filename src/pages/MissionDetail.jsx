@@ -16,6 +16,12 @@ import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from '../systems/useDocumentTitle';
+import {
+  EDITOR_THEMES,
+  registerEditorThemes,
+  loadEditorTheme,
+  saveEditorTheme,
+} from "../systems/editorThemes";
 import "./MissionDetail.css"
 
 const LIVE_MARKER_OWNER = "soroban-quest-live";
@@ -44,7 +50,8 @@ export default function MissionDetail() {
 
   const [livePassCount, setLivePassCount] = useState(0);
   const [liveTotalCount, setLiveTotalCount] = useState(0);
-  const [activeTab, setActiveTab] = useState("story"); 
+  const [activeTab, setActiveTab] = useState("story");
+  const [editorTheme, setEditorTheme] = useState(() => loadEditorTheme());
 
   const terminalBodyRef = useRef(null);
   const editorRef = useRef(null);      
@@ -248,6 +255,16 @@ export default function MissionDetail() {
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+    // Register custom themes so the stored selection applies on first paint.
+    registerEditorThemes(monaco);
+    monaco.editor.setTheme(editorTheme);
+  }, [editorTheme]);
+
+  const handleThemeChange = useCallback((event) => {
+    const nextTheme = event.target.value;
+    setEditorTheme(nextTheme);
+    saveEditorTheme(nextTheme);
+    monacoRef.current?.editor.setTheme(nextTheme);
   }, []);
 
   function applyMonacoMarkers(markers) {
@@ -501,6 +518,20 @@ export default function MissionDetail() {
               </div>
             </div>
             <div className="mission-editor-toolbar-right">
+              <label className="editor-theme-select" aria-label={t("missionDetail.editor.themeLabel")}>
+                <span className="editor-theme-select-label">{t("missionDetail.editor.themeLabel")}</span>
+                <select
+                  className="editor-theme-select-input"
+                  value={editorTheme}
+                  onChange={handleThemeChange}
+                >
+                  {EDITOR_THEMES.map((theme) => (
+                    <option key={theme.id} value={theme.id}>
+                      {theme.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
@@ -544,7 +575,7 @@ export default function MissionDetail() {
               defaultLanguage="rust"
               value={code}
               onChange={(v) => setCode(v || "")}
-              theme="vs-dark"
+              theme={editorTheme}
               onMount={handleEditorMount}
               options={{
                 fontSize: 14,
