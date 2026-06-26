@@ -1,4 +1,5 @@
 import { getDefaultState } from "./gameEngine";
+export { getDefaultState };
 
 /* =========================
    KEYS
