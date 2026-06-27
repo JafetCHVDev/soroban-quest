@@ -43,9 +43,8 @@ test.describe('Navigation', () => {
   });
 
   test('skill tree page loads and displays skills', async ({ page }) => {
-    await page.goto('/#/skill-tree');
-    await page.waitForLoadState('networkidle');
-    await expect(page).toHaveURL(/#\/skill-tree/);
+    await page.goto('/#/skills');
+    await expect(page).toHaveURL(/#\/skills/);
     await expect(page.locator('h1').first()).toBeVisible();
   });
 });

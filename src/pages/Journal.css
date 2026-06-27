@@ -3,9 +3,17 @@
    ========================================== */
 
 .journal-page {
+  background: #0a0e1a;
+  box-shadow: 0 0 0 100vmax #0a0e1a;
+  clip-path: inset(0 -100vmax);
   max-width: 900px;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-md);
+}
+
+[data-theme="light"] .journal-page {
+  background: #fdfbf7;
+  box-shadow: 0 0 0 100vmax #fdfbf7;
 }
 
 .journal-header {
@@ -60,10 +68,34 @@
 }
 
 /* Filters */
+.journal-controls {
+  display: grid;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.journal-search input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.journal-search input:focus {
+  outline: 2px solid var(--cyan-dim);
+  border-color: var(--cyan);
+}
+
+.journal-search input::placeholder {
+  color: var(--text-muted);
+}
+
 .journal-filters {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: var(--space-lg);
   flex-wrap: wrap;
 }
 
@@ -109,8 +141,25 @@
   opacity: 0.3;
 }
 
-.date-group {
-  margin-bottom: var(--space-xl);
+.timeline-viewport {
+  background: #0a0e1a;
+  border-radius: var(--radius-md);
+  height: min(70vh, 720px);
+  overflow: auto;
+  padding-right: 0.5rem;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+[data-theme="light"] .timeline-viewport {
+  background: #fdfbf7;
+}
+
+.timeline-row {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .date-header {
@@ -135,7 +184,7 @@
 
 .timeline-event {
   position: relative;
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
 }
 
 .event-dot {
