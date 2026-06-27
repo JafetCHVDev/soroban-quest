@@ -2,11 +2,15 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import { useTranslation } from '../i18n/useTranslation';
+import useDocumentTitle from '../systems/useDocumentTitle';
 
 export default function MissionMap() {
+    useDocumentTitle('Mission Map');
     const navigate = useNavigate();
     const state = loadProgress();
-    const missions = getAllMissions();
+    const { t, language } = useTranslation();
+    const missions = useMemo(() => getAllMissions(language), [language]);
     const learningPathRef = useRef(null);
     const [learningPathWidth, setLearningPathWidth] = useState(800);
     const [searchTerm, setSearchTerm] = useState('');
@@ -19,7 +23,7 @@ export default function MissionMap() {
             completed: state.completedMissions.includes(m.id),
             unlocked: isMissionUnlocked(m.id, state.completedMissions),
         }));
-    }, [state.completedMissions]);
+    }, [missions, state.completedMissions]);
 
     const filteredMissions = useMemo(() => {
         return missionStates.filter((mission) => {
@@ -36,6 +40,12 @@ export default function MissionMap() {
         if (mission.unlocked) {
             navigate(`/mission/${mission.id}`);
         }
+    };
+
+    const ariaLabelFor = (m) => {
+        if (m.completed) return t('missionMap.aria.missionItemCompleted', { order: m.order, title: m.title });
+        if (m.unlocked) return t('missionMap.aria.missionItemUnlocked', { order: m.order, title: m.title });
+        return t('missionMap.aria.missionItemLocked', { order: m.order, title: m.title });
     };
 
     useEffect(() => {
@@ -95,11 +105,14 @@ export default function MissionMap() {
     }, [learningPathWidth, filteredMissions]);
 
     return (
-        <div className="mission-map-page">
+        <div id="main-content" className="mission-map-page">
             <div className="mission-map-header">
-                <h1 className="section-title">Mission Map</h1>
+                <h1 className="section-title">{t('missionMap.title')}</h1>
                 <p className="section-subtitle">
-                    {state.completedMissions.length} of {missions.length} missions completed
+                    {t('missionMap.subtitle', {
+                        completed: state.completedMissions.length,
+                        total: missions.length,
+                    })}
                 </p>
             </div>
 
@@ -110,7 +123,7 @@ export default function MissionMap() {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     role="img"
-                    aria-label="Mission path graph"
+                    aria-label={t('missionMap.aria.missionPath')}
                 >
                     {desktopPathLayout.points.map(({ mission, cx, cy, index }) => {
                         const next = desktopPathLayout.points[index + 1];
@@ -144,7 +157,7 @@ export default function MissionMap() {
                                     }}
                                     role={mission.unlocked ? 'button' : undefined}
                                     tabIndex={mission.unlocked ? 0 : -1}
-                                    aria-label={`Mission ${mission.order}: ${mission.title}`}
+                                    aria-label={t('missionMap.aria.missionItem', { order: mission.order, title: mission.title })}
                                     style={{ cursor: mission.unlocked ? 'pointer' : 'not-allowed' }}
                                 >
                                     <circle className="path-node-hit-area" cx={cx} cy={cy} r="28" fill="transparent" />
@@ -160,23 +173,25 @@ export default function MissionMap() {
                                     />
                                     <text
                                         x={cx}
-                                        y={cy + 1}
+                                        y={cy + 4}
                                         textAnchor="middle"
                                         dominantBaseline="middle"
                                         fill={mission.completed ? '#22c55e' : mission.unlocked ? '#06d6a0' : '#6b7280'}
                                         fontSize="14"
                                         fontWeight="bold"
+                                        aria-hidden="true"
                                     >
                                         {mission.completed ? '✓' : mission.unlocked ? mission.order : '🔒'}
                                     </text>
                                     <text
                                         x={cx}
-                                        y={cy + 42}
+                                        y={cy + 44}
                                         textAnchor="middle"
-                                        fill={textColor}
                                         fontSize="11"
+                                        fill={mission.unlocked ? '#cbd5e1' : '#475569'}
                                         fontWeight="500"
                                         fontFamily="Inter, sans-serif"
+                                        aria-hidden="true"
                                     >
                                         {shortTitle}
                                     </text>
@@ -188,6 +203,7 @@ export default function MissionMap() {
                                         fontSize="9"
                                         fontWeight="600"
                                         fontFamily="Orbitron, sans-serif"
+                                        aria-hidden="true"
                                     >
                                         {mission.completed ? 'COMPLETED' : `${mission.xpReward} XP`}
                                     </text>
@@ -211,7 +227,8 @@ export default function MissionMap() {
                     </defs>
                 </svg>
             </div>
-            <div className="learning-path-mobile" aria-label="Mission timeline">
+
+            <div className="learning-path-mobile" aria-label={t('missionMap.aria.missionTimeline')}>
                 {filteredMissions.map((m, i) => (
                     <button
                         type="button"
@@ -219,7 +236,7 @@ export default function MissionMap() {
                         className={`timeline-item ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
                         onClick={() => handleMissionClick(m)}
                         disabled={!m.unlocked}
-                        aria-label={`Mission ${m.order}: ${m.title}${m.completed ? ', completed' : m.unlocked ? ', unlocked' : ', locked'}`}
+                        aria-label={ariaLabelFor(m)}
                     >
                         <span className="timeline-track" aria-hidden="true">
                             <span className="timeline-node">
@@ -231,12 +248,12 @@ export default function MissionMap() {
                         </span>
                         <span className="timeline-body">
                             <span className="timeline-meta">
-                                Chapter {m.chapter} • Mission {m.order}
+                                {t('missionMap.card.chapterMission', { chapter: m.chapter, mission: m.order })}
                             </span>
                             <span className="timeline-title">{m.title}</span>
                             <span className="timeline-foot">
-                                <span className="timeline-xp">⚡ {m.xpReward} XP</span>
-                                <span className={`badge badge-${m.difficulty}`}>{m.difficulty}</span>
+                                <span className="timeline-xp">{t('missionMap.card.xp', { xp: m.xpReward })}</span>
+                                <span className={`badge badge-${m.difficulty}`}>{t(`difficulty.${m.difficulty}`)}</span>
                             </span>
                         </span>
                     </button>
@@ -248,7 +265,7 @@ export default function MissionMap() {
                 <div className="search-bar">
                     <input
                         type="text"
-                        placeholder="Search missions..."
+                        placeholder={t('missionMap.searchPlaceholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="search-input"
@@ -260,25 +277,25 @@ export default function MissionMap() {
                             className={`filter-chip ${selectedDifficulty === 'all' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('all')}
                         >
-                            All
+                            {t('missionMap.difficulty.all')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'beginner' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('beginner')}
                         >
-                            Beginner
+                            {t('missionMap.difficulty.beginner')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'intermediate' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('intermediate')}
                         >
-                            Intermediate
+                            {t('missionMap.difficulty.intermediate')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'advanced' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('advanced')}
                         >
-                            Advanced
+                            {t('missionMap.difficulty.advanced')}
                         </button>
                     </div>
                     <div className="chapter-filters">
@@ -286,33 +303,25 @@ export default function MissionMap() {
                             className={`filter-chip ${selectedChapter === 'all' ? 'active' : ''}`}
                             onClick={() => setSelectedChapter('all')}
                         >
-                            All Chapters
+                            {t('missionMap.chapters.all')}
                         </button>
-                        <button
-                            className={`filter-chip ${selectedChapter === 1 ? 'active' : ''}`}
-                            onClick={() => setSelectedChapter(1)}
-                        >
-                            Chapter 1
-                        </button>
-                        <button
-                            className={`filter-chip ${selectedChapter === 2 ? 'active' : ''}`}
-                            onClick={() => setSelectedChapter(2)}
-                        >
-                            Chapter 2
-                        </button>
-                        <button
-                            className={`filter-chip ${selectedChapter === 3 ? 'active' : ''}`}
-                            onClick={() => setSelectedChapter(3)}
-                        >
-                            Chapter 3
-                        </button>
+                        {[1, 2, 3].map((n) => (
+                            <button
+                                key={n}
+                                className={`filter-chip ${selectedChapter === n ? 'active' : ''}`}
+                                onClick={() => setSelectedChapter(n)}
+                            >
+                                {t('missionMap.chapters.n', { number: n })}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>
+            
             <div className="mission-map-grid">
                 {filteredMissions.length === 0 ? (
-                    <div className="no-missions-found">
-                        <p>No missions found matching your filters.</p>
+                    <div className="no-missions-found" role="status">
+                        <p>{t('missionMap.noResults')}</p>
                     </div>
                 ) : (
                     filteredMissions.map((m) => (
@@ -320,28 +329,40 @@ export default function MissionMap() {
                             key={m.id}
                             className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
                             onClick={() => handleMissionClick(m)}
+                            onKeyDown={(e) => {
+                                if (m.unlocked && (e.key === 'Enter' || e.key === ' ')) {
+                                    e.preventDefault();
+                                    handleMissionClick(m);
+                                }
+                            }}
+                            role="button"
+                            tabIndex={m.unlocked ? 0 : -1}
+                            aria-label={`Mission card ${m.order}: ${m.title}. Chapter ${m.chapter}. Reward: ${m.xpReward} XP. Difficulty: ${m.difficulty}.${m.completed ? ' Status: Completed.' : !m.unlocked ? ' Status: Locked.' : ' Status: Available.'}`}
                         >
                             <div className="mission-card-header">
-                                <span className="mission-card-chapter">Chapter {m.chapter} • Mission {m.order}</span>
-                                <span className="mission-card-xp">⚡ {m.xpReward} XP</span>
+                                <span className="mission-card-chapter">
+                                    {t('missionMap.card.chapterMission', { chapter: m.chapter, mission: m.order })}
+                                </span>
+                                <span className="mission-card-xp">{t('missionMap.card.xp', { xp: m.xpReward })}</span>
                             </div>
                             <h3 className="mission-card-title">{m.title}</h3>
                             <p className="mission-card-desc">{m.learningGoal}</p>
                             <div className="mission-card-footer">
-                                <div className="mission-card-concepts">
+                                <div className="mission-card-concepts" aria-label="Concepts introduced in this mission">
                                     {m.conceptsIntroduced.slice(0, 3).map(c => (
                                         <span key={c} className="concept-tag">{c}</span>
                                     ))}
                                 </div>
                                 <span className={`badge badge-${m.difficulty}`}>
-                                    {m.difficulty}
+                                    <span className="sr-only">{t('missionMap.card.difficultyLabel')} </span>
+                                    {t(`difficulty.${m.difficulty}`)}
                                 </span>
                             </div>
                             {m.completed && (
-                                <div className="mission-card-status completed">✓ Completed</div>
+                                <div className="mission-card-status completed"><span className="sr-only">{t('missionMap.card.stateLabel')} </span>{t('missionMap.card.completed')}</div>
                             )}
                             {!m.unlocked && (
-                                <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}>🔒 Locked</div>
+                                <div className="mission-card-status" style={{ color: 'var(--text-muted)' }}><span className="sr-only">{t('missionMap.card.stateLabel')} </span>{t('missionMap.card.locked')}</div>
                             )}
                         </div>
                     ))

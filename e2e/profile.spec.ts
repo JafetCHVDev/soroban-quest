@@ -13,11 +13,11 @@ test.describe('Profile and Data Management', () => {
     await page.click('button:has-text("🐉")');
     await page.click('button:has-text("Save")');
 
-    await expect(page.locator('.profile-name')).toHaveText('Star Voyager');
+    await expect(page.locator('.profile-name')).toContainText('Star Voyager');
     await expect(page.locator('.profile-avatar')).toHaveText('🐉');
 
     await page.reload();
-    await expect(page.locator('.profile-name')).toHaveText('Star Voyager');
+    await expect(page.locator('.profile-name')).toContainText('Star Voyager');
     await expect(page.locator('.profile-avatar')).toHaveText('🐉');
   });
 

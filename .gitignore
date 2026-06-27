@@ -31,3 +31,6 @@ pnpm-debug.log*
 .eslintcache
 .parcel-cache/
 *.tsbuildinfo
+
+# Test results
+test-results/

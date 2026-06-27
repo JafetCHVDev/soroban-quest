@@ -254,7 +254,7 @@
   --shadow-glow-gold:
     0 0 20px var(--gold-glow), 0 0 60px rgba(245, 158, 11, 0.1);
   --shadow-glow-green:
-    0 0 20px var(--green-glow), 0 0 60px rgba(34, 197, 94, 0.1);
+    0 0 20px rgba(34, 197, 94, 0.4), 0 0 60px rgba(34, 197, 94, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -1447,6 +1447,46 @@ button {
   background: var(--cyan);
 }
 
+.editor-theme-select {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.editor-theme-select-label {
+  display: none;
+}
+
+.editor-theme-select-input {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.editor-theme-select-input:hover {
+  color: var(--text-primary);
+  border-color: var(--cyan);
+}
+
+.editor-theme-select-input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+}
+
+@media (min-width: 768px) {
+  .editor-theme-select-label {
+    display: inline;
+  }
+}
+
 .editor-wrapper {
   flex: 1;
   overflow: hidden;
@@ -1638,12 +1678,8 @@ button {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes scaleIn {
@@ -1991,3 +2027,4 @@ button {
     padding: 0 16px;
   }
 }
+

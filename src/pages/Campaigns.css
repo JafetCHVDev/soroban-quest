@@ -26,7 +26,8 @@
   overflow: hidden;
   transition: all var(--transition-slow);
   cursor: pointer;
-  height: 320px;
+  min-height: 380px;
+  height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -272,7 +273,8 @@
   }
 
   .campaign-card {
-    height: 360px;
+    min-height: 400px;
+    height: auto;
   }
 
   .campaign-hero {
@@ -284,4 +286,125 @@
   .campaigns-page {
     padding: var(--space-xl) var(--space-lg);
   }
+}
+
+/* Skills display */
+.campaign-skills {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.skills-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.skill-badge {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono, monospace);
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.campaign-card:hover .skill-badge {
+  border-color: var(--border-accent);
+  color: var(--cyan);
+}
+
+/* Skeleton Loading styles */
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--border-subtle) 37%,
+    var(--bg-card) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.skeleton-title {
+  height: 2.2rem;
+  width: 280px;
+  margin: 0 auto var(--space-md);
+  border-radius: var(--radius-md);
+}
+
+.skeleton-subtitle {
+  height: 1.2rem;
+  width: 380px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-hero {
+  height: 160px;
+  width: 100%;
+}
+
+.skeleton-line {
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+}
+
+.skeleton-line.skeleton-title {
+  height: 1.6rem;
+  width: 60%;
+}
+
+.skeleton-line.skeleton-desc {
+  height: 1rem;
+  width: 100%;
+  margin-bottom: var(--space-xs);
+}
+
+.skeleton-skills-label {
+  height: 0.8rem;
+  width: 35%;
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-skills {
+  height: 2rem;
+  width: 80%;
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-progress {
+  height: 1.8rem;
+  width: 100%;
+  border-radius: var(--radius-md);
+  margin-top: auto;
 }

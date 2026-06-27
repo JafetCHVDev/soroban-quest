@@ -1,40 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { missions } from '../data/missions';
+import React, { useState, useEffect, useMemo } from 'react';
+import { missions, localizeMissions } from '../data/missions';
 import { loadProgress } from '../systems/storage';
+import { useTranslation } from '../i18n/useTranslation';
 import './SkillTree.css';
+import useDocumentTitle from '../systems/useDocumentTitle';
 
+// Concept identifiers are kept untranslated — they're code-level tokens
+// (e.g. `contract`, `Env`, `require_auth`) that appear verbatim in Rust.
+// Only the category titles/descriptions and surrounding chrome are localized.
 const conceptCategories = {
   Core: {
-    title: 'Core Concepts',
-    description: 'Fundamental Soroban building blocks',
     concepts: ['contract', 'contractimpl', 'Env', 'Symbol']
   },
   Storage: {
-    title: 'Storage & State',
-    description: 'Managing persistent data',
     concepts: ['storage', 'instance', 'persistent storage', 'set', 'get', 'remove', 'unwrap_or']
   },
   Types: {
-    title: 'Data Types',
-    description: 'Working with different data types',
     concepts: ['Address', 'Vec', 'Map', 'String', 'i128', 'u32', 'bool']
   },
   Auth: {
-    title: 'Authorization',
-    description: 'Access control and security',
     concepts: ['require_auth', 'init pattern', 'admin patterns']
   },
   Advanced: {
-    title: 'Advanced Patterns',
-    description: 'Complex contract patterns',
     concepts: ['token', 'mint', 'transfer', 'ledger sequence', 'time-lock', 'multi-sig', 'governance pattern', 'conditional panic', 'complex state', 'multiple functions']
   }
 };
 
 export default function SkillTree() {
+  const { t, language } = useTranslation();
+  useDocumentTitle('Skill Tree');
   const [completedMissions, setCompletedMissions] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
+
+  const localizedMissions = useMemo(
+    () => localizeMissions(missions, language),
+    [language],
+  );
 
   useEffect(() => {
     const progress = loadProgress();
@@ -42,12 +44,12 @@ export default function SkillTree() {
   }, []);
 
   const getConceptStatus = (concept) => {
-    const teachingMission = missions.find(mission => 
+    const teachingMission = localizedMissions.find(mission =>
       mission.conceptsIntroduced?.includes(concept)
     );
-    
+
     if (!teachingMission) return { status: 'locked', mission: null };
-    
+
     const isCompleted = completedMissions.includes(teachingMission.id);
     return {
       status: isCompleted ? 'unlocked' : 'locked',
@@ -60,13 +62,13 @@ export default function SkillTree() {
     setSelectedConcept({ concept, mission });
   };
 
-  const renderConceptNode = (concept, categoryIndex, conceptIndex) => {
+  const renderConceptNode = (concept) => {
     const { status, mission } = getConceptStatus(concept);
     const isHovered = hoveredConcept === concept;
     const isSelected = selectedConcept?.concept === concept;
 
     const nodeClass = `concept-node ${status} ${isHovered ? 'hovered' : ''} ${isSelected ? 'selected' : ''}`;
-    
+
     return (
       <div
         key={concept}
@@ -82,46 +84,55 @@ export default function SkillTree() {
         {isHovered && mission && (
           <div className="concept-tooltip">
             <div className="tooltip-mission">{mission.title}</div>
-            <div className="tooltip-chapter">Chapter {mission.chapter}</div>
+            <div className="tooltip-chapter">
+              {t('skillTree.tooltip.chapter', { chapter: mission.chapter })}
+            </div>
           </div>
         )}
       </div>
     );
   };
 
-  const renderCategory = (categoryKey, categoryData, index) => {
+  const renderCategory = (categoryKey, categoryData) => {
     const concepts = categoryData.concepts;
-    const unlockedCount = concepts.filter(concept => 
+    const unlockedCount = concepts.filter(concept =>
       getConceptStatus(concept).status === 'unlocked'
     ).length;
-    const progress = (unlockedCount / concepts.length) * 100;
+    const progressPct = (unlockedCount / concepts.length) * 100;
 
     return (
       <div key={categoryKey} className="skill-category">
         <div className="category-header">
-          <h3 className="category-title">{categoryData.title}</h3>
+          <h3 className="category-title">
+            {t(`skillTree.categories.${categoryKey}.title`)}
+          </h3>
           <div className="category-progress">
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${progress}%` }}
+              <div
+                className="progress-fill"
+                style={{ width: `${progressPct}%` }}
               />
             </div>
-            <span className="progress-text">{unlockedCount}/{concepts.length}</span>
+            <span className="progress-text">
+              {t('skillTree.categoryProgress', {
+                unlocked: unlockedCount,
+                total: concepts.length,
+              })}
+            </span>
           </div>
         </div>
-        <p className="category-description">{categoryData.description}</p>
+        <p className="category-description">
+          {t(`skillTree.categories.${categoryKey}.description`)}
+        </p>
         <div className="concept-grid">
-          {concepts.map((concept, conceptIndex) => 
-            renderConceptNode(concept, index, conceptIndex)
-          )}
+          {concepts.map(concept => renderConceptNode(concept))}
         </div>
       </div>
     );
   };
 
   const totalConcepts = Object.values(conceptCategories).reduce((sum, cat) => sum + cat.concepts.length, 0);
-  const totalUnlocked = Object.values(conceptCategories).reduce((sum, cat) => 
+  const totalUnlocked = Object.values(conceptCategories).reduce((sum, cat) =>
     sum + cat.concepts.filter(concept => getConceptStatus(concept).status === 'unlocked').length, 0
   );
   const overallProgress = (totalUnlocked / totalConcepts) * 100;
@@ -129,34 +140,32 @@ export default function SkillTree() {
   return (
     <div className="skill-tree">
       <div className="skill-tree-header">
-        <h1 className="skill-tree-title">Soroban Skill Tree</h1>
-        <p className="skill-tree-subtitle">
-          Track your mastery of Soroban smart contract concepts
-        </p>
+        <h1 className="skill-tree-title">{t('skillTree.title')}</h1>
+        <p className="skill-tree-subtitle">{t('skillTree.subtitle')}</p>
         <div className="overall-progress">
           <div className="progress-bar large">
-            <div 
-              className="progress-fill" 
+            <div
+              className="progress-fill"
               style={{ width: `${overallProgress}%` }}
             />
           </div>
           <span className="progress-text large">
-            {totalUnlocked}/{totalConcepts} Concepts Mastered
+            {t('skillTree.overall', { unlocked: totalUnlocked, total: totalConcepts })}
           </span>
         </div>
       </div>
 
       <div className="skill-categories">
-        {Object.entries(conceptCategories).map(([key, data], index) => 
-          renderCategory(key, data, index)
+        {Object.entries(conceptCategories).map(([key, data]) =>
+          renderCategory(key, data)
         )}
       </div>
 
       {selectedConcept && (
         <div className="concept-detail-modal" onClick={() => setSelectedConcept(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close" 
+            <button
+              className="modal-close"
               onClick={() => setSelectedConcept(null)}
             >
               ×
@@ -164,32 +173,35 @@ export default function SkillTree() {
             <h3 className="modal-title">{selectedConcept.concept}</h3>
             {selectedConcept.mission ? (
               <div className="mission-info">
-                <h4>Taught in: {selectedConcept.mission.title}</h4>
-                <p><strong>Chapter:</strong> {selectedConcept.mission.chapter}</p>
-                <p><strong>Difficulty:</strong> {selectedConcept.mission.difficulty}</p>
-                <p><strong>XP Reward:</strong> {selectedConcept.mission.xpReward}</p>
+                <h4>{t('skillTree.modal.taughtIn', { title: selectedConcept.mission.title })}</h4>
+                <p><strong>{t('skillTree.modal.chapterLabel')}</strong> {selectedConcept.mission.chapter}</p>
+                <p>
+                  <strong>{t('skillTree.modal.difficultyLabel')}</strong>{' '}
+                  {t(`difficulty.${selectedConcept.mission.difficulty}`)}
+                </p>
+                <p><strong>{t('skillTree.modal.xpLabel')}</strong> {selectedConcept.mission.xpReward}</p>
                 <div className="mission-learning-goal">
-                  <strong>Learning Goal:</strong>
+                  <strong>{t('skillTree.modal.learningGoal')}</strong>
                   <p>{selectedConcept.mission.learningGoal}</p>
                 </div>
                 <div className="mission-status">
                   {completedMissions.includes(selectedConcept.mission.id) ? (
-                    <span className="status-completed">✅ Completed</span>
+                    <span className="status-completed">{t('skillTree.modal.completed')}</span>
                   ) : (
-                    <span className="status-locked">🔒 Not yet completed</span>
+                    <span className="status-locked">{t('skillTree.modal.notCompleted')}</span>
                   )}
                 </div>
                 {!completedMissions.includes(selectedConcept.mission.id) && (
-                  <a 
+                  <a
                     href={`/mission/${selectedConcept.mission.id}`}
                     className="start-mission-btn"
                   >
-                    Start Mission
+                    {t('skillTree.modal.startMission')}
                   </a>
                 )}
               </div>
             ) : (
-              <p>This concept is not yet covered in available missions.</p>
+              <p>{t('skillTree.modal.notCovered')}</p>
             )}
           </div>
         </div>

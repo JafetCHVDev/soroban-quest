@@ -1,0 +1,108 @@
+/* =========================
+   LANGUAGE SELECTOR
+   Append to src/index.css
+   ========================= */
+
+.language-selector {
+  position: relative;
+  display: inline-flex;
+}
+
+.language-selector-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background: transparent;
+  transition: all var(--transition-fast);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.language-selector-trigger:hover {
+  color: var(--text-primary);
+  background: var(--bg-glass);
+}
+
+.language-selector-trigger[aria-expanded="true"] {
+  color: var(--cyan);
+  background: var(--bg-glass);
+}
+
+.language-selector-code {
+  font-family: var(--font-display);
+}
+
+.language-selector-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 160px;
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: calc(var(--z-navbar) + 1);
+  animation: language-menu-in 150ms ease;
+}
+
+@keyframes language-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.language-selector-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.language-selector-option:hover {
+  background: var(--bg-glass);
+  color: var(--text-primary);
+}
+
+.language-selector-option.active {
+  color: var(--cyan);
+  background: var(--cyan-dim, rgba(6, 214, 160, 0.1));
+}
+
+.language-selector-option-code {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  min-width: 26px;
+}
+
+.language-selector-option-name {
+  flex: 1;
+}
+
+/* On mobile, anchor the menu to the left of the trigger so it stays in-viewport */
+@media (max-width: 768px) {
+  .mobile-stats .language-selector-menu {
+    right: auto;
+    left: 0;
+  }
+}
