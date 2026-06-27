@@ -35,27 +35,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        {/* REMOVED: Redundant <ScrollToTop /> component to let hook manage window frames safely */}
-        <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <Suspense fallback={<LoadingScreen />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/missions" element={<MissionMap />} />
-                <Route path="/campaigns" element={<Campaigns />} />
-                <Route path="/mission/:missionId" element={<MissionDetail />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/journal" element={<Journal />} />
-                <Route path="/skills" element={<SkillTree />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer />
-        </div>
         <GameStateProvider>
-          <ScrollToTop />
           <div className="app">
             <Navbar />
             <main className="main-content">
