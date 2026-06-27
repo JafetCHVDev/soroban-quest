@@ -59,7 +59,7 @@ export default function MissionDetail() {
   const validatorRef = useRef(null);    
   const victoryModalRef = useRef(null);
 
-  const { openInOkashi, toast } = useokashi();
+  const { openInOkashi, toast } = useOkashi();
 
   const progressState = loadProgress();
   const isCompleted = progressState.completedMissions.includes(missionId);
