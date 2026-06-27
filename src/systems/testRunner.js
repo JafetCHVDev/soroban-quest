@@ -91,7 +91,7 @@ function checkSyntaxBasics(code) {
     return { passed: true, message: '✓ Basic syntax looks good' };
 }
 
-function checkStructure(code, mission) {
+function checkStructure(code, _mission) {
     // Must have at least one fn declaration
     if (!/fn\s+\w+/.test(code)) {
         return { passed: false, message: '✗ No function definitions found' };

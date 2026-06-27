@@ -8,7 +8,7 @@ import { loadProgress, saveProgress } from "../systems/storage";
 import { completeMission, recordAttempt } from "../systems/gameEngine";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
-import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import { useOkashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";

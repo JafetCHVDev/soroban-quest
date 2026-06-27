@@ -9,7 +9,7 @@
    flat, render-ready object.
    ========================================== */
 
-import { missions } from './missions.js';
+//import { missions } from './missions.js';
 
 export const DEFAULT_CAMPAIGN_LANG = 'en';
 
