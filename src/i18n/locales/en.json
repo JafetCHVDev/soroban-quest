@@ -20,14 +20,23 @@
     "complete": "Complete",
     "completed": "Completed",
     "locked": "Locked",
-    "unlocked": "Unlocked"
+    "unlocked": "Unlocked",
+    "skipToContent": "Skip to main content"
   },
   "navbar": {
     "home": "Home",
     "campaigns": "Campaigns",
     "missions": "Missions",
     "profile": "Profile",
-    "journal": "Journal"
+    "journal": "Journal",
+    "leaderboard": "Leaderboard",
+    "achievements": "Achievements",
+    "ariaMain": "Main navigation",
+    "ariaHome": "Go to home page",
+    "ariaMobile": "Mobile navigation menu",
+    "userProfile": "User profile:",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -129,7 +138,17 @@
     "viewJournal": "📖 View Journal",
     "editPanel": {
       "title": "Edit Profile",
+      "nameLabel": "Adventurer name",
+      "avatarLegend": "Choose an avatar",
       "namePlaceholder": "Enter name"
+    },
+    "selector": {
+      "title": "Active Profile",
+      "help": "{{count}} of {{max}} local profiles in use.",
+      "meta": "Level {{level}} • {{xp}} XP",
+      "create": "Create profile",
+      "emptySlot": "Empty slot",
+      "defaultName": "Player {{number}}"
     },
     "stats": {
       "missions": "Missions",
@@ -156,11 +175,54 @@
         "importFailed": "❌ Invalid file — could not import.",
         "resetDone": "🗑️ Progress reset."
       },
+      "toast": {
+        "exported": "Progress exported!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import that file.",
+        "resetDone": "Progress reset."
+      },
       "log": {
         "exported": "Exported adventure progress",
         "imported": "Imported adventure progress from file"
+      },
+      "toast": {
+        "exported": "Progress exported successfully!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import file. Check the format.",
+        "resetDone": "🗑️ Progress reset."
       }
     }
+  },
+  "leaderboard": {
+    "kicker": "Local multiplayer",
+    "title": "Leaderboard",
+    "subtitle": "Compare XP, level, missions, and badges across your local profiles.",
+    "manageProfiles": "Manage Profiles",
+    "championAria": "Current local champion",
+    "championSummary": "Level {{level}} • {{xp}} XP • {{missions}} missions completed",
+    "tableTitle": "Local Rankings",
+    "profileCount": "{{count}} profiles",
+    "active": "Active",
+    "switch": "Switch",
+    "columns": {
+      "rank": "Rank",
+      "player": "Player",
+      "xp": "XP",
+      "level": "Level",
+      "missions": "Missions",
+      "badges": "Badges",
+      "status": "Status"
+    }
+  },
+  "achievements": {
+    "kicker": "Badge vault",
+    "title": "Achievements",
+    "subtitle": "{{name}}'s unlocked and locked achievements.",
+    "summaryAria": "Achievement completion summary",
+    "unlocked": "Unlocked",
+    "progressAria": "Achievement completion progress",
+    "progress": "Completion",
+    "gridAria": "Achievement badge collection"
   },
   "journal": {
     "title": "Adventure Journal",
@@ -232,6 +294,7 @@
     "back": "← Back to Campaigns",
     "completeOf": "{{completed}}/{{total}} Complete",
     "lore": {
+      "iconLabel": "Chapter lore scroll",
       "modalTitle": "Chapter Introduction",
       "beginChapter": "Begin Chapter {{number}}"
     }

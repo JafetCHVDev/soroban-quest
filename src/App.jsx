@@ -8,10 +8,11 @@ import Profile from "./pages/Profile";
 import Journal from "./pages/Journal";
 import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
+import Leaderboard from "./pages/Leaderboard";
+import Achievements from "./pages/Achievements";
 import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
 
-// 1. Import the ErrorBoundary
+import useScrollToTop from "./hooks/useScrollToTop";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./systems/ToastContext";
 import { GameStateProvider } from "./systems/GameStateContext";
@@ -24,6 +25,9 @@ import "./systems/Toast.css";
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
+  // Global React Router navigation scroll management
+  useScrollToTop();
+
   useEffect(() => {
     const state = loadProgress();
     const newState = updateStreak(state);
@@ -34,7 +38,6 @@ export default function App() {
     <ErrorBoundary>
       <ToastProvider>
         <GameStateProvider>
-          <ScrollToTop />
           <div className="app">
             <Navbar />
             <main className="main-content">
@@ -47,6 +50,8 @@ export default function App() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />
                   <Route path="/skills" element={<SkillTree />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/achievements" element={<Achievements />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

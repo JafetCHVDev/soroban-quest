@@ -97,6 +97,16 @@ return (
               {t("navbar.journal")}
             </Link>
           </li>
+          <li>
+            <Link to="/leaderboard" className={isActive("/leaderboard")}>
+              {t("navbar.leaderboard")}
+            </Link>
+          </li>
+          <li>
+            <Link to="/achievements" className={isActive("/achievements")}>
+              {t("navbar.achievements")}
+            </Link>
+          </li>
         </ul>
 
         {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
@@ -161,6 +171,12 @@ return (
           </Link>
           <Link to="/journal" onClick={() => setIsOpen(false)}>
             {t("navbar.journal")}
+          </Link>
+          <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
+            {t("navbar.leaderboard")}
+          </Link>
+          <Link to="/achievements" onClick={() => setIsOpen(false)}>
+            {t("navbar.achievements")}
           </Link>
 
           {/* MOBILE EXTRAS */}

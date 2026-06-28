@@ -6,6 +6,169 @@ export { getDefaultState };
 ========================= */
 const PROGRESS_KEY = "soroban_quest_progress";
 const PROFILE_KEY = "soroban_quest_profile";
+const PROFILES_KEY = "soroban_quest_profiles";
+const ACTIVE_PROFILE_KEY = "soroban_quest_active_profile";
+export const MAX_PROFILES = 5;
+
+function createDefaultProfileSlot(index = 0, overrides = {}) {
+  const id = overrides.id || `player-${index + 1}`;
+  return {
+    id,
+    profile: {
+      ...defaultProfile,
+      name: index === 0 ? defaultProfile.name : `Player ${index + 1}`,
+      ...(overrides.profile || {}),
+    },
+    progress: {
+      ...getDefaultState(),
+      ...(overrides.progress || {}),
+    },
+  };
+}
+
+function sanitizeProfileSlot(slot, index) {
+  return createDefaultProfileSlot(index, {
+    id: slot?.id || `player-${index + 1}`,
+    profile: slot?.profile,
+    progress: slot?.progress,
+  });
+}
+
+function readLegacySlot() {
+  let legacyProfile = null;
+  const legacyProgress = readLegacyProgress();
+
+  try {
+    const profileData = localStorage.getItem(PROFILE_KEY);
+    if (profileData) legacyProfile = JSON.parse(profileData);
+  } catch {
+    legacyProfile = null;
+  }
+
+  return createDefaultProfileSlot(0, {
+    profile: legacyProfile || undefined,
+    progress: legacyProgress || undefined,
+  });
+}
+
+function readLegacyProgress() {
+  try {
+    const progressData = localStorage.getItem(PROGRESS_KEY);
+    if (!progressData) return null;
+    return { ...getDefaultState(), ...JSON.parse(progressData) };
+  } catch {
+    return null;
+  }
+}
+
+function persistProfiles(profiles) {
+  localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles.slice(0, MAX_PROFILES)));
+}
+
+function mirrorActiveProfileLegacy(slot) {
+  const progressCopy = cleanProgress(slot.progress);
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressCopy));
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(slot.profile));
+}
+
+function cleanProgress(state) {
+  const copy = { ...state };
+  delete copy.leveledUp;
+  delete copy.alreadyCompleted;
+  delete copy.newBadges;
+  return copy;
+}
+
+function progressSignature(state) {
+  return JSON.stringify(cleanProgress({ ...getDefaultState(), ...state }));
+}
+
+function syncActiveProgressFromLegacy(progress) {
+  const activeProfileId = getActiveProfileId();
+  const profiles = loadProfiles();
+  const updated = profiles.map((slot) =>
+    slot.id === activeProfileId
+      ? { ...slot, progress: { ...getDefaultState(), ...cleanProgress(progress) } }
+      : slot
+  );
+  persistProfiles(updated);
+  return updated.find((slot) => slot.id === activeProfileId)?.progress || progress;
+}
+
+export function loadProfiles() {
+  try {
+    const data = localStorage.getItem(PROFILES_KEY);
+    if (!data) {
+      const migrated = [readLegacySlot()];
+      persistProfiles(migrated);
+      setActiveProfileId(migrated[0].id);
+      mirrorActiveProfileLegacy(migrated[0]);
+      return migrated;
+    }
+
+    const parsed = JSON.parse(data);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [createDefaultProfileSlot()];
+    }
+
+    return parsed
+      .slice(0, MAX_PROFILES)
+      .map((slot, index) => sanitizeProfileSlot(slot, index));
+  } catch {
+    return [createDefaultProfileSlot()];
+  }
+}
+
+export function saveProfiles(profiles) {
+  const sanitized = profiles
+    .slice(0, MAX_PROFILES)
+    .map((slot, index) => sanitizeProfileSlot(slot, index));
+  persistProfiles(sanitized);
+
+  const activeSlot = sanitized.find((slot) => slot.id === getActiveProfileId()) || sanitized[0];
+  if (activeSlot) mirrorActiveProfileLegacy(activeSlot);
+  return sanitized;
+}
+
+export function getActiveProfileId() {
+  try {
+    const profiles = JSON.parse(localStorage.getItem(PROFILES_KEY) || "[]");
+    const fallbackId = profiles[0]?.id || "player-1";
+    return localStorage.getItem(ACTIVE_PROFILE_KEY) || fallbackId;
+  } catch {
+    return localStorage.getItem(ACTIVE_PROFILE_KEY) || "player-1";
+  }
+}
+
+export function setActiveProfileId(profileId) {
+  localStorage.setItem(ACTIVE_PROFILE_KEY, profileId);
+}
+
+export function getActiveProfileSlot() {
+  const profiles = loadProfiles();
+  const activeProfileId = getActiveProfileId();
+  const activeSlot = profiles.find((slot) => slot.id === activeProfileId) || profiles[0];
+
+  if (activeSlot && activeSlot.id !== activeProfileId) {
+    setActiveProfileId(activeSlot.id);
+  }
+
+  return activeSlot || createDefaultProfileSlot();
+}
+
+export function addProfile(profile = {}) {
+  const profiles = loadProfiles();
+  if (profiles.length >= MAX_PROFILES) return profiles;
+
+  const nextIndex = profiles.length;
+  const nextSlot = createDefaultProfileSlot(nextIndex, {
+    id: `player-${Date.now()}`,
+    profile,
+  });
+  const updated = [...profiles, nextSlot];
+  persistProfiles(updated);
+  return updated;
+}
 
 /* =========================
    COMPRESSION / DECOMPRESSION
@@ -84,24 +247,29 @@ export function validateImportData(data) {
    PROGRESS
 ========================= */
 export function loadProgress() {
-  try {
-    const data = localStorage.getItem(PROGRESS_KEY);
-    if (!data) return getDefaultState();
+  const activeSlot = getActiveProfileSlot();
+  const legacyProgress = readLegacyProgress();
 
-    return { ...getDefaultState(), ...JSON.parse(data) };
-  } catch {
-    return getDefaultState();
+  if (
+    legacyProgress &&
+    progressSignature(legacyProgress) !== progressSignature(activeSlot.progress)
+  ) {
+    return syncActiveProgressFromLegacy(legacyProgress);
   }
+
+  return activeSlot.progress;
 }
 
 export function saveProgress(state) {
   try {
-    const copy = { ...state };
-    delete copy.leveledUp;
-    delete copy.alreadyCompleted;
-    delete copy.newBadges;
-
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(copy));
+    const activeProfileId = getActiveProfileId();
+    const profiles = loadProfiles();
+    const updated = profiles.map((slot) =>
+      slot.id === activeProfileId
+        ? { ...slot, progress: { ...getDefaultState(), ...cleanProgress(state) } }
+        : slot
+    );
+    saveProfiles(updated);
   } catch (e) {
     console.error(e);
   }
@@ -109,7 +277,14 @@ export function saveProgress(state) {
 
 export function resetProgress() {
   localStorage.removeItem(PROGRESS_KEY);
-  return getDefaultState();
+  const activeProfileId = getActiveProfileId();
+  const defaultState = getDefaultState();
+  const profiles = loadProfiles().map((slot) =>
+    slot.id === activeProfileId ? { ...slot, progress: defaultState } : slot
+  );
+  saveProfiles(profiles);
+  localStorage.removeItem(PROGRESS_KEY);
+  return defaultState;
 }
 
 /* =========================
@@ -121,22 +296,27 @@ export const defaultProfile = {
 };
 
 export function loadProfile() {
-  try {
-    const data = localStorage.getItem(PROFILE_KEY);
-    if (!data) return defaultProfile;
-
-    return { ...defaultProfile, ...JSON.parse(data) };
-  } catch {
-    return defaultProfile;
-  }
+  return getActiveProfileSlot().profile;
 }
 
 export function saveProfile(profile) {
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  const activeProfileId = getActiveProfileId();
+  const profiles = loadProfiles();
+  const updated = profiles.map((slot) =>
+    slot.id === activeProfileId
+      ? { ...slot, profile: { ...defaultProfile, ...profile } }
+      : slot
+  );
+  saveProfiles(updated);
 }
 
 export function resetProfile() {
   localStorage.removeItem(PROFILE_KEY);
+  const activeProfileId = getActiveProfileId();
+  const profiles = loadProfiles().map((slot) =>
+    slot.id === activeProfileId ? { ...slot, profile: defaultProfile } : slot
+  );
+  saveProfiles(profiles);
   return defaultProfile;
 }
 
@@ -146,6 +326,8 @@ export function resetProfile() {
 export async function exportProgress() {
   const state = loadProgress();
   const profile = loadProfile();
+  const profiles = loadProfiles();
+  const activeProfileId = getActiveProfileId();
 
   const compressedBlob = await compressData({ state, profile });
 

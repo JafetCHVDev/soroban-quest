@@ -70,7 +70,7 @@
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* default: 3 columns on desktop */
+  grid-template-columns: repeat(3, 1fr);
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -167,12 +167,6 @@
   animation: fadeIn 0.6s forwards;
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
 /* Responsive container */
 .mission-detail-skeleton {
   display: flex;
@@ -189,6 +183,32 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* Home Skeleton Styles */
+.home-skeleton {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
+.hero-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: var(--space-3xl);
+}
+
+.features-section-skeleton {
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--space-3xl) var(--space-xl);
 }
 
 :root {
@@ -213,6 +233,7 @@
   --red-dim: rgba(239, 68, 68, 0.15);
   --green: #22c55e;
   --green-dim: rgba(34, 197, 94, 0.15);
+  --green-glow: rgba(34, 197, 94, 0.4);
   --blue: #3b82f6;
   --blue-dim: rgba(59, 130, 246, 0.15);
 
@@ -260,6 +281,8 @@
     0 0 20px var(--gold-glow), 0 0 60px rgba(245, 158, 11, 0.1);
   --shadow-glow-green:
     0 0 20px rgba(34, 197, 94, 0.4), 0 0 60px rgba(34, 197, 94, 0.1);
+    --shadow-glow-green:
+    0 0 20px var(--green-glow), 0 0 60px rgba(34, 197, 94, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -382,7 +405,7 @@ button {
 
 .main-content {
   flex: 1;
-  padding-top: 70px; /* navbar height */
+  padding-top: 70px;
 }
 
 /* ============ NAVBAR ============ */
@@ -668,6 +691,7 @@ button {
   background: var(--green-dim);
   color: var(--green);
   border: 1px solid rgba(34, 197, 94, 0.2);
+  --green-glow: rgba(34, 197, 94, 0.4);
 }
 
 .badge-intermediate {
@@ -1671,7 +1695,8 @@ button {
   color: var(--text-secondary);
   margin-bottom: var(--space-xl);
 }
-/* Hide Radio buttons on all screens  */
+
+/* Hide Radio buttons on all screens */
 .tab-radio {
   display: none;
 }
@@ -1773,7 +1798,7 @@ button {
   }
 }
 
-/* MOBILE STYLES  (768px and below) */
+/* MOBILE STYLES (768px and below) */
 @media (max-width: 768px) {
   .mission-map-page {
     padding: var(--space-xl) var(--space-md);
@@ -1829,7 +1854,7 @@ button {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-subtle);
     position: sticky;
-    top: 70px; /* below the fixed navbar */
+    top: 70px;
     z-index: 50;
   }
 
@@ -1860,7 +1885,6 @@ button {
     color: var(--text-primary);
   }
 
-  /* Active tab indicator — driven entirely by :checked, no JS */
   #tab-story:checked ~ .mobile-tabs label[for="tab-story"],
   #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"],
   #tab-tests:checked ~ .mobile-tabs label[for="tab-tests"] {
@@ -1873,22 +1897,17 @@ button {
     width: 100%;
   }
 
-  /* Switch to single-column layout on mobile */
   .mission-detail {
     display: block;
     height: auto;
     overflow: visible;
   }
 
-  /* --- Panel visibility via :checked — no JS, no !important --- */
-
-  /* By default on mobile, hide both main panels */
   .mission-detail .mission-story,
   .mission-detail .mission-editor-panel {
     display: none;
   }
 
-  /* Story tab active */
   #tab-story:checked ~ .mission-detail .mission-story {
     display: block;
     min-height: calc(100vh - 70px - 44px);
@@ -1896,7 +1915,6 @@ button {
     border-right: none;
   }
 
-  /* Editor tab active — show editor panel, hide terminal within it */
   #tab-editor:checked ~ .mission-detail .mission-editor-panel {
     display: flex;
     flex-direction: column;
@@ -1912,7 +1930,6 @@ button {
     min-height: 0;
   }
 
-  /* Tests tab active — show editor panel, hide editor/toolbar, show terminal */
   #tab-tests:checked ~ .mission-detail .mission-editor-panel {
     display: flex;
     flex-direction: column;
@@ -1941,7 +1958,6 @@ button {
     max-height: none;
   }
 
-  /* Toolbar wraps on small screens */
   .mission-editor-toolbar {
     flex-wrap: wrap;
     gap: var(--space-xs);
@@ -1951,7 +1967,6 @@ button {
     flex-wrap: wrap;
   }
 
-  /* Run Tests button meets 44px minimum tap target */
   .btn-sm {
     min-height: 44px;
   }
@@ -1967,7 +1982,6 @@ button {
   z-index: 120;
 }
 
-/* show only mobile */
 @media (max-width: 768px) {
   .hamburger-btn {
     display: block;
@@ -2041,160 +2055,5 @@ button {
   .navbar {
     padding: 0 16px;
   }
-}
-/* ==========================================================================
-   Quest Loading Screen Overlay Styles (Issue #98)
-   ========================================================================== */
-
-
- .quest-loading-overlay {
-  position: fixed !important; /* Overrides any relative layouts */
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;  /* Forces full viewport width on large monitors */
-  height: 100vh !important; /* Forces full viewport height on large monitors */
-  max-width: 100% !important;
-  max-height: 100% !important;
-  background-color: #0a1720 !important; /* Prevents background leaking */
-  color: #ffffff;
-  z-index: 999999 !important; /* Pushes it past any high-index desktop layouts */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-
-/* ==========================================
-   GLOBAL ACCESSIBILITY & KEYBOARD FOCUS STYLES (#102)
-   ========================================== */
-
-/* High contrast outline rings only targeting active keyboard tab navigation */
-*:focus-visible {
-  outline: 3px solid var(--cyan);
-  outline-offset: 3px;
-  box-shadow: 0 0 12px var(--cyan-glow);
-}
-
-/* Disable standard fallback blur rings when click actions happen via mouse */
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* Visually Hidden Utility for Skip-Links & Screen Reader helper texts */
-.skip-to-content {
-  position: absolute;
-  top: -100px;
-  left: 24px;
-  background: linear-gradient(135deg, var(--cyan), #05b88a);
-  color: #0a0e1a;
-  padding: 12px 24px;
-  font-weight: 700;
-  font-family: var(--font-display);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-glow-cyan);
-  z-index: 99999;
-  transition: top var(--transition-fast) ease;
-}
-
-/* Snap into visible boundary layout area upon initial tab interaction focus state */
-.skip-to-content:focus-visible {
-  top: 16px;
-  outline: 3px solid #f1f5f9;
-}
-
-/* Visually hides assistive text snippets completely off screen for sighted users */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-
-/* Ambient Pulse Glow background element */
-.quest-loading-glow {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background-color:  #020617;
-  opacity: 0.04;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: questPulse 2s ease-in-out infinite alternate;
-}
-
-.quest-loading-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* Spinner Framework Structure */
-.quest-loading-spinner-container {
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-
-.quest-loading-spinner-bg {
-  position: absolute;
-  inset: 0;
-  border: 4px solid rgba(207, 253, 237, 0.15);
-  border-radius: 50%;
-}
-
-.quest-loading-spinner-active {
-  position: absolute;
-  inset: 0;
-  border: 4px solid transparent;
-  border-top-color: #273d72; /* Branded gold accent indicator */
-  border-radius: 50%;
-  animation: questSpin 1s linear infinite;
-}
-
-/* Typography Adjustments */
-.quest-loading-text-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.quest-loading-title {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: 0.08em;
-  color: #CFFDED;
-  text-transform: uppercase;
-  animation: questPulse 1.5s ease-in-out infinite alternate;
-}
-
-.quest-loading-subtitle {
-  margin: 6px 0 0 0;
-  font-size: 0.75rem;
-  color: #8a939b;
-  font-family: monospace;
-}
-
-/* Keyframes Definitions */
-@keyframes questSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes questPulse {
-  0% { opacity: 0.6; transform: scale(0.98); }
-  100% { opacity: 1; transform: scale(1.02); }
 }
 

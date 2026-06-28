@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { useTranslation } from '../i18n/useTranslation';
 import { getAllMissions } from '../systems/missionLoader';
 import useDocumentTitle from '../systems/useDocumentTitle';
+import HomeSkeleton from '../components/HomeSkeleton';
 
 export default function Home() {
     useDocumentTitle('Home');
@@ -14,6 +15,14 @@ export default function Home() {
     const missions = getAllMissions(language);
     const completedCount = state.completedMissions.length;
     const hasMissions = completedCount > 0;
+    const [loading, setLoading] = useState(true);
+
+    // Loading effect
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+    }, []);
 
     // Particle starfield effect
     useEffect(() => {
@@ -61,6 +70,8 @@ export default function Home() {
             window.removeEventListener('resize', resize);
         };
     }, []);
+
+    if (loading) return <HomeSkeleton />;
 
     return (
         <div>
