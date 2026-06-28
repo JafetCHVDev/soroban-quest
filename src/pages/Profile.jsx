@@ -80,7 +80,7 @@ export default function Profile() {
     
     // Trigger global success toast alert
     showToast("Progress configuration data exported!", "success");
-    showToast(t("profile.data.toast.exported"), "success");
+    showToast(t("profile.data.status.exported"), "success");
     setImportStatus(t("profile.data.status.exported"));
     logActivity(ACTIVITY_TYPES.EXPORT, {}, t("profile.data.log.exported"));
 
@@ -98,7 +98,7 @@ export default function Profile() {
     } else {
       setImportStatus("Invalid file — could not import.");
       showToast(result.errors.join("\n"), "error");
-      showToast(t("profile.data.toast.importFailed"), "error");
+      showToast(t("profile.data.status.importFailed"), "error");
       setImportStatus(t("profile.data.status.importFailed"));
       setTimeout(() => setImportStatus(""), 3000);
     }
@@ -124,13 +124,13 @@ export default function Profile() {
       
       // Trigger global success toast alert
       showToast("Progress state imported successfully!", "success");
-      showToast(t("profile.data.toast.imported"), "success");
+      showToast(t("profile.data.status.imported"), "success");
       setImportStatus(t("profile.data.status.imported"));
       logActivity(ACTIVITY_TYPES.IMPORT, {}, t("profile.data.log.imported"));
     } catch {
       setImportStatus("Invalid file — could not import.");
       showToast("Could not parse file. Verify structure format.", "error");
-      showToast(t("profile.data.toast.importFailed"), "error");
+      showToast(t("profile.data.status.importFailed"), "error");
       setImportStatus(t("profile.data.status.importFailed"));
     }
 
@@ -149,7 +149,7 @@ export default function Profile() {
       
       // Trigger global warning toast alert
       showToast("All missions, XP levels, and badges have been cleared.", "warning");
-      showToast(t("profile.data.toast.resetDone"), "warning");
+      showToast(t("profile.data.status.resetDone"), "warning");
       setImportStatus(t("profile.data.status.resetDone"));
       setTimeout(() => setImportStatus(""), 3000);
     }
