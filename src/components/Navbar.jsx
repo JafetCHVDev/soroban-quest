@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
-import { loadProfile } from "../systems/storage";
 import { useTranslation } from "../i18n/useTranslation";
+import { useGameState } from "../systems/GameStateContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
-  const profile = loadProfile();
+  const { profile } = useGameState();
   const langRef = useRef(null);
 
   const { t, language, setLanguage, languages } = useTranslation();

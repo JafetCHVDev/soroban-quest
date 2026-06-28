@@ -16,6 +16,13 @@ import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from '../systems/useDocumentTitle';
+import {
+  EDITOR_THEMES,
+  registerEditorThemes,
+  loadEditorTheme,
+  saveEditorTheme,
+} from "../systems/editorThemes";
+import "./MissionDetail.css"
 
 const LIVE_MARKER_OWNER = "soroban-quest-live";
 const MAX_RANK_INDEX = 10;
@@ -43,7 +50,8 @@ export default function MissionDetail() {
 
   const [livePassCount, setLivePassCount] = useState(0);
   const [liveTotalCount, setLiveTotalCount] = useState(0);
-  const [activeTab, setActiveTab] = useState("story"); 
+  const [activeTab, setActiveTab] = useState("story");
+  const [editorTheme, setEditorTheme] = useState(() => loadEditorTheme());
 
   const terminalBodyRef = useRef(null);
   const editorRef = useRef(null);      
@@ -56,6 +64,9 @@ export default function MissionDetail() {
   const progressState = loadProgress();
   const isCompleted = progressState.completedMissions.includes(missionId);
   const hasReplay = CodeRecorder.hasRecording(missionId);
+
+  const nextMissionItem = getNextMission(missionId, language);
+  const previousMissionItem = getMissionById(String(Number(missionId) - 1), language);
 
   // --------------------------- Load Mission ---------------------------
   useEffect(() => {
@@ -103,6 +114,103 @@ export default function MissionDetail() {
     };
   }, []);
 
+  const handleRunTests = useCallback(async () => {
+    if (isRunning || !mission) return;
+    setIsRunning(true);
+    setTestResults([]);
+
+    let state = loadProgress();
+    state = recordAttempt(state, missionId);
+    saveProgress(state);
+
+    const resultCollector = [];
+    const addResult = (result) => {
+      resultCollector.push(result);
+      setTestResults([...resultCollector]);
+    };
+
+    addResult({ phase: "info", message: t("missionDetail.terminal.runningChecks") });
+    await delay(400);
+
+    const result = await runTests(code, mission);
+    for (const r of result.results) {
+      addResult(r);
+      await delay(250);
+    }
+
+    await delay(300);
+    addResult({ phase: "summary", message: result.summary });
+
+    if (result.allPassed) {
+      if (showToast) showToast(t("missionDetail.toasts.validated"), "success");
+      await delay(500);
+      state = loadProgress();
+      const newState = completeMission(state, missionId, mission.xpReward);
+
+      if (!newState.alreadyCompleted) {
+        saveProgress(newState);
+        setVictoryData({
+          xp: mission.xpReward,
+          leveledUp: newState.leveledUp,
+          newLevel: newState.level,
+          newBadges: newState.newBadges || [],
+        });
+        setShowVictory(true);
+      } else {
+        addResult({
+          phase: "info",
+          message: t("missionDetail.terminal.alreadyCompleted"),
+        });
+      }
+    } else {
+      if (showToast) showToast(t("missionDetail.toasts.validationFailed"), "error");
+    }
+
+    setIsRunning(false);
+  }, [code, mission, missionId, isRunning, showToast, t]);
+
+  const handleNextMission = useCallback(() => {
+    if (nextMissionItem) navigate(`/mission/${nextMissionItem.id}`);
+    else navigate("/missions");
+  }, [nextMissionItem, navigate]);
+
+  const handlePreviousMission = useCallback(() => {
+    if (previousMissionItem) navigate(`/mission/${previousMissionItem.id}`);
+  }, [previousMissionItem, navigate]);
+
+  // --------------------------- Keyboard Shortcuts Hook ---------------------------
+  useEffect(() => {
+    const handleGlobalShortcuts = (e) => {
+      // Prevent running if user is typing inside code fields or inputs
+      const targetTag = document.activeElement?.tagName.toLowerCase();
+      const isMonacoFocused = document.activeElement?.closest('.monaco-editor');
+      
+      if (
+        targetTag === "input" || 
+        targetTag === "textarea" || 
+        document.activeElement?.isContentEditable ||
+        isMonacoFocused
+      ) {
+        return; 
+      }
+
+      const key = e.key.toLowerCase();
+      if (key === 'r') {
+        e.preventDefault();
+        handleRunTests();
+      } else if (key === 'n') {
+        e.preventDefault();
+        handleNextMission();
+      } else if (key === 'p') {
+        e.preventDefault();
+        handlePreviousMission();
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalShortcuts);
+    return () => window.removeEventListener("keydown", handleGlobalShortcuts);
+  }, [handleRunTests, handleNextMission, handlePreviousMission]);
+
   // Focus Trapping for the Victory Modal
   useEffect(() => {
     if (!showVictory || !victoryModalRef.current) return;
@@ -147,6 +255,16 @@ export default function MissionDetail() {
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+    // Register custom themes so the stored selection applies on first paint.
+    registerEditorThemes(monaco);
+    monaco.editor.setTheme(editorTheme);
+  }, [editorTheme]);
+
+  const handleThemeChange = useCallback((event) => {
+    const nextTheme = event.target.value;
+    setEditorTheme(nextTheme);
+    saveEditorTheme(nextTheme);
+    monacoRef.current?.editor.setTheme(nextTheme);
   }, []);
 
   function applyMonacoMarkers(markers) {
@@ -210,61 +328,6 @@ export default function MissionDetail() {
     };
   }
 
-  const handleRunTests = useCallback(async () => {
-    if (isRunning || !mission) return;
-    setIsRunning(true);
-    setTestResults([]);
-
-    let state = loadProgress();
-    state = recordAttempt(state, missionId);
-    saveProgress(state);
-
-    const resultCollector = [];
-    const addResult = (result) => {
-      resultCollector.push(result);
-      setTestResults([...resultCollector]);
-    };
-
-    addResult({ phase: "info", message: t("missionDetail.terminal.runningChecks") });
-    await delay(400);
-
-    const result = await runTests(code, mission);
-    for (const r of result.results) {
-      addResult(r);
-      await delay(250);
-    }
-
-    await delay(300);
-    addResult({ phase: "summary", message: result.summary });
-
-    if (result.allPassed) {
-      if (showToast) showToast(t("missionDetail.toasts.validated"), "success");
-      await delay(500);
-      state = loadProgress();
-      const newState = completeMission(state, missionId, mission.xpReward);
-
-      if (!newState.alreadyCompleted) {
-        saveProgress(newState);
-        setVictoryData({
-          xp: mission.xpReward,
-          leveledUp: newState.leveledUp,
-          newLevel: newState.level,
-          newBadges: newState.newBadges || [],
-        });
-        setShowVictory(true);
-      } else {
-        addResult({
-          phase: "info",
-          message: t("missionDetail.terminal.alreadyCompleted"),
-        });
-      }
-    } else {
-      if (showToast) showToast(t("missionDetail.toasts.validationFailed"), "error");
-    }
-
-    setIsRunning(false);
-  }, [code, mission, missionId, isRunning, showToast, t]);
-
   const handleHint = () => {
     if (mission?.hints && hintIndex < mission.hints.length - 1) {
       const nextIndex = hintIndex + 1;
@@ -297,12 +360,6 @@ export default function MissionDetail() {
       setCode(mission.solution);
       if (showToast) showToast(t("missionDetail.toasts.solutionLoaded"), "info");
     }
-  };
-
-  const handleNextMission = () => {
-    const next = getNextMission(missionId, language);
-    if (next) navigate(`/mission/${next.id}`);
-    else navigate("/missions");
   };
 
   const handleWatchReplay = () => {
@@ -358,6 +415,13 @@ export default function MissionDetail() {
 
   return (
     <MissionErrorBoundary>
+      {/* Shortcut Indicator Legend Bar */}
+      <div className="shortcut-legend-bar" style={{ display: 'flex', gap: '1rem', padding: '0.5rem 1rem', background: 'var(--bg-tertiary)', fontSize: '0.75rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-subtle)' }}>
+        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>R</kbd> Run Tests</span>
+        {previousMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>P</kbd> Prev Mission</span>}
+        {nextMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>N</kbd> Next Mission</span>}
+      </div>
+
       {/* Tabs */}
       <div className="mobile-tabs" role="tablist" aria-label={t("missionDetail.tabs.ariaLabel")}>
         <button
@@ -387,7 +451,7 @@ export default function MissionDetail() {
         >
           {t("missionDetail.tabs.tests")}
         </button>
-        {isCompleted && hasReplay && (
+        {(isCompleted || showVictory) && hasReplay && (
           <button
             type="button"
             role="tab"
@@ -454,6 +518,20 @@ export default function MissionDetail() {
               </div>
             </div>
             <div className="mission-editor-toolbar-right">
+              <label className="editor-theme-select" aria-label={t("missionDetail.editor.themeLabel")}>
+                <span className="editor-theme-select-label">{t("missionDetail.editor.themeLabel")}</span>
+                <select
+                  className="editor-theme-select-input"
+                  value={editorTheme}
+                  onChange={handleThemeChange}
+                >
+                  {EDITOR_THEMES.map((theme) => (
+                    <option key={theme.id} value={theme.id}>
+                      {theme.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
@@ -497,7 +575,7 @@ export default function MissionDetail() {
               defaultLanguage="rust"
               value={code}
               onChange={(v) => setCode(v || "")}
-              theme="vs-dark"
+              theme={editorTheme}
               onMount={handleEditorMount}
               options={{
                 fontSize: 14,
@@ -605,7 +683,7 @@ export default function MissionDetail() {
         </div>
 
         {/* ---------------- Replay Panel ---------------- */}
-        {isCompleted && hasReplay && (
+        {(isCompleted || showVictory) && hasReplay && (
           <div 
             className="mission-replay-panel" 
             style={{
@@ -669,6 +747,23 @@ export default function MissionDetail() {
                   ? t("missionDetail.victory.badgeEarnedMany")
                   : t("missionDetail.victory.badgeEarnedOne")}
               </p>
+            )}
+
+            {/* Victory CodeReplay Integration Trigger Trigger Button */}
+            {hasReplay && (
+              <div style={{ marginBottom: "1.25rem" }}>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => {
+                    setShowVictory(false);
+                    handleWatchReplay();
+                  }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  📹 {t("missionDetail.victory.watchReplay") || "Watch Session Replay"}
+                </button>
+              </div>
             )}
 
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
