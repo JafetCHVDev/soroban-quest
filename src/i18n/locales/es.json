@@ -31,6 +31,7 @@
     "journal": "Diario",
     "leaderboard": "Ranking",
     "achievements": "Logros",
+    "shop": "Tienda",
     "ariaMain": "Navegación principal",
     "ariaHome": "Ir a la página de inicio",
     "ariaMobile": "Menú de navegación móvil",
@@ -176,20 +177,14 @@
         "resetDone": "🗑️ Progreso restablecido."
       },
       "toast": {
-        "exported": "¡Progreso exportado!",
-        "imported": "¡Progreso importado correctamente!",
-        "importFailed": "No se pudo importar ese archivo.",
-        "resetDone": "Progreso restablecido."
-      },
-      "log": {
-        "exported": "Progreso de la aventura exportado",
-        "imported": "Progreso de la aventura importado desde archivo"
-      },
-      "toast": {
         "exported": "¡Progreso exportado correctamente!",
         "imported": "¡Progreso importado correctamente!",
         "importFailed": "No se pudo importar el archivo. Verifica el formato.",
         "resetDone": "🗑️ Progreso restablecido."
+      },
+      "log": {
+        "exported": "Progreso de la aventura exportado",
+        "imported": "Progreso de la aventura importado desde archivo"
       }
     }
   },
@@ -484,5 +479,38 @@
       "name": "Demonio Veloz",
       "description": "Completa una misión en el primer intento"
     }
+  },
+  "shop": {
+    "title": "Tienda",
+    "subtitle": "Gasta tu XP en avatares, mejoras e insignias",
+    "ariaCategories": "Filtros de categorías de la tienda",
+    "categories": {
+      "all": "Todas",
+      "avatars": "Avatares",
+      "boosts": "Mejoras",
+      "badges": "Insignias"
+    },
+    "items": {
+      "avatarPack1": "Paquete de Avatares 1",
+      "avatarPack1Desc": "Desbloquea 5 nuevas opciones de avatar",
+      "avatarPack2": "Paquete de Avatares 2",
+      "avatarPack2Desc": "Desbloquea 5 opciones exclusivas de avatar",
+      "xpBoost": "Mejora de XP",
+      "xpBoostDesc": "Duplica tu XP en la próxima misión",
+      "streakFreeze": "Protección de Racha",
+      "streakFreezeDesc": "Protege tu racha por un día perdido",
+      "hintToken": "Token de Pista",
+      "hintTokenDesc": "Revela una pista sin penalización de XP",
+      "premiumBadge": "Insignia Premium",
+      "premiumBadgeDesc": "Insignia premium exclusiva para tu perfil"
+    },
+    "buy": "Comprar",
+    "purchased": "Comprado",
+    "alreadyPurchased": "Ya posees este artículo",
+    "insufficientFunds": "XP insuficiente para comprar este artículo",
+    "purchaseSuccess": "¡{{item}} comprado exitosamente!",
+    "empty": "No hay artículos en esta categoría",
+    "ariaPurchase": "Comprar {{item}} por {{price}} XP",
+    "ariaPurchased": "{{item}} - Ya comprado"
   }
 }
