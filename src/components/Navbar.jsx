@@ -107,6 +107,11 @@ return (
               {t("navbar.achievements")}
             </Link>
           </li>
+          <li>
+            <Link to="/shop" className={isActive("/shop")}>
+              {t("navbar.shop")}
+            </Link>
+          </li>
         </ul>
 
         {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
@@ -177,6 +182,9 @@ return (
           </Link>
           <Link to="/achievements" onClick={() => setIsOpen(false)}>
             {t("navbar.achievements")}
+          </Link>
+          <Link to="/shop" onClick={() => setIsOpen(false)}>
+            {t("navbar.shop")}
           </Link>
 
           {/* MOBILE EXTRAS */}

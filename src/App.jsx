@@ -10,6 +10,7 @@ import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
 import Leaderboard from "./pages/Leaderboard";
 import Achievements from "./pages/Achievements";
+import Shop from "./pages/Shop";
 import Footer from "./components/Footer";
 
 import useScrollToTop from "./hooks/useScrollToTop";
@@ -52,6 +53,7 @@ export default function App() {
                   <Route path="/skills" element={<SkillTree />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/achievements" element={<Achievements />} />
+                  <Route path="/shop" element={<Shop />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
