@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTranslation } from "../i18n/useTranslation";
 import { useGameState } from "../systems/GameStateContext";
+import LanguageSelector from "./LanguageSelector";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,6 +98,21 @@ return (
               {t("navbar.journal")}
             </Link>
           </li>
+          <li>
+            <Link to="/leaderboard" className={isActive("/leaderboard")}>
+              {t("navbar.leaderboard")}
+            </Link>
+          </li>
+          <li>
+            <Link to="/achievements" className={isActive("/achievements")}>
+              {t("navbar.achievements")}
+            </Link>
+          </li>
+          <li>
+            <Link to="/shop" className={isActive("/shop")}>
+              {t("navbar.shop")}
+            </Link>
+          </li>
         </ul>
 
         {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
@@ -162,6 +178,15 @@ return (
           <Link to="/journal" onClick={() => setIsOpen(false)}>
             {t("navbar.journal")}
           </Link>
+          <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
+            {t("navbar.leaderboard")}
+          </Link>
+          <Link to="/achievements" onClick={() => setIsOpen(false)}>
+            {t("navbar.achievements")}
+          </Link>
+          <Link to="/shop" onClick={() => setIsOpen(false)}>
+            {t("navbar.shop")}
+          </Link>
 
           {/* MOBILE EXTRAS */}
           <div className="mobile-stats">
@@ -190,67 +215,5 @@ return (
         </div>
       </nav>
     </>
-  );
-}
-
-function LanguageSelector({
-  idSuffix = "desktop",
-  langRef,
-  langOpen,
-  setLangOpen,
-  handleLanguageChange,
-  language,
-  languages,
-  t,
-}) {
-  const currentLang =
-    languages.find((l) => l.code === language) || languages[0];
-
-  return (
-    <div className="language-selector" ref={idSuffix === "desktop" ? langRef : null}>
-      <button
-        type="button"
-        className="btn-ghost language-selector-trigger"
-        aria-haspopup="listbox"
-        aria-expanded={langOpen}
-        aria-label={t("common.selectLanguage")}
-        onClick={() => setLangOpen((v) => !v)}
-      >
-        <Globe size={18} />
-        <span className="language-selector-code">
-          {currentLang.code.toUpperCase()}
-        </span>
-        <ChevronDown size={14} aria-hidden="true" />
-      </button>
-
-      {langOpen && (
-        <ul
-          className="language-selector-menu"
-          role="listbox"
-          aria-label={t("common.selectLanguage")}
-        >
-          {languages.map((lang) => (
-            <li key={lang.code}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={lang.code === language}
-                className={`language-selector-option ${
-                  lang.code === language ? "active" : ""
-                }`}
-                onClick={() => handleLanguageChange(lang.code)}
-              >
-                <span className="language-selector-option-code">
-                  {lang.code.toUpperCase()}
-                </span>
-                <span className="language-selector-option-name">
-                  {lang.name}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
   );
 }

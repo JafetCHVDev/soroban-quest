@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
@@ -8,7 +8,7 @@ import { loadProgress, saveProgress } from "../systems/storage";
 import { completeMission, recordAttempt } from "../systems/gameEngine";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
-import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import { useOkashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
@@ -32,7 +32,10 @@ export default function MissionDetail() {
   const { missionId } = useParams();
   const navigate = useNavigate();
   const { t, language } = useTranslation();
-  const mission = getMissionById(missionId, language);
+  const mission = useMemo(
+    () => getMissionById(missionId, language),
+    [missionId, language],
+  );
 
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
@@ -59,14 +62,20 @@ export default function MissionDetail() {
   const validatorRef = useRef(null);    
   const victoryModalRef = useRef(null);
 
-  const { openInOkashi, toast } = useokashi();
+  const { openInOkashi, toast } = useOkashi();
 
   const progressState = loadProgress();
   const isCompleted = progressState.completedMissions.includes(missionId);
   const hasReplay = CodeRecorder.hasRecording(missionId);
 
-  const nextMissionItem = getNextMission(missionId, language);
-  const previousMissionItem = getMissionById(String(Number(missionId) - 1), language);
+  const nextMissionItem = useMemo(
+    () => getNextMission(missionId, language),
+    [missionId, language],
+  );
+  const previousMissionItem = useMemo(
+    () => getMissionById(String(Number(missionId) - 1), language),
+    [missionId, language],
+  );
 
   // --------------------------- Load Mission ---------------------------
   useEffect(() => {

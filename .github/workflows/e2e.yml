@@ -134,4 +134,3 @@ jobs:
 
             Please review the screenshot diffs before merging.
           labels: visual-regression, automated
-

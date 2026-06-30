@@ -20,14 +20,24 @@
     "complete": "Complete",
     "completed": "Completed",
     "locked": "Locked",
-    "unlocked": "Unlocked"
+    "unlocked": "Unlocked",
+    "skipToContent": "Skip to main content"
   },
   "navbar": {
     "home": "Home",
     "campaigns": "Campaigns",
     "missions": "Missions",
     "profile": "Profile",
-    "journal": "Journal"
+    "journal": "Journal",
+    "leaderboard": "Leaderboard",
+    "achievements": "Achievements",
+    "shop": "Shop",
+    "ariaMain": "Main navigation",
+    "ariaHome": "Go to home page",
+    "ariaMobile": "Mobile navigation menu",
+    "userProfile": "User profile:",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -129,7 +139,17 @@
     "viewJournal": "📖 View Journal",
     "editPanel": {
       "title": "Edit Profile",
+      "nameLabel": "Adventurer name",
+      "avatarLegend": "Choose an avatar",
       "namePlaceholder": "Enter name"
+    },
+    "selector": {
+      "title": "Active Profile",
+      "help": "{{count}} of {{max}} local profiles in use.",
+      "meta": "Level {{level}} • {{xp}} XP",
+      "create": "Create profile",
+      "emptySlot": "Empty slot",
+      "defaultName": "Player {{number}}"
     },
     "stats": {
       "missions": "Missions",
@@ -156,11 +176,48 @@
         "importFailed": "❌ Invalid file — could not import.",
         "resetDone": "🗑️ Progress reset."
       },
+      "toast": {
+        "exported": "Progress exported successfully!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import file. Check the format.",
+        "resetDone": "🗑️ Progress reset."
+      },
       "log": {
         "exported": "Exported adventure progress",
         "imported": "Imported adventure progress from file"
       }
     }
+  },
+  "leaderboard": {
+    "kicker": "Local multiplayer",
+    "title": "Leaderboard",
+    "subtitle": "Compare XP, level, missions, and badges across your local profiles.",
+    "manageProfiles": "Manage Profiles",
+    "championAria": "Current local champion",
+    "championSummary": "Level {{level}} • {{xp}} XP • {{missions}} missions completed",
+    "tableTitle": "Local Rankings",
+    "profileCount": "{{count}} profiles",
+    "active": "Active",
+    "switch": "Switch",
+    "columns": {
+      "rank": "Rank",
+      "player": "Player",
+      "xp": "XP",
+      "level": "Level",
+      "missions": "Missions",
+      "badges": "Badges",
+      "status": "Status"
+    }
+  },
+  "achievements": {
+    "kicker": "Badge vault",
+    "title": "Achievements",
+    "subtitle": "{{name}}'s unlocked and locked achievements.",
+    "summaryAria": "Achievement completion summary",
+    "unlocked": "Unlocked",
+    "progressAria": "Achievement completion progress",
+    "progress": "Completion",
+    "gridAria": "Achievement badge collection"
   },
   "journal": {
     "title": "Adventure Journal",
@@ -232,6 +289,7 @@
     "back": "← Back to Campaigns",
     "completeOf": "{{completed}}/{{total}} Complete",
     "lore": {
+      "iconLabel": "Chapter lore scroll",
       "modalTitle": "Chapter Introduction",
       "beginChapter": "Begin Chapter {{number}}"
     }
@@ -421,5 +479,38 @@
       "name": "Speed Demon",
       "description": "Complete a mission on first try"
     }
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Spend your XP on avatars, boosts, and badges",
+    "ariaCategories": "Shop category filters",
+    "categories": {
+      "all": "All",
+      "avatars": "Avatars",
+      "boosts": "Boosts",
+      "badges": "Badges"
+    },
+    "items": {
+      "avatarPack1": "Avatar Pack 1",
+      "avatarPack1Desc": "Unlock 5 new avatar options",
+      "avatarPack2": "Avatar Pack 2",
+      "avatarPack2Desc": "Unlock 5 exclusive avatar options",
+      "xpBoost": "XP Boost",
+      "xpBoostDesc": "Double XP for your next mission",
+      "streakFreeze": "Streak Freeze",
+      "streakFreezeDesc": "Protect your streak for one missed day",
+      "hintToken": "Hint Token",
+      "hintTokenDesc": "Reveal a hint without XP penalty",
+      "premiumBadge": "Premium Badge",
+      "premiumBadgeDesc": "Exclusive premium badge for your profile"
+    },
+    "buy": "Buy",
+    "purchased": "Purchased",
+    "alreadyPurchased": "You already own this item",
+    "insufficientFunds": "Not enough XP to purchase this item",
+    "purchaseSuccess": "Successfully purchased {{item}}!",
+    "empty": "No items found in this category",
+    "ariaPurchase": "Purchase {{item}} for {{price}} XP",
+    "ariaPurchased": "{{item}} - Already purchased"
   }
 }
