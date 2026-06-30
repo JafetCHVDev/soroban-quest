@@ -4,6 +4,30 @@ import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
 import { useTranslation } from '../i18n/useTranslation';
 import useDocumentTitle from '../systems/useDocumentTitle';
+import "./MissionMap.css";
+import { getXPProgress, getLevelFromXP, xpForLevel } from "../systems/gameEngine";
+
+function getMissionCompletionRatio(completed, total) {
+    if (!total) return 0;
+    return Math.min(Math.max((completed / total) * 100, 0), 100);
+}
+
+function formatLevel(progressState, fallbackLevel = 1) {
+    // Prefer the persisted level, but fall back to derived level from XP.
+    if (typeof progressState?.level === 'number' && progressState.level > 0) return progressState.level;
+    return getLevelFromXP(progressState?.xp ?? 0) || fallbackLevel;
+}
+
+function formatCurrentLevelProgressPercent(progressState) {
+    const level = formatLevel(progressState);
+    // Show progress within the current level as a percent.
+    const nextLevelXP = xpForLevel(level + 1);
+    const currentLevelXP = xpForLevel(level);
+    const xp = progressState?.xp ?? 0;
+    const denom = Math.max(nextLevelXP - currentLevelXP, 1);
+    return Math.min(Math.max(((xp - currentLevelXP) / denom) * 100, 0), 100);
+}
+
 
 export default function MissionMap() {
     useDocumentTitle('Mission Map');
@@ -107,6 +131,90 @@ export default function MissionMap() {
     return (
         <div id="main-content" className="mission-map-page">
             <div className="mission-map-header">
+                <div className="mission-progress-stats" role="region" aria-label="Mission progress statistics">
+                    <div className="mission-progress-card">
+                    <header className="mission-progress-legend">
+                        <div>
+                            <h2 className="mission-progress-title" style={{ margin: 0 }}>
+                                {t('missionMap.stats.title') || 'Your progression'}
+                            </h2>
+                            <p className="mission-progress-subtitle" style={{ marginTop: '0.25rem' }}>
+                                {t('missionMap.stats.subtitle') || 'Level, completion ratio and total XP'}
+                            </p>
+                        </div>
+                        <p className="mission-progress-subtitle" style={{ textAlign: 'right' }}>
+                            {state.completedMissions.length}/{missions.length} missions
+                        </p>
+                    </header>
+
+                        <div className="mission-progress-legend">
+                            <div>
+                                <h3 className="mission-progress-title">{t('missionMap.stats.title') || 'Your progression'}</h3>
+                                <p className="mission-progress-subtitle">
+                                    {t('missionMap.stats.subtitle') || 'Level, completion ratio and total XP'}
+                                </p>
+                            </div>
+                            <p className="mission-progress-subtitle" style={{ textAlign: 'right' }}>
+                                {state.completedMissions.length}/{missions.length} missions
+                            </p>
+                        </div>
+
+                        <div className="mission-progress-grid">
+                            {(() => {
+                                const totalMissions = missions.length;
+                                const completedMissions = state.completedMissions.length;
+                                const ratioPercent = getMissionCompletionRatio(completedMissions, totalMissions);
+                                const totalXp = state.xp || 0;
+                                const currentLevel = formatLevel(state, 1);
+                                const xpProgressPercent = formatCurrentLevelProgressPercent(state);
+
+                                return (
+                                    <>
+                                        <div className="mission-progress-stat" aria-label="Current player level">
+                                            <div className="mission-progress-stat-row">
+                                                <span className="mission-progress-label">{t('missionMap.stats.level') || 'Level'}</span>
+                                                <span className="mission-progress-value" data-variant="purple">{currentLevel}</span>
+                                            </div>
+                                            <div className="mission-progress-meta">
+                                                {t('missionMap.stats.xpToNext') || 'XP into next'}: {xpProgressPercent.toFixed(0)}%
+                                            </div>
+                                            <div className="mission-progress-meter" aria-hidden="true">
+                                                <div className="mission-progress-meter-fill" style={{ width: `${xpProgressPercent}%` }} />
+                                            </div>
+                                        </div>
+
+                                        <div className="mission-progress-stat" aria-label="Mission completion ratio">
+                                            <div className="mission-progress-stat-row">
+                                                <span className="mission-progress-label">{t('missionMap.stats.completed') || 'Completed'}</span>
+                                                <span className="mission-progress-value" data-variant="green">{ratioPercent.toFixed(0)}%</span>
+                                            </div>
+                                            <div className="mission-progress-meta">
+                                                {completedMissions} / {totalMissions} missions
+                                            </div>
+                                            <div className="mission-progress-meter" aria-hidden="true">
+                                                <div className="mission-progress-meter-fill" style={{ width: `${ratioPercent}%` }} />
+                                            </div>
+                                        </div>
+
+                                        <div className="mission-progress-stat" aria-label="Total XP earned">
+                                            <div className="mission-progress-stat-row">
+                                                <span className="mission-progress-label">{t('missionMap.stats.totalXp') || 'Total XP'}</span>
+                                                <span className="mission-progress-value" data-variant="gold">{totalXp}</span>
+                                            </div>
+                                            <div className="mission-progress-meta">
+                                                {t('missionMap.stats.progressCap') || 'Aggregated XP from completed missions'}
+                                            </div>
+                                            <div className="mission-progress-meter" aria-hidden="true">
+                                                <div className="mission-progress-meter-fill" style={{ width: `${Math.min(xpForLevel(currentLevel + 1) ? (totalXp / xpForLevel(currentLevel + 1)) * 100 : 0, 100)}%` }} />
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </div>
+                    </div>
+                </div>
+
                 <h1 className="section-title">{t('missionMap.title')}</h1>
                 <p className="section-subtitle">
                     {t('missionMap.subtitle', {

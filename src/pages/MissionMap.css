@@ -1,0 +1,148 @@
+.mission-map-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.mission-map-header {
+  margin-bottom: var(--space-xl);
+}
+
+/* ------------------------ Mission Progress Stats ------------------------ */
+.mission-progress-stats {
+  margin: 0 0 var(--space-xl);
+}
+
+.mission-progress-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  padding: var(--space-lg);
+}
+
+.mission-progress-legend {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.mission-progress-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+}
+
+.mission-progress-subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.mission-progress-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.mission-progress-stat {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.mission-progress-stat-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.mission-progress-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.mission-progress-value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+.mission-progress-value[data-variant="green"] {
+  color: #34d399;
+}
+
+.mission-progress-value[data-variant="cyan"] {
+  color: #22d3ee;
+}
+
+.mission-progress-value[data-variant="gold"] {
+  color: var(--gold);
+}
+
+.mission-progress-value[data-variant="purple"] {
+  color: var(--purple);
+}
+
+.mission-progress-meta {
+  margin-top: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mission-progress-meter {
+  margin-top: var(--space-sm);
+  height: 10px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mission-progress-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  width: 0%;
+  transition: width var(--transition-slow);
+}
+
+/* Responsive: stack -> 2 columns -> 3+ columns */
+@media (min-width: 640px) {
+  .mission-progress-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 980px) {
+  .mission-progress-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .mission-map-page {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .mission-progress-card {
+    padding: var(--space-md);
+  }
+
+  .mission-progress-value {
+    font-size: 1.25rem;
+  }
+}
+
