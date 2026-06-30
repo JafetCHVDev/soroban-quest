@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
+  useRef,
 } from 'react';
 
 import en from './locales/en.json';
@@ -20,6 +21,34 @@ const STORAGE_KEY = 'soroban_quest_lang';
 const DEFAULT_LANG = 'en';
 
 export const LanguageContext = createContext(null);
+
+/* ---------- storage abstraction (private-mode safe) ---------- */
+
+/**
+ * In-memory fallback used when localStorage is unavailable
+ * (e.g. private/incognito mode or strict browser settings).
+ */
+const memoryStore = new Map();
+
+function storageGet(key) {
+  try {
+    const v = localStorage.getItem(key);
+    if (v !== null) return v;
+  } catch {
+    /* localStorage blocked — fall through to memory */
+  }
+  return memoryStore.get(key) ?? null;
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return;
+  } catch {
+    /* localStorage blocked — fall through to memory */
+  }
+  memoryStore.set(key, value);
+}
 
 /* ---------- helpers ---------- */
 
@@ -39,12 +68,8 @@ function detectBrowserLanguage() {
 }
 
 function readStoredLanguage() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && SUPPORTED.includes(stored)) return stored;
-  } catch {
-    /* localStorage unavailable (private mode, SSR, etc.) — ignore */
-  }
+  const stored = storageGet(STORAGE_KEY);
+  if (stored && SUPPORTED.includes(stored)) return stored;
   return null;
 }
 
@@ -72,12 +97,12 @@ export function LanguageProvider({ children }) {
     return initial;
   });
 
+  // Track whether the user has explicitly chosen a language so we
+  // don't override their preference when the OS language changes.
+  const userChoseRef = useRef(readStoredLanguage() !== null);
+
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, language);
-    } catch {
-      /* ignore */
-    }
+    storageSet(STORAGE_KEY, language);
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
     }
@@ -85,6 +110,21 @@ export function LanguageProvider({ children }) {
     // (missions/campaigns) localize against the active language.
     setActiveLanguage(language);
   }, [language]);
+
+  // Detect real-time OS language changes via the languagechange event.
+  // Only applies when the user has NOT made an explicit choice.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleLanguageChange = () => {
+      if (userChoseRef.current) return; // respect explicit user choice
+      const detected = detectBrowserLanguage();
+      setLanguageState(detected);
+    };
+
+    window.addEventListener('languagechange', handleLanguageChange);
+    return () => window.removeEventListener('languagechange', handleLanguageChange);
+  }, []);
 
   // t('a.b.c', { name: 'World' })
   const t = useCallback(
@@ -109,7 +149,9 @@ export function LanguageProvider({ children }) {
   );
 
   const setLanguage = useCallback((lang) => {
-    if (SUPPORTED.includes(lang)) setLanguageState(lang);
+    if (!SUPPORTED.includes(lang)) return;
+    userChoseRef.current = true; // mark explicit choice
+    setLanguageState(lang);
   }, []);
 
   const languages = useMemo(
