@@ -12,7 +12,7 @@ test.describe('Campaigns Page', () => {
 
     await expect(page).toHaveURL(/#\/campaigns/);
     await expect(page.locator('h1.section-title')).toHaveText('Campaigns');
-    await expect(page.locator('.campaign-card')).toHaveCount(3);
+    await expect(page.locator('.campaign-card')).toHaveCount(7);
   });
 
   test('opens lore modal on first visit and campaign details are visible', async ({ page }) => {
