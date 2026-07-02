@@ -133,6 +133,166 @@ Completa la Forja de Tokens para obtener el estatus de **Guardián Legendario**.
     missionIds: ['token-forge', 'time-lock', 'multi-party-pact'],
     requiredLevel: 5,
     color: 'gold'
+  },
+  {
+    id: 'chapter-4-data',
+    i18n: {
+      en: {
+        title: 'Chapter 4: Data Fortress',
+        description: 'Master complex state management with Maps, events, and delegated approvals.',
+        lore: `# 🏦 Chapter 4: Data Fortress
+
+Beyond the Hall of Pacts, you discover the **Data Fortress** — a vast repository where sophisticated state is engineered.
+
+*"Data is the foundation of all great contracts,"* declares the Architect. *"Learn to manage multi-user state, emit events, and delegate authority."*
+
+## The Fourth Trial
+
+Build data-driven contracts to unlock **Chapter 5: Advanced Protocols**.
+
+**0/3 missions** • **Level 7 required**`,
+      },
+      es: {
+        title: 'Capítulo 4: Fortaleza de Datos',
+        description: 'Domina la gestión de estado compleja con Map, eventos y aprobaciones delegadas.',
+        lore: `# 🏦 Capítulo 4: Fortaleza de Datos
+
+Más allá del Salón de los Pactos, descubres la **Fortaleza de Datos** — un vasto repositorio donde se construye el estado sofisticado.
+
+*"Los datos son los cimientos de todos los grandes contratos,"* declara el Arquitecto. *"Aprende a gestionar estado multiusuario, emitir eventos y delegar autoridad."*
+
+## La Cuarta Prueba
+
+Construye contratos basados en datos para desbloquear el **Capítulo 5: Protocolos Avanzados**.
+
+**0/3 misiones** • **Nivel 7 requerido**`,
+      },
+    },
+    heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
+    chapterNumber: 4,
+    missionIds: ['vault-manager', 'event-emitter', 'approval-manager'],
+    requiredLevel: 7,
+    color: 'teal'
+  },
+  {
+    id: 'chapter-5-protocols',
+    i18n: {
+      en: {
+        title: 'Chapter 5: Advanced Protocols',
+        description: 'Build real-world DeFi protocols — crowdfunding, escrow, and subscriptions.',
+        lore: `# 🔄 Chapter 5: Advanced Protocols
+
+The **Crowdforge Arena** buzzes with energy. You enter the realm of real-world DeFi protocols.
+
+*"These are the contracts that power the new economy,"* says the Protocol Pioneer. *"Crowdfunding, escrow, subscriptions — build them all."*
+
+## The Fifth Trial
+
+Master advanced protocol patterns to reach **Chapter 6: Production Systems**.
+
+**0/3 missions** • **Level 9 required**`,
+      },
+      es: {
+        title: 'Capítulo 5: Protocolos Avanzados',
+        description: 'Construye protocolos DeFi del mundo real — crowdfunding, escrow y suscripciones.',
+        lore: `# 🔄 Capítulo 5: Protocolos Avanzados
+
+La **Arena del Crowdforge** vibra con energía. Entras en el reino de los protocolos DeFi del mundo real.
+
+*"Estos son los contratos que impulsan la nueva economía,"* dice el Pionero de Protocolos. *"Crowdfunding, escrow, suscripciones — constrúyelos todos."*
+
+## La Quinta Prueba
+
+Domina los patrones de protocolos avanzados para llegar al **Capítulo 6: Sistemas de Producción**.
+
+**0/3 misiones** • **Nivel 9 requerido**`,
+      },
+    },
+    heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
+    chapterNumber: 5,
+    missionIds: ['crowdfund', 'escrow-agent', 'subscription'],
+    requiredLevel: 9,
+    color: 'red'
+  },
+  {
+    id: 'chapter-6-production',
+    i18n: {
+      en: {
+        title: 'Chapter 6: Production Systems',
+        description: 'Deploy production-grade contracts — flash loans, RBAC, oracles, and governance.',
+        lore: `# ⚡ Chapter 6: Production Systems
+
+The **Lightning Vault** crackles with power. You have reached the pinnacle of Soroban development.
+
+*"You stand among the finest contract engineers in the Stellar ecosystem,"* proclaims the Grand Elder. *"Flash loans, role-based security, price oracles, on-chain governance — master the systems that define DeFi."*
+
+## Final Gauntlet
+
+Complete all Production Systems to earn the title of **Stellar Architect**.
+
+**0/4 missions** • **Level 12 required**`,
+      },
+      es: {
+        title: 'Capítulo 6: Sistemas de Producción',
+        description: 'Despliega contratos de nivel de producción — flash loans, RBAC, oráculos y gobernanza.',
+        lore: `# ⚡ Capítulo 6: Sistemas de Producción
+
+La **Bóveda del Relámpago** chisporrotea con poder. Has alcanzado la cima del desarrollo en Soroban.
+
+*"Te encuentras entre los mejores ingenieros de contratos del ecosistema Stellar,"* proclama el Gran Anciano. *"Préstamos flash, seguridad basada en roles, oráculos de precios, gobernanza on-chain — domina los sistemas que definen DeFi."*
+
+## Desafío Final
+
+Completa todos los Sistemas de Producción para ganar el título de **Arquitecto Estelar**.
+
+**0/4 misiones** • **Nivel 12 requerido**`,
+      },
+    },
+    heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
+    chapterNumber: 6,
+    missionIds: ['flash-loan', 'permissions-rbac', 'oracle-feed', 'governor-simple'],
+    requiredLevel: 12,
+    color: 'blue'
+  },
+  {
+    id: 'chapter-7-security',
+    i18n: {
+      en: {
+        title: 'Chapter 7: Security & CTF',
+        description: 'Hunt vulnerabilities and fix security flaws in compromised contracts.',
+        lore: `# 🛡️ Chapter 7: Security & CTF
+
+The **Vulnerability Forge** lies deep beneath the Citadel. Here, broken contracts are made whole.
+
+*"A guardian must know the flaws before the enemy exploits them,"* warns the Security Sage. *"Reentrancy, access control, overflow — confront them all."*
+
+## The Security Gauntlet
+
+Fix security vulnerabilities to complete the Security & CTF gauntlet.
+
+**0/2 missions** • **Level 14 required**`,
+      },
+      es: {
+        title: 'Capítulo 7: Seguridad y CTF',
+        description: 'Caza vulnerabilidades y arregla fallos de seguridad en contratos comprometidos.',
+        lore: `# 🛡️ Capítulo 7: Seguridad y CTF
+
+La **Forja de Vulnerabilidades** yace en las profundidades de la Ciudadela. Aquí, los contratos rotos se restauran.
+
+*"Un guardián debe conocer las fallas antes de que el enemigo las explote,"* advierte el Sabio de Seguridad. *"Reentrancia, control de acceso, desbordamiento — enfréntalos a todos."*
+
+## El Desafío de Seguridad
+
+Arregla vulnerabilidades de seguridad para completar el desafío de Seguridad y CTF.
+
+**0/2 misiones** • **Nivel 14 requerido**`,
+      },
+    },
+    heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',
+    chapterNumber: 7,
+    missionIds: ['reentrancy-guard', 'access-control-fix'],
+    requiredLevel: 14,
+    color: 'red'
   }
 ];
 

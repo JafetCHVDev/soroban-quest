@@ -326,8 +326,6 @@ export function resetProfile() {
 export async function exportProgress() {
   const state = loadProgress();
   const profile = loadProfile();
-  const profiles = loadProfiles();
-  const activeProfileId = getActiveProfileId();
 
   const compressedBlob = await compressData({ state, profile });
 

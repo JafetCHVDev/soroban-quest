@@ -12,6 +12,7 @@ import { useOkashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
+import Confetti from "../components/Confetti";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
@@ -726,6 +727,7 @@ export default function MissionDetail() {
       {/* Victory Modal */}
       {showVictory && victoryData && (
         <div className="modal-overlay" onClick={() => setShowVictory(false)}>
+          <Confetti />
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -739,7 +741,14 @@ export default function MissionDetail() {
             <p className="modal-message">
               {t("missionDetail.victory.youCompleted")} <strong>{mission.title}</strong>
             </p>
-            <div className="modal-xp">{t("missionDetail.victory.xpGained", { xp: victoryData.xp })}</div>
+            <div className="modal-xp" style={{ display: "flex", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
+              <span style={{ color: "var(--cyan)", fontSize: "1.5rem", fontWeight: 700, textShadow: "0 0 20px rgba(6, 214, 160, 0.5)" }}>
+                +{victoryData.xp} XP
+              </span>
+              <span style={{ color: "var(--gold)", fontSize: "1.5rem", fontWeight: 700, textShadow: "0 0 20px rgba(245, 158, 11, 0.5)" }}>
+                +{Math.floor(victoryData.xp * 0.5)} Gold
+              </span>
+            </div>
 
             {victoryData.leveledUp && (
               <p style={{ color: "var(--purple)", fontFamily: "var(--font-display)", marginBottom: "1rem" }}>

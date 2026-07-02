@@ -87,6 +87,18 @@
         "title": "Camino progresivo",
         "body": "Desde \"Hello World\" hasta contratos multi-firma. Cada misión se apoya en la anterior, creando una ruta estructurada hacia el dominio de Soroban."
       }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} Misiones",
+      "xpEarned": "{{xp}} XP Ganados",
+      "goldEarned": "{{gold}} Oro",
+      "badgesUnlocked": "{{count}} Insignias",
+      "currentLevel": "Nivel {{level}} — {{rank}}",
+      "nextMission": "Siguiente Misión",
+      "continueFrom": "Continuar desde {{title}}",
+      "recentActivity": "Actividad Reciente",
+      "viewAll": "Ver Todo",
+      "quickStats": "Estadísticas Rápidas"
     }
   },
   "footer": {
@@ -478,6 +490,34 @@
     "speed_demon": {
       "name": "Demonio Veloz",
       "description": "Completa una misión en el primer intento"
+    },
+    "chapter_1": {
+      "name": "Despertar",
+      "description": "Completa todas las misiones del Capítulo 1"
+    },
+    "chapter_2": {
+      "name": "Guardián de la Memoria",
+      "description": "Completa todas las misiones del Capítulo 2"
+    },
+    "chapter_3": {
+      "name": "Maestro Forjador",
+      "description": "Completa todas las misiones del Capítulo 3"
+    },
+    "chapter_4": {
+      "name": "Arquitecto de Datos",
+      "description": "Completa todas las misiones del Capítulo 4"
+    },
+    "chapter_5": {
+      "name": "Pionero de Protocolos",
+      "description": "Completa todas las misiones del Capítulo 5"
+    },
+    "chapter_6": {
+      "name": "Maestro de Producción",
+      "description": "Completa todas las misiones del Capítulo 6"
+    },
+    "chapter_7": {
+      "name": "Centinela de Seguridad",
+      "description": "Completa todas las misiones del Capítulo 7"
     }
   },
   "shop": {
@@ -507,10 +547,36 @@
     "buy": "Comprar",
     "purchased": "Comprado",
     "alreadyPurchased": "Ya posees este artículo",
-    "insufficientFunds": "XP insuficiente para comprar este artículo",
+    "insufficientFunds": "No tienes suficiente Oro para comprar este artículo",
     "purchaseSuccess": "¡{{item}} comprado exitosamente!",
     "empty": "No hay artículos en esta categoría",
-    "ariaPurchase": "Comprar {{item}} por {{price}} XP",
+    "ariaPurchase": "Comprar {{item}} por {{price}} Oro",
     "ariaPurchased": "{{item}} - Ya comprado"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "¡Bienvenido a Soroban Quest!",
+      "body": "Embárcate en un viaje gamificado para dominar el desarrollo de contratos inteligentes Soroban. Completa misiones, gana XP y Oro, y desbloquea logros."
+    },
+    "step2": {
+      "title": "Tu Centro de Progreso",
+      "body": "La barra de navegación muestra tu nivel, XP, saldo de Oro y perfil. Úsala para navegar entre Misiones, Campañas, Perfil, Diario y más."
+    },
+    "step3": {
+      "title": "Mapa de Misiones y Búsquedas",
+      "body": "El Mapa de Misiones muestra todas las búsquedas organizadas por capítulo. Cada misión presenta un desafío de codificación Soroban con historia, pistas y validación automatizada."
+    },
+    "step4": {
+      "title": "Editor de Código y Validación",
+      "body": "Escribe código Rust Soroban en el editor Monaco integrado. Ejecuta pruebas para verificar tu solución. ¡No necesitas servidor de compilación!"
+    },
+    "step5": {
+      "title": "Progresión RPG",
+      "body": "Gana XP y Oro por cada misión completada. Sube de nivel para desbloquear nuevos rangos, capítulos e insignias. Gasta Oro en la Tienda para artículos cosméticos y mejoras."
+    },
+    "dismiss": "¡Entendido!",
+    "next": "Siguiente",
+    "prev": "Atrás",
+    "skip": "Saltar tutorial"
   }
 }

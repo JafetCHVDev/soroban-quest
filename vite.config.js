@@ -38,6 +38,30 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react-markdown') ||
+              id.includes('node_modules/remark-') ||
+              id.includes('node_modules/rehype-') ||
+              id.includes('node_modules/unified') ||
+              id.includes('node_modules/mdast') ||
+              id.includes('node_modules/hast') ||
+              id.includes('node_modules/unist-') ||
+              id.includes('node_modules/property-information') ||
+              id.includes('node_modules/space-separated-tokens') ||
+              id.includes('node_modules/comma-separated-tokens') ||
+              id.includes('node_modules/trim-lines') ||
+              id.includes('node_modules/lowlight') ||
+              id.includes('node_modules/html-url-attributes') ||
+              id.includes('node_modules/html-void-elements') ||
+              id.includes('node_modules/decode-named-character-reference') ||
+              id.includes('node_modules/character-entities')) {
+            return 'vendor-markdown';
+          }
+        },
+      },
+    },
   },
   test: {
     exclude: ['e2e/**', 'node_modules/**'],

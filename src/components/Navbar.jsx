@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
-  const { profile } = useGameState();
+  const { profile, progress } = useGameState();
   const langRef = useRef(null);
 
   const { t, language, setLanguage, languages } = useTranslation();
@@ -142,6 +142,9 @@ return (
           <span className="text-sm font-semibold">
             <span className="sr-only">{t("navbar.userProfile")} </span>
             {profile.name}
+          </span>
+          <span className="navbar-gold" title={`${progress.gold || 0} gold`}>
+            🪙 {progress.gold || 0}
           </span>
         </div>
 

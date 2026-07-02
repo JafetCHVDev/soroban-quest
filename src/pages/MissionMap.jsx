@@ -41,6 +41,10 @@ export default function MissionMap() {
     const [selectedDifficulty, setSelectedDifficulty] = useState('all');
     const [selectedChapter, setSelectedChapter] = useState('all');
 
+    const chapters = useMemo(() => {
+        return [...new Set(missions.map((m) => m.chapter))].sort((a, b) => a - b);
+    }, [missions]);
+
     const missionStates = useMemo(() => {
         return missions.map((m) => ({
             ...m,
@@ -413,7 +417,7 @@ export default function MissionMap() {
                         >
                             {t('missionMap.chapters.all')}
                         </button>
-                        {[1, 2, 3].map((n) => (
+                        {chapters.map((n) => (
                             <button
                                 key={n}
                                 className={`filter-chip ${selectedChapter === n ? 'active' : ''}`}

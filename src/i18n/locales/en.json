@@ -87,6 +87,18 @@
         "title": "Progressive Path",
         "body": "From \"Hello World\" to multi-signature contracts. Each mission builds on the last, creating a structured path to Soroban mastery."
       }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} Missions",
+      "xpEarned": "{{xp}} XP Earned",
+      "goldEarned": "{{gold}} Gold",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Level {{level}} — {{rank}}",
+      "nextMission": "Next Mission",
+      "continueFrom": "Continue from {{title}}",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickStats": "Quick Stats"
     }
   },
   "footer": {
@@ -478,11 +490,39 @@
     "speed_demon": {
       "name": "Speed Demon",
       "description": "Complete a mission on first try"
+    },
+    "chapter_1": {
+      "name": "Awakening",
+      "description": "Complete all Chapter 1 missions"
+    },
+    "chapter_2": {
+      "name": "Memory Keeper",
+      "description": "Complete all Chapter 2 missions"
+    },
+    "chapter_3": {
+      "name": "Forgemaster",
+      "description": "Complete all Chapter 3 missions"
+    },
+    "chapter_4": {
+      "name": "Data Architect",
+      "description": "Complete all Chapter 4 missions"
+    },
+    "chapter_5": {
+      "name": "Protocol Pioneer",
+      "description": "Complete all Chapter 5 missions"
+    },
+    "chapter_6": {
+      "name": "Production Master",
+      "description": "Complete all Chapter 6 missions"
+    },
+    "chapter_7": {
+      "name": "Security Sentinel",
+      "description": "Complete all Chapter 7 missions"
     }
   },
   "shop": {
     "title": "Shop",
-    "subtitle": "Spend your XP on avatars, boosts, and badges",
+    "subtitle": "Spend your Gold on avatars, boosts, and badges",
     "ariaCategories": "Shop category filters",
     "categories": {
       "all": "All",
@@ -507,10 +547,36 @@
     "buy": "Buy",
     "purchased": "Purchased",
     "alreadyPurchased": "You already own this item",
-    "insufficientFunds": "Not enough XP to purchase this item",
+    "insufficientFunds": "Not enough Gold to purchase this item",
     "purchaseSuccess": "Successfully purchased {{item}}!",
     "empty": "No items found in this category",
-    "ariaPurchase": "Purchase {{item}} for {{price}} XP",
+    "ariaPurchase": "Purchase {{item}} for {{price}} Gold",
     "ariaPurchased": "{{item}} - Already purchased"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Welcome to Soroban Quest!",
+      "body": "Embark on a gamified journey to master Soroban smart contract development. Complete missions, earn XP and Gold, and unlock achievements."
+    },
+    "step2": {
+      "title": "Your Progress Hub",
+      "body": "The navbar shows your level, XP, gold balance, and profile. Use it to navigate between Missions, Campaigns, Profile, Journal, and more."
+    },
+    "step3": {
+      "title": "Mission Map & Quests",
+      "body": "The Mission Map shows all quests organized by chapter. Each mission presents a Soroban coding challenge with a story, hints, and automated validation."
+    },
+    "step4": {
+      "title": "Code Editor & Validation",
+      "body": "Write Rust Soroban code in the embedded Monaco editor. Run tests to check your solution against validation patterns. No compilation server needed!"
+    },
+    "step5": {
+      "title": "RPG Progression",
+      "body": "Earn XP and Gold for each completed mission. Level up to unlock new ranks, chapters, and badges. Spend Gold in the Shop for cosmetic items and boosts."
+    },
+    "dismiss": "Got it!",
+    "next": "Next",
+    "prev": "Back",
+    "skip": "Skip tutorial"
   }
 }

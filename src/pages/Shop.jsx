@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from '../i18n/useTranslation';
 import { useGameState } from '../systems/GameStateContext';
 import { useToast } from '../systems/ToastContext';
+import { spendGold } from '../systems/gameEngine';
+import { logActivity, ACTIVITY_TYPES } from '../systems/activityLogger';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './Shop.css';
 
@@ -81,13 +83,15 @@ export default function Shop() {
       return;
     }
 
-    if (progress.xp < item.price) {
+    const currentGold = progress.gold || 0;
+    if (currentGold < item.price) {
       showToast(t('shop.insufficientFunds'), 'error');
       return;
     }
 
-    const newXP = progress.xp - item.price;
-    updateProgress({ ...progress, xp: newXP });
+    const newProgress = spendGold(progress, item.price);
+    logActivity(ACTIVITY_TYPES.SHOP_PURCHASE, { itemId: item.id, price: item.price }, `Purchased ${item.name} for ${item.price} gold`);
+    updateProgress(newProgress);
     setPurchasedItems([...purchasedItems, item.id]);
     showToast(t('shop.purchaseSuccess', { item: t(`shop.items.${item.name}`) }), 'success');
   };
@@ -101,7 +105,7 @@ export default function Shop() {
         </div>
         <div className="shop-balance">
           <div className="balance-icon">💰</div>
-          <div className="balance-amount">{progress.xp} XP</div>
+          <div className="balance-amount">{progress.gold || 0}</div>
         </div>
       </section>
 
@@ -122,7 +126,7 @@ export default function Shop() {
       <div className="shop-grid">
         {filteredItems.map((item) => {
           const isPurchased = purchasedItems.includes(item.id);
-          const canAfford = progress.xp >= item.price;
+          const canAfford = (progress.gold || 0) >= item.price;
 
           return (
             <article
@@ -134,7 +138,7 @@ export default function Shop() {
                 <h3 className="shop-item-name">{t(`shop.items.${item.name}`)}</h3>
                 <p className="shop-item-description">{t(`shop.items.${item.description}`)}</p>
                 <div className="shop-item-price">
-                  {item.price} XP
+                  {item.price} 🪙
                 </div>
               </div>
               <button
