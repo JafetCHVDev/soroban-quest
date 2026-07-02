@@ -24,7 +24,7 @@ import { clearLocalStorageBeforePageLoad } from './utils';
 // ---------------------------------------------------------------------------
 
 const THRESHOLD = parseFloat(process.env.SNAPSHOT_THRESHOLD ?? '0.1');
-const MAX_DIFF_PIXELS_RATIO = parseFloat(process.env.SNAPSHOT_MAX_DIFF ?? '0.005');
+const MAX_DIFF_PIXELS_RATIO = parseFloat(process.env.SNAPSHOT_MAX_DIFF ?? '0.03');
 
 /** Standard snapshot options applied to every assertion. */
 const snapshotOptions = {

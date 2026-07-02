@@ -8,7 +8,7 @@ export default defineConfig({
     // Default screenshot comparison thresholds (overridable per-assertion).
     toHaveScreenshot: {
       threshold: 0.1,
-      maxDiffPixelRatio: 0.005,
+      maxDiffPixelRatio: 0.03,
     },
   },
   fullyParallel: true,

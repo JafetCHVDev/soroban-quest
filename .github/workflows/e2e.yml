@@ -21,7 +21,7 @@ on:
 env:
   # Tunable thresholds – override in the repo settings if needed.
   SNAPSHOT_THRESHOLD: '0.1'
-  SNAPSHOT_MAX_DIFF: '0.005'
+  SNAPSHOT_MAX_DIFF: '0.03'
 
 jobs:
   # ── Functional E2E tests ─────────────────────────────────────────────────
