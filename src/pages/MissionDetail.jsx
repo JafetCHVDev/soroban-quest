@@ -480,7 +480,6 @@ export default function MissionDetail() {
           className="mission-story" 
           role="region" 
           aria-label="Mission briefing and story description"
-          style={{ display: activeTab === "story" ? "block" : "none" }}
         >
           <div style={{ marginBottom: "var(--space-md)" }}>
             <span className={`badge badge-${mission.difficulty}`}>
@@ -519,7 +518,6 @@ export default function MissionDetail() {
           className="mission-editor-panel" 
           role="region" 
           aria-label="Code submission workspace"
-          style={{ display: activeTab === "editor" ? "flex" : "none" }}
         >
           <div className="mission-editor-toolbar">
             <div className="mission-editor-toolbar-left">
@@ -662,7 +660,6 @@ export default function MissionDetail() {
           className="mission-terminal-panel" 
           role="region" 
           aria-label="Validation execution test terminal log terminal"
-          style={{ display: activeTab === "tests" ? "block" : "none" }}
         >
           <div className="terminal" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <div className="terminal-header">
@@ -697,7 +694,6 @@ export default function MissionDetail() {
           <div 
             className="mission-replay-panel" 
             style={{
-              display: activeTab === "replay" ? "block" : "none",
               padding: '2rem',
               textAlign: 'center',
               background: 'var(--bg-secondary)',
