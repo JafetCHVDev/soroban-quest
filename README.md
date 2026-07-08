@@ -31,15 +31,19 @@ Inspired by [Node Guardians](https://nodeguardians.io/), the platform provides:
 - 🎮 **RPG quest narrative** — immersive story-driven missions in English & Spanish
 - ⌨️ **In-browser code editor** — Monaco Editor with Rust syntax highlighting & 5 themes
 - 🧪 **Instant validation** — AST-based pattern matching + live Monaco markers
-- 🏆 **XP, levels & badges** — full progression system with 11 ranks
-- 🗺️ **Visual learning path** — SVG mission map with search/filter & campaigns
+- 🏆 **XP, levels & badges** — full progression system with 14 badges, 11 ranks & 13 achievements
+- 🗺️ **Visual learning path** — SVG mission map with 19 missions across 7 campaigns
+- 🏪 **Gold Economy & Shop** — earn gold, buy avatar packs, XP boosts, streak freezes & cosmetics
 - 🌓 **Dark/Light mode** — system-aware theme with manual toggle
 - 📱 **PWA** — installable, works offline, periodic updates
 - 🤝 **Collaboration** — real-time Yjs + y-webrtc rooms
 - 📹 **Code Replay** — record and replay your coding sessions
-- 🧠 **Skill Tree** — 31 concepts across 5 categories with progress tracking
+- 🧠 **Skill Tree** — 58 concepts across 7 categories with progress tracking
 - 📖 **Adventure Journal** — virtualized activity log with filters & search
+- 🏆 **Leaderboard** — global player rankings sorted by XP
+- 💎 **Achievements** — 13 milestone-based achievements with progress tracking
 - 🚀 **Okashi Bridge** — one-click compile & deploy to Soroban Testnet
+- 🗺️ **Onboarding** — guided tour for new players
 - 💾 **Offline-first** — all progress saved in `localStorage`
 
 > **Zero backend. Zero cost. Open → Code → Learn → Win.**
@@ -52,11 +56,12 @@ Inspired by [Node Guardians](https://nodeguardians.io/), the platform provides:
 
 | Feature | Description |
 | ------- | ----------- |
-| **7 Progressive Missions** | From "Hello Soroban" to multi-signature contracts |
-| **3 Story Campaigns** | Narrative-driven chapters with lore, gated by level |
+| **19 Progressive Missions** | From "Hello Soroban" to security audits, across 7 chapters |
+| **7 Story Campaigns** | Narrative-driven chapters with lore, gated by level |
 | **XP System** | Earn 100–400 XP per mission with exponential leveling |
 | **11 Rank Titles** | Progress from _Initiate_ to _Stellar Sovereign_ |
-| **8 Achievement Badges** | Unlock milestones like _First Contract_ and _Completionist_ |
+| **14 Badges + 13 Achievements** | Unlock milestones like _First Contract_ and _Completionist_ |
+| **Gold Economy** | Earn gold per mission, spend in the Shop on boosts & cosmetics |
 | **Daily Streaks** | Consecutive login tracking |
 | **Hint System** | Progressive hints when you're stuck |
 
@@ -109,40 +114,90 @@ Since compiling Rust in the browser is not feasible without a backend, Soroban Q
 - Copies your code to clipboard and opens okashi.dev
 - No account or setup required
 
+### 🏪 Shop & Gold Economy
+
+- **Gold** earned per mission completion scales with difficulty (50–200 gold)
+- **6 purchasable items**: Avatar Packs, XP Boost, Streak Freeze, Hint Tokens, Premium Badge
+- Category filters (Avatars / Boosts / Badges)
+- One-time purchases tracked per profile
+- Toast notifications for purchases, insufficient funds, and already-owned items
+
+### 🏆 Leaderboard
+
+- Global player rankings sorted by XP (descending)
+- Champion card for #1 ranked player
+- Sortable table with columns: rank, avatar, name, XP, level, missions completed, badges, status
+- Current profile highlighted with switch-to button
+
+### 💎 Achievements & Badges
+
+- **14 badges** from game progression (First Contract, Completionist, chapter badges, etc.)
+- **13 achievements** from milestone conditions (XP thresholds, streaks, first-try missions)
+- Dedicated Achievements page with progress bar and grid display
+- Unlocked badges show their icon; locked ones show a "?"
+
+### 🗺️ Onboarding
+
+- Guided tour for new players on first visit
+- Step-by-step walkthrough of key UI areas
+- Dismissible overlay with skip option
+
 ---
 
 ## 🗺️ Mission Roadmap
 
 ```
 Campaign 1: The Awakening (Level 1+)
-  ├── 🟢 Mission 1 — The First Contract      (100 XP)
-  └── 🟢 Mission 2 — Greetings Protocol      (150 XP)
+  ├── 🟢 Mission 1  — The First Contract      (100 XP)
+  └── 🟢 Mission 2  — Greetings Protocol      (150 XP)
 
 Campaign 2: Vault of Memory (Level 3+)
-  ├── 🟡 Mission 3 — The Counter Vault       (200 XP)
-  └── 🟡 Mission 4 — Guardian Ledger         (250 XP)
+  ├── 🟡 Mission 3  — The Counter Vault       (200 XP)
+  └── 🟡 Mission 4  — Guardian Ledger         (250 XP)
 
 Campaign 3: Token Forge (Level 5+)
-  ├── 🔴 Mission 5 — Token Forge             (300 XP)
-  ├── 🔴 Mission 6 — The Time Lock           (350 XP)
-  └── 🔴 Mission 7 — Multi-Party Pact        (400 XP)
+  ├── 🔴 Mission 5  — Token Forge             (300 XP)
+  ├── 🔴 Mission 6  — The Time Lock           (350 XP)
+  └── 🔴 Mission 7  — Multi-Party Pact        (400 XP)
+
+Campaign 4: Data Realm (Level 7+)
+  ├── 🔵 Mission 8  — Vault Manager           (400 XP)
+  ├── 🔵 Mission 9  — Event Emitter           (450 XP)
+  └── 🔵 Mission 10 — Approval Manager        (450 XP)
+
+Campaign 5: Protocols (Level 9+)
+  ├── 🟠 Mission 11 — Crowdfund               (500 XP)
+  ├── 🟠 Mission 12 — Escrow Agent            (500 XP)
+  └── 🟠 Mission 13 — Subscription            (550 XP)
+
+Campaign 6: Production (Level 12+)
+  ├── 💜 Mission 14 — Flash Loan              (600 XP)
+  ├── 💜 Mission 15 — Permissions RBAC        (600 XP)
+  ├── 💜 Mission 16 — Oracle Feed             (650 XP)
+  └── 💜 Mission 17 — Governor (Simple)       (650 XP)
+
+Campaign 7: Security (Level 14+)
+  ├── ⚫ Mission 18 — Reentrancy Guard        (700 XP)
+  └── ⚫ Mission 19 — Access Control Fix      (750 XP)
 ```
 
-**Total: 1,750 XP available** · Campaigns unlock at level thresholds
+**Total: 8,550 XP available** · Campaigns unlock at level thresholds
 
 ---
 
 ## 🧠 Skill Tree
 
-31 concepts across 5 categories track what you've learned:
+58 concepts across 7 categories track what you've learned:
 
 | Category | Concepts |
 | -------- | -------- |
-| **Core Concepts** | contract, contractimpl, Env, Vec, Map, multiple functions |
-| **Storage & State** | storage, instance, set, get, unwrap_or, remove, persistent storage |
-| **Data Types** | Symbol, String, Address, u32, i128, bool |
-| **Authorization** | require_auth, init pattern |
-| **Advanced Patterns** | token, mint, transfer, ledger sequence, time-lock, conditional panic, multi-sig, governance pattern |
+| **Core** | contract, contractimpl, Env, Symbol |
+| **Storage** | storage, instance, persistent storage, Map\<Address, i128\>, set, get, remove, unwrap_or, compound storage keys, pool management |
+| **Types** | Address, Vec, Map, String, i128, u32, bool, allowance pattern |
+| **Auth** | require_auth, init pattern, admin pattern, multi-party init, RBAC, role membership |
+| **Events** | events, publish, event-driven design, Vec tracking |
+| **Protocols** | token, mint, transfer, ledger sequence, time-lock, multi-sig, crowdfunding, deadline pattern, goal tracking, escrow pattern, dispute resolution, state machine, recurring billing, subscription state, cancel pattern |
+| **DeFi** | flash loan, loan lifecycle, fee mechanism, oracle pattern, price feed, asset tracking, off-chain bridge, governance, proposal lifecycle, vote tallying, quorum logic |
 
 ---
 
@@ -218,43 +273,70 @@ soroban-quest/
 │   ├── index.css                   # Design system (~1100 lines)
 │   ├── pages/
 │   │   ├── Home.jsx                # Landing page with starfield animation
-│   │   ├── Campaigns.jsx            # Campaign cards with lore modals
+│   │   ├── Home.css                # Home page styles
+│   │   ├── Campaigns.jsx           # Campaign cards with lore modals
+│   │   ├── Campaigns.css           # Campaign page styles
 │   │   ├── MissionMap.jsx          # SVG learning path + search/filter
+│   │   ├── MissionMap.css          # Mission map styles
 │   │   ├── MissionDetail.jsx       # Editor + story + tests + replay
+│   │   ├── MissionDetail.css       # Mission detail styles (desktop grid + mobile tabs)
 │   │   ├── Profile.jsx             # Stats, badges, avatar, import/export
+│   │   ├── Profile.css             # Profile page styles
 │   │   ├── Journal.jsx             # Virtualized activity log
+│   │   ├── Journal.css             # Journal page styles
 │   │   ├── SkillTree.jsx           # Concept-skill visualization
+│   │   ├── SkillTree.css           # Skill tree styles
+│   │   ├── Leaderboard.jsx         # Global player rankings by XP
+│   │   ├── Leaderboard.css         # Leaderboard styles
+│   │   ├── Achievements.jsx        # Badge/achievement showcase
+│   │   ├── Achievements.css        # Achievements page styles
+│   │   ├── Shop.jsx                # Gold-based item shop
+│   │   ├── Shop.css                # Shop page styles
 │   │   └── NotFound.jsx            # 404 page
 │   ├── components/
 │   │   ├── Navbar.jsx              # Navigation + theme/language toggles
 │   │   ├── Footer.jsx              # Footer with links
 │   │   ├── ScrollToTop.jsx         # Smooth scroll on route change
 │   │   ├── LoadingScreen.jsx       # Quest-themed loading overlay
-│   │   ├── MissionDetailSkeleton.jsx  # Skeleton loader
+│   │   ├── HomeSkeleton.jsx        # Skeleton loader for home page
+│   │   ├── MissionDetailSkeleton.jsx  # Skeleton loader for missions
 │   │   ├── ErrorBoundary.jsx       # React error boundary
+│   │   ├── ErrorBoundary.css       # Error boundary styles
 │   │   ├── ErrorFallback.jsx       # Error fallback UI
 │   │   ├── ConfirmationDialog.jsx  # Modal confirmation dialog
+│   │   ├── ConfirmationDialog.css  # Dialog styles
 │   │   ├── CollaborationBar.jsx    # Yjs room UI
 │   │   ├── CollaborationAvatar.jsx # Peer avatars
-│   │   └── CodeReplayPlayer.jsx    # Recorded session playback
+│   │   ├── CodeReplayPlayer.jsx    # Recorded session playback
+│   │   ├── Confetti.jsx            # Confetti animation effect
+│   │   ├── Confetti.css            # Confetti animation styles
+│   │   ├── Onboarding.jsx          # Guided tour for new players
+│   │   ├── Onboarding.css          # Onboarding overlay styles
+│   │   └── LanguageSelector.jsx    # Dropdown language switcher
 │   ├── systems/
-│   │   ├── gameEngine.js           # XP, levels, ranks, badges, streaks
+│   │   ├── gameEngine.js           # XP, levels, ranks, badges, streaks, gold
 │   │   ├── storage.js              # localStorage CRUD + export/import
 │   │   ├── codeValidator.js        # Pattern-matching engine (10 check types)
 │   │   ├── liveValidator.js        # Debounced Monaco marker setter
 │   │   ├── testRunner.js           # 3-phase async test orchestrator
 │   │   ├── missionLoader.js        # Mission queries, unlock logic, i18n
+│   │   ├── missionParser.js        # Markdown mission parser
 │   │   ├── activityLogger.js       # 200-entry ring-buffer activity log
 │   │   ├── codeRecorder.js         # Session recording/playback
 │   │   ├── collaboration.js        # Yjs + y-webrtc integration
 │   │   ├── editorThemes.js         # 5 editor theme definitions
+│   │   ├── achievementEngine.js    # Achievement condition evaluation
 │   │   ├── GameStateContext.jsx    # React context (progress + profile)
 │   │   ├── ToastContext.jsx        # Toast notification system
+│   │   ├── Toast.css               # Toast notification styles
 │   │   ├── useokashi.js            # Okashi.dev bridge hook
 │   │   └── useDocumentTitle.js     # Dynamic document title hook
 │   ├── data/
-│   │   ├── missions.js             # 7 mission definitions (i18n)
-│   │   ├── campaigns.js            # 3 campaign definitions
+│   │   ├── missions.js             # 19 mission definitions (i18n)
+│   │   ├── missions/               # Per-mission markdown assets
+│   │   │   └── hello-soroban.md
+│   │   ├── campaigns.js            # 7 campaign definitions
+│   │   ├── achievements.js         # 13 achievement definitions
 │   │   └── avatars.js              # 12 emoji avatars
 │   └── i18n/
 │       ├── index.jsx               # Language context provider
@@ -269,7 +351,9 @@ soroban-quest/
 │   ├── profile.spec.ts             # Profile editing
 │   ├── campaigns.spec.ts           # Campaign cards + lore modals
 │   ├── skilltree.spec.ts           # Concept nodes + categories
-│   └── streak.spec.ts              # Streak display
+│   ├── streak.spec.ts              # Streak display
+│   ├── visual-regression.spec.ts   # Visual snapshot tests
+│   └── utils.ts                    # E2E test utilities
 ├── docs/
 │   ├── logo.svg                    # Project logo
 │   └── mejoras-sugeridas.md        # Improvement suggestions
