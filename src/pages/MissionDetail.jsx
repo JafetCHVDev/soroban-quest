@@ -56,6 +56,9 @@ export default function MissionDetail() {
   const [liveTotalCount, setLiveTotalCount] = useState(0);
   const [activeTab, setActiveTab] = useState("story");
   const [editorTheme, setEditorTheme] = useState(() => loadEditorTheme());
+  const [editorFontSize, setEditorFontSize] = useState(() => {
+    return parseInt(localStorage.getItem('soroban_quest_editor_font_size') || '14', 10);
+  });
 
   const terminalBodyRef = useRef(null);
   const editorRef = useRef(null);      
@@ -191,6 +194,13 @@ export default function MissionDetail() {
   // --------------------------- Keyboard Shortcuts Hook ---------------------------
   useEffect(() => {
     const handleGlobalShortcuts = (e) => {
+      // Ctrl+Enter / Cmd+Enter always runs tests (even from Monaco)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleRunTests();
+        return;
+      }
+
       // Prevent running if user is typing inside code fields or inputs
       const targetTag = document.activeElement?.tagName.toLowerCase();
       const isMonacoFocused = document.activeElement?.closest('.monaco-editor');
@@ -427,7 +437,7 @@ export default function MissionDetail() {
     <MissionErrorBoundary>
       {/* Shortcut Indicator Legend Bar */}
       <div className="shortcut-legend-bar" style={{ display: 'flex', gap: '1rem', padding: '0.5rem 1rem', background: 'var(--bg-tertiary)', fontSize: '0.75rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>R</kbd> Run Tests</span>
+        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>Ctrl+Enter</kbd> Run Tests</span>
         {previousMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>P</kbd> Prev Mission</span>}
         {nextMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>N</kbd> Next Mission</span>}
       </div>
@@ -540,6 +550,24 @@ export default function MissionDetail() {
                   ))}
                 </select>
               </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                A
+                <input
+                  type="range"
+                  min="10"
+                  max="24"
+                  step="1"
+                  value={editorFontSize}
+                  onChange={(e) => {
+                    const size = parseInt(e.target.value, 10);
+                    setEditorFontSize(size);
+                    localStorage.setItem('soroban_quest_editor_font_size', String(size));
+                  }}
+                  style={{ width: '56px', accentColor: 'var(--cyan)' }}
+                  aria-label="Editor font size"
+                />
+                A
+              </label>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
@@ -586,7 +614,7 @@ export default function MissionDetail() {
               theme={editorTheme}
               onMount={handleEditorMount}
               options={{
-                fontSize: 14,
+                fontSize: editorFontSize,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,

@@ -12,6 +12,10 @@ export function markOnboardingDone() {
   localStorage.setItem("sorobanQuest_onboarding_done", "1");
 }
 
+export function resetOnboarding() {
+  localStorage.removeItem("sorobanQuest_onboarding_done");
+}
+
 export default function Onboarding() {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);

@@ -115,6 +115,8 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
     };
   }, [isPlaying, currentEventIndex, currentTime, playbackSpeed, recording, stepNext]);
 
+  const isAtEnd = currentEventIndex >= recording.events.length - 1;
+
   // Format time display
   const formatTime = (ms) => {
     const seconds = Math.floor(ms / 1000);
@@ -178,13 +180,27 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
           gap: '1rem',
           marginBottom: '1rem'
         }}>
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={togglePlayPause}
-            disabled={currentEventIndex >= recording.events.length - 1}
-          >
-            {isPlaying ? '⏸ Pause' : '▶ Play'}
-          </button>
+          {isAtEnd && !isPlaying ? (
+            <span style={{
+              color: '#34d399',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              padding: '0.25rem 0.75rem',
+              background: 'rgba(52,211,153,0.1)',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid rgba(52,211,153,0.3)'
+            }}>
+              ✓ Replay Complete
+            </span>
+          ) : (
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={togglePlayPause}
+              disabled={currentEventIndex >= recording.events.length - 1}
+            >
+              {isPlaying ? '⏸ Pause' : '▶ Play'}
+            </button>
+          )}
           
           <button
             className="btn btn-ghost btn-sm"

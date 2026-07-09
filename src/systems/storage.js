@@ -271,7 +271,7 @@ export function saveProgress(state) {
     );
     saveProfiles(updated);
   } catch (e) {
-    console.error(e);
+    console.error('Failed to save progress:', e);
   }
 }
 

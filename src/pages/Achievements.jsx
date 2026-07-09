@@ -45,28 +45,37 @@ export default function Achievements() {
       </section>
 
       <section className="achievements-grid" aria-label={t("achievements.gridAria")}>
-        {BADGES.map((badge) => {
-          const isUnlocked = progress.badges.includes(badge.id);
-          return (
-            <article
-              key={badge.id}
-              className={`achievement-card ${isUnlocked ? "unlocked" : "locked"}`}
-            >
-              <div className="achievement-icon" aria-hidden="true">
-                {isUnlocked ? badge.icon : "?"}
-              </div>
-              <div className="achievement-content">
-                <div className="achievement-title-row">
-                  <h2>{t(`badges.${badge.id}.name`)}</h2>
-                  <span className={`achievement-status ${isUnlocked ? "unlocked" : "locked"}`}>
-                    {isUnlocked ? t("common.unlocked") : t("common.locked")}
-                  </span>
+        {BADGES.length === 0 ? (
+          <div className="card text-center p-12">
+            <div style={{ fontSize: "3rem", marginBottom: "1rem", opacity: 0.3 }}>
+              🏅
+            </div>
+            <p className="text-secondary">{t("achievements.empty")}</p>
+          </div>
+        ) : (
+          BADGES.map((badge) => {
+            const isUnlocked = progress.badges.includes(badge.id);
+            return (
+              <article
+                key={badge.id}
+                className={`achievement-card ${isUnlocked ? "unlocked" : "locked"}`}
+              >
+                <div className="achievement-icon" aria-hidden="true">
+                  {isUnlocked ? badge.icon : "?"}
                 </div>
-                <p>{t(`badges.${badge.id}.description`)}</p>
-              </div>
-            </article>
-          );
-        })}
+                <div className="achievement-content">
+                  <div className="achievement-title-row">
+                    <h2>{t(`badges.${badge.id}.name`)}</h2>
+                    <span className={`achievement-status ${isUnlocked ? "unlocked" : "locked"}`}>
+                      {isUnlocked ? t("common.unlocked") : t("common.locked")}
+                    </span>
+                  </div>
+                  <p>{t(`badges.${badge.id}.description`)}</p>
+                </div>
+              </article>
+            );
+          })
+        )}
       </section>
     </div>
   );

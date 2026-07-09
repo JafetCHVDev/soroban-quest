@@ -23,9 +23,10 @@ export default function Home() {
 
     // Loading effect
     useEffect(() => {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             setLoading(false);
-        }, 1500);
+        }, 300);
+        return () => clearTimeout(timer);
     }, []);
 
     // Particle starfield effect
@@ -146,6 +147,10 @@ export default function Home() {
                     <div className="hero-stat">
                         <div className="hero-stat-value">{badgesCount}</div>
                         <div className="hero-stat-label">{t('home.stats.badgesUnlocked', { count: badgesCount })}</div>
+                    </div>
+                    <div className="hero-stat">
+                        <div className="hero-stat-value">{state.streak || 0}🔥</div>
+                        <div className="hero-stat-label">{t('home.stats.streak')}</div>
                     </div>
                 </div>
             </section>

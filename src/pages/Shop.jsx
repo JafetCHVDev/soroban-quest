@@ -64,7 +64,7 @@ export default function Shop() {
   const { progress, updateProgress } = useGameState();
   const { showToast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [purchasedItems, setPurchasedItems] = useState([]);
+  const purchasedItems = progress.purchasedItems || [];
 
   const categories = [
     { id: 'all', name: 'shop.categories.all' },
@@ -90,9 +90,9 @@ export default function Shop() {
     }
 
     const newProgress = spendGold(progress, item.price);
+    newProgress.purchasedItems = [...(progress.purchasedItems || []), item.id];
     logActivity(ACTIVITY_TYPES.SHOP_PURCHASE, { itemId: item.id, price: item.price }, `Purchased ${item.name} for ${item.price} gold`);
     updateProgress(newProgress);
-    setPurchasedItems([...purchasedItems, item.id]);
     showToast(t('shop.purchaseSuccess', { item: t(`shop.items.${item.name}`) }), 'success');
   };
 

@@ -37,7 +37,8 @@
     "ariaMobile": "Mobile navigation menu",
     "userProfile": "User profile:",
     "openMenu": "Open navigation menu",
-    "closeMenu": "Close navigation menu"
+    "closeMenu": "Close navigation menu",
+    "replayTutorial": "Replay Tutorial"
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -98,7 +99,8 @@
       "continueFrom": "Continue from {{title}}",
       "recentActivity": "Recent Activity",
       "viewAll": "View All",
-      "quickStats": "Quick Stats"
+      "quickStats": "Quick Stats",
+      "streak": "Day Streak"
     }
   },
   "footer": {
@@ -113,12 +115,16 @@
       "heading": "Resources",
       "docs": "Soroban Docs",
       "sdk": "Stellar SDK",
-      "github": "GitHub"
+      "github": "GitHub",
+      "glossary": "Glossary",
+      "faq": "FAQ"
     },
     "community": {
       "heading": "Community",
       "discord": "Discord",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "forum": "Stellar Forum",
+      "blog": "Stellar Blog"
     },
     "credits": {
       "tagline": "Built for the Stellar ecosystem",
@@ -135,6 +141,7 @@
       "title": "Something went wrong",
       "body": "The quest encountered a runtime error. Check the console for details.",
       "reload": "Reload",
+      "goHome": "Go Home",
       "report": "Report Issue"
     },
     "editor": {
@@ -229,7 +236,8 @@
     "unlocked": "Unlocked",
     "progressAria": "Achievement completion progress",
     "progress": "Completion",
-    "gridAria": "Achievement badge collection"
+    "gridAria": "Achievement badge collection",
+    "empty": "Complete missions to earn achievements and badges!"
   },
   "journal": {
     "title": "Adventure Journal",
@@ -326,6 +334,10 @@
       "completed": "✓ Completed",
       "locked": "🔒 Locked"
     },
+    "allCompleted": {
+      "title": "All Missions Complete!",
+      "body": "Congratulations, {{rank}}! You mastered all {{xp}} XP worth of Soroban challenges."
+    },
     "noResults": "No missions found matching your filters.",
     "aria": {
       "missionPath": "Mission path graph",
@@ -420,9 +432,17 @@
         "title": "Authorization",
         "description": "Access control and security"
       },
-      "Advanced": {
-        "title": "Advanced Patterns",
-        "description": "Complex contract patterns"
+      "Events": {
+        "title": "Events",
+        "description": "Emitting and handling contract events"
+      },
+      "Protocols": {
+        "title": "Protocols",
+        "description": "Real-world DeFi protocol patterns"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "Decentralized finance primitives"
       }
     },
     "tooltip": {

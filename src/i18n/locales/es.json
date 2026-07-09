@@ -37,7 +37,8 @@
     "ariaMobile": "Menú de navegación móvil",
     "userProfile": "Perfil de usuario:",
     "openMenu": "Abrir menú de navegación",
-    "closeMenu": "Cerrar menú de navegación"
+    "closeMenu": "Cerrar menú de navegación",
+    "replayTutorial": "Repetir tutorial"
   },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
@@ -98,7 +99,8 @@
       "continueFrom": "Continuar desde {{title}}",
       "recentActivity": "Actividad Reciente",
       "viewAll": "Ver Todo",
-      "quickStats": "Estadísticas Rápidas"
+      "quickStats": "Estadísticas Rápidas",
+      "streak": "Racha diaria"
     }
   },
   "footer": {
@@ -113,12 +115,16 @@
       "heading": "Recursos",
       "docs": "Documentación de Soroban",
       "sdk": "SDK de Stellar",
-      "github": "GitHub"
+      "github": "GitHub",
+      "glossary": "Glosario",
+      "faq": "FAQ"
     },
     "community": {
       "heading": "Comunidad",
       "discord": "Discord",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "forum": "Foro de Stellar",
+      "blog": "Blog de Stellar"
     },
     "credits": {
       "tagline": "Construido para el ecosistema Stellar",
@@ -135,6 +141,7 @@
       "title": "Algo salió mal",
       "body": "La misión encontró un error en tiempo de ejecución. Revisa la consola para más detalles.",
       "reload": "Recargar",
+      "goHome": "Ir al inicio",
       "report": "Reportar problema"
     },
     "editor": {
@@ -229,7 +236,8 @@
     "unlocked": "Desbloqueados",
     "progressAria": "Progreso de logros completados",
     "progress": "Progreso",
-    "gridAria": "Colección de insignias de logros"
+    "gridAria": "Colección de insignias de logros",
+    "empty": "¡Completa misiones para ganar logros e insignias!"
   },
   "journal": {
     "title": "Diario de aventura",
@@ -326,6 +334,10 @@
       "completed": "✓ Completada",
       "locked": "🔒 Bloqueada"
     },
+    "allCompleted": {
+      "title": "¡Todas las misiones completadas!",
+      "body": "¡Felicitaciones, {{rank}}! Dominaste todos los {{xp}} XP de desafíos de Soroban."
+    },
     "noResults": "No hay misiones que coincidan con tus filtros.",
     "aria": {
       "missionPath": "Gráfico del camino de misiones",
@@ -420,9 +432,17 @@
         "title": "Autorización",
         "description": "Control de acceso y seguridad"
       },
-      "Advanced": {
-        "title": "Patrones avanzados",
-        "description": "Patrones de contratos complejos"
+      "Events": {
+        "title": "Eventos",
+        "description": "Emisión y manejo de eventos de contratos"
+      },
+      "Protocols": {
+        "title": "Protocolos",
+        "description": "Patrones de protocolos DeFi del mundo real"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "Primitivas de finanzas descentralizadas"
       }
     },
     "tooltip": {

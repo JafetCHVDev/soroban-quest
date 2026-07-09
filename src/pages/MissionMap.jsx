@@ -5,7 +5,7 @@ import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
 import { useTranslation } from '../i18n/useTranslation';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import "./MissionMap.css";
-import { getXPProgress, getLevelFromXP, xpForLevel } from "../systems/gameEngine";
+import { getXPProgress, getLevelFromXP, xpForLevel, getRankTitle } from "../systems/gameEngine";
 
 function getMissionCompletionRatio(completed, total) {
     if (!total) return 0;
@@ -227,6 +227,26 @@ export default function MissionMap() {
                     })}
                 </p>
             </div>
+
+            {/* All Completed Celebration */}
+            {state.completedMissions.length === missions.length && missions.length > 0 && (
+              <div className="card" style={{
+                textAlign: 'center',
+                padding: '2rem',
+                marginBottom: '2rem',
+                background: 'linear-gradient(135deg, rgba(6,214,160,0.1), rgba(139,92,246,0.1))',
+                border: '2px solid rgba(6,214,160,0.3)',
+                borderRadius: 'var(--radius-lg)',
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏆</div>
+                <h2 style={{ color: 'var(--cyan)', fontFamily: 'var(--font-display)', margin: '0 0 0.5rem' }}>
+                  {t('missionMap.allCompleted.title')}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
+                  {t('missionMap.allCompleted.body', { rank: getRankTitle(state.level), xp: state.xp })}
+                </p>
+              </div>
+            )}
 
             {/* SVG Learning Path */}
             <div className="learning-path learning-path-desktop" ref={learningPathRef}>

@@ -20,6 +20,13 @@ function GenericErrorFallback() {
         >
           {t("errorBoundary.generic.reload")}
         </button>
+        <button
+          className="btn-reload"
+          onClick={() => window.location.href = '/'}
+          style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+        >
+          {t("errorBoundary.generic.goHome")}
+        </button>
         <a
           className="btn-report"
           href="https://github.com/JafetCHVDev/soroban-quest/issues"

@@ -4,6 +4,7 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTranslation } from "../i18n/useTranslation";
 import { useGameState } from "../systems/GameStateContext";
 import LanguageSelector from "./LanguageSelector";
+import { resetOnboarding } from "./Onboarding";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,6 +147,15 @@ return (
           <span className="navbar-gold" title={`${progress.gold || 0} gold`}>
             🪙 {progress.gold || 0}
           </span>
+          <button
+            onClick={resetOnboarding}
+            className="btn-ghost"
+            style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}
+            title={t("navbar.replayTutorial")}
+            aria-label={t("navbar.replayTutorial")}
+          >
+            🎓
+          </button>
         </div>
 
         {/* HAMBURGER */}

@@ -156,6 +156,9 @@ function getDefaultState() {
     missionAttempts: {},
     streak: 0,
     lastLogin: null,
+    purchasedItems: [],
+    xpBoostActive: false,
+    streakFreezeUsed: false,
   };
 }
 
@@ -194,7 +197,9 @@ export function getXPProgress(state) {
 }
 
 export function awardXP(state, amount) {
-  const newXP = state.xp + amount;
+  const hasBoost = state.purchasedItems?.includes('xp-boost');
+  const multiplied = hasBoost ? amount * 2 : amount;
+  const newXP = state.xp + multiplied;
   const newLevel = getLevelFromXP(newXP);
   const leveledUp = newLevel > state.level;
 
@@ -202,12 +207,18 @@ export function awardXP(state, amount) {
     logActivity(ACTIVITY_TYPES.LEVEL_UP, { level: newLevel }, `Reached Level ${newLevel}!`);
   }
 
-  return {
+  const nextState = {
     ...state,
     xp: newXP,
     level: newLevel,
     leveledUp,
   };
+
+  if (hasBoost) {
+    nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'xp-boost');
+  }
+
+  return nextState;
 }
 
 export const GOLD_PER_MISSION_RATIO = 0.5;
@@ -288,6 +299,7 @@ export function updateStreak(state) {
   if (lastLogin === today) return state;
 
   let newStreak = 1;
+  let consumedFreeze = false;
   if (lastLogin) {
     const last = new Date(lastLogin);
     const now = new Date(today);
@@ -296,16 +308,25 @@ export function updateStreak(state) {
 
     if (diffDays === 1) {
       newStreak = (state.streak || 0) + 1;
+    } else if (diffDays > 1 && (state.purchasedItems || []).includes('streak-freeze')) {
+      newStreak = state.streak || 0;
+      consumedFreeze = true;
     }
   }
 
   logActivity(ACTIVITY_TYPES.STREAK, { streak: newStreak }, `Daily streak: ${newStreak} day${newStreak > 1 ? 's' : ''}!`);
 
-  return {
+  const nextState = {
     ...state,
     streak: newStreak,
     lastLogin: today,
   };
+
+  if (consumedFreeze) {
+    nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'streak-freeze');
+  }
+
+  return nextState;
 }
 
 export { getDefaultState };
