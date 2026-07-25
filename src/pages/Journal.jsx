@@ -367,12 +367,11 @@ function formatDateHeader(date, t, language) {
   if (isSameDay(date, yesterday)) return t("journal.dates.yesterday");
 
   const locale = language === "es" ? "es" : "en-US";
-  return date.toLocaleDateString(locale, {
-    month: "long",
-    day: "numeric",
-    year:
-      date.getFullYear() !== today.getFullYear() ? "numeric" : undefined,
-  });
+  const options = { month: "long", day: "numeric" };
+  if (date.getFullYear() !== today.getFullYear()) {
+    options.year = "numeric";
+  }
+  return date.toLocaleDateString(locale, options);
 }
 
 function isSameDay(d1, d2) {
