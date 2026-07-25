@@ -5,12 +5,9 @@ node_modules/
 dist/
 
 # Environment variables
-.env
-.env.local
 .env.*.local
 
 # Editor / IDE
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -40,3 +37,4 @@ playwright-report/
 # NOTE: e2e/snapshots/ is intentionally NOT ignored – baseline PNGs are committed.
 # Temporary diff images generated during a failed run are stored in test-results/
 # which is already excluded above.
+config.bat
