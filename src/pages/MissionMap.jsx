@@ -395,7 +395,11 @@ export default function MissionMap() {
             {/* Mission Cards Grid */}
             <div className="mission-map-filters">
                 <div className="search-bar">
+                    <label htmlFor="mission-search" className="sr-only">
+                        {t('missionMap.searchPlaceholder')}
+                    </label>
                     <input
+                        id="mission-search"
                         type="text"
                         placeholder={t('missionMap.searchPlaceholder')}
                         value={searchTerm}
@@ -404,36 +408,41 @@ export default function MissionMap() {
                     />
                 </div>
                 <div className="filter-chips">
-                    <div className="difficulty-filters">
+                    <div className="difficulty-filters" role="group" aria-label={t('missionMap.difficulty.all')}>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'all' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('all')}
+                            aria-pressed={selectedDifficulty === 'all'}
                         >
                             {t('missionMap.difficulty.all')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'beginner' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('beginner')}
+                            aria-pressed={selectedDifficulty === 'beginner'}
                         >
                             {t('missionMap.difficulty.beginner')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'intermediate' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('intermediate')}
+                            aria-pressed={selectedDifficulty === 'intermediate'}
                         >
                             {t('missionMap.difficulty.intermediate')}
                         </button>
                         <button
                             className={`filter-chip ${selectedDifficulty === 'advanced' ? 'active' : ''}`}
                             onClick={() => setSelectedDifficulty('advanced')}
+                            aria-pressed={selectedDifficulty === 'advanced'}
                         >
                             {t('missionMap.difficulty.advanced')}
                         </button>
                     </div>
-                    <div className="chapter-filters">
+                    <div className="chapter-filters" role="group" aria-label={t('missionMap.chapters.all')}>
                         <button
                             className={`filter-chip ${selectedChapter === 'all' ? 'active' : ''}`}
                             onClick={() => setSelectedChapter('all')}
+                            aria-pressed={selectedChapter === 'all'}
                         >
                             {t('missionMap.chapters.all')}
                         </button>
@@ -442,6 +451,7 @@ export default function MissionMap() {
                                 key={n}
                                 className={`filter-chip ${selectedChapter === n ? 'active' : ''}`}
                                 onClick={() => setSelectedChapter(n)}
+                                aria-pressed={selectedChapter === n}
                             >
                                 {t('missionMap.chapters.n', { number: n })}
                             </button>

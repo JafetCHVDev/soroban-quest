@@ -247,6 +247,11 @@ export default function MissionDetail() {
     firstElement.focus();
 
     const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setShowVictory(false);
+        return;
+      }
       if (e.key !== "Tab") return;
 
       if (e.shiftKey) {

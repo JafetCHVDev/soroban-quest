@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { missions, localizeMissions } from '../data/missions';
 import { loadProgress } from '../systems/storage';
 import { useTranslation } from '../i18n/useTranslation';
@@ -38,6 +38,7 @@ export default function SkillTree() {
   const [completedMissions, setCompletedMissions] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
+  const modalRef = useRef(null);
 
   const localizedMissions = useMemo(
     () => localizeMissions(missions, language),
@@ -48,6 +49,37 @@ export default function SkillTree() {
     const progress = loadProgress();
     setCompletedMissions(progress.completedMissions || []);
   }, []);
+
+  // Focus trap + Escape for the concept detail modal
+  useEffect(() => {
+    if (!selectedConcept || !modalRef.current) return;
+    const modal = modalRef.current;
+    const focusableSelectors =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () => Array.from(modal.querySelectorAll(focusableSelectors));
+
+    const focusable = getFocusable();
+    if (focusable.length) focusable[0].focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setSelectedConcept(null);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const els = getFocusable();
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    modal.addEventListener('keydown', handleKeyDown);
+    return () => modal.removeEventListener('keydown', handleKeyDown);
+  }, [selectedConcept]);
 
   const getConceptStatus = (concept) => {
     const teachingMission = localizedMissions.find(mission =>
@@ -79,16 +111,28 @@ export default function SkillTree() {
       <div
         key={concept}
         className={nodeClass}
+        role="button"
+        tabIndex={0}
+        aria-pressed={isSelected}
+        aria-label={`${concept} — ${status === 'unlocked' ? t('common.unlocked') : t('common.locked')}`}
         onClick={() => handleConceptClick(concept)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleConceptClick(concept);
+          }
+        }}
         onMouseEnter={() => setHoveredConcept(concept)}
         onMouseLeave={() => setHoveredConcept(null)}
+        onFocus={() => setHoveredConcept(concept)}
+        onBlur={() => setHoveredConcept(null)}
       >
-        <div className="concept-icon">
+        <div className="concept-icon" aria-hidden="true">
           {status === 'locked' ? '🔒' : '✨'}
         </div>
         <div className="concept-name">{concept}</div>
         {isHovered && mission && (
-          <div className="concept-tooltip">
+          <div className="concept-tooltip" role="tooltip">
             <div className="tooltip-mission">{mission.title}</div>
             <div className="tooltip-chapter">
               {t('skillTree.tooltip.chapter', { chapter: mission.chapter })}
@@ -144,7 +188,7 @@ export default function SkillTree() {
   const overallProgress = (totalUnlocked / totalConcepts) * 100;
 
   return (
-    <div className="skill-tree">
+    <div id="main-content" className="skill-tree">
       <div className="skill-tree-header">
         <h1 className="skill-tree-title">{t('skillTree.title')}</h1>
         <p className="skill-tree-subtitle">{t('skillTree.subtitle')}</p>
@@ -168,15 +212,23 @@ export default function SkillTree() {
       </div>
 
       {selectedConcept && (
-        <div className="concept-detail-modal" onClick={() => setSelectedConcept(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="concept-detail-modal" onClick={() => setSelectedConcept(null)} role="presentation">
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="skill-modal-title"
+          >
             <button
               className="modal-close"
               onClick={() => setSelectedConcept(null)}
+              aria-label={t('common.close')}
             >
               ×
             </button>
-            <h3 className="modal-title">{selectedConcept.concept}</h3>
+            <h3 id="skill-modal-title" className="modal-title">{selectedConcept.concept}</h3>
             {selectedConcept.mission ? (
               <div className="mission-info">
                 <h4>{t('skillTree.modal.taughtIn', { title: selectedConcept.mission.title })}</h4>

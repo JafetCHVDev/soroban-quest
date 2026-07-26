@@ -156,6 +156,11 @@
   "profile": {
     "edit": "✏️ Editar perfil",
     "viewJournal": "📖 Ver diario",
+    "aria": {
+      "selectAvatar": "Seleccionar avatar {{avatar}}",
+      "completedListing": "Lista de misiones completadas",
+      "completedEntry": "{{title}}, ganaste {{xp}} XP"
+    },
     "editPanel": {
       "title": "Editar perfil",
       "nameLabel": "Nombre del aventurero",
@@ -308,6 +313,7 @@
     "chapterComplete": "✓ ¡Capítulo completado!",
     "back": "← Volver a campañas",
     "completeOf": "{{completed}}/{{total}} completadas",
+    "statusLabel": "Estado:",
     "lore": {
       "iconLabel": "Pergamino de historia del capítulo",
       "modalTitle": "Introducción del capítulo",
@@ -332,7 +338,9 @@
       "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completada",
-      "locked": "🔒 Bloqueada"
+      "locked": "🔒 Bloqueada",
+      "difficultyLabel": "Dificultad:",
+      "stateLabel": "Estado:"
     },
     "allCompleted": {
       "title": "¡Todas las misiones completadas!",
@@ -353,8 +361,10 @@
       "story": "Historia",
       "editor": "Editor",
       "tests": "Pruebas",
-      "replay": "📹 Repetición"
+      "replay": "📹 Repetición",
+      "ariaLabel": "Pestañas de sección de misión"
     },
+    "difficultyLabel": "Dificultad:",
     "notFound": {
       "title": "Misión no encontrada",
       "body": "La misión \"{{id}}\" no existe.",
@@ -398,7 +408,8 @@
       "badgeEarnedOne": "🏅 ¡Nueva insignia obtenida!",
       "badgeEarnedMany": "🏅 ¡Nuevas insignias obtenidas!",
       "next": "Siguiente misión →",
-      "map": "Mapa de misiones"
+      "map": "Mapa de misiones",
+      "iconLabel": "Icono de trofeo — misión completada"
     },
     "replay": {
       "header": "📹 Mira tu solución",

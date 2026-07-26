@@ -70,6 +70,11 @@ export default function Campaigns() {
     firstElement.focus();
 
     const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeModal();
+        return;
+      }
       if (e.key !== "Tab") return;
 
       if (e.shiftKey) {
