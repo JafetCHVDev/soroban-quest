@@ -7,7 +7,7 @@
    needing access to React context.
    ========================================== */
 
-export const SUPPORTED_LANGS = ['en', 'es'];
+export const SUPPORTED_LANGS = ['en', 'es', 'ja'];
 export const DEFAULT_LANG = 'en';
 
 let activeLanguage = DEFAULT_LANG;

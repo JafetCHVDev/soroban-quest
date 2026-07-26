@@ -47,6 +47,21 @@ Completa estos contratos fundamentales para desbloquear el **Capítulo 2: Bóved
 
 **0/2 misiones** • **Nivel 1 requerido**`,
       },
+      ja: {
+          title: '第1章：覚醒',
+          description: '最初のソロバンコントラクトを習得せよ。Stellar守護者としての道を切り揢け。',
+          lore: `# 🌌 第1章：覚醒
+
+あなたは**星の城塞**の門前に立っている。既知の空間の果てを周回している。古代の**ソロバンの守護者**たちがあなたの到着を感じ取っている。
+
+*"また新たな探求者か"* と古老の守護者はささやく。*"ブロックチェーンは、それに応えるコードを持つ者を呼び寄せる。"*
+
+## あなたの運命が待っている
+
+これらの基礎コントラクトを完了して**第2章：記憶の保管庫**を解放せよ。
+
+**0/2 ミッション** • **レベル1 必要**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #8b5cf6 50%, #f59e0b 100%)',
     chapterNumber: 1,
@@ -86,6 +101,21 @@ La **Torre de Señales** se desvanece tras de ti. Desciendes a la **Bóveda de l
 Domina la gestión de estado para acceder al **Capítulo 3: Forja de Tokens**.
 
 **0/2 misiones** • **Nivel 3 requerido**`,
+      },
+      ja: {
+          title: '第2章：記憶の保管庫',
+          description: '永続ストレージとアクセス制御を解放せよ。記憶が真の力を定義する。',
+          lore: `# 🔐 第2章：記憶の保管庫
+
+**信号塔**が背後に消える。あなたは**記憶の保管庫**へと降りていく。そこでは古代の知恵が何世紀にもわたって渡されている。
+
+*“記憶のないコントラクトは、つかの間の考えに過ぎない”*　と保管庫の守護者はささやく。*“永続するためには、保存し保護せねばならない。”*
+
+## 第二の試練
+
+状態管理を習得して**第3章：トークン鍛造所**へのアクセスを得よ。
+
+**0/2 ミッション** • **レベル3 必要**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #8b5cf6 0%, #f59e0b 50%, #ef4444 100%)',
@@ -127,6 +157,21 @@ Completa la Forja de Tokens para obtener el estatus de **Guardián Legendario**.
 
 **0/3 misiones** • **Nivel 5 requerido**`,
       },
+      ja: {
+          title: '第3章：トークン鍛造所',
+          description: 'トークンを鋰造し、タイムロックを習得し、マルチシグで統治せよ。マスター守護者となれ。',
+          lore: `# ⚒️ 第3章：トークン鍛造所
+
+**クロノゲート**が力で唇る。あなたは**トークン鍛造所** — Stellar経済の心臓部に入る。
+
+*“真の熟達は永続する価値を生み出す”*　と鍛処師長は宣言する。*“トークン、時間、信頼 — それらすべてを鍛え上げよ。”*
+
+## 最終挑戦
+
+トークン鍛造所を完了して**レジェンダリー守護者**の地位を獲得せよ。
+
+**0/3 ミッション** • **レベル5 必要**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #06d6a0 100%)',
     chapterNumber: 3,
@@ -166,6 +211,21 @@ Más allá del Salón de los Pactos, descubres la **Fortaleza de Datos** — un 
 Construye contratos basados en datos para desbloquear el **Capítulo 5: Protocolos Avanzados**.
 
 **0/3 misiones** • **Nivel 7 requerido**`,
+      },
+      ja: {
+          title: '第4章：データ要塞',
+          description: 'Map、イベント、委任承認を使って複雑な状態管理を習得せよ。',
+          lore: `# 🏦 第4章：データ要塞
+
+協定の間を越えて、あなたは**データ要塞**を発見する — 洗練された状態が構築される広大なリポジトリだ。
+
+*“データはすべての偉大なコントラクトの基盤である”*　と設計者は宣言する。*“マルチユーザー状態の管理、イベントの発行、権限の委任を学べ。”*
+
+## 第四の試練
+
+データ驅動型コントラクトを構築して**第5章：高度なプロトコル**を解放せよ。
+
+**0/3 ミッション** • **レベル7 必要**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
@@ -207,6 +267,21 @@ Domina los patrones de protocolos avanzados para llegar al **Capítulo 6: Sistem
 
 **0/3 misiones** • **Nivel 9 requerido**`,
       },
+      ja: {
+          title: '第5章：高度なプロトコル',
+          description: '実際のDeFiプロトコル — クラウドファンディング、エスクロー、サブスクリプションを構築せよ。',
+          lore: `# 🔄 第5章：高度なプロトコル
+
+**クラウドフォージアリーナ**がエネルギーで賑わっている。あなたは実際のDeFiプロトコルの領域に入る。
+
+*“これらが新しい経済を動かすコントラクトだ”*　とプロトコルの先驅者は言う。*“クラウドファンディング、エスクロー、サブスクリプション — それらすべてを構築せよ。”*
+
+## 第五の試練
+
+高度なプロトコルパターンを習得して**第6章：プロダクションシステム**に到達せよ。
+
+**0/3 ミッション** • **レベル9 必要**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
     chapterNumber: 5,
@@ -247,6 +322,21 @@ Completa todos los Sistemas de Producción para ganar el título de **Arquitecto
 
 **0/4 misiones** • **Nivel 12 requerido**`,
       },
+      ja: {
+          title: '第6章：プロダクションシステム',
+          description: 'プロダクショングレードのコントラクトを展開せよ。',
+          lore: `# ⚡ 第6章：プロダクションシステム
+
+**ライトニング保管庫**がパワーでバチバチと音を立てている。あなたはソロバン開発の頂点に達した。
+
+*“あなたはStellarエコシステムで最も優れたコントラクトエンジニアの仲間入りを果たした”*　と大長老は宣言する。*“フラッシュローン、ロールベースのセキュリティ、価格オラクル、オンチェーンガバナンス — DeFiを定義するシステムを習得せよ。”*
+
+## 最終関門
+
+すべてのプロダクションシステムを完了して**Stellarアーキテクト**の稱号を獲得せよ。
+
+**0/4 ミッション** • **レベル12 必要**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
     chapterNumber: 6,
@@ -286,6 +376,21 @@ La **Forja de Vulnerabilidades** yace en las profundidades de la Ciudadela. Aqu�
 Arregla vulnerabilidades de seguridad para completar el desafío de Seguridad y CTF.
 
 **0/2 misiones** • **Nivel 14 requerido**`,
+      },
+      ja: {
+          title: '第7章：セキュリティとCTF',
+          description: '脆弱性を探し出し、侵害されたコントラクトのセキュリティ欠陷を修正せよ。',
+          lore: `# 🛡️ 第7章：セキュリティとCTF
+
+**脆弱性鍛造所**は城塞の地下深くにある。ここでは壊れたコントラクトが完全なものにされる。
+
+*“守護者は敵が悪用する前に欠陷を知らねばならない”*　とセキュリティの賢者は警告する。*“リエントランシー、アクセス制御、オーバーフロー — それらすべてに立ち向かえ。”*
+
+## セキュリティ関門
+
+セキュリティ脆弱性を修正してセキュリティ＆CTF関門を完了せよ。
+
+**0/2 ミッション** • **レベル14 必要**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',

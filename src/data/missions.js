@@ -67,6 +67,42 @@ Completa la plantilla de código para pasar todas las verificaciones. ¡Los Guar
                     'La línea de retorno completa: `vec![&env, symbol_short!("Hello"), to]`',
                 ],
             },
+            ja: {
+                title: '初めてのコントラクト',
+                story: `# 🌌 覚醒
+
+あなたは**星の城塞**の門の前に立っている。それは、既知の宇宙の果てを周回する輝く要塞だ。Sorobanの守護者たちは、あなたの到着を感じ取っている。
+
+*「また一人の探求者か」*と古老の守護者はささやく。*「お前の価値を示すためには、最初のスマートコントラクトを鍛え上げねばならない。」*
+
+## ミッション
+
+あなたの最初のSorobanスマートコントラクトを作成せよ — 名前を受け取り挨拶を返す、シンプルな\`hello\`関数を持つコントラクトだ。
+
+## 学ぶこと
+
+- \`#[contract]\`属性と\`#[contractimpl]\`属性
+- \`Env\`型 — ブロックチェーンへの入り口
+- 文字列のような値のための\`Symbol\`型
+- \`Vec<Symbol>\`を返す方法
+
+## キーコンセプト
+
+\`\`\`rust
+#[contract]          // 構造体をコントラクトとしてマーク
+#[contractimpl]      // コントラクトのメソッドを含む
+Env                  // 実行環境
+Symbol               // 小型で効率的な文字列型
+\`\`\`
+
+コードテンプレートを完成させ、すべてのチェックを通過せよ。守護者たちはあなたの最初のコントラクトを待っている！ ⚔️`,
+                learningGoal: '初めてのSorobanスマートコントラクト（hello関数付き）を作成する',
+                hints: [
+                    '`pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>` から始めよう',
+                    '`vec![]`マクロの最初の引数として`&env`を使用する',
+                    '完全なreturn行: `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
@@ -181,6 +217,41 @@ u32                 // Entero sin signo de 32 bits
                     'La firma de la función greet: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
                     'Para count_chars: `pub fn count_chars(env: Env, text: String) -> u32`',
                     'Usa `text.len()` para obtener la longitud de la cadena',
+                ],
+            },
+            ja: {
+                title: '挨拶プロトコル',
+                story: `# 📡 信号塔
+
+最初の門が開かれた。あなたは**信号塔**へと進む。そこではメッセージがStellarネットワーク全体に波紋のように広がっている。
+
+*「コミュニケーションこそ力なり」*と塔の守護者は言う。*「あなたのコントラクトはデータを管理することを学ばねばならない — 入力を受け付け、構造化された応答を返すのだ。」*
+
+## ミッション
+
+複数の関数を持つコントラクトを構築せよ：
+- \`greet\` — 名前を受け取り、個人化された挨拶を返す
+- \`count_chars\` — 文字列を受け取り、その長さをu32で返す
+
+## 学ぶこと
+
+- 単一のコントラクト内での複数関数
+- Sorobanにおける\`String\`型の操作
+- 関数からの異なる型の返却
+- \`symbol_short!\`マクロ
+
+## キーコンセプト
+
+\`\`\`rust
+String              // Sorobanにおける完全な文字列型
+symbol_short!()     // 短いリテラルからSymbolを作成
+u32                 // 符号なし32ビット整数
+\`\`\``,
+                learningGoal: '異なる戻り値の型を持つマルチ関数コントラクトを構築する',
+                hints: [
+                    'greet関数のシグネチャ: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
+                    'count_charsの場合: `pub fn count_chars(env: Env, text: String) -> u32`',
+                    '文字列の長さを取得するには`text.len()`を使用する',
                 ],
             },
         },
@@ -305,6 +376,41 @@ env.storage().instance().get(&key)          // Leer (devuelve Option)
                     'Usa `env.storage().instance().get(&COUNTER)` para leer el conteo',
                     'Usa `.unwrap_or(0)` para devolver 0 por defecto cuando no existe un valor',
                     'Usa `env.storage().instance().set(&COUNTER, &new_count)` para guardar el nuevo conteo',
+                ],
+            },
+            ja: {
+                title: 'カウンター保管庫',
+                story: `# 🔐 記憶の保管庫
+
+あなたは**記憶の保管庫**へと降りていく。そこには古代の知恵が時を超えて保存されている。
+
+*「記憶のないコントラクトは、魂のない意識体のようなものだ」*と保管庫の守護者はささやく。*「保存と取得を学べ — つまり、記憶することを。」*
+
+## ミッション
+
+値を永続化するカウンターコントラクトを作成せよ：
+- \`increment\` — カウンターを1増やす
+- \`get_count\` — 現在のカウントを返す
+
+## 学ぶこと
+
+- \`env.storage().instance()\`による**永続ストレージ**
+- 状態の読み取りと書き込み
+- ストレージのための\`Symbol\`キーパターン
+- \`.unwrap_or()\`によるデフォルト値
+
+## キーコンセプト
+
+\`\`\`rust
+env.storage().instance().set(&key, &value)  // 書き込み
+env.storage().instance().get(&key)          // 読み取り（Optionを返す）
+.unwrap_or(default)                         // Noneの場合のデフォルト
+\`\`\``,
+                learningGoal: '永続ストレージを使用して状態を持つカウンターコントラクトを作成する',
+                hints: [
+                    'カウントを読み取るには`env.storage().instance().get(&COUNTER)`を使用',
+                    '値が存在しない場合のデフォルトに`.unwrap_or(0)`を使用',
+                    '新しいカウントを保存するには`env.storage().instance().set(&COUNTER, &new_count)`を使用',
                 ],
             },
         },
@@ -439,6 +545,42 @@ Map<Address, Symbol>        // Mapeo clave-valor
                     'La función init almacena el admin: `env.storage().instance().set(&ADMIN, &admin)`',
                     'En register, llama a `who.require_auth()` antes de almacenar',
                     'Almacena con: `env.storage().instance().set(&who, &name)`',
+                ],
+            },
+            ja: {
+                title: 'ガーディアン台帳',
+                story: `# 📋 ガーディアン台帳
+
+評議会の間は古の光に輝いている。あなたの前には**ガーディアン台帳**が置かれている — それは、自らを証明したすべての者の登録簿である。
+
+*「領域を守るためには、誰が行動できるかを制御しなければならない」*と評議会の長は宣言する。*「アクセス制御の技術を学べ。」*
+
+## ミッション
+
+アクセス制御付きの登録コントラクトを構築せよ：
+- \`register\` — 新しいガーディアンを登録する（名前を保存する）
+- \`get_guardian\` — アドレスからガーディアンの名前を取得する
+- 初期化時に設定される\`admin\`アドレス
+
+## 学ぶこと
+
+- ユーザーIDのための\`Address\`型
+- アクセス制御のための\`require_auth()\`
+- キーと値のペアのための\`Map\`型
+- コントラクト初期化パターン
+
+## キーコンセプト
+
+\`\`\`rust
+Address                     // アカウント/IDを表す
+address.require_auth()      // 呼び出し元が認証されていることを確認
+Map<Address, Symbol>        // キーと値のマッピング
+\`\`\``,
+                learningGoal: 'Addressとrequire_authでアクセス制御を実装する',
+                hints: [
+                    'init関数でadminを保存: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'registerでは、保存前に`who.require_auth()`を呼び出す',
+                    '保存方法: `env.storage().instance().set(&who, &name)`',
                 ],
             },
         },
@@ -584,6 +726,44 @@ let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
                     'Para mint: obtén el admin del almacenamiento, llama a admin.require_auth(), luego actualiza el saldo',
                     'Para balance: `env.storage().persistent().get(&account).unwrap_or(0)`',
                     'Para transfer: require_auth del remitente, lee ambos saldos, actualiza ambos',
+                ],
+            },
+            ja: {
+                title: 'トークン鋳造所',
+                story: `# ⚒️ トークン鋳造所
+
+城塞の奥深くには**トークン鋳造所**がある。そこでは、純粋なロジックからデジタル資産が鋳造される。
+
+*「通貨はあらゆる経済の血液だ」*と鍛冶師は言う。*「アカウント間で転送可能なトークンを作成するのだ。」*
+
+## ミッション
+
+シンプルなトークンコントラクトを作成せよ：
+- \`mint\` — アドレスにトークンを生成する（管理者のみ）
+- \`balance\` — アドレスの残高を返す
+- \`transfer\` — あるアドレスから別のアドレスへトークンを移動する
+
+## 学ぶこと
+
+- トークン残高管理
+- 認証付き転送ロジック
+- 管理者制限関数
+- 残高の整数演算
+
+## キーコンセプト
+
+\`\`\`rust
+// 管理者チェックパターン
+admin.require_auth();
+
+// 残高管理
+let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
+\`\`\``,
+                learningGoal: 'mint、balance、transfer関数を持つ基本的なトークンを構築する',
+                hints: [
+                    'mintの場合: ストレージからadminを取得し、admin.require_auth()を呼び出してから残高を更新',
+                    'balanceの場合: `env.storage().persistent().get(&account).unwrap_or(0)`',
+                    'transferの場合: 送信元からrequire_auth、両方の残高を読み取り、両方を更新',
                 ],
             },
         },
@@ -736,6 +916,41 @@ panic!("message")        // Abortar con un error
                     'Usa `env.ledger().sequence()` para obtener el número de ledger actual',
                     'Compara: `if current_seq < unlock_at { panic!("Still locked"); }`',
                     'Limpia el almacenamiento tras desbloquear: `env.storage().instance().remove(&key)`',
+                ],
+            },
+            ja: {
+                title: 'タイムロック',
+                story: `# ⏳ クロノゲート
+
+**クロノゲート**があなたの前にそびえ立つ。その機構は台帳のリズムに合わせて刻々と動いている。
+
+*「時間は武器だ」*と時の守護者は言う。*「ブロックの経過に基づいてロックとアンロックを行うことを学べ。」*
+
+## ミッション
+
+タイムロック付き保管庫を作成せよ：
+- \`lock\` — 指定された台帳シーケンス番号までトークンをロックする
+- \`unlock\` — ロック期間が経過した場合にトークンを解放する
+- \`get_lock_info\` — ロックの期限を返す
+
+## 学ぶこと
+
+- 時間ベースのロジックのための台帳シーケンス/タイムスタンプ
+- ブロックチェーン状態に基づく条件付き実行
+- 現在のブロックのための\`env.ledger().sequence()\`
+- エラーハンドリングのためのパニックパターン
+
+## キーコンセプト
+
+\`\`\`rust
+env.ledger().sequence()  // 現在の台帳シーケンス番号
+panic!("message")        // エラーで中断
+\`\`\``,
+                learningGoal: '台帳シーケンスを使用して時間ベースの条件付きロジックを実装する',
+                hints: [
+                    '現在の台帳番号を取得するには`env.ledger().sequence()`を使用',
+                    '比較: `if current_seq < unlock_at { panic!("Still locked"); }`',
+                    'アンロック後にストレージをクリア: `env.storage().instance().remove(&key)`',
                 ],
             },
         },
@@ -903,6 +1118,46 @@ env.storage().instance().set(&signer_key, &true);
                     'En create_pact: almacena la descripción, el número requerido y un conteo inicial de firmas de 0',
                     'En sign_pact: lee el conteo actual, increméntalo en 1, guárdalo de nuevo',
                     'En is_complete: compara signed >= required',
+                ],
+            },
+            ja: {
+                title: 'マルチパーティ協定',
+                story: `# 🤝 協定の間
+
+あなたは**協定の間**に到着した。守護者たちの仲間入りを果たす前の最後の試練である。
+
+*「スマートコントラクトの真の力は」*と大長老は宣言する。*「見知らぬ者同士の信頼を可能にすることにある。」*
+
+## ミッション
+
+マルチシグネチャ合意コントラクトを作成せよ：
+- \`create_pact\` — N個の署名を必要とする合意を作成する
+- \`sign_pact\` — 当事者が合意に署名することを可能にする
+- \`is_complete\` — 必要な署名がすべて集まったか確認する
+- \`get_signers\` — 誰が署名したかを返す
+
+## 学ぶこと
+
+- コントラクト内の複雑なデータ構造
+- マルチパーティ認証
+- ストレージによるカウントと追跡
+- 現実世界のガバナンスパターンの構築
+
+## キーコンセプト
+
+\`\`\`rust
+// 署名者数の追跡
+let count: u32 = env.storage().instance()
+    .get(&SIGNER_COUNT).unwrap_or(0);
+
+// 動的キーでの保存
+env.storage().instance().set(&signer_key, &true);
+\`\`\``,
+                learningGoal: '複雑な状態管理を持つマルチシグネチャ協定コントラクトを構築する',
+                hints: [
+                    'create_pact: 説明、必要数、初期署名数0を保存',
+                    'sign_pact: 現在のカウントを読み取り、1増やして保存',
+                    'is_complete: signed >= required を比較',
                 ],
             },
         },
@@ -1089,6 +1344,52 @@ env.storage().instance().set(&BALANCES, &balances);
                     'Para deposit: obtén el saldo actual, suma el monto, guarda de nuevo',
                 ],
             },
+            ja: {
+                title: 'ボールトマネージャー',
+                story: `# 🏦 データ要塞
+
+協定の間の先には**データ要塞**がある。そこでは無数のユーザー残高が保存され、保護されている。
+
+*「1つの残高は簡単だ」*と保管庫の設計者は言う。*「多数を管理する — それがストレージアーキテクチャの芸術だ。」*
+
+## ミッション
+
+複数のユーザー残高を管理する保管庫コントラクトを構築せよ：
+- \`deposit\` — ユーザーの残高に資金を追加する（ユーザー認証必須）
+- \`withdraw\` — ユーザーの残高から資金を減らす（ユーザー認証必須）
+- \`get_balance\` — ユーザーの現在の残高を返す
+
+## 学ぶこと
+
+- マルチユーザー状態のための\`Map<Address, i128>\`
+- ユーザーごとの認証のための\`Env::require_auth()\`
+- 複雑なキーを使用した永続ストレージ
+- 安全な算術パターン
+
+## キーコンセプト
+
+\`\`\`rust
+// 複数残高のためのMap
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// ユーザーごとの認証
+user.require_auth();
+
+// 更新と永続化
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Mapストレージパターンでマルチユーザー保管庫を構築する',
+                hints: [
+                    'ユーザー残高を保存するにはMap<Address, i128>を使用',
+                    'ユーザー残高を変更する前にuser.require_auth()を呼び出す',
+                    'ストレージからMapを読み取る: .unwrap_or(Map::new(&env))',
+                    'depositの場合: 現在の残高を取得し、金額を加算して保存',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
@@ -1265,6 +1566,50 @@ keys.push_back(key);
                     'Añade nuevas claves con keys.push_back(key)',
                 ],
             },
+            ja: {
+                title: 'イベントエミッター',
+                story: `# 📡 信号標識
+
+データ要塞の最上部には**信号標識**が立っている。Stellarネットワーク全体にイベントを放送している。
+
+*「語るコントラクトは、理解されるコントラクトだ」*と標識の守護者は言う。*「イベントは、何が起きたかを世界に知らせる。」*
+
+## ミッション
+
+キーと値のデータを保存し、すべての状態変更に対してイベントを発行するコントラクトを作成せよ：
+- \`set_value\` — 値を保存し、キーと値を持つイベントを発行する
+- \`get_value\` — キーから保存された値を取得する
+- \`get_all_keys\` — 保存されたすべてのキーを返す
+
+## 学ぶこと
+
+- イベント発行のための\`env.events().publish()\`
+- 動的なキー追跡のための\`Vec<Symbol>\`
+- イベント駆動型コントラクトアーキテクチャ
+- Stellar上のパブリッシュ-サブスクライブパターン
+
+## キーコンセプト
+
+\`\`\`rust
+// イベントを発行
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Vecでキーを追跡
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'キーと値のストアコントラクトでイベント発行を実装する',
+                hints: [
+                    'トピックSymbolとイベントデータでenv.events().publish()を使用',
+                    'すべての保存されたキーを追跡するにはVec<Symbol>を使用',
+                    '新しいキーはkeys.push_back(key)で追加',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
@@ -1425,6 +1770,46 @@ env.storage().instance().get(&(owner, spender))
                     'Usa una tupla (Address, Address) como clave de almacenamiento compuesta',
                     'En approve: almacena la autorización para el par (owner, spender)',
                     'En transfer_from: require_auth del spender, verifica autorización, decrementa, actualiza saldos',
+                ],
+            },
+            ja: {
+                title: '承認マネージャー',
+                story: `# ✋ 委任の間
+
+データ要塞の中には**委任の間**がある。そこでは、許可を通じて信頼が形式化される。
+
+*「常に自分で行動できるとは限らない」*と委任の達人は説明する。*「時には、他の人に代わりに行動する権限を与えなければならない。」*
+
+## ミッション
+
+ユーザーが他のユーザーを承認して自分の代わりに使用できるようにするコントラクトを構築せよ：
+- \`approve\` — 所有者が指定された金額について支出者を承認する
+- \`transfer_from\` — 支出者が所有者から受取人に転送する
+- \`allowance\` — 支出者が使用を許可されている金額を確認する
+
+## 学ぶこと
+
+- ネストされたキーと値のパターン（所有者 -> 支出者 -> 許可）
+- 委任された認可
+- 二重アドレスストレージキー
+- 許可減額パターン
+
+## キーコンセプト
+
+\`\`\`rust
+// 許可のための複合ストレージキー
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// ネストされた許可の読み取り
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: '許可と委任転送システムを実装する',
+                hints: [
+                    'タプル(Address, Address)を複合ストレージキーとして使用',
+                    'approve: (owner, spender)ペアの許可を保存',
+                    'transfer_from: spenderからrequire_auth、許可を確認、減額、残高を更新',
                 ],
             },
         },
@@ -1591,6 +1976,52 @@ if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
                     'En init: almacena el monto objetivo y la secuencia del ledger de la fecha límite',
                     'En contribute: verifica que la fecha límite no haya pasado, añade el monto al total',
                     'En check_goal: compara el total recaudado contra el objetivo',
+                ],
+            },
+            ja: {
+                title: 'クラウドファンドキャンペーン',
+                story: `# 🎯 クラウドフォージアリーナ
+
+あなたは**クラウドフォージアリーナ**に入る。そこでは、集合的な力がアイデアに命を吹き込む。
+
+*「一人でも強い」*と競売人は宣言する。*「しかし共にあれば、星をも動かせる。人々が資金を提供できるキャンペーンを構築せよ。」*
+
+## ミッション
+
+クラウドファンディングコントラクトを作成せよ：
+- \`init\` — 資金調達目標と期限（台帳シーケンス）を設定する
+- \`contribute\` — 貢献者から資金を追加する
+- \`check_goal\` — 総貢献額が目標以上の場合にtrueを返す
+- \`get_total_raised\` — 調達された総資金を返す
+
+## 学ぶこと
+
+- 時間ベースの期限のための台帳シーケンス
+- エスクロー的な資金蓄積
+- 条件付きチェックによる目標追跡
+- マルチコントリビューター状態管理
+
+## キーコンセプト
+
+\`\`\`rust
+// 調達総額の追跡
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// 期限の確認
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: '目標と期限の追跡を持つクラウドファンディングコントラクトを構築する',
+                hints: [
+                    'init: 目標金額と期限の台帳シーケンスを保存',
+                    'contribute: 期限が過ぎていないことを確認し、総額に金額を追加',
+                    'check_goal: 調達総額を目標と比較',
                 ],
             },
         },
@@ -1768,6 +2199,50 @@ arbiter.require_auth();
                     'En deposit: require_auth del comprador y almacena el monto',
                     'En release: require_auth del árbitro, transfiere al vendedor',
                     'En refund: require_auth del árbitro, devuelve al comprador',
+                ],
+            },
+            ja: {
+                title: 'エスクローエージェント',
+                story: `# 🤲 信頼取引所
+
+クラウドフォージアリーナの奥深くには**信頼取引所**がある。そこでは、見知らぬ者同士の取引が仲介される。
+
+*「信頼は最も貴重な通貨だ」*とエスクロー仲介人は言う。*「条件が満たされるまで価値を保持するシステムを構築せよ。」*
+
+## ミッション
+
+買い手、売り手、調停者によるエスクローコントラクトを作成せよ：
+- \`init\` — 買い手、売り手、調停者のアドレスでエスクローを設定する
+- \`deposit\` — 買い手がエスクローに資金を預ける
+- \`release\` — 調停者が売り手に資金を解放する
+- \`refund\` — 調停者が買い手に返金する
+
+## 学ぶこと
+
+- マルチパーティコントラクト初期化
+- 三者認証パターン
+- エスクローライフサイクルの状態機械
+- 紛争解決パターン
+
+## キーコンセプト
+
+\`\`\`rust
+// マルチパーティ初期化
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// 調停者のみの関数
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: '紛争解決機能付きマルチパーティエスクローコントラクトを実装する',
+                hints: [
+                    'init: 買い手、売り手、調停者のアドレスを保存',
+                    'deposit: 買い手からの認証を要求し、金額を保存',
+                    'release: 調停者からの認証を要求し、売り手に転送',
+                    'refund: 調停者からの認証を要求し、買い手に返金',
                 ],
             },
         },
@@ -1948,6 +2423,48 @@ if env.ledger().sequence() >= next_billing {
                     'En subscribe: almacena el plan, establece next_billing a sequence + intervalo',
                     'En collect: verifica si sequence >= next_billing, si es así cobra y actualiza next_billing',
                     'En cancel: limpia los datos de suscripción del almacenamiento',
+                ],
+            },
+            ja: {
+                title: 'サブスクリプションマネージャー',
+                story: `# 🔄 定期エンジン
+
+高度なプロトコル地区の中心部で**定期エンジン**が唸っている。自動化された定期的な合意を動かしている。
+
+*「最も強力なコントラクトとは、絶え間ない注意なしに機能するものだ」*とエンジン管理者は言う。*「定期的な支払いを徴収するサブスクリプションを構築せよ。」*
+
+## ミッション
+
+サブスクリプション管理コントラクトを作成せよ：
+- \`subscribe\` — ユーザーがプランに登録する（プラン、次回請求時期を保存）
+- \`collect\` — 請求が期限の場合にサブスクリプション料を徴収する
+- \`cancel\` — サブスクリプションをキャンセルする
+- \`get_subscription\` — ユーザーのサブスクリプション情報を返す
+
+## 学ぶこと
+
+- 台帳シーケンスによる定期請求ロジック
+- サブスクリプション状態管理
+- キャンセルと返金のパターン
+- 時間間隔の計算
+
+## キーコンセプト
+
+\`\`\`rust
+// サブスクリプション期間の追跡
+let interval: u32 = 1000; // 約1000台帳ごとに請求
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// 請求期限の確認
+if env.ledger().sequence() >= next_billing {
+    // 支払いを徴収
+}
+\`\`\``,
+                learningGoal: '定期的な請求を持つ定期サブスクリプションコントラクトを構築する',
+                hints: [
+                    'subscribe: プランを保存し、next_billingを現在のsequence + intervalに設定',
+                    'collect: 現在のsequence >= next_billingを確認し、徴収してnext_billingを更新',
+                    'cancel: ストレージからサブスクリプションデータをクリア',
                 ],
             },
         },
@@ -2136,6 +2653,48 @@ env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
                     'En repay: verifica que exista el préstamo, devuelve fondos más comisión al pool, limpia el préstamo',
                 ],
             },
+            ja: {
+                title: 'フラッシュローンプール',
+                story: `# ⚡ 稲妻の保管庫
+
+城塞の最深層には**稲妻の保管庫**がある。そこでは資本が光の速さで移動する。
+
+*「フラッシュローンはコントラクト設計の究極の試練だ」*と稲妻のアークコンは言う。*「借りて、使い、そして単一のトランザクション内で返済するのだ。」*
+
+## ミッション
+
+簡略化されたフラッシュローンプールを構築せよ：
+- \`init\` — プール残高を設定する
+- \`flash_loan\` — プールから借りる（呼び出し内で返済必須）
+- \`get_pool_balance\` — 現在のプール残高を返す
+- \`repay\` — 借りた金額に少額の手数料を加えて返済する
+
+## 学ぶこと
+
+- フラッシュローンの仕組み（検証用に簡略化）
+- プール残高管理
+- ローンのライフサイクル追跡
+- 返済時の手数料パターン
+
+## キーコンセプト
+
+\`\`\`rust
+// アクティブなローンの追跡
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// 手数料付き返済
+let fee = amount / 100; // 1%の手数料
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: '簡略化されたフラッシュローンプールコントラクトを構築する',
+                hints: [
+                    'init: 初期プール残高を保存',
+                    'flash_loan: プールに十分な残高があることを確認、プールから差し引き、ローンを記録',
+                    'repay: ローンが存在することを確認、手数料を加えてプールに戻し、ローンをクリア',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
@@ -2310,6 +2869,49 @@ env.storage().instance()
                     'En has_role: verifica si la clave del rol existe y es true',
                 ],
             },
+            ja: {
+                title: 'パーミッションRBAC',
+                story: `# 🛡️ 役割の間
+
+稲妻の保管庫の先に**役割の間**がそびえている。そこでは、構造化された権限によってアクセスが管理されている。
+
+*「さまよう者すべてが、すべての扉にアクセスできるわけではない」*と役割の達人は宣言する。*「役割が何をできるかを定義するシステムを構築せよ。」*
+
+## ミッション
+
+役割ベースのアクセス制御コントラクトを作成せよ：
+- \`grant_role\` — 管理者がユーザーに役割を付与する
+- \`revoke_role\` — 管理者がユーザーから役割を剥奪する
+- \`has_role\` — ユーザーが特定の役割を持っているか確認する
+- \`get_admin\` — コントラクトの管理者を返す
+
+## 学ぶこと
+
+- 役割ベースのアクセス制御（RBAC）パターン
+- 管理者のみの特権関数
+- 役割メンバーシップのための複合キー
+- 柔軟な権限アーキテクチャ
+
+## キーコンセプト
+
+\`\`\`rust
+// 役割を付与
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// 役割メンバーシップの確認
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: '役割ベースのアクセス制御コントラクトを実装する',
+                hints: [
+                    'init: 管理者アドレスを保存',
+                    'grant_role: 管理者からの認証を要求し、ユーザーの役割メンバーシップを保存',
+                    'revoke_role: 管理者からの認証を要求し、役割メンバーシップを削除',
+                    'has_role: 役割キーが存在しtrueであるか確認',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -2471,6 +3073,48 @@ pub fn update_price(env: Env, asset: Symbol, price: i128) {
                     'En get_price: busca y devuelve el precio del activo',
                     'En get_last_updated: devuelve la secuencia almacenada para el activo',
                     'En get_all_assets: usa un rastreador Vec<Symbol> similar al event-emitter',
+                ],
+            },
+            ja: {
+                title: 'オラクルフィード',
+                story: `# 📊 オラクルの尖塔
+
+プロダクションシステム地区の頂点には**オラクルの尖塔**が立っている。そこでは、オフチェーンデータがブロックチェーンに入力される。
+
+*「データなしではスマートコントラクトは盲目だ」*とオラクルの賢者は言う。*「オンチェーンとオフチェーンの世界の間に橋を構築せよ。」*
+
+## ミッション
+
+価格オラクルコントラクトを作成せよ：
+- \`update_price\` — 管理者が資産ペアの価格を更新する
+- \`get_price\` — 資産ペアの現在の価格を返す
+- \`get_last_updated\` — 価格が最後に更新された時期を返す
+- \`get_all_assets\` — 追跡中のすべての資産ペアを返す
+
+## 学ぶこと
+
+- オラクルデータフィードパターン
+- 管理者のみの更新関数
+- タイムスタンプ/シーケンス追跡
+- Vec<Symbol>による資産ペア管理
+
+## キーコンセプト
+
+\`\`\`rust
+// メタデータ付きで価格を保存
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: '管理者更新によるオンチェーン価格オラクルを構築する',
+                hints: [
+                    'update_price: 管理者からの認証を要求し、価格とシーケンスを保存',
+                    'get_price: 資産の価格を検索して返す',
+                    'get_last_updated: 資産の保存されたシーケンスを返す',
+                    'get_all_assets: event-emitterと同様にVec<Symbol>トラッカーを使用',
                 ],
             },
         },
@@ -2661,6 +3305,49 @@ let no_votes: u32 = /* contar votos donde value es false */
                     'En create_proposal: almacena descripción, fecha límite, conteos de sí/no',
                     'En vote: verifica que la propuesta esté activa, registra la elección del votante, actualiza los totales',
                     'En execute: verifica que la propuesta se haya aprobado (sí > no), márcala como ejecutada',
+                ],
+            },
+            ja: {
+                title: 'シンプルガバナー',
+                story: `# 🏛️ ガバナンスの間
+
+最後の部屋が待っている — **ガバナンスの間**。そこでは、領域全体の運命が集合的な意志によって決定される。
+
+*「最高のスマートコントラクトは、コミュニティが自己統治する力を与える」*と大長老は宣言する。*「投票によって提案が法律となるシステムを構築せよ。」*
+
+## ミッション
+
+提案と投票を行うガバナンスコントラクトを作成せよ：
+- \`create_proposal\` — 説明と投票期間を持つ提案を作成する
+- \`vote\` — アクティブな提案に対して投票（賛成/反対）する
+- \`execute\` — 可決された場合に提案を実行する
+- \`get_proposal\` — 提案の詳細を返す
+
+## 学ぶこと
+
+- オンチェーンガバナンスのメカニズム
+- 提案のライフサイクル（作成 → 投票 → 実行）
+- Map<Address, bool>による投票集計
+- 定足数と承認閾値のロジック
+
+## キーコンセプト
+
+\`\`\`rust
+// 提案ごとの投票を追跡
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// 承認の集計
+let yes_votes: u32 = /* 値がtrueの投票をカウント */
+let no_votes: u32 = /* 値がfalseの投票をカウント */
+\`\`\``,
+                learningGoal: '提案と投票を持つ完全なオンチェーンガバナンスシステムを構築する',
+                hints: [
+                    'create_proposal: 説明、期限、賛成/反対カウントを保存',
+                    'vote: 提案がアクティブであることを確認し、投票者の選択を記録、集計を更新',
+                    'execute: 提案が可決されたか確認（yes > no）、実行済みとしてマーク',
                 ],
             },
         },
@@ -2880,6 +3567,53 @@ env.storage().instance().set(&MUTEX, &false);
                     'Establece mutex a true antes de actualizar el saldo, false después',
                 ],
             },
+            ja: {
+                title: 'リエントランシーガード',
+                story: `# 🛡️ 脆弱性鍛造所
+
+城塞の深部には**脆弱性鍛造所**がある。そこで、壊れたコントラクトが修復される。
+
+*「スマートコントラクトにおける最も危険な脆弱性は」*とセキュリティの賢者は警告する。*「リエントランシーだ。状態を保持したまま外部コードを呼び出すコントラクトは悪用される可能性がある。」*
+
+## ミッション
+
+以下の保管庫コントラクトはリエントランシーに対して脆弱である — 資金を送信した後に残高を更新している。あなたの仕事は、**ミューテックスガード**パターンを使用して修正することだ：リエントランシーを防ぐブール値フラグである。
+
+脆弱なコードの特徴：
+- \`withdraw\`が状態を更新する**前に**資金を送信する（バグ）
+- リエントランシー保護がない
+
+以下のように修正せよ：
+1. \`false\`に初期化された\`MUTEX\`ブール値ストレージキーを追加する
+2. \`withdraw\`の開始時に\`true\`に設定する
+3. \`withdraw\`の終了時に\`false\`に戻す
+4. エントリ時にミューテックスを確認し、すでにロックされていればパニックする
+
+## 学ぶこと
+
+- リエントランシー脆弱性の特定
+- 予防のためのミューテックス/ガードパターン
+- チェック-効果-相互作用パターン
+- セキュリティ第一の開発マインドセット
+
+## キーコンセプト
+
+\`\`\`rust
+// ミューテックスガードパターン
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... 脆弱な操作 ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'ミューテックスガードパターンを使用してリエントランシーの脆弱性を修正する',
+                hints: [
+                    'MUTEX定数を追加: `const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'withdrawの開始時に、ミューテックスがtrueであればパニック',
+                    '残高更新の前にミューテックスをtrueに、後にfalseに設定',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3056,6 +3790,51 @@ env.storage().instance().set(&FEE, &new_fee);
                     'En set_fee: lee ADMIN del almacenamiento, llama a admin.require_auth()',
                     'En pause: lee ADMIN del almacenamiento, llama a admin.require_auth()',
                     'La función init está bien — ya almacena el admin correctamente',
+                ],
+            },
+            ja: {
+                title: 'アクセス制御修正',
+                story: `# 🔓 権限侵害
+
+**権限侵害**は、壊れた認可ロジックを修復するための訓練場である。
+
+*「2番目に一般的な脆弱性は」*とセキュリティの賢者は説明する。*「アクセス制御の欠如だ。管理者に制限されるべき関数が誰でも呼び出せてしまう。」*
+
+## ミッション
+
+以下のコントラクトには\`admin\`アドレスが保存されているが、特権関数で\`require_auth()\`を**決して**使用していない。あなたの仕事は、適切なアクセス制御を追加することだ。
+
+脆弱なコードの特徴：
+- \`ADMIN\`定数が定義されているが、決してチェックされていない
+- \`set_fee\`と\`pause\`関数が誰でも呼び出せる
+- どこにも\`require_auth()\`の呼び出しがない
+
+以下のように修正せよ：
+1. \`set_fee\`と\`pause\`に\`require_auth()\`チェックを追加する
+2. 認証を確認する前に、ストレージから管理者アドレスを読み取る
+
+## 学ぶこと
+
+- アクセス制御の脆弱性の特定
+- 適切な\`require_auth()\`の配置
+- 管理者のみの関数パターン
+- 多層防御の原則
+
+## キーコンセプト
+
+\`\`\`rust
+// 正しいアクセス制御
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// 特権操作を実行
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'require_auth()チェックを追加してアクセス制御の欠如を修正する',
+                hints: [
+                    'set_fee: ストレージからADMINを読み取り、admin.require_auth()を呼び出す',
+                    'pause: ストレージからADMINを読み取り、admin.require_auth()を呼び出す',
+                    'init関数はそのままで問題ない — すでに管理者を正しく保存している',
                 ],
             },
         },

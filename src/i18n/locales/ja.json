@@ -1,0 +1,606 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "ja": "日本語"
+  },
+  "common": {
+    "selectLanguage": "言語を選択",
+    "toggleTheme": "テーマ切替",
+    "back": "戻る",
+    "close": "閉じる",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "loading": "読み込み中…",
+    "all": "すべて",
+    "level": "レベル",
+    "xp": "XP",
+    "chapter": "チャプター",
+    "mission": "ミッション",
+    "complete": "完了",
+    "completed": "完了済み",
+    "locked": "ロック中",
+    "unlocked": "解除済み",
+    "skipToContent": "メインコンテンツへスキップ"
+  },
+  "navbar": {
+    "home": "ホーム",
+    "campaigns": "キャンペーン",
+    "missions": "ミッション",
+    "profile": "プロフィール",
+    "journal": "ジャーナル",
+    "leaderboard": "リーダーボード",
+    "achievements": "実績",
+    "shop": "ショップ",
+    "ariaMain": "メインナビゲーション",
+    "ariaHome": "ホームページへ移動",
+    "ariaMobile": "モバイルナビゲーションメニュー",
+    "userProfile": "ユーザープロフィール:",
+    "openMenu": "ナビゲーションメニューを開く",
+    "closeMenu": "ナビゲーションメニューを閉じる",
+    "replayTutorial": "チュートリアルを再生"
+  },
+  "home": {
+    "badge": "✨ セットアップ不要 • ウォレット不要 • オープンソース",
+    "title": {
+      "lead": "マスター",
+      "brand": "Soroban",
+      "tail": "スマートコントラクト"
+    },
+    "subtitle": "Stellarのスマートコントラクトプラットフォームを学ぶ壮大なクエストに乗り出しましょう。ブラウザで実際のSorobanコードを書き、チャレンジを解決し、ブロックチェーンスキルをレベルアップ — インストール不要。",
+    "cta": {
+      "continueQuest": "⚔️ クエストを続ける",
+      "viewProgress": "📊 進捗を見る",
+      "beginJourney": "🚀 旅を始める",
+      "viewMissionMap": "🗺️ ミッションマップを見る"
+    },
+    "stats": {
+      "missions": "ミッション",
+      "totalXp": "総XP",
+      "backendNeeded": "バックエンドが必要"
+    },
+    "howItWorks": {
+      "title": "使い方",
+      "subtitle": "ゼロからSorobanマスターへの道のり、すべてブラウザ上で。"
+    },
+    "features": {
+      "read": {
+        "title": "クエストを読む",
+        "body": "各ミッションはストーリーを紡ぎながら、Sorobanの核となる概念を教えます。ナラティブ駆動のチャレンジを通じて、コントラクト、ストレージ、トークンなどを学びましょう。"
+      },
+      "write": {
+        "title": "コードを書く",
+        "body": "組み込みのMonacoエディタでRustのシンタックスハイライトとSorobanのオートコンプリートを使用。テンプレートがスタートをサポート — ロジックを入力するだけ。"
+      },
+      "test": {
+        "title": "テストを実行",
+        "body": "瞬時のフィードバックでコードを検証。各ミッションには、コントラクトの構造、関数、パターンを確認する隠しチェックがあります。"
+      },
+      "xp": {
+        "title": "XPを獲得してレベルアップ",
+        "body": "完了したミッションごとに経験値を獲得。バッジをアンロックし、ランクを上げ、InitiateからStellar Sovereignへの旅を記録しましょう。"
+      },
+      "zeroBackend": {
+        "title": "バックエンド不要",
+        "body": "すべてブラウザ上で動作。サーバー、データベース、アカウントは不要。進捗はローカルに保存され、いつでもJSONファイルとしてエクスポート可能。"
+      },
+      "path": {
+        "title": "段階的な学習パス",
+        "body": "「Hello World」からマルチシグコントラクトまで。各ミッションは前回の内容を基に構築され、Sorobanマスターへの構造化された道筋を作ります。"
+      }
+    },
+    "stats": {
+      "missions": "ミッション",
+      "totalXp": "総XP",
+      "backendNeeded": "バックエンドが必要",
+      "missionsCompleted": "{{count}}/{{total}} ミッション",
+      "xpEarned": "{{xp}} XP獲得",
+      "goldEarned": "{{gold}} ゴールド",
+      "badgesUnlocked": "{{count}} バッジ",
+      "currentLevel": "レベル {{level}} — {{rank}}",
+      "nextMission": "次のミッション",
+      "continueFrom": "{{title}}から続ける",
+      "recentActivity": "最近のアクティビティ",
+      "viewAll": "すべて表示",
+      "quickStats": "クイック統計",
+      "streak": "連続ログイン日数"
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "プラットフォーム",
+      "home": "ホーム",
+      "missions": "ミッション",
+      "profile": "プロフィール",
+      "glossary": "用語集"
+    },
+    "resources": {
+      "heading": "リソース",
+      "docs": "Sorobanドキュメント",
+      "sdk": "Stellar SDK",
+      "github": "GitHub",
+      "glossary": "用語集",
+      "faq": "FAQ"
+    },
+    "community": {
+      "heading": "コミュニティ",
+      "discord": "Discord",
+      "telegram": "Telegram",
+      "forum": "Stellarフォーラム",
+      "blog": "Stellarブログ"
+    },
+    "credits": {
+      "tagline": "Stellarエコシステムのために構築",
+      "license": "MITライセンス"
+    }
+  },
+  "notFound": {
+    "title": "このクエストは存在しません",
+    "body": "深宇宙に迷い込んだようです",
+    "back": "基地に戻る"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "エラーが発生しました",
+      "body": "クエストでランタイムエラーが発生しました。コンソールで詳細を確認してください。",
+      "reload": "再読み込み",
+      "goHome": "ホームへ",
+      "report": "問題を報告"
+    },
+    "editor": {
+      "body": "エディタの読み込みに失敗しました",
+      "reset": "エディタをリセット"
+    },
+    "mission": {
+      "title": "ミッションを利用できません",
+      "retry": "再試行"
+    }
+  },
+  "profile": {
+    "edit": "✏️ プロフィール編集",
+    "viewJournal": "📖 ジャーナルを見る",
+    "editPanel": {
+      "title": "プロフィール編集",
+      "nameLabel": "冒険者名",
+      "avatarLegend": "アバターを選択",
+      "namePlaceholder": "名前を入力"
+    },
+    "selector": {
+      "title": "アクティブプロフィール",
+      "help": "{{count}}/{{max}} のローカルプロフィールを使用中。",
+      "meta": "レベル {{level}} • {{xp}} XP",
+      "create": "プロフィールを作成",
+      "emptySlot": "空きスロット",
+      "defaultName": "プレイヤー {{number}}"
+    },
+    "stats": {
+      "missions": "ミッション",
+      "badges": "バッジ"
+    },
+    "sections": {
+      "badges": "🏅 バッジ",
+      "completedMissions": "✅ 完了済みミッション",
+      "data": "⚙️ データ"
+    },
+    "noMissions": "まだ完了したミッションはありません。",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "合計: {{xp}} XP"
+    },
+    "data": {
+      "export": "エクスポート",
+      "import": "インポート",
+      "reset": "リセット",
+      "confirmReset": "すべての進捗をリセットしますか？この操作は元に戻せません。",
+      "status": {
+        "exported": "✅ 進捗をエクスポートしました！",
+        "imported": "✅ 進捗を正常にインポートしました！",
+        "importFailed": "❌ 無効なファイル — インポートできませんでした。",
+        "resetDone": "🗑️ 進捗をリセットしました。"
+      },
+      "toast": {
+        "exported": "進捗を正常にエクスポートしました！",
+        "imported": "進捗を正常にインポートしました！",
+        "importFailed": "ファイルをインポートできませんでした。形式を確認してください。",
+        "resetDone": "🗑️ 進捗をリセットしました。"
+      },
+      "log": {
+        "exported": "冒険の進捗をエクスポートしました",
+        "imported": "ファイルから冒険の進捗をインポートしました"
+      }
+    }
+  },
+  "leaderboard": {
+    "kicker": "ローカルマルチプレイヤー",
+    "title": "リーダーボード",
+    "subtitle": "ローカルプロフィール間でXP、レベル、ミッション、バッジを比較。",
+    "manageProfiles": "プロフィール管理",
+    "championAria": "現在のローカルチャンピオン",
+    "championSummary": "レベル {{level}} • {{xp}} XP • {{missions}} ミッション完了",
+    "tableTitle": "ローカルランキング",
+    "profileCount": "{{count}} プロフィール",
+    "active": "アクティブ",
+    "switch": "切り替え",
+    "columns": {
+      "rank": "順位",
+      "player": "プレイヤー",
+      "xp": "XP",
+      "level": "レベル",
+      "missions": "ミッション",
+      "badges": "バッジ",
+      "status": "ステータス"
+    }
+  },
+  "achievements": {
+    "kicker": "バッジ保管庫",
+    "title": "実績",
+    "subtitle": "{{name}}の解除済み・未解除の実績。",
+    "summaryAria": "実績完了サマリー",
+    "unlocked": "解除済み",
+    "progressAria": "実績完了進捗",
+    "progress": "達成度",
+    "gridAria": "実績バッジコレクション",
+    "empty": "ミッションを完了して実績とバッジを獲得しましょう！"
+  },
+  "journal": {
+    "title": "冒険日誌",
+    "subtitle": "Soroban領域での旅の記録、永遠に。",
+    "clearLog": "🗑️ ログをクリア",
+    "confirmClear": "すべてのアクティビティ履歴をクリアしますか？",
+    "controlsLabel": "ジャーナル検索とフィルター",
+    "searchLabel": "ジャーナルエントリを検索",
+    "searchPlaceholder": "ジャーナルエントリを検索…",
+    "typeFilterLabel": "アクティビティタイプでフィルター",
+    "dateFilterLabel": "日付でフィルター",
+    "summary": {
+      "missions": "ミッション",
+      "badges": "バッジ",
+      "level": "レベル",
+      "totalXp": "総XP",
+      "streak": "連続ログイン日数"
+    },
+    "filters": {
+      "all": "すべて",
+      "mission": "ミッション",
+      "badge": "バッジ",
+      "levelUp": "レベルアップ",
+      "hint": "ヒント",
+      "system": "システム"
+    },
+    "dateFilters": {
+      "all": "いつでも",
+      "today": "今日",
+      "week": "過去7日間",
+      "month": "今月"
+    },
+    "empty": "まだ記録されたアクティビティはありません。最初のミッションを始めましょう！",
+    "dates": {
+      "today": "今日",
+      "yesterday": "昨日"
+    },
+    "events": {
+      "missionStarted": "ミッションを開始: {{title}}",
+      "missionCompleted": "ミッションを完了: {{title}}",
+      "badgeEarned": "「{{name}}」バッジを獲得！",
+      "levelUp": "レベル {{level}} に到達！",
+      "hintUsed": "ヒント {{index}} を使用",
+      "export": "冒険の進捗をエクスポートしました",
+      "import": "ファイルから冒険の進捗をインポートしました",
+      "streakOne": "連続ログイン: 1日目！",
+      "streakMany": "連続ログイン: {{count}}日目！"
+    },
+    "details": {
+      "targetXp": "目標XP: {{xp}}",
+      "earnedXp": "{{xp}} XP獲得"
+    },
+    "eventLabels": {
+      "mission": "ミッション",
+      "badge": "バッジ",
+      "levelUp": "レベルアップ",
+      "hint": "ヒント",
+      "system": "システム",
+      "streak": "連続"
+    }
+  },
+  "campaigns": {
+    "title": "キャンペーン",
+    "subtitle": "壮大なストーリー駆動のチャプター | レベル {{level}} | {{completed}}/{{total}} 全ミッション",
+    "chapter": "チャプター {{number}}",
+    "missionCount": "{{completed}}/{{total}} ミッション",
+    "lockedAt": "🔒 レベル {{level}} で解除",
+    "chapterComplete": "✓ チャプター完了！",
+    "back": "← キャンペーンに戻る",
+    "completeOf": "{{completed}}/{{total}} 完了",
+    "lore": {
+      "iconLabel": "チャプター伝承スクロール",
+      "modalTitle": "チャプター紹介",
+      "beginChapter": "チャプター {{number}} を開始"
+    }
+  },
+  "missionMap": {
+    "title": "ミッションマップ",
+    "subtitle": "{{completed}}/{{total}} ミッション完了",
+    "searchPlaceholder": "ミッションを検索…",
+    "difficulty": {
+      "all": "すべて",
+      "beginner": "初心者",
+      "intermediate": "中級",
+      "advanced": "上級"
+    },
+    "chapters": {
+      "all": "全チャプター",
+      "n": "チャプター {{number}}"
+    },
+    "card": {
+      "chapterMission": "チャプター {{chapter}} • ミッション {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ 完了",
+      "locked": "🔒 ロック中"
+    },
+    "allCompleted": {
+      "title": "全ミッション完了！",
+      "body": "おめでとうございます、{{rank}}！ {{xp}} XP相当のSorobanチャレンジをすべてマスターしました。"
+    },
+    "noResults": "フィルターに一致するミッションが見つかりません。",
+    "aria": {
+      "missionPath": "ミッションパスグラフ",
+      "missionTimeline": "ミッションタイムライン",
+      "missionItem": "ミッション {{order}}: {{title}}",
+      "missionItemCompleted": "ミッション {{order}}: {{title}}、完了済み",
+      "missionItemUnlocked": "ミッション {{order}}: {{title}}、解除済み",
+      "missionItemLocked": "ミッション {{order}}: {{title}}、ロック中"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "ストーリー",
+      "editor": "エディタ",
+      "tests": "テスト",
+      "replay": "📹 リプレイ"
+    },
+    "notFound": {
+      "title": "ミッションが見つかりません",
+      "body": "ミッション「{{id}}」は存在しません。",
+      "back": "← ミッションマップに戻る"
+    },
+    "editor": {
+      "reset": "↺ リセット",
+      "hint": "💡 ヒント",
+      "solution": "👁️ 解答",
+      "run": "▶ テスト実行",
+      "running": "実行中…",
+      "themeLabel": "エディタテーマ"
+    },
+    "terminal": {
+      "title": "テスト出力",
+      "placeholder": "「テスト実行」をクリックしてコードを検証…",
+      "runningChecks": "🔍 検証チェックを実行中…",
+      "alreadyCompleted": "🏅 既に完了済み — 追加XPは獲得できません。"
+    },
+    "status": {
+      "checking": "確認中…",
+      "passing": "{{passed}}/{{total}} チェック通過",
+      "allPassing": "{{passed}}/{{total}} チェック通過 ✓",
+      "note": "ライブチェック · 完全スイートはテスト実行で"
+    },
+    "toasts": {
+      "validated": "ミッションパラメータを検証しました！",
+      "validationFailed": "検証に失敗しました。ターミナルを確認してください。",
+      "hintUnlocked": "ヒント {{index}} を解除しました",
+      "codeReset": "コードをテンプレートにリセットしました",
+      "solutionLoaded": "解答をエディタに読み込みました"
+    },
+    "hint": {
+      "label": "💡 ヒント {{index}}:"
+    },
+    "victory": {
+      "title": "ミッション完了！",
+      "youCompleted": "完了しました",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 レベルアップ！ レベル {{level}} — {{rank}} になりました",
+      "badgeEarnedOne": "🏅 新しいバッジを獲得！",
+      "badgeEarnedMany": "🏅 新しいバッジを獲得！",
+      "next": "次のミッション →",
+      "map": "ミッションマップ"
+    },
+    "replay": {
+      "header": "📹 解答を確認",
+      "body": "問題解決プロセスをステップごとに確認できます。",
+      "start": "▶️ リプレイ開始"
+    },
+    "okashi": {
+      "button": "🚀 Okashiで試す — コンパイル＆デプロイ",
+      "help": "新しいタブでokashi.devを開きます。コードがクリップボードにコピーされます — 実際のSorobanコンパイラでコンパイルし、Testnetにデプロイするために貼り付けてください。"
+    }
+  },
+  "skillTree": {
+    "title": "Sorobanスキルツリー",
+    "subtitle": "Sorobanスマートコントラクトのコンセプト習熟度を追跡",
+    "overall": "{{unlocked}}/{{total}} コンセプト習得",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": {
+        "title": "コアコンセプト",
+        "description": "Sorobanの基本的な構成要素"
+      },
+      "Storage": {
+        "title": "ストレージと状態",
+        "description": "永続データの管理"
+      },
+      "Types": {
+        "title": "データ型",
+        "description": "さまざまなデータ型の操作"
+      },
+      "Auth": {
+        "title": "認証",
+        "description": "アクセス制御とセキュリティ"
+      },
+      "Events": {
+        "title": "イベント",
+        "description": "コントラクトイベントの発行と処理"
+      },
+      "Protocols": {
+        "title": "プロトコル",
+        "description": "実際のDeFiプロトコルパターン"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "分散型ファイナンスのプリミティブ"
+      }
+    },
+    "tooltip": {
+      "chapter": "チャプター {{chapter}}"
+    },
+    "modal": {
+      "taughtIn": "学習元: {{title}}",
+      "chapterLabel": "チャプター:",
+      "difficultyLabel": "難易度:",
+      "xpLabel": "XP報酬:",
+      "learningGoal": "学習目標:",
+      "completed": "✅ 完了",
+      "notCompleted": "🔒 未完了",
+      "startMission": "ミッションを開始",
+      "notCovered": "このコンセプトは利用可能なミッションではまだカバーされていません。"
+    }
+  },
+  "ranks": {
+    "0": "見習い",
+    "1": "徒弟",
+    "2": "書記",
+    "3": "コーダー",
+    "4": "設計者",
+    "5": "番人",
+    "6": "守護者",
+    "7": "上級守護者",
+    "8": "長老",
+    "9": "賢者",
+    "10": "恒星の支配者"
+  },
+  "difficulty": {
+    "beginner": "初心者",
+    "intermediate": "中級",
+    "advanced": "上級"
+  },
+  "badges": {
+    "first_contract": {
+      "name": "最初のコントラクト",
+      "description": "最初のミッションを完了"
+    },
+    "triple_threat": {
+      "name": "トリプルスレット",
+      "description": "3つのミッションを完了"
+    },
+    "five_star": {
+      "name": "ファイブスター",
+      "description": "5つのミッションを完了"
+    },
+    "completionist": {
+      "name": "コンプリーショニスト",
+      "description": "全ミッションを完了"
+    },
+    "level_3": {
+      "name": "ライジングスター",
+      "description": "レベル3に到達"
+    },
+    "level_5": {
+      "name": "ステラガーディアン",
+      "description": "レベル5に到達"
+    },
+    "xp_1000": {
+      "name": "XP収集家",
+      "description": "1000 XPを獲得"
+    },
+    "speed_demon": {
+      "name": "スピードデーモン",
+      "description": "初回でミッションを完了"
+    },
+    "chapter_1": {
+      "name": "覚醒",
+      "description": "チャプター1の全ミッションを完了"
+    },
+    "chapter_2": {
+      "name": "記憶の守護者",
+      "description": "チャプター2の全ミッションを完了"
+    },
+    "chapter_3": {
+      "name": "鍛冶師",
+      "description": "チャプター3の全ミッションを完了"
+    },
+    "chapter_4": {
+      "name": "データ設計者",
+      "description": "チャプター4の全ミッションを完了"
+    },
+    "chapter_5": {
+      "name": "プロトコルパイオニア",
+      "description": "チャプター5の全ミッションを完了"
+    },
+    "chapter_6": {
+      "name": "プロダクションマスター",
+      "description": "チャプター6の全ミッションを完了"
+    },
+    "chapter_7": {
+      "name": "セキュリティセンチネル",
+      "description": "チャプター7の全ミッションを完了"
+    }
+  },
+  "shop": {
+    "title": "ショップ",
+    "subtitle": "ゴールドを使ってアバター、ブースト、バッジを購入",
+    "ariaCategories": "ショップカテゴリフィルター",
+    "categories": {
+      "all": "すべて",
+      "avatars": "アバター",
+      "boosts": "ブースト",
+      "badges": "バッジ"
+    },
+    "items": {
+      "avatarPack1": "アバターパック1",
+      "avatarPack1Desc": "5つの新しいアバターオプションを解除",
+      "avatarPack2": "アバターパック2",
+      "avatarPack2Desc": "5つの限定アバターオプションを解除",
+      "xpBoost": "XPブースト",
+      "xpBoostDesc": "次のミッションでXPが2倍",
+      "streakFreeze": "連続フリーズ",
+      "streakFreezeDesc": "1日休んでも連続記録を保護",
+      "hintToken": "ヒントトークン",
+      "hintTokenDesc": "XPペナルティなしでヒントを表示",
+      "premiumBadge": "プレミアムバッジ",
+      "premiumBadgeDesc": "プロフィール用の限定プレミアムバッジ"
+    },
+    "buy": "購入",
+    "purchased": "購入済み",
+    "alreadyPurchased": "このアイテムは既に所有しています",
+    "insufficientFunds": "このアイテムを購入するのに十分なゴールドがありません",
+    "purchaseSuccess": "{{item}} を正常に購入しました！",
+    "empty": "このカテゴリにアイテムが見つかりません",
+    "ariaPurchase": "{{item}} を {{price}} ゴールドで購入",
+    "ariaPurchased": "{{item}} - 購入済み"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Soroban Questへようこそ！",
+      "body": "ゲーム感覚でSorobanスマートコントラクト開発をマスターしましょう。ミッションを完了し、XPとゴールドを獲得し、実績を解除しましょう。"
+    },
+    "step2": {
+      "title": "進捗ハブ",
+      "body": "ナビゲーションバーにレベル、XP、ゴールド残高、プロフィールが表示されます。ミッション、キャンペーン、プロフィール、ジャーナルなどに移動するために使用します。"
+    },
+    "step3": {
+      "title": "ミッションマップとクエスト",
+      "body": "ミッションマップにはチャプターごとに整理されたすべてのクエストが表示されます。各ミッションはストーリー、ヒント、自動検証を備えたSorobanコーディングチャレンジです。"
+    },
+    "step4": {
+      "title": "コードエディタと検証",
+      "body": "組み込みのMonacoエディタでRust Sorobanコードを記述します。テストを実行して、検証パターンに対する解答を確認します。コンパイルサーバーは不要！"
+    },
+    "step5": {
+      "title": "RGP成長システム",
+      "body": "各ミッション完了でXPとゴールドを獲得。レベルアップして新しいランク、チャプター、バッジを解除。ショップでゴールドを使ってコスメティックアイテムやブーストを購入。"
+    },
+    "dismiss": "了解！",
+    "next": "次へ",
+    "prev": "戻る",
+    "skip": "チュートリアルをスキップ"
+  }
+}
