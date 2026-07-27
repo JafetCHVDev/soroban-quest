@@ -76,6 +76,78 @@ export const EDITOR_THEMES = [
       },
     },
   },
+  {
+    // Deep navy/dark-blue background with cyan + magenta accents.
+    // Cyberpunk aesthetic designed for extended coding sessions (low eye strain).
+    id: "midnight-protocol",
+    label: "Midnight Protocol",
+    builtin: false,
+    data: {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment",   foreground: "4a5568", fontStyle: "italic" },
+        { token: "keyword",   foreground: "00d4ff" }, // electric cyan
+        { token: "string",    foreground: "ff79c6" }, // magenta/pink
+        { token: "number",    foreground: "bd93f9" }, // soft purple
+        { token: "type",      foreground: "50fa7b" }, // neon green
+        { token: "function",  foreground: "8be9fd" }, // light cyan
+        { token: "variable",  foreground: "f8f8f2" }, // near-white
+        { token: "operator",  foreground: "ff79c6" }, // magenta
+        { token: "delimiter", foreground: "6272a4" }, // muted blue-grey
+      ],
+      colors: {
+        "editor.background":               "#0a0e1a",
+        "editor.foreground":               "#cdd6f4",
+        "editor.lineHighlightBackground":  "#111827",
+        "editor.selectionBackground":      "#1e3a5f",
+        "editor.inactiveSelectionBackground": "#162840",
+        "editorLineNumber.foreground":     "#3d4f6e",
+        "editorLineNumber.activeForeground": "#00d4ff",
+        "editorCursor.foreground":         "#ff79c6",
+        "editorIndentGuide.background":    "#1e2a3a",
+        "editorWidget.background":         "#0d1525",
+        "editorSuggestWidget.background":  "#0d1525",
+        "editorSuggestWidget.border":      "#1e3a5f",
+      },
+    },
+  },
+  {
+    // Purple/violet background with warm orange + cool blue syntax highlights.
+    // Inspired by space nebula imagery — fits the Stellar blockchain theme.
+    id: "nebula",
+    label: "Nebula",
+    builtin: false,
+    data: {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment",   foreground: "6272a4", fontStyle: "italic" },
+        { token: "keyword",   foreground: "ff9d00" }, // warm amber/orange
+        { token: "string",    foreground: "69d2e7" }, // cool cyan-blue
+        { token: "number",    foreground: "ff6b6b" }, // soft coral
+        { token: "type",      foreground: "c792ea" }, // lavender
+        { token: "function",  foreground: "82aaff" }, // periwinkle blue
+        { token: "variable",  foreground: "e1e4f0" }, // near-white lavender
+        { token: "operator",  foreground: "ff9d00" }, // warm amber
+        { token: "delimiter", foreground: "7b7fb5" }, // muted indigo
+      ],
+      colors: {
+        "editor.background":               "#12103a",
+        "editor.foreground":               "#e1e4f0",
+        "editor.lineHighlightBackground":  "#1a1752",
+        "editor.selectionBackground":      "#2d2a6e",
+        "editor.inactiveSelectionBackground": "#211e55",
+        "editorLineNumber.foreground":     "#443f7a",
+        "editorLineNumber.activeForeground": "#ff9d00",
+        "editorCursor.foreground":         "#c792ea",
+        "editorIndentGuide.background":    "#1e1b4b",
+        "editorWidget.background":         "#0e0c2e",
+        "editorSuggestWidget.background":  "#0e0c2e",
+        "editorSuggestWidget.border":      "#2d2a6e",
+      },
+    },
+  },
 ];
 
 export const DEFAULT_THEME_ID = "vs-dark";
