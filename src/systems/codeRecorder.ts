@@ -1,4 +1,4 @@
-// codeRecorder.js
+// codeRecorder.ts
 // Records user coding sessions for replay functionality
 
 const STORAGE_KEY_PREFIX = 'soroban_quest_replays_';
@@ -6,8 +6,29 @@ const MAX_EVENTS = 200;
 const MAX_STORAGE_SIZE = 500 * 1024; // 500KB
 const DEBOUNCE_DELAY = 2000; // 2 seconds
 
+export interface RecorderEvent {
+  timestamp: number;
+  type: string;
+  content: any;
+}
+
+export interface RecordingData {
+  events: RecorderEvent[];
+  missionId: string;
+  recordedAt: number;
+  duration: number;
+}
+
 class CodeRecorder {
-  constructor(missionId) {
+  missionId: string;
+  storageKey: string;
+  events: RecorderEvent[];
+  startTime: number;
+  debounceTimer: any;
+  lastCodeState: string;
+  isRecording: boolean;
+
+  constructor(missionId: string) {
     this.missionId = missionId;
     this.storageKey = `${STORAGE_KEY_PREFIX}${missionId}`;
     this.events = [];
@@ -18,7 +39,7 @@ class CodeRecorder {
   }
 
   // Start recording a new session
-  startRecording(initialCode = '') {
+  startRecording(initialCode = ''): void {
     this.events = [];
     this.startTime = Date.now();
     this.lastCodeState = initialCode;
@@ -29,7 +50,7 @@ class CodeRecorder {
   }
 
   // Stop recording and save to localStorage
-  stopRecording() {
+  stopRecording(): void {
     if (!this.isRecording) return;
     
     this.isRecording = false;
@@ -45,10 +66,10 @@ class CodeRecorder {
   }
 
   // Add an event to the recording
-  addEvent(type, content = '') {
+  addEvent(type: string, content: any = ''): void {
     if (!this.isRecording) return;
 
-    const event = {
+    const event: RecorderEvent = {
       timestamp: Date.now() - this.startTime,
       type,
       content
@@ -63,7 +84,7 @@ class CodeRecorder {
   }
 
   // Record code edit (debounced)
-  recordCodeEdit(newCode) {
+  recordCodeEdit(newCode: string): void {
     if (!this.isRecording || newCode === this.lastCodeState) return;
 
     // Clear existing timer
@@ -79,22 +100,22 @@ class CodeRecorder {
   }
 
   // Record immediate events (run tests, hint, reset)
-  recordRunTests() {
+  recordRunTests(): void {
     this.addEvent('run');
   }
 
-  recordHint(hintIndex) {
+  recordHint(hintIndex: number): void {
     this.addEvent('hint', hintIndex);
   }
 
-  recordReset() {
+  recordReset(): void {
     this.addEvent('reset');
   }
 
   // Save recording to localStorage
-  saveRecording() {
+  saveRecording(): void {
     try {
-      const recordingData = {
+      const recordingData: RecordingData = {
         events: this.events,
         missionId: this.missionId,
         recordedAt: Date.now(),
@@ -124,7 +145,7 @@ class CodeRecorder {
   }
 
   // Load recording from localStorage
-  static loadRecording(missionId) {
+  static loadRecording(missionId: string): RecordingData | null {
     try {
       const storageKey = `${STORAGE_KEY_PREFIX}${missionId}`;
       const data = localStorage.getItem(storageKey);
@@ -136,26 +157,26 @@ class CodeRecorder {
   }
 
   // Check if a recording exists for a mission
-  static hasRecording(missionId) {
+  static hasRecording(missionId: string): boolean {
     const storageKey = `${STORAGE_KEY_PREFIX}${missionId}`;
     return localStorage.getItem(storageKey) !== null;
   }
 
   // Delete a recording
-  static deleteRecording(missionId) {
+  static deleteRecording(missionId: string): void {
     const storageKey = `${STORAGE_KEY_PREFIX}${missionId}`;
     localStorage.removeItem(storageKey);
   }
 
   // Clear all recordings
-  static clearAllRecordings() {
+  static clearAllRecordings(): void {
     Object.keys(localStorage)
       .filter(key => key.startsWith(STORAGE_KEY_PREFIX))
       .forEach(key => localStorage.removeItem(key));
   }
 
   // Get all recording keys (for management)
-  static getAllRecordingKeys() {
+  static getAllRecordingKeys(): string[] {
     return Object.keys(localStorage)
       .filter(key => key.startsWith(STORAGE_KEY_PREFIX))
       .map(key => key.replace(STORAGE_KEY_PREFIX, ''));

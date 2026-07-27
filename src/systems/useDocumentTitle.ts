@@ -5,8 +5,7 @@ const BASE_TITLE = 'Soroban Quest';
 /**
  * Custom hook to dynamically update the document title per route.
  *
- * @param {string} title - Page-specific title (e.g. "Profile", "Mission Map").
- * @returns {void}
+ * @param title - Page-specific title (e.g. "Profile", "Mission Map").
  *
  * Usage:
  *   function Profile() {
@@ -16,7 +15,7 @@ const BASE_TITLE = 'Soroban Quest';
  *
  * Renders as: "Profile | Soroban Quest"
  */
-export default function useDocumentTitle(title) {
+export default function useDocumentTitle(title?: string): void {
     useEffect(() => {
         if (!title) {
             document.title = BASE_TITLE;

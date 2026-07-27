@@ -5,14 +5,21 @@
 
 import { ACHIEVEMENTS } from "../data/achievements";
 import { logActivity, ACTIVITY_TYPES } from "./activityLogger";
+import { Achievement, AchievementCondition } from "../types";
 
 const ACHIEVEMENTS_KEY = "soroban_quest_achievements";
 const ACHIEVEMENTS_PROGRESS_KEY = "soroban_quest_achievements_progress";
 
+export interface AchievementState {
+  unlocked: string[];
+  progress: Record<string, { unlockedAt?: string }>;
+  lastUpdated?: string | null;
+}
+
 /**
  * Get default achievement state structure
  */
-function getDefaultAchievementState() {
+function getDefaultAchievementState(): AchievementState {
   return {
     unlocked: [],
     progress: {},
@@ -23,7 +30,7 @@ function getDefaultAchievementState() {
 /**
  * Load achievement state from localStorage
  */
-export function loadAchievementState() {
+export function loadAchievementState(): AchievementState {
   try {
     const data = localStorage.getItem(ACHIEVEMENTS_KEY);
     if (!data) {
@@ -43,7 +50,7 @@ export function loadAchievementState() {
 /**
  * Save achievement state to localStorage
  */
-export function saveAchievementState(state) {
+export function saveAchievementState(state: AchievementState): void {
   try {
     const toSave = {
       ...state,
@@ -58,7 +65,7 @@ export function saveAchievementState(state) {
 /**
  * Evaluate a single achievement condition against game state
  */
-function evaluateCondition(condition, gameState, totalMissions) {
+function evaluateCondition(condition: AchievementCondition, gameState: any, totalMissions: number): boolean {
   const completedMissions = gameState.completedMissions || [];
   
   switch (condition.type) {
@@ -66,19 +73,19 @@ function evaluateCondition(condition, gameState, totalMissions) {
       if (condition.value === "all") {
         return completedMissions.length >= totalMissions;
       }
-      return completedMissions.length >= condition.value;
+      return completedMissions.length >= (condition.value as number);
 
     case "total_xp":
-      return (gameState.xp || 0) >= condition.value;
+      return (gameState.xp || 0) >= (condition.value as number);
 
     case "level":
-      return (gameState.level || 1) >= condition.value;
+      return (gameState.level || 1) >= (condition.value as number);
 
     case "first_try_missions":
-      return (gameState.firstTryMissions || []).length >= condition.value;
+      return (gameState.firstTryMissions || []).length >= (condition.value as number);
 
     case "streak":
-      return (gameState.streak || 0) >= condition.value;
+      return (gameState.streak || 0) >= (condition.value as number);
 
     default:
       console.warn(`Unknown condition type: ${condition.type}`);
@@ -89,7 +96,7 @@ function evaluateCondition(condition, gameState, totalMissions) {
 /**
  * Check if an achievement is unlocked
  */
-export function isAchievementUnlocked(achievementId) {
+export function isAchievementUnlocked(achievementId: string): boolean {
   const state = loadAchievementState();
   return state.unlocked.includes(achievementId);
 }
@@ -97,7 +104,7 @@ export function isAchievementUnlocked(achievementId) {
 /**
  * Get progress for a specific achievement (0-1)
  */
-export function getAchievementProgress(achievementId, gameState, totalMissions) {
+export function getAchievementProgress(achievementId: string, gameState: any, totalMissions: number): number {
   const achievement = ACHIEVEMENTS.find((a) => a.id === achievementId);
   if (!achievement) return 0;
 
@@ -108,20 +115,20 @@ export function getAchievementProgress(achievementId, gameState, totalMissions) 
 
   const condition = achievement.condition;
   let current = 0;
-  let target = condition.value;
+  let target = condition.value as number;
 
   switch (condition.type) {
     case "missions_completed":
-      current = gameState.completedMissions.length;
-      if (target === "all") target = totalMissions;
+      current = (gameState.completedMissions || []).length;
+      if (condition.value === "all") target = totalMissions;
       break;
 
     case "total_xp":
-      current = gameState.xp;
+      current = gameState.xp || 0;
       break;
 
     case "level":
-      current = gameState.level;
+      current = gameState.level || 1;
       break;
 
     case "first_try_missions":
@@ -136,15 +143,16 @@ export function getAchievementProgress(achievementId, gameState, totalMissions) 
       return 0;
   }
 
+  if (!target || target <= 0) return 0;
   return Math.min(current / target, 1);
 }
 
 /**
  * Check and unlock achievements based on current game state
  */
-export function checkAchievements(gameState, totalMissions = 10) {
+export function checkAchievements(gameState: any, totalMissions = 10): { newlyUnlocked: Achievement[]; totalUnlocked: number; totalAchievements: number } {
   const achievementState = loadAchievementState();
-  const newlyUnlocked = [];
+  const newlyUnlocked: Achievement[] = [];
 
   for (const achievement of ACHIEVEMENTS) {
     // Skip if already unlocked
@@ -187,7 +195,7 @@ export function checkAchievements(gameState, totalMissions = 10) {
 /**
  * Get all achievements with their unlock status
  */
-export function getAllAchievements(gameState, totalMissions = 10) {
+export function getAllAchievements(gameState: any, totalMissions = 10) {
   const achievementState = loadAchievementState();
 
   return ACHIEVEMENTS.map((achievement) => ({
@@ -201,7 +209,7 @@ export function getAllAchievements(gameState, totalMissions = 10) {
 /**
  * Get achievements by category
  */
-export function getAchievementsByCategory(category, gameState, totalMissions = 10) {
+export function getAchievementsByCategory(category: string, gameState: any, totalMissions = 10) {
   const allAchievements = getAllAchievements(gameState, totalMissions);
   return allAchievements.filter((a) => a.category === category);
 }
@@ -209,7 +217,7 @@ export function getAchievementsByCategory(category, gameState, totalMissions = 1
 /**
  * Reset achievement state (for testing/debugging)
  */
-export function resetAchievementState() {
+export function resetAchievementState(): AchievementState {
   try {
     localStorage.removeItem(ACHIEVEMENTS_KEY);
     localStorage.removeItem(ACHIEVEMENTS_PROGRESS_KEY);
@@ -223,7 +231,7 @@ export function resetAchievementState() {
 /**
  * Get achievement statistics
  */
-export function getAchievementStats() {
+export function getAchievementStats(): { total: number; unlocked: number; locked: number; percentage: number } {
   const state = loadAchievementState();
   const total = ACHIEVEMENTS.length;
   const unlocked = state.unlocked.length;

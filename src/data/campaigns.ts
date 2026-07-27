@@ -11,9 +11,11 @@
 
 //import { missions } from './missions.js';
 
-export const DEFAULT_CAMPAIGN_LANG = 'en';
+import { Campaign, Language } from '../types';
 
-export const campaigns = [
+export const DEFAULT_CAMPAIGN_LANG: Language = 'en';
+
+export const campaigns: Campaign[] = [
   {
     id: 'chapter-1-awakening',
     i18n: {
@@ -306,19 +308,19 @@ Arregla vulnerabilidades de seguridad para completar el desafío de Seguridad y 
  * `campaign.i18n[lang]`, falling back to English, then any legacy
  * top-level field. The `i18n` block is omitted from the result.
  */
-export function localizeCampaign(campaign, lang = DEFAULT_CAMPAIGN_LANG) {
+export function localizeCampaign(campaign?: Campaign | null, lang: Language = DEFAULT_CAMPAIGN_LANG): Campaign | null | undefined {
   if (!campaign) return campaign;
 
   const { i18n, ...neutral } = campaign;
   const locale = (i18n && (i18n[lang] || i18n[DEFAULT_CAMPAIGN_LANG])) || {};
   const fallback = (i18n && i18n[DEFAULT_CAMPAIGN_LANG]) || {};
 
-  const pick = (field) =>
+  const pick = (field: 'title' | 'description' | 'lore') =>
     locale[field] != null
       ? locale[field]
       : fallback[field] != null
       ? fallback[field]
-      : neutral[field];
+      : (neutral as any)[field];
 
   return {
     ...neutral,
@@ -329,14 +331,14 @@ export function localizeCampaign(campaign, lang = DEFAULT_CAMPAIGN_LANG) {
 }
 
 /** Localizes an array of campaigns. */
-export function localizeCampaigns(list, lang = DEFAULT_CAMPAIGN_LANG) {
-  return (list || []).map((c) => localizeCampaign(c, lang));
+export function localizeCampaigns(list?: Campaign[] | null, lang: Language = DEFAULT_CAMPAIGN_LANG): Campaign[] {
+  return (list || []).map((c) => localizeCampaign(c, lang) as Campaign);
 }
 
 // Helper: Get campaign progress from completedMissions array
-export function getCampaignProgress(campaignId, completedMissions) {
+export function getCampaignProgress(campaignId: string, completedMissions: string[] = []) {
   const campaign = campaigns.find(c => c.id === campaignId);
-  if (!campaign) return { completed: 0, total: 0 };
+  if (!campaign) return { completed: 0, total: 0, percentage: 0 };
 
   const completed = campaign.missionIds.filter(id => completedMissions.includes(id)).length;
   return { completed, total: campaign.missionIds.length, percentage: (completed / campaign.missionIds.length) * 100 };

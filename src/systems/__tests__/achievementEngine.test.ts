@@ -18,7 +18,7 @@ const localStorageMock = {
   clear: vi.fn(),
 };
 
-globalThis.localStorage = localStorageMock;
+globalThis.localStorage = localStorageMock as any;
 
 import {
   loadAchievementState,

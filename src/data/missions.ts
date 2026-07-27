@@ -12,13 +12,14 @@
    ========================================== */
 
 import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
-import { createMissionFromMarkdown } from '../systems/missionParser.js';
+import { createMissionFromMarkdown } from '../systems/missionParser';
+import { Mission, Language } from '../types';
 
-export const DEFAULT_MISSION_LANG = 'en';
+export const DEFAULT_MISSION_LANG: Language = 'en';
 
 const helloSorobanContent = createMissionFromMarkdown(helloSorobanMarkdown);
 
-export const missions = [
+export const missions: Mission[] = [
     {
         id: 'hello-soroban',
         chapter: 1,
@@ -3159,7 +3160,7 @@ impl ConfigContract {
  * legacy top-level field. The `i18n` block itself is omitted from the
  * returned object so consumers keep using `mission.title` etc.
  */
-export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
+export function localizeMission(mission?: Mission | null, lang: Language = DEFAULT_MISSION_LANG): Mission | null | undefined {
     if (!mission) return mission;
 
     const { i18n, ...neutral } = mission;
@@ -3167,12 +3168,12 @@ export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
         (i18n && (i18n[lang] || i18n[DEFAULT_MISSION_LANG])) || {};
     const fallback = (i18n && i18n[DEFAULT_MISSION_LANG]) || {};
 
-    const pick = (field) =>
+    const pick = (field: 'title' | 'story' | 'learningGoal' | 'hints') =>
         locale[field] != null
             ? locale[field]
             : fallback[field] != null
             ? fallback[field]
-            : neutral[field];
+            : (neutral as any)[field];
 
     return {
         ...neutral,
@@ -3184,6 +3185,6 @@ export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
 }
 
 /** Localizes an array of missions. */
-export function localizeMissions(list, lang = DEFAULT_MISSION_LANG) {
-    return (list || []).map((m) => localizeMission(m, lang));
+export function localizeMissions(list?: Mission[] | null, lang: Language = DEFAULT_MISSION_LANG): Mission[] {
+    return (list || []).map((m) => localizeMission(m, lang) as Mission);
 }

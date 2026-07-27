@@ -3,8 +3,23 @@
    for Soroban/Rust code validation
    ========================================== */
 
-export function validateCode(code, checks) {
-  const results = [];
+import { MissionCheck } from '../types';
+
+export interface CheckRunResult {
+  passed: boolean;
+  message: string;
+  check: MissionCheck;
+}
+
+export interface ValidationSummary {
+  passed: boolean;
+  results: CheckRunResult[];
+  passedCount: number;
+  totalCount: number;
+}
+
+export function validateCode(code: string, checks: any[]): ValidationSummary {
+  const results: CheckRunResult[] = [];
 
   for (const check of checks) {
     const result = runCheck(code, check);
@@ -19,7 +34,7 @@ export function validateCode(code, checks) {
   };
 }
 
-function runCheck(code, check) {
+function runCheck(code: string, check: MissionCheck): CheckRunResult {
   switch (check.type) {
     case 'contains_pattern':
       return checkContainsPattern(code, check);
@@ -46,32 +61,32 @@ function runCheck(code, check) {
   }
 }
 
-function checkContainsPattern(code, check) {
-  const found = code.includes(check.pattern);
+function checkContainsPattern(code: string, check: MissionCheck): CheckRunResult {
+  const pattern = check.pattern || '';
+  const found = code.includes(pattern);
   return {
     passed: found,
     message: found
-      ? `✓ Found: ${check.description || check.pattern}`
-      : `✗ ${check.message || `Missing pattern: ${check.pattern}`}`,
+      ? `✓ Found: ${check.description || pattern}`
+      : `✗ ${check.message || `Missing pattern: ${pattern}`}`,
     check,
   };
 }
 
-function checkHasFunction(code, check) {
-  // Match fn name with optional pub, parameters
-  const escapedName = escapeRegex(check.name);
+function checkHasFunction(code: string, check: MissionCheck): CheckRunResult {
+  const name = check.name || '';
+  const escapedName = escapeRegex(name);
   const fnPattern = new RegExp(`(pub\\s+)?fn\\s+${escapedName}\\s*\\(([^)]*)\\)`, 'gm');
   const match = fnPattern.exec(code);
 
   if (!match) {
     return {
       passed: false,
-      message: `✗ ${check.message || `Function '${check.name}' not found`}`,
+      message: `✗ ${check.message || `Function '${name}' not found`}`,
       check,
     };
   }
 
-  // If params are specified, validate them
   if (check.params && check.params.length > 0) {
     const paramStr = match[2].replace(/\s+/g, ' ').trim();
     const allPresent = check.params.every((p) => {
@@ -82,7 +97,7 @@ function checkHasFunction(code, check) {
     if (!allPresent) {
       return {
         passed: false,
-        message: `✗ Function '${check.name}' has incorrect parameters. Expected: ${check.params.join(', ')}`,
+        message: `✗ Function '${name}' has incorrect parameters. Expected: ${check.params.join(', ')}`,
         check,
       };
     }
@@ -90,57 +105,61 @@ function checkHasFunction(code, check) {
 
   return {
     passed: true,
-    message: `✓ Function '${check.name}' found with correct signature`,
+    message: `✓ Function '${name}' found with correct signature`,
     check,
   };
 }
 
-function checkReturnsType(code, check) {
-  const escapedName = escapeRegex(check.function);
-  const escapedType = escapeRegex(check.returnType).replace(/\s+/g, '\\s*');
+function checkReturnsType(code: string, check: MissionCheck): CheckRunResult {
+  const fnName = check.function || '';
+  const returnType = check.returnType || '';
+  const escapedName = escapeRegex(fnName);
+  const escapedType = escapeRegex(returnType).replace(/\s+/g, '\\s*');
   const pattern = new RegExp(`fn\\s+${escapedName}\\s*\\([^)]*\\)\\s*->\\s*${escapedType}`, 'gm');
   const found = pattern.test(code);
 
   return {
     passed: found,
     message: found
-      ? `✓ Function '${check.function}' returns correct type: ${check.returnType}`
-      : `✗ ${check.message || `Function '${check.function}' should return ${check.returnType}`}`,
+      ? `✓ Function '${fnName}' returns correct type: ${returnType}`
+      : `✗ ${check.message || `Function '${fnName}' should return ${returnType}`}`,
     check,
   };
 }
 
-function checkHasAttribute(code, check) {
-  const escaped = escapeRegex(check.attribute);
+function checkHasAttribute(code: string, check: MissionCheck): CheckRunResult {
+  const attr = check.attribute || '';
+  const escaped = escapeRegex(attr);
   const pattern = new RegExp(`#\\[${escaped}[^\\]]*\\]`, 'gm');
   const found = pattern.test(code);
 
   return {
     passed: found,
     message: found
-      ? `✓ Attribute #[${check.attribute}] found`
-      : `✗ ${check.message || `Missing attribute: #[${check.attribute}]`}`,
+      ? `✓ Attribute #[${attr}] found`
+      : `✗ ${check.message || `Missing attribute: #[${attr}]`}`,
     check,
   };
 }
 
-function checkUsesType(code, check) {
-  const escaped = escapeRegex(check.typeName);
+function checkUsesType(code: string, check: MissionCheck): CheckRunResult {
+  const typeName = check.typeName || '';
+  const escaped = escapeRegex(typeName);
   const pattern = new RegExp(`\\b${escaped}\\b`, 'gm');
   const found = pattern.test(code);
 
   return {
     passed: found,
     message: found
-      ? `✓ Type '${check.typeName}' is used`
-      : `✗ ${check.message || `Must use type: ${check.typeName}`}`,
+      ? `✓ Type '${typeName}' is used`
+      : `✗ ${check.message || `Must use type: ${typeName}`}`,
     check,
   };
 }
 
-function checkStorageOperation(code, check) {
-  const op = check.operation; // 'get', 'set', 'has', 'remove'
-  const patterns = {
+function checkStorageOperation(code: string, check: MissionCheck): CheckRunResult {
+  const op = check.operation as 'get' | 'set' | 'has' | 'remove';
+  const patterns: Record<string, RegExp> = {
     get: /env\s*\.\s*storage\(\)\s*\.\s*(persistent|temporary|instance)\(\)\s*\.\s*get/,
     set: /env\s*\.\s*storage\(\)\s*\.\s*(persistent|temporary|instance)\(\)\s*\.\s*set/,
     has: /env\s*\.\s*storage\(\)\s*\.\s*(persistent|temporary|instance)\(\)\s*\.\s*has/,
@@ -158,32 +177,34 @@ function checkStorageOperation(code, check) {
   };
 }
 
-function checkNoPattern(code, check) {
-  const found = code.includes(check.pattern);
+function checkNoPattern(code: string, check: MissionCheck): CheckRunResult {
+  const pattern = check.pattern || '';
+  const found = code.includes(pattern);
   return {
     passed: !found,
     message: !found
-      ? `✓ Correctly avoided: ${check.description || check.pattern}`
-      : `✗ ${check.message || `Should not contain: ${check.pattern}`}`,
+      ? `✓ Correctly avoided: ${check.description || pattern}`
+      : `✗ ${check.message || `Should not contain: ${pattern}`}`,
     check,
   };
 }
 
-function checkHasStruct(code, check) {
-  const escaped = escapeRegex(check.name);
+function checkHasStruct(code: string, check: MissionCheck): CheckRunResult {
+  const name = check.name || '';
+  const escaped = escapeRegex(name);
   const pattern = new RegExp(`(pub\\s+)?struct\\s+${escaped}`, 'gm');
   const found = pattern.test(code);
 
   return {
     passed: found,
     message: found
-      ? `✓ Struct '${check.name}' defined`
-      : `✗ ${check.message || `Missing struct: ${check.name}`}`,
+      ? `✓ Struct '${name}' defined`
+      : `✗ ${check.message || `Missing struct: ${name}`}`,
     check,
   };
 }
 
-function checkBalancedBraces(code, check) {
+function checkBalancedBraces(code: string, check: MissionCheck): CheckRunResult {
   let count = 0;
   for (const ch of code) {
     if (ch === '{') count++;
@@ -201,20 +222,21 @@ function checkBalancedBraces(code, check) {
   };
 }
 
-function checkHasImport(code, check) {
-  const escaped = escapeRegex(check.module);
+function checkHasImport(code: string, check: MissionCheck): CheckRunResult {
+  const mod = (check as any).module || '';
+  const escaped = escapeRegex(mod);
   const pattern = new RegExp(`use\\s+${escaped}`, 'gm');
   const found = pattern.test(code);
 
   return {
     passed: found,
     message: found
-      ? `✓ Import '${check.module}' found`
-      : `✗ ${check.message || `Missing import: use ${check.module}`}`,
+      ? `✓ Import '${mod}' found`
+      : `✗ ${check.message || `Missing import: use ${mod}`}`,
     check,
   };
 }
 
-function escapeRegex(str) {
+function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

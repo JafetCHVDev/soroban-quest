@@ -5,6 +5,15 @@
    registered with monaco.editor.defineTheme on editor mount.
 ========================= */
 
+import { EditorTheme } from '../types';
+
+export interface EditorThemeOption {
+  id: string;
+  label: string;
+  builtin: boolean;
+  data?: EditorTheme;
+}
+
 const THEME_KEY = "soroban_quest_editor_theme";
 
 /**
@@ -14,7 +23,7 @@ const THEME_KEY = "soroban_quest_editor_theme";
  * - `builtin`: true for Monaco's bundled themes (no definition needed).
  * - `data`: monaco theme definition, required for custom themes.
  */
-export const EDITOR_THEMES = [
+export const EDITOR_THEMES: EditorThemeOption[] = [
   {
     id: "vs-dark",
     label: "Dark (default)",
@@ -35,6 +44,8 @@ export const EDITOR_THEMES = [
     label: "Soroban Night",
     builtin: false,
     data: {
+      id: "soroban-night",
+      name: "Soroban Night",
       base: "vs-dark",
       inherit: true,
       rules: [
@@ -58,6 +69,8 @@ export const EDITOR_THEMES = [
     label: "Stellar Dawn",
     builtin: false,
     data: {
+      id: "stellar-dawn",
+      name: "Stellar Dawn",
       base: "vs",
       inherit: true,
       rules: [
@@ -81,12 +94,12 @@ export const EDITOR_THEMES = [
 export const DEFAULT_THEME_ID = "vs-dark";
 
 /** Returns the theme definition for an id, or undefined when unknown. */
-export function getThemeById(id) {
+export function getThemeById(id: string): EditorThemeOption | undefined {
   return EDITOR_THEMES.find((theme) => theme.id === id);
 }
 
 /** Returns true when `id` matches a known theme. */
-export function isValidThemeId(id) {
+export function isValidThemeId(id: string): boolean {
   return EDITOR_THEMES.some((theme) => theme.id === id);
 }
 
@@ -94,7 +107,7 @@ export function isValidThemeId(id) {
  * Register every custom theme with the given monaco instance. Built-in themes
  * are skipped since Monaco already knows them. Safe to call more than once.
  */
-export function registerEditorThemes(monaco) {
+export function registerEditorThemes(monaco: any): void {
   if (!monaco?.editor?.defineTheme) return;
   for (const theme of EDITOR_THEMES) {
     if (!theme.builtin && theme.data) {
@@ -104,7 +117,7 @@ export function registerEditorThemes(monaco) {
 }
 
 /** Read the persisted theme id, falling back to the default when unset/invalid. */
-export function loadEditorTheme() {
+export function loadEditorTheme(): string {
   try {
     const stored = localStorage.getItem(THEME_KEY);
     return stored && isValidThemeId(stored) ? stored : DEFAULT_THEME_ID;
@@ -114,7 +127,7 @@ export function loadEditorTheme() {
 }
 
 /** Persist the selected theme id. Unknown ids are ignored. */
-export function saveEditorTheme(id) {
+export function saveEditorTheme(id: string): void {
   if (!isValidThemeId(id)) return;
   try {
     localStorage.setItem(THEME_KEY, id);

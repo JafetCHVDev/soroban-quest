@@ -15,7 +15,7 @@ vi.mock("../activityLogger", () => {
 
 import {
   xpForLevel,
-  _xpForNextLevel,
+  xpForNextLevel,
   getLevelFromXP,
   getRankTitle,
   getXPProgress,
@@ -25,11 +25,11 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
-  _BADGES,
+  BADGES,
 } from "../gameEngine";
 
 describe("gameEngine core logic", () => {
-  let baseState;
+  let baseState: any;
 
   beforeEach(() => {
     baseState = getDefaultState();
@@ -203,7 +203,7 @@ describe("gameEngine core logic", () => {
       const out = checkBadges(s);
       // should unlock at least first_contract and triple_threat
       expect(out.newBadges).toEqual(expect.arrayContaining(["first_contract", "triple_threat"]));
-      expect(out.badges).toEqual(expect.arrayContaining(out.newBadges));
+      expect(out.badges).toEqual(expect.arrayContaining(out.newBadges || []));
     });
 
     it("does not duplicate badges when called twice", () => {

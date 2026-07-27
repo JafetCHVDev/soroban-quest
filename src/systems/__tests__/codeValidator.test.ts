@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateCode } from "../codeValidator.js";
+import { validateCode } from "../codeValidator";
 
 describe("codeValidator", () => {
   describe("has_function", () => {

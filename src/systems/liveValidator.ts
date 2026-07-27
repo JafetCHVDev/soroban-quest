@@ -1,10 +1,29 @@
 // Constants
+import { Mission, MissionCheck } from '../types';
+
 export const Severity = {
   Error: 8,   // monaco.MarkerSeverity.Error
   Warning: 4, // monaco.MarkerSeverity.Warning
   Info: 2,
   Hint: 1,
-};
+} as const;
+
+export interface MonacoMarker {
+  severity: number;
+  message: string;
+  startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number;
+  source: string;
+  code: string;
+}
+
+export interface LiveValidationResult {
+  markers: MonacoMarker[];
+  passCount: number;
+  totalCount: number;
+}
 
 const LIVE_CHECK_TYPES = new Set([
   "has_function",
@@ -15,13 +34,12 @@ const LIVE_CHECK_TYPES = new Set([
   "has_import",
 ]);
 
-
 // Helpers
-function escapeRegex(str) {
+function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function locateLine(code, searchText) {
+function locateLine(code: string, searchText: string): { lineNumber: number; startColumn: number; endColumn: number } {
   const lines = code.split("\n");
   for (let i = 0; i < lines.length; i++) {
     const col = lines[i].indexOf(searchText);
@@ -36,7 +54,7 @@ function locateLine(code, searchText) {
   return { lineNumber: 1, startColumn: 1, endColumn: 2 };
 }
 
-function checkBraces(code) {
+function checkBraces(code: string): { ok: boolean; line: number } {
   const lines = code.split("\n");
   let depth = 0;
   for (let i = 0; i < lines.length; i++) {
@@ -51,20 +69,20 @@ function checkBraces(code) {
   return { ok: depth === 0, line: lines.length };
 }
 
-
-function validateCheck(check, code) {
+function validateCheck(check: MissionCheck, code: string): MonacoMarker | null {
   switch (check.type) {
 
     // ── has_function 
     case "has_function": {
-      const escaped = escapeRegex(check.name);
+      const name = check.name || '';
+      const escaped = escapeRegex(name);
       const pattern = new RegExp(`(pub\\s+)?fn\\s+${escaped}\\s*\\(`, "gm");
       const match = pattern.exec(code);
 
       if (!match) {
         return {
           severity: Severity.Warning,
-          message: check.message || `Missing function \`${check.name}\``,
+          message: check.message || `Missing function \`${name}\``,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
@@ -74,8 +92,7 @@ function validateCheck(check, code) {
         };
       }
 
-      // If params specified, validate them too
-      if (check.params?.length > 0) {
+      if (check.params && check.params.length > 0) {
         const fullPattern = new RegExp(
           `(pub\\s+)?fn\\s+${escaped}\\s*\\(([^)]*)\\)`,
           "gm"
@@ -87,12 +104,12 @@ function validateCheck(check, code) {
         );
 
         if (!allPresent) {
-          const loc = locateLine(code, `fn ${check.name}`);
+          const loc = locateLine(code, `fn ${name}`);
           return {
             severity: Severity.Warning,
             message:
               check.message ||
-              `Function \`${check.name}\` has incorrect parameters. Expected: ${check.params.join(", ")}`,
+              `Function \`${name}\` has incorrect parameters. Expected: ${check.params.join(", ")}`,
             startLineNumber: loc.lineNumber,
             startColumn: loc.startColumn,
             endLineNumber: loc.lineNumber,
@@ -103,22 +120,23 @@ function validateCheck(check, code) {
         }
       }
 
-      return null; // pass
+      return null;
     }
 
     // ── has_attribute 
     case "has_attribute": {
-      const escaped = escapeRegex(check.attribute);
+      const attr = check.attribute || '';
+      const escaped = escapeRegex(attr);
       const pattern = new RegExp(`#\\[${escaped}[^\\]]*\\]`, "gm");
 
-      if (pattern.test(code)) return null; // pass
+      if (pattern.test(code)) return null;
 
       const loc = locateLine(code, "pub struct");
       return {
         severity: Severity.Error,
         message:
           check.message ||
-          `Missing required attribute \`#[${check.attribute}]\``,
+          `Missing required attribute \`#[${attr}]\``,
         startLineNumber: loc.lineNumber,
         startColumn: loc.startColumn,
         endLineNumber: loc.lineNumber,
@@ -130,12 +148,13 @@ function validateCheck(check, code) {
 
     // ── uses_type 
     case "uses_type": {
-      const pattern = new RegExp(`\\b${escapeRegex(check.typeName)}\\b`, "gm");
-      if (pattern.test(code)) return null; // pass
+      const typeName = check.typeName || '';
+      const pattern = new RegExp(`\\b${escapeRegex(typeName)}\\b`, "gm");
+      if (pattern.test(code)) return null;
 
       return {
         severity: Severity.Warning,
-        message: check.message || `Must use type \`${check.typeName}\``,
+        message: check.message || `Must use type \`${typeName}\``,
         startLineNumber: 1,
         startColumn: 1,
         endLineNumber: 1,
@@ -168,13 +187,14 @@ function validateCheck(check, code) {
 
     // ── has_struct 
     case "has_struct": {
-      const escaped = escapeRegex(check.name);
+      const name = check.name || '';
+      const escaped = escapeRegex(name);
       const pattern = new RegExp(`(pub\\s+)?struct\\s+${escaped}`, "gm");
-      if (pattern.test(code)) return null; // pass
+      if (pattern.test(code)) return null;
 
       return {
         severity: Severity.Warning,
-        message: check.message || `Missing struct \`${check.name}\``,
+        message: check.message || `Missing struct \`${name}\``,
         startLineNumber: 1,
         startColumn: 1,
         endLineNumber: 1,
@@ -186,14 +206,15 @@ function validateCheck(check, code) {
 
     // ── has_import 
     case "has_import": {
-      const escaped = escapeRegex(check.module);
+      const mod = (check as any).module || '';
+      const escaped = escapeRegex(mod);
       const pattern = new RegExp(`use\\s+${escaped}`, "gm");
-      if (pattern.test(code)) return null; // pass
+      if (pattern.test(code)) return null;
 
       const loc = locateLine(code, "use ");
       return {
         severity: Severity.Warning,
-        message: check.message || `Missing import: \`use ${check.module}\``,
+        message: check.message || `Missing import: \`use ${mod}\``,
         startLineNumber: loc.lineNumber,
         startColumn: loc.startColumn,
         endLineNumber: loc.lineNumber,
@@ -204,19 +225,18 @@ function validateCheck(check, code) {
     }
 
     default:
-      return null; // deferred to Run Tests
+      return null;
   }
 }
 
-
 // Public API
-export function runLiveValidation(code, mission) {
+export function runLiveValidation(code: string, mission?: Mission | null): LiveValidationResult {
   if (!mission?.checks) {
     return { markers: [], passCount: 0, totalCount: 0 };
   }
 
   const liveChecks = mission.checks.filter((c) => LIVE_CHECK_TYPES.has(c.type));
-  const markers = [];
+  const markers: MonacoMarker[] = [];
   let passCount = 0;
 
   for (const check of liveChecks) {
@@ -231,10 +251,10 @@ export function runLiveValidation(code, mission) {
   return { markers, passCount, totalCount: liveChecks.length };
 }
 
-export function createDebouncedValidator(waitMs = 500, onResult) {
-  let timer = null;
+export function createDebouncedValidator(waitMs = 500, onResult: (res: LiveValidationResult) => void) {
+  let timer: any = null;
 
-  function call(code, mission) {
+  function call(code: string, mission?: Mission | null) {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
       onResult(runLiveValidation(code, mission));

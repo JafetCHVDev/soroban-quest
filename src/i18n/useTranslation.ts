@@ -3,7 +3,7 @@
    ========================================== */
 
 import { useContext } from 'react';
-import { LanguageContext } from './index.jsx';
+import { LanguageContext } from './index';
 
 export function useTranslation() {
   const ctx = useContext(LanguageContext);
@@ -12,9 +12,9 @@ export function useTranslation() {
   // outside the provider (e.g., isolated tests or storybook).
   if (!ctx) {
     return {
-      t: (key) => key,
+      t: (key: string) => key,
       language: 'en',
-      setLanguage: () => {},
+      setLanguage: (_lang: string) => {},
       languages: [{ code: 'en', name: 'English' }],
     };
   }

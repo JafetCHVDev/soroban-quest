@@ -7,19 +7,21 @@
    needing access to React context.
    ========================================== */
 
-export const SUPPORTED_LANGS = ['en', 'es'];
-export const DEFAULT_LANG = 'en';
+import { Language } from '../types';
 
-let activeLanguage = DEFAULT_LANG;
-const listeners = new Set();
+export const SUPPORTED_LANGS: Language[] = ['en', 'es'];
+export const DEFAULT_LANG: Language = 'en';
+
+let activeLanguage: Language = DEFAULT_LANG;
+const listeners = new Set<(lang: Language) => void>();
 
 /** Read the current active language code (e.g. 'en' | 'es'). */
-export function getActiveLanguage() {
+export function getActiveLanguage(): Language {
     return activeLanguage;
 }
 
 /** Update the active language. Called by the LanguageProvider. */
-export function setActiveLanguage(lang) {
+export function setActiveLanguage(lang: Language): void {
     if (!SUPPORTED_LANGS.includes(lang) || lang === activeLanguage) return;
     activeLanguage = lang;
     for (const fn of listeners) {
@@ -32,7 +34,7 @@ export function setActiveLanguage(lang) {
 }
 
 /** Subscribe to language changes. Returns an unsubscribe function. */
-export function onLanguageChange(fn) {
+export function onLanguageChange(fn: (lang: Language) => void): () => void {
     listeners.add(fn);
     return () => listeners.delete(fn);
 }

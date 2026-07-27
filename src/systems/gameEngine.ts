@@ -3,7 +3,6 @@
    ========================================== */
 import { logActivity, ACTIVITY_TYPES } from "./activityLogger";
 
-
 const LEVEL_BASE = 500;
 const LEVEL_EXPONENT = 1.5;
 
@@ -26,7 +25,7 @@ const RANK_TITLES = [
   "Security Sentinel", // 15+
 ];
 
-const CHAPTER_MISSIONS = {
+const CHAPTER_MISSIONS: Record<number, string[]> = {
   1: ['hello-soroban', 'greetings-protocol'],
   2: ['counter-vault', 'guardian-ledger'],
   3: ['token-forge', 'time-lock', 'multi-party-pact'],
@@ -36,7 +35,35 @@ const CHAPTER_MISSIONS = {
   7: ['reentrancy-guard', 'access-control-fix'],
 };
 
-export const BADGES = [
+export interface GameEngineState {
+  xp: number;
+  gold: number;
+  level: number;
+  completedMissions: string[];
+  badges: string[];
+  firstTryMissions: string[];
+  currentMission?: string | null;
+  missionAttempts: Record<string, number>;
+  streak: number;
+  lastLogin?: string | null;
+  purchasedItems?: string[];
+  xpBoostActive?: boolean;
+  streakFreezeUsed?: boolean;
+  leveledUp?: boolean;
+  alreadyCompleted?: boolean;
+  newBadges?: string[];
+  [key: string]: any;
+}
+
+export interface BadgeDefinition {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  condition: (state: GameEngineState) => boolean;
+}
+
+export const BADGES: BadgeDefinition[] = [
   {
     id: "first_contract",
     name: "First Contract",
@@ -91,7 +118,7 @@ export const BADGES = [
     name: "Speed Demon",
     description: "Complete a mission on first try",
     icon: "⚡",
-    condition: (state) => state.firstTryMissions?.length >= 1,
+    condition: (state) => (state.firstTryMissions?.length || 0) >= 1,
   },
   {
     id: "chapter_1",
@@ -144,7 +171,7 @@ export const BADGES = [
   },
 ];
 
-function getDefaultState() {
+function getDefaultState(): GameEngineState {
   return {
     xp: 0,
     gold: 0,
@@ -162,16 +189,16 @@ function getDefaultState() {
   };
 }
 
-export function xpForLevel(level) {
+export function xpForLevel(level: number): number {
   if (level <= 1) return 0;
   return Math.floor(LEVEL_BASE * Math.pow(level - 1, LEVEL_EXPONENT));
 }
 
-export function xpForNextLevel(level) {
+export function xpForNextLevel(level: number): number {
   return xpForLevel(level + 1);
 }
 
-export function getLevelFromXP(xp) {
+export function getLevelFromXP(xp: number): number {
   let level = 1;
   while (xpForLevel(level + 1) <= xp) {
     level++;
@@ -179,12 +206,12 @@ export function getLevelFromXP(xp) {
   return level;
 }
 
-export function getRankTitle(level) {
+export function getRankTitle(level: number): string {
   const index = Math.min(level - 1, RANK_TITLES.length - 1);
   return RANK_TITLES[index];
 }
 
-export function getXPProgress(state) {
+export function getXPProgress(state: GameEngineState): { current: number; needed: number; percentage: number } {
   const currentLevelXP = xpForLevel(state.level);
   const nextLevelXP = xpForNextLevel(state.level);
   const progressXP = state.xp - currentLevelXP;
@@ -196,7 +223,7 @@ export function getXPProgress(state) {
   };
 }
 
-export function awardXP(state, amount) {
+export function awardXP(state: GameEngineState, amount: number): GameEngineState {
   const hasBoost = state.purchasedItems?.includes('xp-boost');
   const multiplied = hasBoost ? amount * 2 : amount;
   const newXP = state.xp + multiplied;
@@ -207,7 +234,7 @@ export function awardXP(state, amount) {
     logActivity(ACTIVITY_TYPES.LEVEL_UP, { level: newLevel }, `Reached Level ${newLevel}!`);
   }
 
-  const nextState = {
+  const nextState: GameEngineState = {
     ...state,
     xp: newXP,
     level: newLevel,
@@ -223,7 +250,7 @@ export function awardXP(state, amount) {
 
 export const GOLD_PER_MISSION_RATIO = 0.5;
 
-export function awardGold(state, xpReward) {
+export function awardGold(state: GameEngineState, xpReward: number): GameEngineState {
   const goldEarned = Math.floor(xpReward * GOLD_PER_MISSION_RATIO);
   logActivity(ACTIVITY_TYPES.GOLD_EARNED, { amount: goldEarned }, `Earned ${goldEarned} gold!`);
   return {
@@ -232,7 +259,7 @@ export function awardGold(state, xpReward) {
   };
 }
 
-export function spendGold(state, amount) {
+export function spendGold(state: GameEngineState, amount: number): GameEngineState {
   const currentGold = state.gold || 0;
   if (amount > currentGold) return state;
   return {
@@ -241,7 +268,7 @@ export function spendGold(state, amount) {
   };
 }
 
-export function completeMission(state, missionId, xpReward) {
+export function completeMission(state: GameEngineState, missionId: string, xpReward: number): GameEngineState {
   if (state.completedMissions.includes(missionId)) {
     return { ...state, alreadyCompleted: true };
   }
@@ -249,7 +276,7 @@ export function completeMission(state, missionId, xpReward) {
   const attempts = state.missionAttempts[missionId] || 0;
   const isFirstTry = attempts <= 1;
 
-  let newState = {
+  let newState: GameEngineState = {
     ...state,
     completedMissions: [...state.completedMissions, missionId],
     firstTryMissions: isFirstTry
@@ -266,7 +293,7 @@ export function completeMission(state, missionId, xpReward) {
   return newState;
 }
 
-export function recordAttempt(state, missionId) {
+export function recordAttempt(state: GameEngineState, missionId: string): GameEngineState {
   return {
     ...state,
     missionAttempts: {
@@ -276,8 +303,8 @@ export function recordAttempt(state, missionId) {
   };
 }
 
-export function checkBadges(state) {
-  const newBadges = [];
+export function checkBadges(state: GameEngineState): GameEngineState {
+  const newBadges: string[] = [];
   for (const badge of BADGES) {
     if (!state.badges.includes(badge.id) && badge.condition(state)) {
       newBadges.push(badge.id);
@@ -292,7 +319,7 @@ export function checkBadges(state) {
   };
 }
 
-export function updateStreak(state) {
+export function updateStreak(state: GameEngineState): GameEngineState {
   const today = new Date().toISOString().split("T")[0];
   const lastLogin = state.lastLogin;
 
@@ -301,8 +328,8 @@ export function updateStreak(state) {
   let newStreak = 1;
   let consumedFreeze = false;
   if (lastLogin) {
-    const last = new Date(lastLogin);
-    const now = new Date(today);
+    const last = new Date(lastLogin).getTime();
+    const now = new Date(today).getTime();
     const diffTime = Math.abs(now - last);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -316,7 +343,7 @@ export function updateStreak(state) {
 
   logActivity(ACTIVITY_TYPES.STREAK, { streak: newStreak }, `Daily streak: ${newStreak} day${newStreak > 1 ? 's' : ''}!`);
 
-  const nextState = {
+  const nextState: GameEngineState = {
     ...state,
     streak: newStreak,
     lastLogin: today,

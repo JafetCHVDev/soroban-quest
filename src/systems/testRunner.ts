@@ -4,9 +4,26 @@
    ========================================== */
 
 import { validateCode } from './codeValidator';
+import { Mission } from '../types';
 
-export async function runTests(code, mission) {
-    const results = [];
+export interface TestRunResultItem {
+  phase: string;
+  label: string;
+  passed: boolean;
+  message: string;
+  check?: any;
+}
+
+export interface TestRunSummary {
+  results: TestRunResultItem[];
+  allPassed: boolean;
+  passedCount: number;
+  totalCount: number;
+  summary: string;
+}
+
+export async function runTests(code: string, mission: Mission): Promise<TestRunSummary> {
+    const results: TestRunResultItem[] = [];
 
     // Step 1: Syntax basics
     results.push({
@@ -27,7 +44,7 @@ export async function runTests(code, mission) {
     await delay(300);
 
     // Step 3: Mission-specific checks
-    const validation = validateCode(code, mission.checks);
+    const validation = validateCode(code, mission.checks || []);
 
     for (let i = 0; i < validation.results.length; i++) {
         await delay(200);
@@ -55,7 +72,7 @@ export async function runTests(code, mission) {
     };
 }
 
-function checkSyntaxBasics(code) {
+function checkSyntaxBasics(code: string): { passed: boolean; message: string } {
     const trimmed = code.trim();
 
     if (trimmed.length === 0) {
@@ -91,7 +108,7 @@ function checkSyntaxBasics(code) {
     return { passed: true, message: '✓ Basic syntax looks good' };
 }
 
-function checkStructure(code, _mission) {
+function checkStructure(code: string, _mission: Mission): { passed: boolean; message: string } {
     // Must have at least one fn declaration
     if (!/fn\s+\w+/.test(code)) {
         return { passed: false, message: '✗ No function definitions found' };
@@ -111,6 +128,6 @@ function checkStructure(code, _mission) {
     return { passed: true, message: '✓ Contract structure validated' };
 }
 
-function delay(ms) {
+function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

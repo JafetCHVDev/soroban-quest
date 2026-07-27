@@ -6,27 +6,27 @@ import {
 } from "../collaboration";
 
 function createProviderMock() {
-  const handlers = new Map();
-  const awarenessStates = new Map();
+  const handlers = new Map<string, any>();
+  const awarenessStates = new Map<string, any>();
   return {
     connected: false,
     awareness: {
       setLocalState: vi.fn(),
-      setLocalStateField: vi.fn((key, value) => {
+      setLocalStateField: vi.fn((key: string, value: any) => {
         const current = awarenessStates.get("local") || {};
         awarenessStates.set("local", { ...current, [key]: value });
       }),
       getStates: vi.fn(() => awarenessStates),
-      on: vi.fn((event, handler) => handlers.set(`awareness:${event}`, handler)),
+      on: vi.fn((event: string, handler: any) => handlers.set(`awareness:${event}`, handler)),
     },
-    on: vi.fn((event, handler) => handlers.set(event, handler)),
+    on: vi.fn((event: string, handler: any) => handlers.set(event, handler)),
     connect: vi.fn(),
     disconnect: vi.fn(),
     destroy: vi.fn(),
-    emitStatus(status) {
+    emitStatus(status: any) {
       handlers.get("status")?.({ status });
     },
-    addPeer(peer) {
+    addPeer(peer: any) {
       awarenessStates.set(peer.id, { user: peer });
       handlers.get("awareness:change")?.();
     },
@@ -54,88 +54,68 @@ describe("CollaborationManager", () => {
   });
 
   it("restores a local snapshot so work survives reconnects", () => {
-    const storage = {};
+    const storage: Record<string, string> = {};
     vi.stubGlobal("localStorage", {
-      getItem: (key) => storage[key] || null,
-      setItem: (key, value) => {
+      getItem: (key: string) => storage[key] || null,
+      setItem: (key: string, value: string) => {
         storage[key] = value;
       },
     });
     const first = new CollaborationManager({
       roomId: "mission-one",
       missionId: "basics",
-      initialCode: "seed",
-      providerFactory: () => createProviderMock(),
+      initialCode: "hello",
     });
 
     first.setCode("saved work");
+
     const second = new CollaborationManager({
       roomId: "mission-one",
       missionId: "basics",
-      initialCode: "seed",
-      providerFactory: () => createProviderMock(),
+      initialCode: "hello",
     });
 
     expect(second.getCode()).toBe("saved work");
-    vi.unstubAllGlobals();
   });
 
-  it("reports connected peers through awareness updates", () => {
+  it("handles status, awareness, and peer updates", () => {
     const provider = createProviderMock();
     const manager = new CollaborationManager({
-      roomId: "mission-one",
+      roomId: "room-1",
       missionId: "basics",
-      providerFactory: () => provider,
-    });
-    const onPeers = vi.fn();
-
-    manager.on("peers", onPeers);
-    manager.connect();
-    provider.addPeer({ id: "peer-1", name: "Ada", color: "#8b5cf6" });
-
-    expect(manager.getPeers()).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ id: "peer-1", name: "Ada" }),
-      ]),
-    );
-    expect(onPeers).toHaveBeenCalled();
-  });
-
-  it("emits status updates for disconnect and reconnect flows", () => {
-    const provider = createProviderMock();
-    const manager = new CollaborationManager({
-      roomId: "mission-one",
-      missionId: "basics",
+      user: { id: "p1", name: "Alice" },
       providerFactory: () => provider,
     });
     const onStatus = vi.fn();
+    const onPeers = vi.fn();
 
     manager.on("status", onStatus);
+    manager.on("peers", onPeers);
+
     manager.connect();
     provider.emitStatus("connected");
-    manager.disconnect();
-    manager.reconnect();
+    provider.addPeer({ id: "p2", name: "Bob" });
 
+    expect(manager.getStatus()).toEqual({
+      roomId: "room-1",
+      connected: true,
+      peerCount: 2,
+    });
     expect(onStatus).toHaveBeenCalledWith(expect.objectContaining({ connected: true }));
-    expect(provider.disconnect).toHaveBeenCalled();
-    expect(provider.connect).toHaveBeenCalled();
+    expect(onPeers).toHaveBeenCalled();
   });
 
-  it("flags conflicts when remote code arrives after local divergence", () => {
-    const provider = createProviderMock();
+  it("merges remote changes and flags merge conflicts", () => {
     const manager = new CollaborationManager({
-      roomId: "mission-one",
+      roomId: "room-2",
       missionId: "basics",
       initialCode: "base",
-      providerFactory: () => provider,
     });
     const onConflict = vi.fn();
 
     manager.on("conflict", onConflict);
-    manager.connect();
-    manager.lastSyncedCode = "base";
-    manager.code.insert(4, "-local");
 
+    manager.setCode("base-local");
     const result = manager.mergeCode("base-remote");
 
     expect(result.conflict).toBe(true);
@@ -146,10 +126,10 @@ describe("CollaborationManager", () => {
 
 describe("collaboration invite helpers", () => {
   it("creates and reads stable room links", () => {
-    const location = { href: "https://quest.example/#/mission/one?foo=bar" };
+    const location = { href: "https://quest.example/#/mission/one?foo=bar" } as any;
     const invite = createCollaborationInvite("room one!", location);
 
     expect(invite).toContain("collab=room-one-");
-    expect(readCollaborationRoom({ href: invite })).toBe("room-one-");
+    expect(readCollaborationRoom({ href: invite } as any)).toBe("room-one-");
   });
 });

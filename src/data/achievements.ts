@@ -1,8 +1,6 @@
-/* ==========================================
-   ACHIEVEMENTS DATA
-   ========================================== */
+import { Achievement } from '../types';
 
-export const ACHIEVEMENTS = [
+export const ACHIEVEMENTS: Achievement[] = [
   {
     id: "first_steps",
     name: "First Steps",
@@ -187,7 +185,7 @@ export const ACHIEVEMENTS = [
   },
 ];
 
-export const ACHIEVEMENT_CATEGORIES = {
+export const ACHIEVEMENT_CATEGORIES: Record<string, string> = {
   missions: "Missions",
   xp: "Experience",
   level: "Level",

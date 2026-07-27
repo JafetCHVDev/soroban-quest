@@ -1,13 +1,13 @@
 const FRONTMATTER_ARRAY_FIELDS = ['skills', 'prereqs', 'conceptsIntroduced', 'hints'];
 const FRONTMATTER_NUMBER_FIELDS = ['chapter', 'order', 'xp', 'xpReward'];
 
-function parseScalar(value) {
+function parseScalar(value: string): string | any[] {
   const trimmed = value.trim();
   if (trimmed === '[]') return [];
   return trimmed.replace(/^['"]|['"]$/g, '');
 }
 
-function normalizeArray(value) {
+function normalizeArray(value: any): string[] {
   if (Array.isArray(value)) return value;
   if (typeof value === 'string') {
     return value
@@ -18,10 +18,10 @@ function normalizeArray(value) {
   return [];
 }
 
-function parseFrontmatterBlock(block) {
-  const data = {};
+function parseFrontmatterBlock(block: string): Record<string, any> {
+  const data: Record<string, any> = {};
   const lines = block.split(/\r?\n/);
-  let currentListKey = null;
+  let currentListKey: string | null = null;
 
   for (const line of lines) {
     if (!line.trim()) continue;
@@ -51,7 +51,7 @@ function parseFrontmatterBlock(block) {
   return data;
 }
 
-function splitFrontmatter(source) {
+function splitFrontmatter(source: string): { data: Record<string, any>; content: string } {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) return { data: {}, content: source };
   return {
@@ -60,7 +60,7 @@ function splitFrontmatter(source) {
   };
 }
 
-function normalizeMetadata(data) {
+function normalizeMetadata(data: Record<string, any>): Record<string, any> {
   const metadata = { ...data };
 
   for (const field of FRONTMATTER_ARRAY_FIELDS) {
@@ -83,7 +83,7 @@ function normalizeMetadata(data) {
   return metadata;
 }
 
-export function parseMissionMarkdown(source) {
+export function parseMissionMarkdown(source: string): Record<string, any> {
   const { data, content } = splitFrontmatter(source);
   const metadata = normalizeMetadata(data);
 
@@ -93,7 +93,7 @@ export function parseMissionMarkdown(source) {
   };
 }
 
-export function createMissionFromMarkdown(source, overrides = {}) {
+export function createMissionFromMarkdown(source: string, overrides: Record<string, any> = {}): Record<string, any> {
   const parsed = parseMissionMarkdown(source);
   const {
     title,

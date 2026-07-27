@@ -10,7 +10,35 @@ const PROFILES_KEY = "soroban_quest_profiles";
 const ACTIVE_PROFILE_KEY = "soroban_quest_active_profile";
 export const MAX_PROFILES = 5;
 
-function createDefaultProfileSlot(index = 0, overrides = {}) {
+export interface ProfileData {
+  name: string;
+  avatar: string;
+  [key: string]: any;
+}
+
+export interface ProfileSlot {
+  id: string;
+  profile: ProfileData;
+  progress: any;
+}
+
+export interface ImportValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+export interface FileReadResult {
+  success: boolean;
+  data: any;
+  errors: string[];
+}
+
+export const defaultProfile: ProfileData = {
+  name: "Stellar Guardian",
+  avatar: "🛡️",
+};
+
+function createDefaultProfileSlot(index = 0, overrides: Partial<ProfileSlot> = {}): ProfileSlot {
   const id = overrides.id || `player-${index + 1}`;
   return {
     id,
@@ -26,7 +54,7 @@ function createDefaultProfileSlot(index = 0, overrides = {}) {
   };
 }
 
-function sanitizeProfileSlot(slot, index) {
+function sanitizeProfileSlot(slot: any, index: number): ProfileSlot {
   return createDefaultProfileSlot(index, {
     id: slot?.id || `player-${index + 1}`,
     profile: slot?.profile,
@@ -34,8 +62,8 @@ function sanitizeProfileSlot(slot, index) {
   });
 }
 
-function readLegacySlot() {
-  let legacyProfile = null;
+function readLegacySlot(): ProfileSlot {
+  let legacyProfile: ProfileData | null = null;
   const legacyProgress = readLegacyProgress();
 
   try {
@@ -51,7 +79,7 @@ function readLegacySlot() {
   });
 }
 
-function readLegacyProgress() {
+function readLegacyProgress(): any {
   try {
     const progressData = localStorage.getItem(PROGRESS_KEY);
     if (!progressData) return null;
@@ -61,17 +89,17 @@ function readLegacyProgress() {
   }
 }
 
-function persistProfiles(profiles) {
+function persistProfiles(profiles: ProfileSlot[]): void {
   localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles.slice(0, MAX_PROFILES)));
 }
 
-function mirrorActiveProfileLegacy(slot) {
+function mirrorActiveProfileLegacy(slot: ProfileSlot): void {
   const progressCopy = cleanProgress(slot.progress);
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressCopy));
   localStorage.setItem(PROFILE_KEY, JSON.stringify(slot.profile));
 }
 
-function cleanProgress(state) {
+function cleanProgress(state: any): any {
   const copy = { ...state };
   delete copy.leveledUp;
   delete copy.alreadyCompleted;
@@ -79,11 +107,11 @@ function cleanProgress(state) {
   return copy;
 }
 
-function progressSignature(state) {
+function progressSignature(state: any): string {
   return JSON.stringify(cleanProgress({ ...getDefaultState(), ...state }));
 }
 
-function syncActiveProgressFromLegacy(progress) {
+function syncActiveProgressFromLegacy(progress: any): any {
   const activeProfileId = getActiveProfileId();
   const profiles = loadProfiles();
   const updated = profiles.map((slot) =>
@@ -95,7 +123,7 @@ function syncActiveProgressFromLegacy(progress) {
   return updated.find((slot) => slot.id === activeProfileId)?.progress || progress;
 }
 
-export function loadProfiles() {
+export function loadProfiles(): ProfileSlot[] {
   try {
     const data = localStorage.getItem(PROFILES_KEY);
     if (!data) {
@@ -119,7 +147,7 @@ export function loadProfiles() {
   }
 }
 
-export function saveProfiles(profiles) {
+export function saveProfiles(profiles: ProfileSlot[]): ProfileSlot[] {
   const sanitized = profiles
     .slice(0, MAX_PROFILES)
     .map((slot, index) => sanitizeProfileSlot(slot, index));
@@ -130,7 +158,7 @@ export function saveProfiles(profiles) {
   return sanitized;
 }
 
-export function getActiveProfileId() {
+export function getActiveProfileId(): string {
   try {
     const profiles = JSON.parse(localStorage.getItem(PROFILES_KEY) || "[]");
     const fallbackId = profiles[0]?.id || "player-1";
@@ -140,11 +168,11 @@ export function getActiveProfileId() {
   }
 }
 
-export function setActiveProfileId(profileId) {
+export function setActiveProfileId(profileId: string): void {
   localStorage.setItem(ACTIVE_PROFILE_KEY, profileId);
 }
 
-export function getActiveProfileSlot() {
+export function getActiveProfileSlot(): ProfileSlot {
   const profiles = loadProfiles();
   const activeProfileId = getActiveProfileId();
   const activeSlot = profiles.find((slot) => slot.id === activeProfileId) || profiles[0];
@@ -156,14 +184,14 @@ export function getActiveProfileSlot() {
   return activeSlot || createDefaultProfileSlot();
 }
 
-export function addProfile(profile = {}) {
+export function addProfile(profile: Partial<ProfileData> = {}): ProfileSlot[] {
   const profiles = loadProfiles();
   if (profiles.length >= MAX_PROFILES) return profiles;
 
   const nextIndex = profiles.length;
   const nextSlot = createDefaultProfileSlot(nextIndex, {
     id: `player-${Date.now()}`,
-    profile,
+    profile: profile as ProfileData,
   });
   const updated = [...profiles, nextSlot];
   persistProfiles(updated);
@@ -173,7 +201,7 @@ export function addProfile(profile = {}) {
 /* =========================
    COMPRESSION / DECOMPRESSION
 ========================= */
-async function compressData(data) {
+async function compressData(data: any): Promise<Blob> {
   const jsonString = JSON.stringify(data);
   const encoder = new TextEncoder();
   const dataArray = encoder.encode(jsonString);
@@ -186,7 +214,7 @@ async function compressData(data) {
   return compressedBlob;
 }
 
-async function decompressData(blob) {
+async function decompressData(blob: Blob): Promise<any> {
   const decompressedStream = new DecompressionStream('gzip');
   const decompressedStreamResponse = new Response(blob.stream().pipeThrough(decompressedStream));
   const decompressedBlob = await decompressedStreamResponse.blob();
@@ -198,8 +226,8 @@ async function decompressData(blob) {
 /* =========================
    VALIDATION
 ========================= */
-export function validateImportData(data) {
-  const errors = [];
+export function validateImportData(data: any): ImportValidationResult {
+  const errors: string[] = [];
   
   if (!data) {
     errors.push("Data is empty or null");
@@ -246,7 +274,7 @@ export function validateImportData(data) {
 /* =========================
    PROGRESS
 ========================= */
-export function loadProgress() {
+export function loadProgress(): any {
   const activeSlot = getActiveProfileSlot();
   const legacyProgress = readLegacyProgress();
 
@@ -260,7 +288,7 @@ export function loadProgress() {
   return activeSlot.progress;
 }
 
-export function saveProgress(state) {
+export function saveProgress(state: any): void {
   try {
     const activeProfileId = getActiveProfileId();
     const profiles = loadProfiles();
@@ -275,7 +303,7 @@ export function saveProgress(state) {
   }
 }
 
-export function resetProgress() {
+export function resetProgress(): any {
   localStorage.removeItem(PROGRESS_KEY);
   const activeProfileId = getActiveProfileId();
   const defaultState = getDefaultState();
@@ -290,16 +318,11 @@ export function resetProgress() {
 /* =========================
    PROFILE
 ========================= */
-export const defaultProfile = {
-  name: "Stellar Guardian",
-  avatar: "🛡️",
-};
-
-export function loadProfile() {
+export function loadProfile(): ProfileData {
   return getActiveProfileSlot().profile;
 }
 
-export function saveProfile(profile) {
+export function saveProfile(profile: Partial<ProfileData>): void {
   const activeProfileId = getActiveProfileId();
   const profiles = loadProfiles();
   const updated = profiles.map((slot) =>
@@ -310,7 +333,7 @@ export function saveProfile(profile) {
   saveProfiles(updated);
 }
 
-export function resetProfile() {
+export function resetProfile(): ProfileData {
   localStorage.removeItem(PROFILE_KEY);
   const activeProfileId = getActiveProfileId();
   const profiles = loadProfiles().map((slot) =>
@@ -323,7 +346,7 @@ export function resetProfile() {
 /* =========================
    EXPORT / IMPORT
 ========================= */
-export async function exportProgress() {
+export async function exportProgress(): Promise<void> {
   const state = loadProgress();
   const profile = loadProfile();
 
@@ -339,7 +362,7 @@ export async function exportProgress() {
   URL.revokeObjectURL(url);
 }
 
-export async function importProgress(data) {
+export async function importProgress(data: any): Promise<any> {
   if (data.state) {
     saveProgress({ ...getDefaultState(), ...data.state });
   }
@@ -354,9 +377,9 @@ export async function importProgress(data) {
   return data;
 }
 
-export async function readAndValidateFile(file) {
+export async function readAndValidateFile(file: File): Promise<FileReadResult> {
   try {
-    let data;
+    let data: any;
     
     try {
       data = await decompressData(file);
@@ -372,11 +395,11 @@ export async function readAndValidateFile(file) {
       data,
       errors: validation.errors
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       success: false,
       data: null,
-      errors: [error.message || "Failed to read or parse file"]
+      errors: [error?.message || "Failed to read or parse file"]
     };
   }
 }

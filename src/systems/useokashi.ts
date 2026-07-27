@@ -4,15 +4,22 @@ export const TOAST_STATES = {
   IDLE: "idle",
   SUCCESS: "success",
   ERROR: "error",
-};
+} as const;
+
+export type ToastState = typeof TOAST_STATES[keyof typeof TOAST_STATES];
+
+export interface OkashiToast {
+  state: ToastState;
+  message: string;
+}
 
 export function useOkashi() {
-  const [toast, setToast] = useState({ 
+  const [toast, setToast] = useState<OkashiToast>({ 
     state: TOAST_STATES.IDLE, 
     message: "" 
   });
 
-  const openInOkashi = useCallback(async (code) => {
+  const openInOkashi = useCallback(async (code: string) => {
     // Step 1: Copy code to clipboard
     try {
       await navigator.clipboard.writeText(code);

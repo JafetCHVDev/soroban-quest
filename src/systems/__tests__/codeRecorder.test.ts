@@ -1,24 +1,25 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import CodeRecorder from '../codeRecorder.js';
+import CodeRecorder from '../codeRecorder';
 
 // Mirrors real localStorage: stored entries become the mock's own enumerable
 // properties (via instance assignment), while getItem/setItem/removeItem live
 // on the prototype and are excluded from Object.keys — matching the Storage
 // interface that CodeRecorder's static helpers rely on.
 class LocalStorageMock {
-  getItem(key) {
+  [key: string]: any;
+  getItem(key: string) {
     return Object.prototype.hasOwnProperty.call(this, key) ? this[key] : null;
   }
-  setItem(key, value) {
+  setItem(key: string, value: any) {
     this[key] = String(value);
   }
-  removeItem(key) {
+  removeItem(key: string) {
     delete this[key];
   }
 }
 
 describe('CodeRecorder', () => {
-  let storage;
+  let storage: any;
 
   beforeEach(() => {
     storage = new LocalStorageMock();
@@ -200,8 +201,8 @@ describe('CodeRecorder', () => {
       recorder.stopRecording();
 
       const loaded = CodeRecorder.loadRecording('mission-1');
-      expect(loaded.missionId).toBe('mission-1');
-      expect(loaded.events).toHaveLength(1);
+      expect(loaded!.missionId).toBe('mission-1');
+      expect(loaded!.events).toHaveLength(1);
     });
 
     it('returns null and warns when stored data is corrupted', () => {

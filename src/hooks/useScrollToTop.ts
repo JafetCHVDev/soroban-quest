@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
 
-export default function useScrollToTop() {
+export default function useScrollToTop(): void {
   const { pathname } = useLocation();
   const navigationType = useNavigationType();
 
@@ -13,7 +13,7 @@ export default function useScrollToTop() {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: "instant"
+        behavior: "instant" as ScrollBehavior
       });
 
       // 2. Reset internal DOM main layout wrappers if they hold the overflow scrollbars

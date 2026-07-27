@@ -7,19 +7,19 @@ import {
   registerEditorThemes,
   loadEditorTheme,
   saveEditorTheme,
-} from "../editorThemes.js";
+} from "../editorThemes";
 
 describe("editorThemes", () => {
-  let storage;
+  let storage: Record<string, string>;
 
   beforeEach(() => {
     storage = {};
     vi.stubGlobal("localStorage", {
-      getItem: (key) => storage[key] ?? null,
-      setItem: (key, value) => {
+      getItem: (key: string) => storage[key] ?? null,
+      setItem: (key: string, value: string) => {
         storage[key] = String(value);
       },
-      removeItem: (key) => {
+      removeItem: (key: string) => {
         delete storage[key];
       },
     });
@@ -37,7 +37,7 @@ describe("editorThemes", () => {
       for (const theme of EDITOR_THEMES) {
         if (!theme.builtin) {
           expect(theme.data).toBeTruthy();
-          expect(theme.data.base).toBeTruthy();
+          expect(theme.data?.base).toBeTruthy();
         }
       }
     });

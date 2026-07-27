@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   getDefaultState,
-} from "../gameEngine.js";
+} from "../gameEngine";
 import {
   loadProgress as load,
   saveProgress as save,
@@ -12,19 +12,19 @@ import {
   loadProfile,
   saveProfile,
   MAX_PROFILES,
-} from "../storage.js";
+} from "../storage";
 
 describe("storage", () => {
-  let storage;
+  let storage: Record<string, string>;
 
   beforeEach(() => {
     storage = {};
     vi.stubGlobal("localStorage", {
-      getItem: (key) => storage[key] || null,
-      setItem: (key, value) => {
+      getItem: (key: string) => storage[key] || null,
+      setItem: (key: string, value: string) => {
         storage[key] = value;
       },
-      removeItem: (key) => {
+      removeItem: (key: string) => {
         delete storage[key];
       },
     });

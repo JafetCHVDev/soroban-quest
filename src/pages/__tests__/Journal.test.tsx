@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildJournalRows, filterJournalEntries } from "../Journal.jsx";
+import { buildJournalRows, filterJournalEntries } from "../Journal";
 
-const t = (key, vars = {}) => {
-  const messages = {
+const t = (key: string, vars: Record<string, any> = {}) => {
+  const messages: Record<string, string> = {
     "journal.events.missionStarted": `Started mission: ${vars.title}`,
     "journal.events.badgeEarned": `Earned ${vars.name}`,
     "journal.dates.today": "Today",
@@ -11,7 +11,7 @@ const t = (key, vars = {}) => {
   return messages[key] || key;
 };
 
-const entries = [
+const entries: any[] = [
   {
     id: "newer",
     timestamp: "2026-06-25T06:00:00.000Z",
@@ -34,7 +34,7 @@ describe("Journal helpers", () => {
       t,
     );
 
-    expect(filtered.map((entry) => entry.id)).toEqual(["newer"]);
+    expect(filtered.map((entry: any) => entry.id)).toEqual(["newer"]);
   });
 
   it("filters entries by date range", () => {
@@ -43,7 +43,7 @@ describe("Journal helpers", () => {
 
     const filtered = filterJournalEntries(entries, { dateFilter: "TODAY" }, t);
 
-    expect(filtered.map((entry) => entry.id)).toEqual(["newer"]);
+    expect(filtered.map((entry: any) => entry.id)).toEqual(["newer"]);
     vi.useRealTimers();
   });
 

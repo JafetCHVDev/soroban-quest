@@ -7,30 +7,60 @@ const DEFAULT_SIGNALING = [
   "wss://y-webrtc-signaling-us.herokuapp.com",
 ];
 
-function createId(prefix = "collab") {
+export interface CollabUser {
+  id: string;
+  name: string;
+  color?: string;
+  [key: string]: any;
+}
+
+export interface CollaborationStatus {
+  roomId: string;
+  connected: boolean;
+  peerCount: number;
+  reconnecting?: boolean;
+}
+
+export interface MergeResult {
+  changed: boolean;
+  conflict: boolean;
+  code: string;
+}
+
+export interface CollaborationOptions {
+  roomId?: string;
+  missionId?: string;
+  user?: Partial<CollabUser>;
+  initialCode?: string;
+  providerFactory?: (roomName: string, doc: Y.Doc, opts: any) => any;
+  awarenessFactory?: () => any;
+  signaling?: string[];
+}
+
+function createId(prefix = "collab"): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return `${prefix}-${crypto.randomUUID()}`;
   }
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function normalizeRoomId(roomId) {
+function normalizeRoomId(roomId?: string): string {
   return String(roomId || "")
     .trim()
     .replace(/[^a-zA-Z0-9_-]/g, "-")
     .slice(0, 96);
 }
 
-function getWindowLocation() {
+function getWindowLocation(): Location | null {
   if (typeof window === "undefined") return null;
   return window.location;
 }
 
-function snapshotKey(missionId, roomId) {
+function snapshotKey(missionId: string, roomId: string): string {
   return `soroban_quest_collab:${missionId}:${roomId}`;
 }
 
-function readSnapshot(missionId, roomId) {
+function readSnapshot(missionId: string, roomId: string): string {
   try {
     if (typeof localStorage === "undefined") return "";
     return localStorage.getItem(snapshotKey(missionId, roomId)) || "";
@@ -39,7 +69,7 @@ function readSnapshot(missionId, roomId) {
   }
 }
 
-function writeSnapshot(missionId, roomId, code) {
+function writeSnapshot(missionId: string, roomId: string, code: string): void {
   try {
     if (typeof localStorage === "undefined") return;
     localStorage.setItem(snapshotKey(missionId, roomId), code);
@@ -48,7 +78,7 @@ function writeSnapshot(missionId, roomId, code) {
   }
 }
 
-export function createCollaborationInvite(roomId, location = getWindowLocation()) {
+export function createCollaborationInvite(roomId: string, location = getWindowLocation()): string {
   const safeRoomId = normalizeRoomId(roomId);
   if (!location) return `?collab=${safeRoomId}`;
 
@@ -57,12 +87,28 @@ export function createCollaborationInvite(roomId, location = getWindowLocation()
   return url.toString();
 }
 
-export function readCollaborationRoom(location = getWindowLocation()) {
+export function readCollaborationRoom(location = getWindowLocation()): string {
   if (!location) return "";
-  return normalizeRoomId(new URL(location.href).searchParams.get("collab"));
+  return normalizeRoomId(new URL(location.href).searchParams.get("collab") || "");
 }
 
 export class CollaborationManager {
+  roomId: string;
+  missionId: string;
+  user: CollabUser;
+  signaling: string[];
+  providerFactory?: (roomName: string, doc: Y.Doc, opts: any) => any;
+  awarenessFactory?: () => any;
+  doc: Y.Doc;
+  code: Y.Text;
+  meta: Y.Map<any>;
+  provider: any;
+  awareness: any;
+  connected: boolean;
+  destroyed: boolean;
+  lastSyncedCode: string;
+  listeners: Record<string, Set<(payload: any) => void>>;
+
   constructor({
     roomId,
     missionId,
@@ -71,7 +117,7 @@ export class CollaborationManager {
     providerFactory,
     awarenessFactory,
     signaling = DEFAULT_SIGNALING,
-  } = {}) {
+  }: CollaborationOptions = {}) {
     this.roomId = normalizeRoomId(roomId || createId("mission"));
     this.missionId = missionId || "mission";
     this.user = {
@@ -109,7 +155,7 @@ export class CollaborationManager {
     });
   }
 
-  connect() {
+  connect(): this {
     if (this.destroyed) {
       throw new Error("CollaborationManager has been destroyed");
     }
@@ -121,7 +167,7 @@ export class CollaborationManager {
       : new WebrtcProvider(roomName, this.doc, { signaling: this.signaling });
     this.awareness = this.provider.awareness || this.awarenessFactory?.();
 
-    this.provider.on?.("status", (event) => {
+    this.provider.on?.("status", (event: { status: string }) => {
       this.connected = event.status === "connected";
       this.emit("status", this.getStatus());
     });
@@ -138,7 +184,7 @@ export class CollaborationManager {
     return this;
   }
 
-  disconnect() {
+  disconnect(): this {
     this.connected = false;
     this.awareness?.setLocalState?.(null);
     this.provider?.disconnect?.();
@@ -146,14 +192,14 @@ export class CollaborationManager {
     return this;
   }
 
-  reconnect() {
+  reconnect(): this {
     if (!this.provider) return this.connect();
     this.provider.connect?.();
     this.emit("status", { ...this.getStatus(), reconnecting: true });
     return this;
   }
 
-  destroy() {
+  destroy(): void {
     this.destroyed = true;
     this.connected = false;
     this.awareness?.setLocalState?.(null);
@@ -162,7 +208,7 @@ export class CollaborationManager {
     Object.values(this.listeners).forEach((listeners) => listeners.clear());
   }
 
-  setCode(nextCode, origin = "local") {
+  setCode(nextCode: string, origin = "local"): boolean {
     const value = String(nextCode ?? "");
     const current = this.getCode();
     if (current === value) return false;
@@ -176,7 +222,7 @@ export class CollaborationManager {
     return true;
   }
 
-  mergeCode(remoteCode) {
+  mergeCode(remoteCode: string): MergeResult {
     const current = this.getCode();
     const incoming = String(remoteCode ?? "");
     if (incoming === current) return { changed: false, conflict: false, code: current };
@@ -192,11 +238,11 @@ export class CollaborationManager {
     return result;
   }
 
-  getCode() {
+  getCode(): string {
     return this.code.toString();
   }
 
-  getStatus() {
+  getStatus(): CollaborationStatus {
     return {
       roomId: this.roomId,
       connected: this.connected,
@@ -204,23 +250,23 @@ export class CollaborationManager {
     };
   }
 
-  getPeers() {
+  getPeers(): CollabUser[] {
     if (!this.awareness?.getStates) return [];
     return Array.from(this.awareness.getStates().values())
-      .map((state) => state.user)
+      .map((state: any) => state.user)
       .filter(Boolean);
   }
 
-  on(type, listener) {
+  on(type: string, listener: (payload: any) => void): () => void {
     this.listeners[type]?.add(listener);
     return () => this.listeners[type]?.delete(listener);
   }
 
-  emit(type, payload) {
+  emit(type: string, payload: any): void {
     this.listeners[type]?.forEach((listener) => listener(payload));
   }
 }
 
-export function createCollaborationManager(options) {
+export function createCollaborationManager(options?: CollaborationOptions): CollaborationManager {
   return new CollaborationManager(options);
 }

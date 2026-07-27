@@ -2,6 +2,8 @@
    Activity Logger — Quest Journal System
    ========================================== */
 
+import { ActivityLog } from '../types';
+
 const LOG_KEY = "soroban_quest_activity_log";
 const MAX_LOG_SIZE = 200;
 
@@ -19,20 +21,27 @@ export const ACTIVITY_TYPES = {
   STREAK: "STREAK",
   GOLD_EARNED: "GOLD_EARNED",
   SHOP_PURCHASE: "SHOP_PURCHASE",
-};
+} as const;
+
+export type ActivityType = typeof ACTIVITY_TYPES[keyof typeof ACTIVITY_TYPES] | string;
+
+export interface ActivityEntry {
+  id: string;
+  timestamp: string;
+  type: ActivityType;
+  data: Record<string, any>;
+  message: string;
+}
 
 /**
  * Logs a new activity to localStorage
- * @param {string} type - Use ACTIVITY_TYPES
- * @param {object} data - Metadata for the event (e.g., missionId, badgeName)
- * @param {string} message - Human-readable description
  */
-export function logActivity(type, data = {}, message = "") {
+export function logActivity(type: ActivityType, data: Record<string, any> = {}, message = ""): void {
   try {
     const log = getActivityLog();
     
-    const newEntry = {
-      id: Date.now() + Math.random().toString(36).substr(2, 9),
+    const newEntry: ActivityEntry = {
+      id: Date.now() + Math.random().toString(36).substring(2, 9),
       timestamp: new Date().toISOString(),
       type,
       data,
@@ -53,9 +62,8 @@ export function logActivity(type, data = {}, message = "") {
 
 /**
  * Retrieves the activity log from localStorage
- * @returns {Array} List of activity objects
  */
-export function getActivityLog() {
+export function getActivityLog(): ActivityEntry[] {
   try {
     const data = localStorage.getItem(LOG_KEY);
     return data ? JSON.parse(data) : [];
@@ -67,6 +75,6 @@ export function getActivityLog() {
 /**
  * Clears the activity log
  */
-export function clearLog() {
+export function clearLog(): void {
   localStorage.removeItem(LOG_KEY);
 }
