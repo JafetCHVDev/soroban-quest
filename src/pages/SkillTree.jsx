@@ -4,6 +4,7 @@ import { loadProgress } from '../systems/storage';
 import { useTranslation } from '../i18n/useTranslation';
 import './SkillTree.css';
 import useDocumentTitle from '../systems/useDocumentTitle';
+import { measureRender } from '../systems/performanceMonitor';
 
 // Concept identifiers are kept untranslated — they're code-level tokens
 // (e.g. `contract`, `Env`, `require_auth`) that appear verbatim in Rust.
@@ -38,6 +39,11 @@ export default function SkillTree() {
   const [completedMissions, setCompletedMissions] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
+
+  useEffect(() => {
+    const stop = measureRender('SkillTree');
+    stop();
+  });
 
   const localizedMissions = useMemo(
     () => localizeMissions(missions, language),
