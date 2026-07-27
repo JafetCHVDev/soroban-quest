@@ -14,7 +14,7 @@ export default function Leaderboard() {
   const rankedProfiles = [...profiles].sort((a, b) => {
     if (b.progress.xp !== a.progress.xp) return b.progress.xp - a.progress.xp;
     if (b.progress.level !== a.progress.level) return b.progress.level - a.progress.level;
-    return b.progress.completedMissions.length - a.progress.completedMissions.length;
+    return (b.progress.completedMissions || []).length - (a.progress.completedMissions || []).length;
   });
 
   const topProfile = rankedProfiles[0];
@@ -45,7 +45,7 @@ export default function Leaderboard() {
               {t("leaderboard.championSummary", {
                 level: topProfile.progress.level,
                 xp: topProfile.progress.xp,
-                missions: topProfile.progress.completedMissions.length,
+                missions: (topProfile.progress.completedMissions || []).length,
               })}
             </p>
           </div>
@@ -62,46 +62,45 @@ export default function Leaderboard() {
           </span>
         </div>
 
-        <div className="leaderboard-table-wrap">
+        <div className="leaderboard-table-wrapper">
           <table className="leaderboard-table">
             <thead>
               <tr>
-                <th>{t("leaderboard.columns.rank")}</th>
-                <th>{t("leaderboard.columns.player")}</th>
-                <th>{t("leaderboard.columns.xp")}</th>
-                <th>{t("leaderboard.columns.level")}</th>
-                <th>{t("leaderboard.columns.missions")}</th>
-                <th>{t("leaderboard.columns.badges")}</th>
-                <th>{t("leaderboard.columns.status")}</th>
+                <th>{t("leaderboard.headers.rank")}</th>
+                <th>{t("leaderboard.headers.adventurer")}</th>
+                <th>{t("leaderboard.headers.level")}</th>
+                <th>{t("leaderboard.headers.xp")}</th>
+                <th>{t("leaderboard.headers.missions")}</th>
+                <th>{t("leaderboard.headers.badges")}</th>
+                <th>{t("leaderboard.headers.actions")}</th>
               </tr>
             </thead>
             <tbody>
               {rankedProfiles.map((slot, index) => {
+                const rank = index + 1;
                 const isActive = slot.id === activeProfileId;
+
                 return (
-                  <tr key={slot.id} className={isActive ? "active" : ""}>
-                    <td className="rank-cell">#{index + 1}</td>
-                    <td>
-                      <div className="player-cell">
-                        <span className="player-avatar" aria-hidden="true">
-                          {slot.profile.avatar}
-                        </span>
-                        <span>{slot.profile.name}</span>
-                      </div>
+                  <tr key={slot.id} className={isActive ? "active-row" : ""}>
+                    <td className="rank-cell">#{rank}</td>
+                    <td className="adventurer-cell">
+                      <span className="avatar" aria-hidden="true">
+                        {slot.profile.avatar}
+                      </span>
+                      <span className="name">{slot.profile.name}</span>
+                      {isActive && <span className="active-badge">{t("common.active")}</span>}
                     </td>
-                    <td>{slot.progress.xp}</td>
                     <td>{slot.progress.level}</td>
-                    <td>{slot.progress.completedMissions.length}</td>
-                    <td>{slot.progress.badges.length}</td>
+                    <td className="xp-cell">{slot.progress.xp} XP</td>
+                    <td>{(slot.progress.completedMissions || []).length}</td>
+                    <td>{(slot.progress.badges || []).length}</td>
                     <td>
                       {isActive ? (
-                        <span className="leaderboard-status active">
-                          {t("leaderboard.active")}
-                        </span>
+                        <span className="current-profile-label">{t("leaderboard.current")}</span>
                       ) : (
                         <button
                           type="button"
-                          className="leaderboard-switch"
+                          className="btn-ghost btn-sm"
                           onClick={() => switchProfile(slot.id)}
                         >
                           {t("leaderboard.switch")}

@@ -19,7 +19,7 @@ export function useOkashi() {
     message: "" 
   });
 
-  const openInOkashi = useCallback(async (code: string) => {
+  const openInOkashi = useCallback(async (code: string, _title?: string) => {
     // Step 1: Copy code to clipboard
     try {
       await navigator.clipboard.writeText(code);

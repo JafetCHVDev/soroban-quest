@@ -13,13 +13,13 @@ export default function Home() {
     useDocumentTitle('Home');
     const navigate = useNavigate();
     const state = loadProgress();
-    const canvasRef = useRef(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const { t, language } = useTranslation();
     const missions = getAllMissions(language);
-    const completedCount = state.completedMissions.length;
+    const completedCount = (state.completedMissions || []).length;
     const hasMissions = completedCount > 0;
     const [loading, setLoading] = useState(true);
-    const [showOnboarding, setShowOnboarding] = useState(() => shouldShowOnboarding());
+    const [showOnboarding] = useState<boolean>(() => shouldShowOnboarding());
 
     // Loading effect
     useEffect(() => {
@@ -34,7 +34,8 @@ export default function Home() {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        let animId;
+        if (!ctx) return;
+        let animId: number;
 
         const resize = () => {
             canvas.width = canvas.offsetWidth;
@@ -53,6 +54,7 @@ export default function Home() {
         }));
 
         function draw() {
+            if (!ctx || !canvas) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (const s of stars) {
                 s.pulse += 0.02;
@@ -79,10 +81,10 @@ export default function Home() {
     const activityLog = useMemo(() => getActivityLog().slice(0, 5), [state]);
     const rankTitle = getRankTitle(state.level);
     const totalMissions = missions.length;
-    const badgesCount = state.badges.length;
+    const badgesCount = (state.badges || []).length;
     const goldBalance = state.gold || 0;
     const nextMission = useMemo(() => {
-        return missions.find((m) => !state.completedMissions.includes(m.id));
+        return missions.find((m) => !(state.completedMissions || []).includes(m.id));
     }, [missions, state.completedMissions]);
 
     if (loading) return <HomeSkeleton />;
@@ -184,7 +186,7 @@ export default function Home() {
                                 <p className="dashboard-empty">{t('home.stats.viewAll')}</p>
                             ) : (
                                 <ul className="dashboard-activity-list">
-                                    {activityLog.map((entry) => (
+                                    {activityLog.map((entry: any) => (
                                         <li key={entry.id} className="dashboard-activity-item">
                                             <span className="dashboard-activity-msg">{entry.message}</span>
                                         </li>

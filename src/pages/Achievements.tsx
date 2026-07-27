@@ -12,9 +12,9 @@ export default function Achievements() {
   const { t } = useTranslation();
 
   const unlockedCount = BADGES.filter((badge) =>
-    progress.badges.includes(badge.id)
+    (progress.badges || []).includes(badge.id)
   ).length;
-  const completion = Math.round((unlockedCount / BADGES.length) * 100);
+  const completion = BADGES.length ? Math.round((unlockedCount / BADGES.length) * 100) : 0;
 
   return (
     <div id="main-content" className="achievements-page">
@@ -54,23 +54,26 @@ export default function Achievements() {
           </div>
         ) : (
           BADGES.map((badge) => {
-            const isUnlocked = progress.badges.includes(badge.id);
+            const isUnlocked = (progress.badges || []).includes(badge.id);
             return (
               <article
                 key={badge.id}
                 className={`achievement-card ${isUnlocked ? "unlocked" : "locked"}`}
+                aria-label={`${t(`badges.${badge.id}.name`) || badge.name} — ${
+                  isUnlocked ? t("achievements.unlocked") : t("achievements.locked")
+                }`}
               >
                 <div className="achievement-icon" aria-hidden="true">
-                  {isUnlocked ? badge.icon : "?"}
+                  {badge.icon}
                 </div>
                 <div className="achievement-content">
                   <div className="achievement-title-row">
-                    <h2>{t(`badges.${badge.id}.name`)}</h2>
-                    <span className={`achievement-status ${isUnlocked ? "unlocked" : "locked"}`}>
-                      {isUnlocked ? t("common.unlocked") : t("common.locked")}
+                    <h3>{t(`badges.${badge.id}.name`) || badge.name}</h3>
+                    <span className="achievement-status">
+                      {isUnlocked ? t("achievements.unlocked") : t("achievements.locked")}
                     </span>
                   </div>
-                  <p>{t(`badges.${badge.id}.description`)}</p>
+                  <p>{t(`badges.${badge.id}.description`) || badge.description}</p>
                 </div>
               </article>
             );

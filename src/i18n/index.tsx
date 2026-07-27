@@ -9,28 +9,32 @@ import React, {
   useMemo,
   useCallback,
   useRef,
+  ReactNode,
 } from 'react';
 
 import en from './locales/en.json';
 import es from './locales/es.json';
-import { setActiveLanguage } from './languageBridge.js';
+import { setActiveLanguage } from './languageBridge';
 
-const LOCALES = { en, es };
+const LOCALES: Record<string, any> = { en, es };
 const SUPPORTED = ['en', 'es'];
 const STORAGE_KEY = 'soroban_quest_lang';
 const DEFAULT_LANG = 'en';
 
-export const LanguageContext = createContext(null);
+export interface LanguageContextType {
+  t: (key: string, vars?: Record<string, any>) => string;
+  language: string;
+  setLanguage: (lang: string) => void;
+  languages: Array<{ code: string; name: string }>;
+}
+
+export const LanguageContext = createContext<LanguageContextType | null>(null);
 
 /* ---------- storage abstraction (private-mode safe) ---------- */
 
-/**
- * In-memory fallback used when localStorage is unavailable
- * (e.g. private/incognito mode or strict browser settings).
- */
-const memoryStore = new Map();
+const memoryStore = new Map<string, string>();
 
-function storageGet(key) {
+function storageGet(key: string): string | null {
   try {
     const v = localStorage.getItem(key);
     if (v !== null) return v;
@@ -40,7 +44,7 @@ function storageGet(key) {
   return memoryStore.get(key) ?? null;
 }
 
-function storageSet(key, value) {
+function storageSet(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
     return;
@@ -52,7 +56,7 @@ function storageSet(key, value) {
 
 /* ---------- helpers ---------- */
 
-function detectBrowserLanguage() {
+function detectBrowserLanguage(): string {
   if (typeof navigator === 'undefined') return DEFAULT_LANG;
 
   const candidates = [
@@ -67,19 +71,19 @@ function detectBrowserLanguage() {
   return DEFAULT_LANG;
 }
 
-function readStoredLanguage() {
+function readStoredLanguage(): string | null {
   const stored = storageGet(STORAGE_KEY);
   if (stored && SUPPORTED.includes(stored)) return stored;
   return null;
 }
 
-function resolveKey(dict, key) {
+function resolveKey(dict: any, key: string): any {
   return key
     .split('.')
     .reduce((acc, part) => (acc == null ? undefined : acc[part]), dict);
 }
 
-function interpolate(template, vars) {
+function interpolate(template: any, vars?: Record<string, any>): string {
   if (typeof template !== 'string' || !vars) return template;
   return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, name) =>
     vars[name] != null ? String(vars[name]) : `{{${name}}}`,
@@ -88,17 +92,17 @@ function interpolate(template, vars) {
 
 /* ---------- Provider ---------- */
 
-export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState(() => {
+export interface LanguageProviderProps {
+  children?: ReactNode;
+}
+
+export function LanguageProvider({ children }: LanguageProviderProps) {
+  const [language, setLanguageState] = useState<string>(() => {
     const initial = readStoredLanguage() || detectBrowserLanguage();
-    // Sync the bridge immediately so first-render data loads localize
-    // correctly, before the effect below runs.
     setActiveLanguage(initial);
     return initial;
   });
 
-  // Track whether the user has explicitly chosen a language so we
-  // don't override their preference when the OS language changes.
   const userChoseRef = useRef(readStoredLanguage() !== null);
 
   useEffect(() => {
@@ -106,18 +110,14 @@ export function LanguageProvider({ children }) {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
     }
-    // Keep the non-React language bridge in sync so data loaders
-    // (missions/campaigns) localize against the active language.
     setActiveLanguage(language);
   }, [language]);
 
-  // Detect real-time OS language changes via the languagechange event.
-  // Only applies when the user has NOT made an explicit choice.
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const handleLanguageChange = () => {
-      if (userChoseRef.current) return; // respect explicit user choice
+      if (userChoseRef.current) return;
       const detected = detectBrowserLanguage();
       setLanguageState(detected);
     };
@@ -126,9 +126,8 @@ export function LanguageProvider({ children }) {
     return () => window.removeEventListener('languagechange', handleLanguageChange);
   }, []);
 
-  // t('a.b.c', { name: 'World' })
   const t = useCallback(
-    (key, vars) => {
+    (key: string, vars?: Record<string, any>): string => {
       if (!key) return '';
       const dict = LOCALES[language] || LOCALES[DEFAULT_LANG];
       const fallback = LOCALES[DEFAULT_LANG];
@@ -137,8 +136,6 @@ export function LanguageProvider({ children }) {
       if (value == null) value = resolveKey(fallback, key);
       if (value == null) {
         if (import.meta?.env?.DEV) {
-          // Surface missing keys in development without crashing
-          // eslint-disable-next-line no-console
           console.warn(`[i18n] Missing translation key: "${key}"`);
         }
         return key;
@@ -148,9 +145,9 @@ export function LanguageProvider({ children }) {
     [language],
   );
 
-  const setLanguage = useCallback((lang) => {
+  const setLanguage = useCallback((lang: string) => {
     if (!SUPPORTED.includes(lang)) return;
-    userChoseRef.current = true; // mark explicit choice
+    userChoseRef.current = true;
     setLanguageState(lang);
   }, []);
 

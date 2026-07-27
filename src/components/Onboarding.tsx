@@ -4,26 +4,31 @@ import "./Onboarding.css";
 
 const STEPS_COUNT = 5;
 
-export function shouldShowOnboarding() {
+export function shouldShowOnboarding(): boolean {
   return !localStorage.getItem("sorobanQuest_onboarding_done");
 }
 
-export function markOnboardingDone() {
+export function markOnboardingDone(): void {
   localStorage.setItem("sorobanQuest_onboarding_done", "1");
 }
 
-export function resetOnboarding() {
+export function resetOnboarding(): void {
   localStorage.removeItem("sorobanQuest_onboarding_done");
 }
 
-export default function Onboarding() {
+export interface OnboardingProps {
+  onComplete?: () => void;
+}
+
+export default function Onboarding({ onComplete }: OnboardingProps = {}) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
 
   const handleDismiss = useCallback(() => {
     markOnboardingDone();
     setStep(-1);
-  }, []);
+    onComplete?.();
+  }, [onComplete]);
 
   const handleNext = useCallback(() => {
     if (step < STEPS_COUNT - 1) setStep((s) => s + 1);

@@ -5,10 +5,13 @@ import {
   createCollaborationInvite,
   createCollaborationManager,
   readCollaborationRoom,
+  CollaborationManager,
+  CollabUser,
+  CollaborationStatus,
 } from "../systems/collaboration";
 
 const COLORS = ["#06d6a0", "#8b5cf6", "#f59e0b", "#3b82f6", "#ef4444"];
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   bar: {
     alignItems: "center",
     background: "rgba(17, 24, 39, 0.82)",
@@ -57,7 +60,7 @@ const styles = {
   },
 };
 
-function createLocalUser() {
+function createLocalUser(): CollabUser {
   const savedName =
     typeof localStorage !== "undefined"
       ? localStorage.getItem("soroban_quest_collab_name")
@@ -73,18 +76,25 @@ function createLocalUser() {
   };
 }
 
+export interface CollaborationBarProps {
+  missionId?: string;
+  code?: string;
+  onCodeChange?: (nextCode: string) => void;
+  managerFactory?: (opts: any) => CollaborationManager;
+}
+
 export default function CollaborationBar({
   missionId,
-  code,
+  code = "",
   onCodeChange,
   managerFactory = createCollaborationManager,
-}) {
-  const [roomInput, setRoomInput] = useState(() => readCollaborationRoom());
-  const [manager, setManager] = useState(null);
-  const [status, setStatus] = useState({ connected: false, peerCount: 0 });
-  const [peers, setPeers] = useState([]);
-  const [copied, setCopied] = useState(false);
-  const [conflict, setConflict] = useState(false);
+}: CollaborationBarProps) {
+  const [roomInput, setRoomInput] = useState<string>(() => readCollaborationRoom());
+  const [manager, setManager] = useState<CollaborationManager | null>(null);
+  const [status, setStatus] = useState<CollaborationStatus>({ roomId: "", connected: false, peerCount: 0 });
+  const [peers, setPeers] = useState<CollabUser[]>([]);
+  const [copied, setCopied] = useState<boolean>(false);
+  const [conflict, setConflict] = useState<boolean>(false);
   const user = useMemo(() => createLocalUser(), []);
 
   useEffect(() => {
@@ -106,7 +116,7 @@ export default function CollaborationBar({
 
     nextManager.on("status", setStatus);
     nextManager.on("peers", setPeers);
-    nextManager.on("code", (nextCode) => {
+    nextManager.on("code", (nextCode: string) => {
       if (nextCode !== code) onCodeChange?.(nextCode);
     });
     nextManager.on("conflict", () => setConflict(true));

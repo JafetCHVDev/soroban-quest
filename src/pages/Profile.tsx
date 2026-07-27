@@ -1,16 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 
 import {
   importProgress,
   exportProgress,
-  resetProgress,
-  loadProfile,
-  saveProfile,
   readAndValidateFile,
-  getDefaultState,
-  defaultProfile,
 } from "../systems/storage";
 
 import { getXPProgress, BADGES } from "../systems/gameEngine";
@@ -24,7 +19,6 @@ import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from "../i18n/useTranslation";
 
-// Total rank entries: 0..10. Anything >= 10 maps to the last rank.
 const MAX_RANK_INDEX = 10;
 
 export default function Profile() {
@@ -49,9 +43,9 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(profile.avatar || "🛡️");
 
   const [importStatus, setImportStatus] = useState("");
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [importPreview, setImportPreview] = useState(null);
+  const [importPreview, setImportPreview] = useState<any>(null);
 
   const xpProgress = getXPProgress(state);
   const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
@@ -67,8 +61,6 @@ export default function Profile() {
 
     updateProfile(updated);
     setEditing(false);
-
-    // Trigger global success toast alert
     showToast("Profile layout saved successfully!", "success");
   };
 
@@ -91,8 +83,6 @@ export default function Profile() {
   const handleExport = async () => {
     await exportProgress();
     setImportStatus(" Progress exported!");
-    
-    // Trigger global success toast alert
     showToast("Progress configuration data exported!", "success");
     showToast(t("profile.data.status.exported"), "success");
     setImportStatus(t("profile.data.status.exported"));
@@ -101,7 +91,7 @@ export default function Profile() {
     setTimeout(() => setImportStatus(""), 3000);
   };
 
-  const handleFileSelect = async (e) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -111,13 +101,12 @@ export default function Profile() {
       setImportPreview(result.data);
     } else {
       setImportStatus("Invalid file — could not import.");
-      showToast(result.errors.join("\n"), "error");
+      showToast((result.errors || []).join("\n"), "error");
       showToast(t("profile.data.status.importFailed"), "error");
       setImportStatus(t("profile.data.status.importFailed"));
       setTimeout(() => setImportStatus(""), 3000);
     }
     
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -135,8 +124,6 @@ export default function Profile() {
         updateProfile(importPreview.profile);
       }
       setImportStatus("Progress imported successfully!");
-      
-      // Trigger global success toast alert
       showToast("Progress state imported successfully!", "success");
       showToast(t("profile.data.status.imported"), "success");
       setImportStatus(t("profile.data.status.imported"));
@@ -160,8 +147,6 @@ export default function Profile() {
     const confirmed = await resetProgress();
     if (confirmed) {
       setImportStatus("🗑️ Progress reset.");
-      
-      // Trigger global warning toast alert
       showToast("All missions, XP levels, and badges have been cleared.", "warning");
       showToast(t("profile.data.status.resetDone"), "warning");
       setImportStatus(t("profile.data.status.resetDone"));
@@ -170,7 +155,7 @@ export default function Profile() {
   };
 
   const completedMissions = missions.filter((m) =>
-    state.completedMissions.includes(m.id)
+    (state.completedMissions || []).includes(m.id)
   );
 
   return (
@@ -284,7 +269,7 @@ export default function Profile() {
         >
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
-              {state.completedMissions.length}
+              {(state.completedMissions || []).length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
               {t("profile.stats.missions")}
@@ -293,7 +278,7 @@ export default function Profile() {
 
           <div className="card">
             <div style={{ fontSize: "1.3rem", fontWeight: 800 }}>
-              {state.badges.length}
+              {(state.badges || []).length}
             </div>
             <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
               {t("profile.stats.badges")}
@@ -362,7 +347,7 @@ export default function Profile() {
 
       <div className="profile-badges-grid" role="region" aria-label="Badges progression collection">
         {BADGES.map((badge) => {
-          const earned = state.badges.includes(badge.id);
+          const earned = (state.badges || []).includes(badge.id);
 
           return (
             <div

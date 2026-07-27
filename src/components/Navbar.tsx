@@ -11,11 +11,11 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
   const { profile, progress } = useGameState();
-  const langRef = useRef(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const { t, language, setLanguage, languages } = useTranslation();
 
-  const [theme, setTheme] = useState(() => {
+  const [theme, setTheme] = useState<string>(() => {
     return (
       localStorage.getItem("soroban_quest_theme") ||
       (window.matchMedia("(prefers-color-scheme: light)").matches
@@ -32,12 +32,12 @@ export default function Navbar() {
   // Close the language dropdown on outside click or Escape
   useEffect(() => {
     if (!langOpen) return;
-    const onClick = (e) => {
-      if (langRef.current && !langRef.current.contains(e.target)) {
+    const onClick = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
         setLangOpen(false);
       }
     };
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setLangOpen(false);
     };
     document.addEventListener("mousedown", onClick);
@@ -52,14 +52,14 @@ export default function Navbar() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  const handleLanguageChange = (code) => {
+  const handleLanguageChange = (code: string) => {
     setLanguage(code);
     setLangOpen(false);
   };
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
+  const isActive = (path: string) => (location.pathname === path ? "active" : "");
 
-return (
+  return (
     <>
       {/* SKIP TO CONTENT LINK (#102) */}
       <a href="#main-content" className="skip-to-content">

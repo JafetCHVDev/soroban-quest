@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import {
   loadProgress,
   saveProgress,
@@ -9,21 +9,41 @@ import {
   addProfile,
   getActiveProfileId,
   setActiveProfileId,
-  MAX_PROFILES
+  MAX_PROFILES,
+  ProfileData,
+  ProfileSlot,
 } from "./storage";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import { useTranslation } from "../i18n/useTranslation";
+import { GameEngineState } from "./gameEngine";
 
-const GameStateContext = createContext(null);
+export interface GameStateContextType {
+  progress: GameEngineState;
+  profile: ProfileData;
+  profiles: ProfileSlot[];
+  activeProfileId: string;
+  maxProfiles: number;
+  updateProgress: (newProgress: GameEngineState) => void;
+  updateProfile: (newProfile: Partial<ProfileData>) => void;
+  switchProfile: (profileId: string) => void;
+  createProfile: (profileData?: Partial<ProfileData>) => ProfileSlot;
+  resetProgress: () => Promise<boolean>;
+}
 
-export const GameStateProvider = ({ children }) => {
+const GameStateContext = createContext<GameStateContextType | null>(null);
+
+export interface GameStateProviderProps {
+  children?: ReactNode;
+}
+
+export const GameStateProvider: React.FC<GameStateProviderProps> = ({ children }) => {
   const { t } = useTranslation();
-  const [progress, setProgressState] = useState(() => loadProgress());
-  const [profile, setProfileState] = useState(() => loadProfile());
-  const [profiles, setProfiles] = useState(() => loadProfiles());
-  const [activeProfileId, setActiveProfileState] = useState(() => getActiveProfileId());
+  const [progress, setProgressState] = useState<GameEngineState>(() => loadProgress());
+  const [profile, setProfileState] = useState<ProfileData>(() => loadProfile());
+  const [profiles, setProfiles] = useState<ProfileSlot[]>(() => loadProfiles());
+  const [activeProfileId, setActiveProfileState] = useState<string>(() => getActiveProfileId());
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [resetConfirmResolve, setResetConfirmResolve] = useState(null);
+  const [resetConfirmResolve, setResetConfirmResolve] = useState<((val: boolean) => void) | null>(null);
 
   const refreshActiveState = useCallback(() => {
     setProgressState(loadProgress());
@@ -32,24 +52,24 @@ export const GameStateProvider = ({ children }) => {
     setActiveProfileState(getActiveProfileId());
   }, []);
 
-  const updateProgress = useCallback((newProgress) => {
+  const updateProgress = useCallback((newProgress: GameEngineState) => {
     saveProgress(newProgress);
     setProgressState(newProgress);
     setProfiles(loadProfiles());
   }, []);
 
-  const updateProfile = useCallback((newProfile) => {
+  const updateProfile = useCallback((newProfile: Partial<ProfileData>) => {
     saveProfile(newProfile);
-    setProfileState(newProfile);
+    setProfileState(loadProfile());
     setProfiles(loadProfiles());
   }, []);
 
-  const switchProfile = useCallback((profileId) => {
+  const switchProfile = useCallback((profileId: string) => {
     setActiveProfileId(profileId);
     refreshActiveState();
   }, [refreshActiveState]);
 
-  const createProfile = useCallback((profileData) => {
+  const createProfile = useCallback((profileData?: Partial<ProfileData>) => {
     const updatedProfiles = addProfile(profileData);
     const nextProfile = updatedProfiles[updatedProfiles.length - 1];
     if (nextProfile) {
@@ -59,9 +79,9 @@ export const GameStateProvider = ({ children }) => {
     return nextProfile;
   }, [refreshActiveState]);
 
-  const resetProgress = useCallback(() => {
+  const resetProgress = useCallback((): Promise<boolean> => {
     setIsResetConfirmOpen(true);
-    return new Promise((resolve) => {
+    return new Promise<boolean>((resolve) => {
       setResetConfirmResolve(() => resolve);
     });
   }, []);
@@ -116,7 +136,7 @@ export const GameStateProvider = ({ children }) => {
   );
 };
 
-export const useGameState = () => {
+export const useGameState = (): GameStateContextType => {
   const context = useContext(GameStateContext);
   if (!context) {
     throw new Error("useGameState must be used within a GameStateProvider");

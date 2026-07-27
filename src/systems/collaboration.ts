@@ -78,7 +78,7 @@ function writeSnapshot(missionId: string, roomId: string, code: string): void {
   }
 }
 
-export function createCollaborationInvite(roomId: string, location = getWindowLocation()): string {
+export function createCollaborationInvite(roomId?: string, location = getWindowLocation()): string {
   const safeRoomId = normalizeRoomId(roomId);
   if (!location) return `?collab=${safeRoomId}`;
 

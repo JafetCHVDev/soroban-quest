@@ -1,10 +1,17 @@
-// CodeReplayPlayer.jsx
+// CodeReplayPlayer.tsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
+import { RecordingData } from '../systems/codeRecorder';
 
 const PLAYBACK_SPEEDS = [1, 2, 4];
 
-export default function CodeReplayPlayer({ missionId, recording, onClose }) {
+export interface CodeReplayPlayerProps {
+  missionId?: string;
+  recording?: RecordingData | null;
+  onClose: () => void;
+}
+
+export default function CodeReplayPlayer({ missionId, recording, onClose }: CodeReplayPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
@@ -12,12 +19,12 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   
-  const intervalRef = useRef(null);
-  const editorRef = useRef(null);
+  const intervalRef = useRef<any>(null);
+  const editorRef = useRef<any>(null);
 
   // Initialize
   useEffect(() => {
-    if (recording) {
+    if (recording && recording.events && recording.events.length > 0) {
       setDuration(recording.duration || 0);
       setCurrentCode(recording.events[0]?.content || '');
       setCurrentEventIndex(0);
@@ -26,7 +33,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
   }, [recording]);
 
   // Handle editor mount
-  const handleEditorDidMount = (editor) => {
+  const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
     // Make editor read-only
     editor.updateOptions({ readOnly: true });
@@ -39,7 +46,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
 
   // Step to next event
   const stepNext = useCallback(() => {
-    if (currentEventIndex < recording.events.length - 1) {
+    if (recording && currentEventIndex < recording.events.length - 1) {
       const nextIndex = currentEventIndex + 1;
       const nextEvent = recording.events[nextIndex];
       
@@ -54,7 +61,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
 
   // Step to previous event
   const stepPrevious = useCallback(() => {
-    if (currentEventIndex > 0) {
+    if (recording && currentEventIndex > 0) {
       const prevIndex = currentEventIndex - 1;
       const prevEvent = recording.events[prevIndex];
       
@@ -73,8 +80,9 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
   }, [currentEventIndex, recording]);
 
   // Jump to specific time
-  const jumpToTime = useCallback((targetTime) => {
-    // Find the event at or before the target time
+  const jumpToTime = useCallback((targetTime: number) => {
+    if (!recording || !recording.events.length) return;
+    
     let targetIndex = 0;
     let codeAtTime = recording.events[0]?.content || '';
     
@@ -96,14 +104,14 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
 
   // Playback loop
   useEffect(() => {
-    if (isPlaying && currentEventIndex < recording.events.length - 1) {
+    if (recording && isPlaying && currentEventIndex < recording.events.length - 1) {
       const nextEvent = recording.events[currentEventIndex + 1];
       const delay = (nextEvent.timestamp - currentTime) / playbackSpeed;
       
       intervalRef.current = setTimeout(() => {
         stepNext();
       }, delay);
-    } else if (isPlaying && currentEventIndex >= recording.events.length - 1) {
+    } else if (recording && isPlaying && currentEventIndex >= recording.events.length - 1) {
       // Stop at the end
       setIsPlaying(false);
     }
@@ -115,10 +123,10 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
     };
   }, [isPlaying, currentEventIndex, currentTime, playbackSpeed, recording, stepNext]);
 
-  const isAtEnd = currentEventIndex >= recording.events.length - 1;
+  const isAtEnd = recording ? currentEventIndex >= recording.events.length - 1 : true;
 
   // Format time display
-  const formatTime = (ms) => {
+  const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -126,7 +134,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
   };
 
   // Get event type display
-  const getEventDisplay = (eventType) => {
+  const getEventDisplay = (eventType: string) => {
     switch (eventType) {
       case 'edit': return { text: 'Code Edit', color: '#60a5fa' };
       case 'run': return { text: 'Run Tests', color: '#34d399' };
@@ -378,14 +386,14 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.target.style.background = 'var(--bg-secondary)';
-                    e.target.style.opacity = '1';
+                    (e.currentTarget as HTMLElement).style.background = 'var(--bg-secondary)';
+                    (e.currentTarget as HTMLElement).style.opacity = '1';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
-                    e.target.style.background = 'transparent';
-                    e.target.style.opacity = '0.7';
+                    (e.currentTarget as HTMLElement).style.background = 'transparent';
+                    (e.currentTarget as HTMLElement).style.opacity = '0.7';
                   }
                 }}
               >

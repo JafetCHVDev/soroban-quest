@@ -1,6 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import "./ConfirmationDialog.css";
 
+export interface ConfirmationDialogProps {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  confirmText: string;
+  cancelText: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
 export default function ConfirmationDialog({
   isOpen,
   title,
@@ -9,8 +19,8 @@ export default function ConfirmationDialog({
   cancelText,
   onConfirm,
   onCancel,
-}) {
-  const dialogRef = useRef(null);
+}: ConfirmationDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Keyboard navigation & Focus trapping
   useEffect(() => {
@@ -18,12 +28,12 @@ export default function ConfirmationDialog({
 
     const dialogElement = dialogRef.current;
     const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-    const focusableElements = dialogElement.querySelectorAll(focusableSelectors);
+    const focusableElements = Array.from(dialogElement.querySelectorAll<HTMLElement>(focusableSelectors));
 
     if (focusableElements.length === 0) return;
 
-    // Focus the cancel button (usually the first button or btn-cancel) by default for safety in destructive actions
-    const cancelBtn = Array.from(focusableElements).find(
+    // Focus the cancel button by default for safety in destructive actions
+    const cancelBtn = focusableElements.find(
       (el) => el.classList.contains("btn-cancel") || el.getAttribute("data-cancel") === "true"
     );
     if (cancelBtn) {
@@ -32,7 +42,7 @@ export default function ConfirmationDialog({
       focusableElements[0].focus();
     }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         onCancel();

@@ -1,5 +1,21 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { Globe, ChevronDown } from "lucide-react";
+
+export interface LanguageOption {
+  code: string;
+  name: string;
+}
+
+export interface LanguageSelectorProps {
+  idSuffix?: string;
+  langRef?: RefObject<HTMLDivElement | null>;
+  langOpen: boolean;
+  setLangOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLanguageChange: (langCode: string) => void;
+  language: string;
+  languages: LanguageOption[];
+  t: (key: string) => string;
+}
 
 export default function LanguageSelector({
   idSuffix = "desktop",
@@ -10,19 +26,19 @@ export default function LanguageSelector({
   language,
   languages,
   t,
-}) {
+}: LanguageSelectorProps) {
   const currentLang =
     languages.find((l) => l.code === language) || languages[0];
 
   return (
-    <div className="language-selector" ref={idSuffix === "desktop" ? langRef : null}>
+    <div className="language-selector" ref={idSuffix === "desktop" ? (langRef as any) : null}>
       <button
         type="button"
         className="btn-ghost language-selector-trigger"
         aria-haspopup="listbox"
         aria-expanded={langOpen}
         aria-label={t("common.selectLanguage")}
-        title={t("common.selectLanguage")} // <--- Native tooltip added
+        title={t("common.selectLanguage")}
         onClick={() => setLangOpen((v) => !v)}
       >
         <Globe size={18} />

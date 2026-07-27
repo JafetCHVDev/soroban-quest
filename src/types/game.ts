@@ -52,10 +52,14 @@ export interface Campaign {
   chapterNumber: number;
   missionIds: string[];
   requiredLevel: number;
+  requiredMissionsCompleted?: number;
   color: string;
+  icon?: string;
+  difficulty?: string;
   title?: string;
   description?: string;
   lore?: string;
+  missions?: string[];
   i18n?: Record<string, CampaignI18nEntry>;
 }
 

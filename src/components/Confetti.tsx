@@ -4,11 +4,16 @@ import "./Confetti.css";
 const COLORS = ["#06d6a0", "#8b5cf6", "#f59e0b", "#ef476f", "#118ab2", "#ffd166", "#06d6a0"];
 const SHAPES = ["50%", "0%", "30%"];
 
-function randomBetween(min, max) {
+function randomBetween(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-export default function Confetti({ count = 60, duration = 3000 }) {
+export interface ConfettiProps {
+  count?: number;
+  duration?: number;
+}
+
+export default function Confetti({ count = 60, duration = 3000 }: ConfettiProps) {
   const pieces = useMemo(() => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -34,8 +39,8 @@ export default function Confetti({ count = 60, duration = 3000 }) {
             borderRadius: p.borderRadius,
             width: `${p.width}px`,
             height: `${p.height}px`,
-            "--fall-delay": `${p.delay}s`,
-            "--fall-duration": `${p.fallDuration}s`,
+            ["--fall-delay" as any]: `${p.delay}s`,
+            ["--fall-duration" as any]: `${p.fallDuration}s`,
           }}
         />
       ))}

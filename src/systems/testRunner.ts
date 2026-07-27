@@ -14,6 +14,8 @@ export interface TestRunResultItem {
   check?: any;
 }
 
+export type TestResult = TestRunResultItem;
+
 export interface TestRunSummary {
   results: TestRunResultItem[];
   allPassed: boolean;
@@ -22,11 +24,23 @@ export interface TestRunSummary {
   summary: string;
 }
 
-export async function runTests(code: string, mission: Mission): Promise<TestRunSummary> {
+export async function runTests(
+  code: string,
+  checksOrMission: any[] | Mission | any,
+  onResultCallback?: (result: TestRunResultItem) => void,
+): Promise<TestRunSummary> {
+    const checks = Array.isArray(checksOrMission) ? checksOrMission : checksOrMission?.checks || [];
+    const missionObj = Array.isArray(checksOrMission) ? { checks: checksOrMission } : checksOrMission;
+
     const results: TestRunResultItem[] = [];
 
+    const add = (item: TestRunResultItem) => {
+        results.push(item);
+        onResultCallback?.(item);
+    };
+
     // Step 1: Syntax basics
-    results.push({
+    add({
         phase: 'syntax',
         label: '🔍 Checking syntax...',
         ...checkSyntaxBasics(code),
@@ -35,20 +49,20 @@ export async function runTests(code: string, mission: Mission): Promise<TestRunS
     await delay(300);
 
     // Step 2: Structure validation
-    results.push({
+    add({
         phase: 'structure',
         label: '🏗️ Validating structure...',
-        ...checkStructure(code, mission),
+        ...checkStructure(code, missionObj),
     });
 
     await delay(300);
 
     // Step 3: Mission-specific checks
-    const validation = validateCode(code, mission.checks || []);
+    const validation = validateCode(code, checks);
 
     for (let i = 0; i < validation.results.length; i++) {
         await delay(200);
-        results.push({
+        add({
             phase: 'test',
             label: `🧪 Test ${i + 1}/${validation.totalCount}`,
             ...validation.results[i],
@@ -108,13 +122,11 @@ function checkSyntaxBasics(code: string): { passed: boolean; message: string } {
     return { passed: true, message: '✓ Basic syntax looks good' };
 }
 
-function checkStructure(code: string, _mission: Mission): { passed: boolean; message: string } {
-    // Must have at least one fn declaration
+function checkStructure(code: string, _mission: any): { passed: boolean; message: string } {
     if (!/fn\s+\w+/.test(code)) {
         return { passed: false, message: '✗ No function definitions found' };
     }
 
-    // Should have Soroban-related content
     const hasSorobanMarkers =
         code.includes('soroban_sdk') ||
         code.includes('contractimpl') ||

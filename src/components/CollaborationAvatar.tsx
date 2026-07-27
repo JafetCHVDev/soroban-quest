@@ -1,9 +1,15 @@
 import React from "react";
+import { CollaborationUser } from "../types";
 
-export default function CollaborationAvatar({ user, active = false }) {
+export interface CollaborationAvatarProps {
+  user?: Partial<CollaborationUser>;
+  active?: boolean;
+}
+
+export default function CollaborationAvatar({ user, active = false }: CollaborationAvatarProps) {
   const initial = user?.name?.trim()?.[0]?.toUpperCase() || "?";
-  const style = {
-    "--avatar-color": user?.color || "#06d6a0",
+  const style: React.CSSProperties = {
+    ["--avatar-color" as any]: user?.color || "#06d6a0",
     alignItems: "center",
     background: "color-mix(in srgb, var(--avatar-color) 18%, transparent)",
     border: "1px solid var(--avatar-color)",

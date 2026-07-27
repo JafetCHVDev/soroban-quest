@@ -1,10 +1,6 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useTranslation } from "../i18n/useTranslation";
 import "./ErrorBoundary.css";
-
-/* ---------- Functional fallback subcomponents ---------- */
-/* They live inside the LanguageProvider tree (the provider is above
-   the ErrorBoundary in App.jsx), so they can safely use useTranslation. */
 
 function GenericErrorFallback() {
   const { t } = useTranslation();
@@ -47,7 +43,7 @@ function EditorErrorFallback() {
       <p style={{ color: "#f87171" }}>{t("errorBoundary.editor.body")}</p>
       <button
         className="btn-reload"
-        style={{ scale: "0.8" }}
+        style={{ transform: "scale(0.8)" }}
         onClick={() => window.location.reload()}
       >
         {t("errorBoundary.editor.reset")}
@@ -71,26 +67,32 @@ function MissionErrorFallback() {
   );
 }
 
-/* ---------- Class boundaries ---------- */
+export interface ErrorBoundaryProps {
+  children?: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
 
 /**
  * 1. Generic Error Boundary
  */
-export class ErrorBoundary extends React.Component {
-  constructor(props) {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error("Soroban Quest Error:", error, errorInfo);
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return <GenericErrorFallback />;
     }
@@ -101,17 +103,17 @@ export class ErrorBoundary extends React.Component {
 /**
  * 2. Editor Error Boundary
  */
-export class EditorErrorBoundary extends React.Component {
-  constructor(props) {
+export class EditorErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return <EditorErrorFallback />;
     }
@@ -122,17 +124,17 @@ export class EditorErrorBoundary extends React.Component {
 /**
  * 3. Mission Error Boundary
  */
-export class MissionErrorBoundary extends React.Component {
-  constructor(props) {
+export class MissionErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return <MissionErrorFallback />;
     }

@@ -7,9 +7,12 @@
 
 import { EditorTheme } from '../types';
 
+export type EditorThemeId = string;
+
 export interface EditorThemeOption {
   id: string;
   label: string;
+  name?: string;
   builtin: boolean;
   data?: EditorTheme;
 }
