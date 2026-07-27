@@ -6,7 +6,7 @@ export const TOAST_STATES = {
   ERROR: "error",
 };
 
-export function useokashi() {
+export function useOkashi() {
   const [toast, setToast] = useState({ 
     state: TOAST_STATES.IDLE, 
     message: "" 

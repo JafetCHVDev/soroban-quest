@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTranslation } from "../i18n/useTranslation";
 import { useGameState } from "../systems/GameStateContext";
+import LanguageSelector from "./LanguageSelector";
+import { resetOnboarding } from "./Onboarding";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
-  const { profile } = useGameState();
+  const { profile, progress } = useGameState();
   const langRef = useRef(null);
 
   const { t, language, setLanguage, languages } = useTranslation();
@@ -100,6 +102,21 @@ export default function Navbar() {
               {t("navbar.journal")}
             </Link>
           </li>
+          <li>
+            <Link to="/leaderboard" className={isActive("/leaderboard")}>
+              {t("navbar.leaderboard")}
+            </Link>
+          </li>
+          <li>
+            <Link to="/achievements" className={isActive("/achievements")}>
+              {t("navbar.achievements")}
+            </Link>
+          </li>
+          <li>
+            <Link to="/shop" className={isActive("/shop")}>
+              {t("navbar.shop")}
+            </Link>
+          </li>
         </ul>
 
         {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
@@ -130,6 +147,18 @@ export default function Navbar() {
             <span className="sr-only">{t("navbar.userProfile")} </span>
             {profile.name}
           </span>
+          <span className="navbar-gold" title={`${progress.gold || 0} gold`}>
+            🪙 {progress.gold || 0}
+          </span>
+          <button
+            onClick={resetOnboarding}
+            className="btn-ghost"
+            style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}
+            title={t("navbar.replayTutorial")}
+            aria-label={t("navbar.replayTutorial")}
+          >
+            🎓
+          </button>
         </div>
 
         {/* HAMBURGER */}
@@ -169,6 +198,15 @@ export default function Navbar() {
           </Link>
           <Link to="/journal" onClick={() => setIsOpen(false)}>
             {t("navbar.journal")}
+          </Link>
+          <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
+            {t("navbar.leaderboard")}
+          </Link>
+          <Link to="/achievements" onClick={() => setIsOpen(false)}>
+            {t("navbar.achievements")}
+          </Link>
+          <Link to="/shop" onClick={() => setIsOpen(false)}>
+            {t("navbar.shop")}
           </Link>
 
           {/* MOBILE EXTRAS */}
@@ -264,4 +302,5 @@ function LanguageSelector({
       )}
     </div>
   );
+}
 }

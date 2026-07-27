@@ -9,6 +9,9 @@ import Journal from "./pages/Journal";
 import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
 import Quests from "./pages/Quests"; // Added Quests import
+import Leaderboard from "./pages/Leaderboard";
+import Achievements from "./pages/Achievements";
+import Shop from "./pages/Shop";
 import Footer from "./components/Footer";
 
 import useScrollToTop from "./hooks/useScrollToTop";
@@ -49,6 +52,9 @@ export default function App() {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />
                   <Route path="/skills" element={<SkillTree />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/achievements" element={<Achievements />} />
+                  <Route path="/shop" element={<Shop />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

@@ -15,7 +15,7 @@ vi.mock("../activityLogger", () => {
 
 import {
   xpForLevel,
-  xpForNextLevel,
+  _xpForNextLevel,
   getLevelFromXP,
   getRankTitle,
   getXPProgress,
@@ -25,7 +25,7 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
-  BADGES,
+  _BADGES,
 } from "../gameEngine";
 
 describe("gameEngine core logic", () => {

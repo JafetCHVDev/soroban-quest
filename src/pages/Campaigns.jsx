@@ -43,7 +43,7 @@ export default function Campaigns() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 800);
+    }, 200);
     return () => clearTimeout(timer);
   }, []);
 

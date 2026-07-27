@@ -6,6 +6,15 @@ import { LanguageProvider } from './i18n';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import './index.css';
 
+function redirectPathToHashRoute() {
+  if (window.location.hash || window.location.pathname === '/') return;
+
+  const hashRoute = `${window.location.pathname}${window.location.search}`;
+  window.history.replaceState(null, '', `/#${hashRoute}`);
+}
+
+redirectPathToHashRoute();
+
 function UpdatePrompt() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],

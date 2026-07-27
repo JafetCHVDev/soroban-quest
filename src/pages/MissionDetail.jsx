@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
@@ -8,10 +8,11 @@ import { loadProgress, saveProgress } from "../systems/storage";
 import { completeMission, recordAttempt } from "../systems/gameEngine";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
-import { useokashi, TOAST_STATES } from "../systems/useokashi";
+import { useOkashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
+import Confetti from "../components/Confetti";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
@@ -32,7 +33,10 @@ export default function MissionDetail() {
   const { missionId } = useParams();
   const navigate = useNavigate();
   const { t, language } = useTranslation();
-  const mission = getMissionById(missionId, language);
+  const mission = useMemo(
+    () => getMissionById(missionId, language),
+    [missionId, language],
+  );
 
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
@@ -52,6 +56,9 @@ export default function MissionDetail() {
   const [liveTotalCount, setLiveTotalCount] = useState(0);
   const [activeTab, setActiveTab] = useState("story");
   const [editorTheme, setEditorTheme] = useState(() => loadEditorTheme());
+  const [editorFontSize, setEditorFontSize] = useState(() => {
+    return parseInt(localStorage.getItem('soroban_quest_editor_font_size') || '14', 10);
+  });
 
   const terminalBodyRef = useRef(null);
   const editorRef = useRef(null);      
@@ -59,14 +66,20 @@ export default function MissionDetail() {
   const validatorRef = useRef(null);    
   const victoryModalRef = useRef(null);
 
-  const { openInOkashi, toast } = useokashi();
+  const { openInOkashi, toast } = useOkashi();
 
   const progressState = loadProgress();
   const isCompleted = progressState.completedMissions.includes(missionId);
   const hasReplay = CodeRecorder.hasRecording(missionId);
 
-  const nextMissionItem = getNextMission(missionId, language);
-  const previousMissionItem = getMissionById(String(Number(missionId) - 1), language);
+  const nextMissionItem = useMemo(
+    () => getNextMission(missionId, language),
+    [missionId, language],
+  );
+  const previousMissionItem = useMemo(
+    () => getMissionById(String(Number(missionId) - 1), language),
+    [missionId, language],
+  );
 
   // --------------------------- Load Mission ---------------------------
   useEffect(() => {
@@ -181,6 +194,13 @@ export default function MissionDetail() {
   // --------------------------- Keyboard Shortcuts Hook ---------------------------
   useEffect(() => {
     const handleGlobalShortcuts = (e) => {
+      // Ctrl+Enter / Cmd+Enter always runs tests (even from Monaco)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleRunTests();
+        return;
+      }
+
       // Prevent running if user is typing inside code fields or inputs
       const targetTag = document.activeElement?.tagName.toLowerCase();
       const isMonacoFocused = document.activeElement?.closest('.monaco-editor');
@@ -417,7 +437,7 @@ export default function MissionDetail() {
     <MissionErrorBoundary>
       {/* Shortcut Indicator Legend Bar */}
       <div className="shortcut-legend-bar" style={{ display: 'flex', gap: '1rem', padding: '0.5rem 1rem', background: 'var(--bg-tertiary)', fontSize: '0.75rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>R</kbd> Run Tests</span>
+        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>Ctrl+Enter</kbd> Run Tests</span>
         {previousMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>P</kbd> Prev Mission</span>}
         {nextMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>N</kbd> Next Mission</span>}
       </div>
@@ -470,7 +490,6 @@ export default function MissionDetail() {
           className="mission-story" 
           role="region" 
           aria-label="Mission briefing and story description"
-          style={{ display: activeTab === "story" ? "block" : "none" }}
         >
           <div style={{ marginBottom: "var(--space-md)" }}>
             <span className={`badge badge-${mission.difficulty}`}>
@@ -509,7 +528,6 @@ export default function MissionDetail() {
           className="mission-editor-panel" 
           role="region" 
           aria-label="Code submission workspace"
-          style={{ display: activeTab === "editor" ? "flex" : "none" }}
         >
           <div className="mission-editor-toolbar">
             <div className="mission-editor-toolbar-left">
@@ -531,6 +549,24 @@ export default function MissionDetail() {
                     </option>
                   ))}
                 </select>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                A
+                <input
+                  type="range"
+                  min="10"
+                  max="24"
+                  step="1"
+                  value={editorFontSize}
+                  onChange={(e) => {
+                    const size = parseInt(e.target.value, 10);
+                    setEditorFontSize(size);
+                    localStorage.setItem('soroban_quest_editor_font_size', String(size));
+                  }}
+                  style={{ width: '56px', accentColor: 'var(--cyan)' }}
+                  aria-label="Editor font size"
+                />
+                A
               </label>
               <button
                 type="button"
@@ -578,7 +614,7 @@ export default function MissionDetail() {
               theme={editorTheme}
               onMount={handleEditorMount}
               options={{
-                fontSize: 14,
+                fontSize: editorFontSize,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
@@ -652,7 +688,6 @@ export default function MissionDetail() {
           className="mission-terminal-panel" 
           role="region" 
           aria-label="Validation execution test terminal log terminal"
-          style={{ display: activeTab === "tests" ? "block" : "none" }}
         >
           <div className="terminal" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <div className="terminal-header">
@@ -687,7 +722,6 @@ export default function MissionDetail() {
           <div 
             className="mission-replay-panel" 
             style={{
-              display: activeTab === "replay" ? "block" : "none",
               padding: '2rem',
               textAlign: 'center',
               background: 'var(--bg-secondary)',
@@ -717,6 +751,7 @@ export default function MissionDetail() {
       {/* Victory Modal */}
       {showVictory && victoryData && (
         <div className="modal-overlay" onClick={() => setShowVictory(false)}>
+          <Confetti />
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -730,7 +765,14 @@ export default function MissionDetail() {
             <p className="modal-message">
               {t("missionDetail.victory.youCompleted")} <strong>{mission.title}</strong>
             </p>
-            <div className="modal-xp">{t("missionDetail.victory.xpGained", { xp: victoryData.xp })}</div>
+            <div className="modal-xp" style={{ display: "flex", gap: "1rem", justifyContent: "center", alignItems: "center" }}>
+              <span style={{ color: "var(--cyan)", fontSize: "1.5rem", fontWeight: 700, textShadow: "0 0 20px rgba(6, 214, 160, 0.5)" }}>
+                +{victoryData.xp} XP
+              </span>
+              <span style={{ color: "var(--gold)", fontSize: "1.5rem", fontWeight: 700, textShadow: "0 0 20px rgba(245, 158, 11, 0.5)" }}>
+                +{Math.floor(victoryData.xp * 0.5)} Gold
+              </span>
+            </div>
 
             {victoryData.leveledUp && (
               <p style={{ color: "var(--purple)", fontFamily: "var(--font-display)", marginBottom: "1rem" }}>

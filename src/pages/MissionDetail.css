@@ -183,6 +183,7 @@
   .mission-detail.active-tab-replay .mission-replay-panel { display: block !important; }
   
   .mission-story, .mission-editor-panel, .mission-terminal-panel, .mission-replay-panel {
+    display: none;
     border: none;
     height: 100%;
   }
