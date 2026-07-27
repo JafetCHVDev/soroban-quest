@@ -20,14 +20,25 @@
     "complete": "Completa",
     "completed": "Completada",
     "locked": "Bloqueada",
-    "unlocked": "Desbloqueada"
+    "unlocked": "Desbloqueada",
+    "skipToContent": "Saltar al contenido principal"
   },
   "navbar": {
     "home": "Inicio",
     "campaigns": "Campañas",
     "missions": "Misiones",
     "profile": "Perfil",
-    "journal": "Diario"
+    "journal": "Diario",
+    "leaderboard": "Ranking",
+    "achievements": "Logros",
+    "shop": "Tienda",
+    "ariaMain": "Navegación principal",
+    "ariaHome": "Ir a la página de inicio",
+    "ariaMobile": "Menú de navegación móvil",
+    "userProfile": "Perfil de usuario:",
+    "openMenu": "Abrir menú de navegación",
+    "closeMenu": "Cerrar menú de navegación",
+    "replayTutorial": "Repetir tutorial"
   },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
@@ -77,6 +88,19 @@
         "title": "Camino progresivo",
         "body": "Desde \"Hello World\" hasta contratos multi-firma. Cada misión se apoya en la anterior, creando una ruta estructurada hacia el dominio de Soroban."
       }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} Misiones",
+      "xpEarned": "{{xp}} XP Ganados",
+      "goldEarned": "{{gold}} Oro",
+      "badgesUnlocked": "{{count}} Insignias",
+      "currentLevel": "Nivel {{level}} — {{rank}}",
+      "nextMission": "Siguiente Misión",
+      "continueFrom": "Continuar desde {{title}}",
+      "recentActivity": "Actividad Reciente",
+      "viewAll": "Ver Todo",
+      "quickStats": "Estadísticas Rápidas",
+      "streak": "Racha diaria"
     }
   },
   "footer": {
@@ -91,12 +115,16 @@
       "heading": "Recursos",
       "docs": "Documentación de Soroban",
       "sdk": "SDK de Stellar",
-      "github": "GitHub"
+      "github": "GitHub",
+      "glossary": "Glosario",
+      "faq": "FAQ"
     },
     "community": {
       "heading": "Comunidad",
       "discord": "Discord",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "forum": "Foro de Stellar",
+      "blog": "Blog de Stellar"
     },
     "credits": {
       "tagline": "Construido para el ecosistema Stellar",
@@ -113,6 +141,7 @@
       "title": "Algo salió mal",
       "body": "La misión encontró un error en tiempo de ejecución. Revisa la consola para más detalles.",
       "reload": "Recargar",
+      "goHome": "Ir al inicio",
       "report": "Reportar problema"
     },
     "editor": {
@@ -129,7 +158,17 @@
     "viewJournal": "📖 Ver diario",
     "editPanel": {
       "title": "Editar perfil",
+      "nameLabel": "Nombre del aventurero",
+      "avatarLegend": "Elige un avatar",
       "namePlaceholder": "Ingresa tu nombre"
+    },
+    "selector": {
+      "title": "Perfil activo",
+      "help": "{{count}} de {{max}} perfiles locales en uso.",
+      "meta": "Nivel {{level}} • {{xp}} XP",
+      "create": "Crear perfil",
+      "emptySlot": "Espacio vacío",
+      "defaultName": "Jugador {{number}}"
     },
     "stats": {
       "missions": "Misiones",
@@ -156,11 +195,49 @@
         "importFailed": "❌ Archivo inválido — no se pudo importar.",
         "resetDone": "🗑️ Progreso restablecido."
       },
+      "toast": {
+        "exported": "¡Progreso exportado correctamente!",
+        "imported": "¡Progreso importado correctamente!",
+        "importFailed": "No se pudo importar el archivo. Verifica el formato.",
+        "resetDone": "🗑️ Progreso restablecido."
+      },
       "log": {
         "exported": "Progreso de la aventura exportado",
         "imported": "Progreso de la aventura importado desde archivo"
       }
     }
+  },
+  "leaderboard": {
+    "kicker": "Multijugador local",
+    "title": "Ranking",
+    "subtitle": "Compara XP, nivel, misiones e insignias entre tus perfiles locales.",
+    "manageProfiles": "Gestionar perfiles",
+    "championAria": "Campeón local actual",
+    "championSummary": "Nivel {{level}} • {{xp}} XP • {{missions}} misiones completadas",
+    "tableTitle": "Clasificación local",
+    "profileCount": "{{count}} perfiles",
+    "active": "Activo",
+    "switch": "Cambiar",
+    "columns": {
+      "rank": "Puesto",
+      "player": "Jugador",
+      "xp": "XP",
+      "level": "Nivel",
+      "missions": "Misiones",
+      "badges": "Insignias",
+      "status": "Estado"
+    }
+  },
+  "achievements": {
+    "kicker": "Bóveda de insignias",
+    "title": "Logros",
+    "subtitle": "Logros desbloqueados y bloqueados de {{name}}.",
+    "summaryAria": "Resumen de logros completados",
+    "unlocked": "Desbloqueados",
+    "progressAria": "Progreso de logros completados",
+    "progress": "Progreso",
+    "gridAria": "Colección de insignias de logros",
+    "empty": "¡Completa misiones para ganar logros e insignias!"
   },
   "journal": {
     "title": "Diario de aventura",
@@ -232,6 +309,7 @@
     "back": "← Volver a campañas",
     "completeOf": "{{completed}}/{{total}} completadas",
     "lore": {
+      "iconLabel": "Pergamino de historia del capítulo",
       "modalTitle": "Introducción del capítulo",
       "beginChapter": "Comenzar capítulo {{number}}"
     }
@@ -255,6 +333,10 @@
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completada",
       "locked": "🔒 Bloqueada"
+    },
+    "allCompleted": {
+      "title": "¡Todas las misiones completadas!",
+      "body": "¡Felicitaciones, {{rank}}! Dominaste todos los {{xp}} XP de desafíos de Soroban."
     },
     "noResults": "No hay misiones que coincidan con tus filtros.",
     "aria": {
@@ -350,9 +432,17 @@
         "title": "Autorización",
         "description": "Control de acceso y seguridad"
       },
-      "Advanced": {
-        "title": "Patrones avanzados",
-        "description": "Patrones de contratos complejos"
+      "Events": {
+        "title": "Eventos",
+        "description": "Emisión y manejo de eventos de contratos"
+      },
+      "Protocols": {
+        "title": "Protocolos",
+        "description": "Patrones de protocolos DeFi del mundo real"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "Primitivas de finanzas descentralizadas"
       }
     },
     "tooltip": {
@@ -420,6 +510,93 @@
     "speed_demon": {
       "name": "Demonio Veloz",
       "description": "Completa una misión en el primer intento"
+    },
+    "chapter_1": {
+      "name": "Despertar",
+      "description": "Completa todas las misiones del Capítulo 1"
+    },
+    "chapter_2": {
+      "name": "Guardián de la Memoria",
+      "description": "Completa todas las misiones del Capítulo 2"
+    },
+    "chapter_3": {
+      "name": "Maestro Forjador",
+      "description": "Completa todas las misiones del Capítulo 3"
+    },
+    "chapter_4": {
+      "name": "Arquitecto de Datos",
+      "description": "Completa todas las misiones del Capítulo 4"
+    },
+    "chapter_5": {
+      "name": "Pionero de Protocolos",
+      "description": "Completa todas las misiones del Capítulo 5"
+    },
+    "chapter_6": {
+      "name": "Maestro de Producción",
+      "description": "Completa todas las misiones del Capítulo 6"
+    },
+    "chapter_7": {
+      "name": "Centinela de Seguridad",
+      "description": "Completa todas las misiones del Capítulo 7"
     }
+  },
+  "shop": {
+    "title": "Tienda",
+    "subtitle": "Gasta tu XP en avatares, mejoras e insignias",
+    "ariaCategories": "Filtros de categorías de la tienda",
+    "categories": {
+      "all": "Todas",
+      "avatars": "Avatares",
+      "boosts": "Mejoras",
+      "badges": "Insignias"
+    },
+    "items": {
+      "avatarPack1": "Paquete de Avatares 1",
+      "avatarPack1Desc": "Desbloquea 5 nuevas opciones de avatar",
+      "avatarPack2": "Paquete de Avatares 2",
+      "avatarPack2Desc": "Desbloquea 5 opciones exclusivas de avatar",
+      "xpBoost": "Mejora de XP",
+      "xpBoostDesc": "Duplica tu XP en la próxima misión",
+      "streakFreeze": "Protección de Racha",
+      "streakFreezeDesc": "Protege tu racha por un día perdido",
+      "hintToken": "Token de Pista",
+      "hintTokenDesc": "Revela una pista sin penalización de XP",
+      "premiumBadge": "Insignia Premium",
+      "premiumBadgeDesc": "Insignia premium exclusiva para tu perfil"
+    },
+    "buy": "Comprar",
+    "purchased": "Comprado",
+    "alreadyPurchased": "Ya posees este artículo",
+    "insufficientFunds": "No tienes suficiente Oro para comprar este artículo",
+    "purchaseSuccess": "¡{{item}} comprado exitosamente!",
+    "empty": "No hay artículos en esta categoría",
+    "ariaPurchase": "Comprar {{item}} por {{price}} Oro",
+    "ariaPurchased": "{{item}} - Ya comprado"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "¡Bienvenido a Soroban Quest!",
+      "body": "Embárcate en un viaje gamificado para dominar el desarrollo de contratos inteligentes Soroban. Completa misiones, gana XP y Oro, y desbloquea logros."
+    },
+    "step2": {
+      "title": "Tu Centro de Progreso",
+      "body": "La barra de navegación muestra tu nivel, XP, saldo de Oro y perfil. Úsala para navegar entre Misiones, Campañas, Perfil, Diario y más."
+    },
+    "step3": {
+      "title": "Mapa de Misiones y Búsquedas",
+      "body": "El Mapa de Misiones muestra todas las búsquedas organizadas por capítulo. Cada misión presenta un desafío de codificación Soroban con historia, pistas y validación automatizada."
+    },
+    "step4": {
+      "title": "Editor de Código y Validación",
+      "body": "Escribe código Rust Soroban en el editor Monaco integrado. Ejecuta pruebas para verificar tu solución. ¡No necesitas servidor de compilación!"
+    },
+    "step5": {
+      "title": "Progresión RPG",
+      "body": "Gana XP y Oro por cada misión completada. Sube de nivel para desbloquear nuevos rangos, capítulos e insignias. Gasta Oro en la Tienda para artículos cosméticos y mejoras."
+    },
+    "dismiss": "¡Entendido!",
+    "next": "Siguiente",
+    "prev": "Atrás",
+    "skip": "Saltar tutorial"
   }
 }

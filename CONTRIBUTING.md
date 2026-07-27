@@ -39,18 +39,20 @@ Open `http://localhost:5173/`.
 
 Top-level app code lives in `src/`.
 
-- `src/pages/`: route-level pages (`Home`, `MissionMap`, `MissionDetail`, `Profile`).
-- `src/components/`: shared UI components (currently `Navbar`).
+- `src/pages/`: route-level pages (Home, MissionMap, MissionDetail, Profile, Journal, Campaigns, SkillTree, Leaderboard, Achievements, Shop, NotFound).
+- `src/components/`: shared UI components (Navbar, Footer, ErrorBoundary, ConfirmationDialog, etc.).
 - `src/systems/`: gameplay logic, validation, persistence, and mission loading.
-- `src/data/`: content definitions (all missions).
+- `src/data/`: content definitions (all missions and campaigns).
+- `src/i18n/`: internationalization (locales and language bridge).
 
 ### System Files
 
-- `src/systems/gameEngine.js`: XP, level progression, mission completion, attempt tracking, and badge awards.
+- `src/systems/gameEngine.js`: XP, gold, level progression, mission completion, attempt tracking, and badge awards.
 - `src/systems/storage.js`: localStorage load/save plus progress export/import/reset.
 - `src/systems/codeValidator.js`: check runner and individual validation check implementations.
 - `src/systems/testRunner.js`: orchestrates syntax, structure, and mission checks with progressive output.
 - `src/systems/missionLoader.js`: mission retrieval, chapter grouping, unlock logic, and next/previous mission helpers.
+- `src/systems/activityLogger.js`: persistent activity journal for user history.
 
 ## Adding a New Mission
 
@@ -58,33 +60,42 @@ Add new missions in `src/data/missions.js` inside the exported `missions` array.
 
 ### Mission Object Schema
 
-Use this schema for each mission object:
+Missions use an i18n-aware structure. Language-neutral fields sit at the top level, while localizable fields live under `i18n[locale]`:
 
 ```js
 {
   id: 'unique-id',                     // URL-safe unique identifier (used in /mission/:missionId)
-  title: 'Mission Title',              // Display title
-  chapter: 1,                          // Chapter number used in map grouping
+  chapter: 1,                          // Chapter number used in map grouping (1-6)
   order: 1,                            // Sequential order used for unlock flow
   difficulty: 'beginner',              // beginner | intermediate | advanced
   xpReward: 100,                       // XP awarded on first completion
-  story: '# Markdown story content',   // Markdown shown in the mission story panel
-  learningGoal: 'One-line outcome',    // Short summary used in mission cards
+  i18n: {
+    en: {
+      title: 'Mission Title',
+      story: '# Markdown story content',
+      learningGoal: 'One-line outcome',
+      hints: ['Hint 1', 'Hint 2'],
+    },
+    es: {
+      title: 'Título de la Misión',
+      story: '# Contenido de la historia en markdown',
+      learningGoal: 'Resultado de una línea',
+      hints: ['Pista 1', 'Pista 2'],
+    },
+  },
   template: '// Starter code...',      // Initial code loaded into Monaco editor
   solution: '// Reference solution...',// Revealable reference solution
-  checks: [                            // Validation checks run by codeValidator/testRunner
+  checks: [                            // Validation checks run by codeValidator
     { type: 'has_function', name: 'hello', params: ['env', 'to'] }
   ],
-  hints: [                             // Progressive hints shown in order
-    'Hint 1',
-    'Hint 2'
-  ],
-  conceptsIntroduced: [                // Tags shown on mission cards
+  conceptsIntroduced: [                // Tags shown on mission cards and skill tree
     'Env',
     'storage'
   ]
 }
 ```
+
+Alternatively, missions can be authored in Markdown format with YAML frontmatter. See `src/data/missions/hello-soroban.md` for an example, and `src/systems/missionParser.js` for the parser.
 
 ### Authoring Notes
 
@@ -92,11 +103,12 @@ Use this schema for each mission object:
 - Keep `order` contiguous so unlock logic remains linear.
 - Ensure `template` is solvable and `solution` passes all checks.
 - Write `story` in Markdown; code blocks should use fenced syntax (for example, `rust`).
+- Include both `en` and `es` translations in the `i18n` block.
 - Prefer checks that validate learning goals directly (function signatures, types, storage patterns, auth patterns).
 
 ## Validation Check Types Reference
 
-The table below is based on `src/systems/codeValidator.js`. Every listed type currently exists in code.
+Based on `src/systems/codeValidator.js`. Every listed type currently exists in code.
 
 | Type | Required Fields | Example |
 |---|---|---|
@@ -112,10 +124,22 @@ The table below is based on `src/systems/codeValidator.js`. Every listed type cu
 | `has_import` | `module` | `{ type: 'has_import', module: 'soroban_sdk' }` |
 
 Notes:
-
 - `has_attribute` expects the attribute token (for example `contract` or `contractimpl`), not the full `#[...]` wrapper.
 - `returns_type` uses the key `function` in this codebase (not `functionName`).
 - `has_import` uses the key `module` in this codebase (not `importPath`).
+
+## Development Commands
+
+```bash
+npm run dev              # Start local dev server (Vite)
+npm run test             # Run unit/system tests (Vitest)
+npm run test:e2e         # Run end-to-end tests (Playwright)
+npm run test:visual      # Run visual regression tests
+npm run lint             # Lint all files (ESLint)
+npm run lint:fix         # Auto-fix lint issues
+npm run build            # Build for production
+npm run preview          # Preview production build locally
+```
 
 ## Development Workflow
 
@@ -142,7 +166,7 @@ git checkout -b feat/my-change
 - Commit messages: use Conventional Commits (for example, `feat: add mission 8 checks`).
 - Every PR must pass the CI pipeline before review.
 - Every PR must be tested locally before opening:
-  - all pages load (`/`, `/missions`, `/mission/:id`, `/profile`)
+  - all pages load (`/`, `/missions`, `/mission/:id`, `/profile`, `/campaigns`, `/shop`, etc.)
   - mission validation still works
   - production build succeeds (`npm run build`)
 
@@ -160,5 +184,8 @@ Before submitting your PR:
 
 - Project overview: `README.md`
 - Missions data: `src/data/missions.js`
+- Campaigns data: `src/data/campaigns.js`
 - Validator: `src/systems/codeValidator.js`
 - Test orchestration: `src/systems/testRunner.js`
+- Future roadmap: `FUTURE.md`
+- Live demo: https://soroban-quest.vercel.app/

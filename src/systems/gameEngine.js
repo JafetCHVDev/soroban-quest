@@ -18,8 +18,23 @@ const RANK_TITLES = [
   "Master Guardian", // 7
   "Elder", // 8
   "Luminary", // 9
-  "Stellar Sovereign", // 10+
+  "Stellar Sovereign", // 10
+  "Vault Keeper", // 11
+  "Protocol Weaver", // 12
+  "DeFi Sage", // 13
+  "Stellar Architect", // 14
+  "Security Sentinel", // 15+
 ];
+
+const CHAPTER_MISSIONS = {
+  1: ['hello-soroban', 'greetings-protocol'],
+  2: ['counter-vault', 'guardian-ledger'],
+  3: ['token-forge', 'time-lock', 'multi-party-pact'],
+  4: ['vault-manager', 'event-emitter', 'approval-manager'],
+  5: ['crowdfund', 'escrow-agent', 'subscription'],
+  6: ['flash-loan', 'permissions-rbac', 'oracle-feed', 'governor-simple'],
+  7: ['reentrancy-guard', 'access-control-fix'],
+};
 
 export const BADGES = [
   {
@@ -48,7 +63,7 @@ export const BADGES = [
     name: "Completionist",
     description: "Complete all missions",
     icon: "👑",
-    condition: (state) => state.completedMissions.length >= 7,
+    condition: (state) => state.completedMissions.length >= 19,
   },
   {
     id: "level_3",
@@ -78,11 +93,61 @@ export const BADGES = [
     icon: "⚡",
     condition: (state) => state.firstTryMissions?.length >= 1,
   },
+  {
+    id: "chapter_1",
+    name: "Awakening",
+    description: "Complete all Chapter 1 missions",
+    icon: "🌅",
+    condition: (state) => CHAPTER_MISSIONS[1].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_2",
+    name: "Memory Keeper",
+    description: "Complete all Chapter 2 missions",
+    icon: "🔐",
+    condition: (state) => CHAPTER_MISSIONS[2].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_3",
+    name: "Forgemaster",
+    description: "Complete all Chapter 3 missions",
+    icon: "⚒️",
+    condition: (state) => CHAPTER_MISSIONS[3].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_4",
+    name: "Data Architect",
+    description: "Complete all Chapter 4 missions",
+    icon: "🏦",
+    condition: (state) => CHAPTER_MISSIONS[4].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_5",
+    name: "Protocol Pioneer",
+    description: "Complete all Chapter 5 missions",
+    icon: "🔗",
+    condition: (state) => CHAPTER_MISSIONS[5].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_6",
+    name: "Production Master",
+    description: "Complete all Chapter 6 missions",
+    icon: "⚡",
+    condition: (state) => CHAPTER_MISSIONS[6].every((id) => state.completedMissions.includes(id)),
+  },
+  {
+    id: "chapter_7",
+    name: "Security Sentinel",
+    description: "Complete all Chapter 7 missions",
+    icon: "🛡️",
+    condition: (state) => CHAPTER_MISSIONS[7].every((id) => state.completedMissions.includes(id)),
+  },
 ];
 
 function getDefaultState() {
   return {
     xp: 0,
+    gold: 0,
     level: 1,
     completedMissions: [],
     badges: [],
@@ -91,6 +156,9 @@ function getDefaultState() {
     missionAttempts: {},
     streak: 0,
     lastLogin: null,
+    purchasedItems: [],
+    xpBoostActive: false,
+    streakFreezeUsed: false,
   };
 }
 
@@ -129,7 +197,9 @@ export function getXPProgress(state) {
 }
 
 export function awardXP(state, amount) {
-  const newXP = state.xp + amount;
+  const hasBoost = state.purchasedItems?.includes('xp-boost');
+  const multiplied = hasBoost ? amount * 2 : amount;
+  const newXP = state.xp + multiplied;
   const newLevel = getLevelFromXP(newXP);
   const leveledUp = newLevel > state.level;
 
@@ -137,11 +207,37 @@ export function awardXP(state, amount) {
     logActivity(ACTIVITY_TYPES.LEVEL_UP, { level: newLevel }, `Reached Level ${newLevel}!`);
   }
 
-  return {
+  const nextState = {
     ...state,
     xp: newXP,
     level: newLevel,
     leveledUp,
+  };
+
+  if (hasBoost) {
+    nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'xp-boost');
+  }
+
+  return nextState;
+}
+
+export const GOLD_PER_MISSION_RATIO = 0.5;
+
+export function awardGold(state, xpReward) {
+  const goldEarned = Math.floor(xpReward * GOLD_PER_MISSION_RATIO);
+  logActivity(ACTIVITY_TYPES.GOLD_EARNED, { amount: goldEarned }, `Earned ${goldEarned} gold!`);
+  return {
+    ...state,
+    gold: (state.gold || 0) + goldEarned,
+  };
+}
+
+export function spendGold(state, amount) {
+  const currentGold = state.gold || 0;
+  if (amount > currentGold) return state;
+  return {
+    ...state,
+    gold: currentGold - amount,
   };
 }
 
@@ -162,6 +258,7 @@ export function completeMission(state, missionId, xpReward) {
   };
 
   newState = awardXP(newState, xpReward);
+  newState = awardGold(newState, xpReward);
   newState = checkBadges(newState);
 
   logActivity(ACTIVITY_TYPES.MISSION_COMPLETED, { missionId }, `Successfully completed mission: ${missionId}`);
@@ -202,6 +299,7 @@ export function updateStreak(state) {
   if (lastLogin === today) return state;
 
   let newStreak = 1;
+  let consumedFreeze = false;
   if (lastLogin) {
     const last = new Date(lastLogin);
     const now = new Date(today);
@@ -210,16 +308,25 @@ export function updateStreak(state) {
 
     if (diffDays === 1) {
       newStreak = (state.streak || 0) + 1;
+    } else if (diffDays > 1 && (state.purchasedItems || []).includes('streak-freeze')) {
+      newStreak = state.streak || 0;
+      consumedFreeze = true;
     }
   }
 
   logActivity(ACTIVITY_TYPES.STREAK, { streak: newStreak }, `Daily streak: ${newStreak} day${newStreak > 1 ? 's' : ''}!`);
 
-  return {
+  const nextState = {
     ...state,
     streak: newStreak,
     lastLogin: today,
   };
+
+  if (consumedFreeze) {
+    nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'streak-freeze');
+  }
+
+  return nextState;
 }
 
 export { getDefaultState };

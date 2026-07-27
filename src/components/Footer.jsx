@@ -28,6 +28,8 @@ export default function Footer() {
             <li><a href="https://soroban.stellar.org" target="_blank" rel="noopener noreferrer">{t("footer.resources.docs")}</a></li>
             <li><a href="https://stellar.org/developers" target="_blank" rel="noopener noreferrer">{t("footer.resources.sdk")}</a></li>
             <li><a href="https://github.com/JafetCHVDev/soroban-quest" target="_blank" rel="noopener noreferrer">{t("footer.resources.github")}</a></li>
+            <li><a href="https://developers.stellar.org/docs/learn/encyclopedia" target="_blank" rel="noopener noreferrer">{t("footer.resources.glossary")}</a></li>
+            <li><a href="https://github.com/JafetCHVDev/soroban-quest/issues" target="_blank" rel="noopener noreferrer">{t("footer.resources.faq")}</a></li>
           </ul>
         </div>
 
@@ -35,6 +37,8 @@ export default function Footer() {
           <h4>{t("footer.community.heading")}</h4>
           <ul>
             <li><a href="https://discord.gg/stellarcomm" target="_blank" rel="noopener noreferrer">{t("footer.community.discord")}</a></li>
+            <li><a href="https://forum.stellar.org" target="_blank" rel="noopener noreferrer">{t("footer.community.forum")}</a></li>
+            <li><a href="https://stellar.org/blog" target="_blank" rel="noopener noreferrer">{t("footer.community.blog")}</a></li>
           </ul>
         </div>
       </div>

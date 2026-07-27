@@ -13,16 +13,22 @@ const conceptCategories = {
     concepts: ['contract', 'contractimpl', 'Env', 'Symbol']
   },
   Storage: {
-    concepts: ['storage', 'instance', 'persistent storage', 'set', 'get', 'remove', 'unwrap_or']
+    concepts: ['storage', 'instance', 'persistent storage', 'Map<Address, i128>', 'set', 'get', 'remove', 'unwrap_or', 'compound storage keys', 'pool management']
   },
   Types: {
-    concepts: ['Address', 'Vec', 'Map', 'String', 'i128', 'u32', 'bool']
+    concepts: ['Address', 'Vec', 'Map', 'String', 'i128', 'u32', 'bool', 'allowance pattern']
   },
   Auth: {
-    concepts: ['require_auth', 'init pattern', 'admin patterns']
+    concepts: ['require_auth', 'init pattern', 'admin pattern', 'multi-party init', 'RBAC', 'role membership']
   },
-  Advanced: {
-    concepts: ['token', 'mint', 'transfer', 'ledger sequence', 'time-lock', 'multi-sig', 'governance pattern', 'conditional panic', 'complex state', 'multiple functions']
+  Events: {
+    concepts: ['events', 'publish', 'event-driven design', 'Vec tracking']
+  },
+  Protocols: {
+    concepts: ['token', 'mint', 'transfer', 'ledger sequence', 'time-lock', 'multi-sig', 'crowdfunding', 'deadline pattern', 'goal tracking', 'escrow pattern', 'dispute resolution', 'state machine', 'recurring billing', 'subscription state', 'cancel pattern']
+  },
+  DeFi: {
+    concepts: ['flash loan', 'loan lifecycle', 'fee mechanism', 'oracle pattern', 'price feed', 'asset tracking', 'off-chain bridge', 'governance', 'proposal lifecycle', 'vote tallying', 'quorum logic']
   }
 };
 

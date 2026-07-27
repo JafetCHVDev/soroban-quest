@@ -11,8 +11,8 @@ test.describe('SkillTree Page', () => {
 
     await expect(page).toHaveURL(/#\/skills/);
     await expect(page.locator('.skill-tree-title')).toHaveText('Soroban Skill Tree');
-    await expect(page.locator('.skill-category')).toHaveCount(5);
-    await expect(page.locator('.concept-node')).toHaveCount(31);
+    await expect(page.locator('.skill-category')).toHaveCount(7);
+    await expect(page.locator('.concept-node')).toHaveCount(58);
   });
 
   test('renders locked visualization for initial progress', async ({ page }) => {
@@ -20,7 +20,7 @@ test.describe('SkillTree Page', () => {
 
     const lockedNodes = page.locator('.concept-node.locked');
     await expect(lockedNodes.first()).toBeVisible();
-    await expect(lockedNodes).toHaveCount(31);
+    await expect(lockedNodes).toHaveCount(58);
     await expect(page.locator('.concept-node.unlocked')).toHaveCount(0);
   });
 

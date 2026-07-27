@@ -4,6 +4,7 @@ import { clearLocalStorageBeforePageLoad } from './utils';
 test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await clearLocalStorageBeforePageLoad(page);
+    await page.evaluate(() => localStorage.setItem('sorobanQuest_onboarding_done', '1'));
     await page.goto('/');
     // Force Playwright to wait for components and local files to fully load and settle
     await page.waitForLoadState('networkidle');
