@@ -1,10 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
+
+const analyzer = process.env.ANALYZE === 'true'
+  ? visualizer({
+      filename: 'dist/bundle-stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      open: false,
+    })
+  : null;
 
 export default defineConfig({
   plugins: [
     react(),
+    analyzer,
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['docs/logo.svg'],
