@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite';
+import { env } from 'node:process';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { visualizer } from 'rollup-plugin-visualizer';
 
-const analyzer = process.env.ANALYZE === 'true'
+const analyzer = env.ANALYZE === 'true'
   ? visualizer({
       filename: 'dist/bundle-stats.html',
       gzipSize: true,
