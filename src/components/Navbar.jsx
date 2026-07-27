@@ -27,6 +27,23 @@ export default function Navbar({ onOpenShortcuts }) {
     localStorage.setItem('soroban_quest_theme', theme);
   }, [theme]);
 
+  // Close mobile menu and reset body scroll on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (!langOpen) return;
     const onClick = (e) => {
@@ -63,7 +80,12 @@ export default function Navbar({ onOpenShortcuts }) {
       </a>
 
       <nav className="navbar" aria-label={t('navbar.ariaMain')}>
-        <Link to="/" className="navbar-logo" aria-label={t('navbar.ariaHome')}>
+        <Link
+          to="/"
+          className="navbar-logo"
+          aria-label={t('navbar.ariaHome')}
+          style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+        >
           <span className="navbar-logo-text">SOROBAN QUEST</span>
         </Link>
 
@@ -130,7 +152,15 @@ export default function Navbar({ onOpenShortcuts }) {
           <button
             onClick={onOpenShortcuts}
             className="btn-ghost"
-            style={{ padding: '0.5rem', borderRadius: '50%' }}
+            style={{
+              padding: '0.5rem',
+              borderRadius: '50%',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             title="Keyboard Shortcuts (Ctrl+K or ?)"
             aria-label="Keyboard Shortcuts"
           >
@@ -140,7 +170,15 @@ export default function Navbar({ onOpenShortcuts }) {
           <button
             onClick={toggleTheme}
             className="btn-ghost"
-            style={{ padding: '0.5rem', borderRadius: '50%' }}
+            style={{
+              padding: '0.5rem',
+              borderRadius: '50%',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             aria-label={t('common.toggleTheme')}
           >
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -158,7 +196,15 @@ export default function Navbar({ onOpenShortcuts }) {
           <button
             onClick={resetOnboarding}
             className="btn-ghost"
-            style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+            style={{
+              padding: '0.25rem 0.5rem',
+              fontSize: '0.75rem',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             title={t('navbar.replayTutorial')}
             aria-label={t('navbar.replayTutorial')}
           >
@@ -169,44 +215,121 @@ export default function Navbar({ onOpenShortcuts }) {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="hamburger-btn"
+          style={{
+            minWidth: '44px',
+            minHeight: '44px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           aria-label={isOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
           aria-expanded={isOpen}
         >
-          {isOpen ? <X /> : <Menu />}
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
         <div className={`mobile-menu ${isOpen ? 'open' : ''}`} aria-label={t('navbar.ariaMobile')}>
-          <Link to="/" onClick={() => setIsOpen(false)}>
+          <div
+            className="mobile-menu-header"
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1rem',
+              width: '100%',
+            }}
+          >
+            <span className="text-sm font-bold opacity-85">Navigation</span>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="btn-ghost"
+              style={{
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label={t('navbar.closeMenu')}
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <Link
+            to="/"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.home')}
           </Link>
-          <Link to="/campaigns" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/campaigns"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.campaigns')}
           </Link>
-          <Link to="/quests" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/quests"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.quests') || 'Quests'}
           </Link>
-          <Link to="/missions" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/missions"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.missions')}
           </Link>
-          <Link to="/profile" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/profile"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.profile')}
           </Link>
-          <Link to="/journal" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/journal"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.journal')}
           </Link>
-          <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/leaderboard"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.leaderboard')}
           </Link>
-          <Link to="/achievements" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/achievements"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.achievements')}
           </Link>
-          <Link to="/shop" onClick={() => setIsOpen(false)}>
+          <Link
+            to="/shop"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
             {t('navbar.shop')}
           </Link>
 
-          <div className="mobile-stats">
+          <div
+            className="mobile-stats"
+            style={{
+              marginTop: 'auto',
+              paddingTop: '1rem',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
             <LanguageSelector
               idSuffix="mobile"
               langRef={langRef}
@@ -218,29 +341,51 @@ export default function Navbar({ onOpenShortcuts }) {
               t={t}
             />
 
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                onOpenShortcuts();
-              }}
-              className="btn-ghost"
-              style={{ padding: '0.5rem', borderRadius: '50%' }}
-              title="Keyboard Shortcuts"
-              aria-label="Keyboard Shortcuts"
+            <div
+              style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', alignItems: 'center' }}
             >
-              <Keyboard size={20} />
-            </button>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  onOpenShortcuts();
+                }}
+                className="btn-ghost"
+                style={{
+                  padding: '0.5rem',
+                  borderRadius: '50%',
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                title="Keyboard Shortcuts"
+                aria-label="Keyboard Shortcuts"
+              >
+                <Keyboard size={20} />
+              </button>
 
-            <button
-              onClick={toggleTheme}
-              className="btn-ghost"
-              style={{ padding: '0.5rem', borderRadius: '50%' }}
-              aria-label={t('common.toggleTheme')}
-            >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
-            <span aria-hidden="true">{profile.avatar}</span>
-            <span>{profile.name}</span>
+              <button
+                onClick={toggleTheme}
+                className="btn-ghost"
+                style={{
+                  padding: '0.5rem',
+                  borderRadius: '50%',
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                aria-label={t('common.toggleTheme')}
+              >
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+              <span aria-hidden="true" style={{ fontSize: '1.25rem' }}>
+                {profile.avatar}
+              </span>
+              <span style={{ fontWeight: '600' }}>{profile.name}</span>
+            </div>
           </div>
         </div>
       </nav>
