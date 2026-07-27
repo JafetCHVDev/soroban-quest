@@ -17,6 +17,7 @@ import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from '../systems/useDocumentTitle';
+import { measureRender } from "../systems/performanceMonitor";
 import {
   EDITOR_THEMES,
   registerEditorThemes,
@@ -30,6 +31,10 @@ const MAX_RANK_INDEX = 10;
 
 export default function MissionDetail() {
   useDocumentTitle('Mission Detail');
+  useEffect(() => {
+    const stop = measureRender('MissionDetail');
+    stop();
+  });
   const { missionId } = useParams();
   const navigate = useNavigate();
   const { t, language } = useTranslation();
