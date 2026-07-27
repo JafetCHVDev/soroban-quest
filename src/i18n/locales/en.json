@@ -366,13 +366,21 @@
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
       "running": "Running…",
+      "compile": "⚙️ Compile & Run",
+      "compiling": "Compiling…",
       "themeLabel": "Editor theme"
     },
     "terminal": {
       "title": "Test Output",
       "placeholder": "Click \"Run Tests\" to validate your code…",
       "runningChecks": "🔍 Running validation checks…",
-      "alreadyCompleted": "🏅 Already completed — no additional XP awarded."
+      "alreadyCompleted": "🏅 Already completed — no additional XP awarded.",
+      "compiling": "⚙️ Compiling contract…",
+      "compileOk": "✅ Compilation succeeded in {{ms}}ms",
+      "compileFailed": "❌ Compilation failed ({{errors}} error(s))",
+      "compileFallback": "ℹ️ Using the in-browser analyzer (real WASM toolchain not loaded).",
+      "compileEngineWasm": "🦀 Compiled with the Soroban WASM toolchain.",
+      "compileError": "❌ Compiler error: {{message}}"
     },
     "status": {
       "checking": "Checking…",

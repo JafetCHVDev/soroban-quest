@@ -366,13 +366,21 @@
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
       "running": "Ejecutando…",
+      "compile": "⚙️ Compilar y ejecutar",
+      "compiling": "Compilando…",
       "themeLabel": "Tema del editor"
     },
     "terminal": {
       "title": "Salida de pruebas",
       "placeholder": "Haz clic en \"Ejecutar pruebas\" para validar tu código…",
       "runningChecks": "🔍 Ejecutando verificaciones…",
-      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional."
+      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional.",
+      "compiling": "⚙️ Compilando contrato…",
+      "compileOk": "✅ Compilación exitosa en {{ms}}ms",
+      "compileFailed": "❌ La compilación falló ({{errors}} error(es))",
+      "compileFallback": "ℹ️ Usando el analizador del navegador (toolchain WASM real no cargado).",
+      "compileEngineWasm": "🦀 Compilado con el toolchain WASM de Soroban.",
+      "compileError": "❌ Error del compilador: {{message}}"
     },
     "status": {
       "checking": "Verificando…",

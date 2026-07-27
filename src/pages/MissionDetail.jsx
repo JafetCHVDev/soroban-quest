@@ -10,6 +10,7 @@ import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useOkashi, TOAST_STATES } from "../systems/useokashi";
 import { createDebouncedValidator } from "../systems/liveValidator";
+import { getWasmCompiler, WasmCompiler, COMPILE_MARKER_OWNER } from "../systems/wasmCompiler";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
 import Confetti from "../components/Confetti";
@@ -46,6 +47,7 @@ export default function MissionDetail() {
   const [code, setCode] = useState("");
   const [testResults, setTestResults] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [isCompiling, setIsCompiling] = useState(false);
   const [showVictory, setShowVictory] = useState(false);
   const [victoryData, setVictoryData] = useState(null);
   const [hintIndex, setHintIndex] = useState(-1);
@@ -63,8 +65,9 @@ export default function MissionDetail() {
   const terminalBodyRef = useRef(null);
   const editorRef = useRef(null);      
   const monacoRef = useRef(null);      
-  const validatorRef = useRef(null);    
+  const validatorRef = useRef(null);
   const victoryModalRef = useRef(null);
+  const compilerRef = useRef(null);
 
   const { openInOkashi, toast } = useOkashi();
 
@@ -127,6 +130,16 @@ export default function MissionDetail() {
     };
   }, []);
 
+  // Set up the WASM compiler (lazy worker) and tear it down on unmount.
+  useEffect(() => {
+    compilerRef.current = getWasmCompiler();
+    // Kick off worker init in the background so the first compile is snappy.
+    compilerRef.current.init?.();
+    return () => {
+      clearCompileMarkers();
+    };
+  }, []);
+
   const handleRunTests = useCallback(async () => {
     if (isRunning || !mission) return;
     setIsRunning(true);
@@ -181,6 +194,73 @@ export default function MissionDetail() {
 
     setIsRunning(false);
   }, [code, mission, missionId, isRunning, showToast, t]);
+
+  const handleCompileAndRun = useCallback(async () => {
+    if (isCompiling || isRunning || !mission) return;
+    setIsCompiling(true);
+    setTestResults([]);
+    clearCompileMarkers();
+
+    const collector = [];
+    const push = (result) => {
+      collector.push(result);
+      setTestResults([...collector]);
+    };
+
+    push({ phase: "info", message: t("missionDetail.terminal.compiling") });
+
+    const compiler = compilerRef.current || getWasmCompiler();
+    let result;
+    try {
+      result = await compiler.compileAndRun(code, mission);
+    } catch (err) {
+      push({
+        phase: "summary",
+        passed: false,
+        message: t("missionDetail.terminal.compileError", {
+          message: err?.message || String(err),
+        }),
+      });
+      setIsCompiling(false);
+      return;
+    }
+
+    // Surface which engine ran so users understand the guarantee level.
+    if (result.engine === "wasm") {
+      push({ phase: "info", message: t("missionDetail.terminal.compileEngineWasm") });
+    } else {
+      push({ phase: "info", message: t("missionDetail.terminal.compileFallback") });
+    }
+
+    // Stream compiler stdout/stderr into the terminal, line by line.
+    for (const line of String(result.stdout || "").split("\n")) {
+      if (line.trim()) push({ phase: "output", passed: true, message: line });
+    }
+    for (const line of String(result.stderr || "").split("\n")) {
+      if (line.trim()) push({ phase: "output", passed: false, message: line });
+    }
+
+    // Publish diagnostics as Monaco markers in the editor.
+    applyCompileMarkers(WasmCompiler.toMonacoMarkers(result.diagnostics));
+
+    if (result.ok) {
+      push({
+        phase: "summary",
+        passed: true,
+        message: t("missionDetail.terminal.compileOk", { ms: result.durationMs ?? 0 }),
+      });
+      if (showToast) showToast(t("missionDetail.terminal.compileOk", { ms: result.durationMs ?? 0 }), "success");
+    } else {
+      push({
+        phase: "summary",
+        passed: false,
+        message: t("missionDetail.terminal.compileFailed", { errors: result.errorCount ?? 0 }),
+      });
+      if (showToast) showToast(t("missionDetail.toasts.validationFailed"), "error");
+    }
+
+    setIsCompiling(false);
+  }, [code, mission, isCompiling, isRunning, showToast, t]);
 
   const handleNextMission = useCallback(() => {
     if (nextMissionItem) navigate(`/mission/${nextMissionItem.id}`);
@@ -302,6 +382,23 @@ export default function MissionDetail() {
     if (!monaco || !editor) return;
     const model = editor.getModel();
     if (model) monaco.editor.setModelMarkers(model, LIVE_MARKER_OWNER, []);
+  }
+
+  function applyCompileMarkers(markers) {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+    const model = editor.getModel();
+    if (!model) return;
+    monaco.editor.setModelMarkers(model, COMPILE_MARKER_OWNER, markers);
+  }
+
+  function clearCompileMarkers() {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+    const model = editor.getModel();
+    if (model) monaco.editor.setModelMarkers(model, COMPILE_MARKER_OWNER, []);
   }
 
   function statusBarState() {
@@ -593,6 +690,16 @@ export default function MissionDetail() {
                 aria-label="Overwrite active workspace with solution code blueprint"
               >
                 {t("missionDetail.editor.solution")}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={handleCompileAndRun}
+                disabled={isCompiling || isRunning}
+                aria-label="Compile and run the contract in a sandboxed Soroban VM"
+                title="Compile & Run"
+              >
+                {isCompiling ? t("missionDetail.editor.compiling") : t("missionDetail.editor.compile")}
               </button>
               <button
                 type="button"
