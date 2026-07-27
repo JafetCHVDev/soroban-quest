@@ -47,6 +47,21 @@ Completa estos contratos fundamentales para desbloquear el **Capítulo 2: Bóved
 
 **0/2 misiones** • **Nivel 1 requerido**`,
       },
+      fr: {
+        title: 'Chapitre 1 : L\'Éveil',
+        description: 'Maîtrisez vos premiers contrats Soroban. Forgez votre voie en tant que Gardien Stellaire.',
+        lore: `# 🌌 Chapitre 1 : L'Éveil
+
+Vous vous tenez aux portes de la **Citadelle Stellaire**, en orbite à la lisière de l'espace connu. Les anciens **Gardiens de Soroban** ont perçu votre arrivée.
+
+*"Encore un chercheur,"* murmure le Gardien Ancien. *"La blockchain appelle ceux qui possèdent le code pour répondre."*
+
+## Votre Destinée Vous Attend
+
+Complétez ces contrats fondamentaux pour débloquer le **Chapitre 2 : Chambre de la Mémoire**.
+
+**0/2 missions** • **Niveau 1 requis**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #8b5cf6 50%, #f59e0b 100%)',
     chapterNumber: 1,
@@ -86,6 +101,21 @@ La **Torre de Señales** se desvanece tras de ti. Desciendes a la **Bóveda de l
 Domina la gestión de estado para acceder al **Capítulo 3: Forja de Tokens**.
 
 **0/2 misiones** • **Nivel 3 requerido**`,
+      },
+      fr: {
+        title: 'Chapitre 2 : Chambre de la Mémoire',
+        description: 'Débloquez le stockage persistant et le contrôle d\'accès. La mémoire définit le véritable pouvoir.',
+        lore: `# 🔐 Chapitre 2 : Chambre de la Mémoire
+
+La **Tour des Signaux** s'estompe derrière vous. Vous descendez dans la **Chambre de la Mémoire**, où la sagesse ancestrale perdure à travers les éons.
+
+*"Un contrat sans mémoire n'est qu'une pensée éphémère,"* murmure le Gardien de la Chambre. *"Pour perdurer, vous devez stocker et protéger."*
+
+## La Deuxième Épreuve
+
+Maîtrisez la gestion de l'état pour accéder au **Chapitre 3 : Forge de Jetons**.
+
+**0/2 missions** • **Niveau 3 requis**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #8b5cf6 0%, #f59e0b 50%, #ef4444 100%)',
@@ -127,6 +157,21 @@ Completa la Forja de Tokens para obtener el estatus de **Guardián Legendario**.
 
 **0/3 misiones** • **Nivel 5 requerido**`,
       },
+      fr: {
+        title: 'Chapitre 3 : Forge de Jetons',
+        description: 'Frappez des jetons, maîtrisez les verrous temporels, gouvernez avec la multi-signature. Devenez le Gardien Maître.',
+        lore: `# ⚒️ Chapitre 3 : Forge de Jetons
+
+La **Porte du Temps** vibre de puissance. Vous entrez dans la **Forge de Jetons** — le cœur de l'économie Stellar.
+
+*"La véritable maîtrise crée une valeur qui perdure,"* déclare le Maître Forgeron. *"Jetons, temps, confiance — forgez-les tous."*
+
+## Défi Final
+
+Complétez la Forge de Jetons pour obtenir le statut de **Gardien Légendaire**.
+
+**0/3 missions** • **Niveau 5 requis**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #06d6a0 100%)',
     chapterNumber: 3,
@@ -166,6 +211,21 @@ Más allá del Salón de los Pactos, descubres la **Fortaleza de Datos** — un 
 Construye contratos basados en datos para desbloquear el **Capítulo 5: Protocolos Avanzados**.
 
 **0/3 misiones** • **Nivel 7 requerido**`,
+      },
+      fr: {
+        title: 'Chapitre 4 : Forteresse de Données',
+        description: 'Maîtrisez la gestion d\'état complexe avec les Map, les événements et les approbations déléguées.',
+        lore: `# 🏦 Chapitre 4 : Forteresse de Données
+
+Au-delà de la Salle des Pactes, vous découvrez la **Forteresse de Données** — un vaste dépôt où l'état sophistiqué est conçu.
+
+*"Les données sont le fondement de tous les grands contrats,"* déclare l'Architecte. *"Apprenez à gérer l'état multi-utilisateur, à émettre des événements et à déléguer l'autorité."*
+
+## La Quatrième Épreuve
+
+Construisez des contrats axés sur les données pour débloquer le **Chapitre 5 : Protocoles Avancés**.
+
+**0/3 missions** • **Niveau 7 requis**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
@@ -207,6 +267,21 @@ Domina los patrones de protocolos avanzados para llegar al **Capítulo 6: Sistem
 
 **0/3 misiones** • **Nivel 9 requerido**`,
       },
+      fr: {
+        title: 'Chapitre 5 : Protocoles Avancés',
+        description: 'Construisez des protocoles DeFi du monde réel — financement participatif, séquestre et abonnements.',
+        lore: `# 🔄 Chapitre 5 : Protocoles Avancés
+
+L'**Arène Crowdforge** bourdonne d'énergie. Vous entrez dans le royaume des protocoles DeFi du monde réel.
+
+*"Voici les contrats qui alimentent la nouvelle économie,"* dit le Pionnier des Protocoles. *"Financement participatif, séquestre, abonnements — construisez-les tous."*
+
+## La Cinquième Épreuve
+
+Maîtrisez les modèles de protocoles avancés pour atteindre le **Chapitre 6 : Systèmes de Production**.
+
+**0/3 missions** • **Niveau 9 requis**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
     chapterNumber: 5,
@@ -247,6 +322,21 @@ Completa todos los Sistemas de Producción para ganar el título de **Arquitecto
 
 **0/4 misiones** • **Nivel 12 requerido**`,
       },
+      fr: {
+        title: 'Chapitre 6 : Systèmes de Production',
+        description: 'Déployez des contrats de niveau production — flash loans, RBAC, oracles et gouvernance.',
+        lore: `# ⚡ Chapitre 6 : Systèmes de Production
+
+La **Chambre de la Foudre** crépite de puissance. Vous avez atteint le sommet du développement Soroban.
+
+*"Vous comptez parmi les meilleurs ingénieurs de contrats de l'écosystème Stellar,"* proclame le Grand Ancien. *"Flash loans, sécurité basée sur les rôles, oracles de prix, gouvernance on-chain — maîtrisez les systèmes qui définissent la DeFi."*
+
+## Épreuve Finale
+
+Complétez tous les Systèmes de Production pour gagner le titre d'**Architecte Stellaire**.
+
+**0/4 missions** • **Niveau 12 requis**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
     chapterNumber: 6,
@@ -286,6 +376,21 @@ La **Forja de Vulnerabilidades** yace en las profundidades de la Ciudadela. Aqu�
 Arregla vulnerabilidades de seguridad para completar el desafío de Seguridad y CTF.
 
 **0/2 misiones** • **Nivel 14 requerido**`,
+      },
+      fr: {
+        title: 'Chapitre 7 : Sécurité et CTF',
+        description: 'Traquez les vulnérabilités et corrigez les failles de sécurité dans des contrats compromis.',
+        lore: `# 🛡️ Chapitre 7 : Sécurité et CTF
+
+La **Forge des Vulnérabilités** repose dans les profondeurs de la Citadelle. Ici, les contrats brisés sont restaurés.
+
+*"Un gardien doit connaître les failles avant que l'ennemi ne les exploite,"* avertit le Sage de la Sécurité. *"Réentrance, contrôle d'accès, dépassement — affrontez-les tous."*
+
+## Le Défi de Sécurité
+
+Corrigez les vulnérabilités de sécurité pour compléter le défi Sécurité et CTF.
+
+**0/2 missions** • **Niveau 14 requis**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',
