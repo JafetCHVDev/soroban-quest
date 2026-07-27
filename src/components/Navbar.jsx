@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Volume2, VolumeX } from "lucide-react";
 import { useTranslation } from "../i18n/useTranslation";
 import { useGameState } from "../systems/GameStateContext";
+import { useSound } from "../systems/SoundContext";
 import LanguageSelector from "./LanguageSelector";
 import { resetOnboarding } from "./Onboarding";
 
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
   const { profile, progress } = useGameState();
+  const { muted, toggleMute, sound } = useSound();
   const langRef = useRef(null);
 
   const { t, language, setLanguage, languages } = useTranslation();
@@ -49,6 +51,7 @@ export default function Navbar() {
   }, [langOpen]);
 
   const toggleTheme = () => {
+    sound.playClick();
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
@@ -137,6 +140,15 @@ return (
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
+          <button
+            onClick={() => { sound.playClick(); toggleMute(); }}
+            className="btn-ghost"
+            style={{ padding: "0.5rem", borderRadius: "50%" }}
+            aria-label={muted ? t("navbar.soundUnmute") : t("navbar.soundMute")}
+            title={muted ? t("navbar.soundUnmute") : t("navbar.soundMute")}
+          >
+            {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+          </button>
           <span className="text-xl" aria-hidden="true">
             {profile.avatar}
           </span>
@@ -221,6 +233,14 @@ return (
               aria-label={t("common.toggleTheme")}
             >
               {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+            <button
+              onClick={() => { sound.playClick(); toggleMute(); }}
+              className="btn-ghost"
+              style={{ padding: "0.5rem", borderRadius: "50%" }}
+              aria-label={muted ? t("navbar.soundUnmute") : t("navbar.soundMute")}
+            >
+              {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
             <span aria-hidden="true">{profile.avatar}</span>
             <span>{profile.name}</span>

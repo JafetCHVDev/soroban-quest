@@ -20,6 +20,7 @@ import { avatars } from "../data/avatars";
 // Hooks and Utilities
 import { useToast } from "../systems/ToastContext";
 import { useGameState } from "../systems/GameStateContext";
+import { useSound } from "../systems/SoundContext";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from "../i18n/useTranslation";
@@ -31,6 +32,7 @@ export default function Profile() {
   useDocumentTitle('Profile');
   const { showToast } = useToast();
   const { t, language } = useTranslation();
+  const { muted, volume, toggleMute, setVolume, sound } = useSound();
   const {
     progress: state,
     profile,
@@ -393,6 +395,51 @@ export default function Profile() {
             </div>
           ))
         )}
+      </div>
+
+      {/* SOUND SETTINGS */}
+      <h2 className="profile-section-title">{t("profile.sections.sound")}</h2>
+      <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => { sound.playClick(); toggleMute(); }}
+            aria-pressed={muted}
+            style={{ minWidth: "7rem" }}
+          >
+            {muted ? t("sound.unmute") : t("sound.mute")}
+          </button>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            {muted ? t("sound.statusMuted") : t("sound.statusOn")}
+          </span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <label
+            htmlFor="sound-volume-slider"
+            style={{ fontSize: "0.85rem", color: "var(--text-secondary)", whiteSpace: "nowrap" }}
+          >
+            {t("sound.volume")}
+          </label>
+          <input
+            id="sound-volume-slider"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={volume}
+            disabled={muted}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            onMouseUp={() => sound.playClick()}
+            onTouchEnd={() => sound.playClick()}
+            style={{ flex: 1, accentColor: "var(--cyan)", opacity: muted ? 0.4 : 1 }}
+            aria-label={t("sound.volumeAriaLabel")}
+          />
+          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", minWidth: "2.5rem", textAlign: "right" }}>
+            {Math.round(volume * 100)}%
+          </span>
+        </div>
       </div>
 
       {/* CONFIGURATION DATA MANAGEMENT */}
