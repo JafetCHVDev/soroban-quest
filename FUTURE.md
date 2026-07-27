@@ -140,7 +140,7 @@ Each requires translating mission stories (19 missions × 7 chapters of lore), U
 
 ## 🧪 Testing
 
-- Add Vitest tests for `missionLoader.js`
+- ~~Add Vitest tests for `missionLoader.js`~~ ✅
 - Add Vitest tests for `campaigns.js` (getCampaignProgress, localizeCampaign)
 - Add Vitest tests for new missions structure/validity
 - Add E2E tests for the full mission flow (Playwright)
