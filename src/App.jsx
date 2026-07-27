@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Journal from "./pages/Journal";
 import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
+import Quests from "./pages/Quests"; // Added Quests import
 import Footer from "./components/Footer";
 
 import useScrollToTop from "./hooks/useScrollToTop";
@@ -19,11 +20,10 @@ import { loadProgress, saveProgress } from "./systems/storage";
 import { updateStreak } from "./systems/gameEngine";
 import "./systems/Toast.css";
 
-// Lazy load page components
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
-  // Global React Router navigation scroll management
+  // Global React Router navigation scroll management hook
   useScrollToTop();
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export default function App() {
     <ErrorBoundary>
       <ToastProvider>
         <GameStateProvider>
-          <ScrollToTop />
           <div className="app">
             <Navbar />
             <main className="main-content">
@@ -45,6 +44,7 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/missions" element={<MissionMap />} />
                   <Route path="/campaigns" element={<Campaigns />} />
+                  <Route path="/quests" element={<Quests />} /> {/* Added Quests route */}
                   <Route path="/mission/:missionId" element={<MissionDetail />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />

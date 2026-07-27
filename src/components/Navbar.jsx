@@ -57,7 +57,7 @@ export default function Navbar() {
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
-return (
+  return (
     <>
       {/* SKIP TO CONTENT LINK (#102) */}
       <a href="#main-content" className="skip-to-content">
@@ -82,6 +82,9 @@ return (
               {t("navbar.campaigns")}
             </Link>
           </li>
+          <Link to="/quests" className={isActive("/quests")}>
+            {t("navbar.quests") || "Quests"}
+          </Link>
           <li>
             <Link to="/missions" className={isActive("/missions")}>
               {t("navbar.missions")}
@@ -140,7 +143,9 @@ return (
         </button>
 
         {/* BACKDROP */}
-        {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
+        {isOpen && (
+          <div className="backdrop" onClick={() => setIsOpen(false)} />
+        )}
 
         {/* MOBILE MENU */}
         <div
@@ -152,6 +157,9 @@ return (
           </Link>
           <Link to="/campaigns" onClick={() => setIsOpen(false)}>
             {t("navbar.campaigns")}
+          </Link>
+          <Link to="/quests" onClick={() => setIsOpen(false)}>
+            {t("navbar.quests") || "Quests"}
           </Link>
           <Link to="/missions" onClick={() => setIsOpen(false)}>
             {t("navbar.missions")}
@@ -207,7 +215,10 @@ function LanguageSelector({
     languages.find((l) => l.code === language) || languages[0];
 
   return (
-    <div className="language-selector" ref={idSuffix === "desktop" ? langRef : null}>
+    <div
+      className="language-selector"
+      ref={idSuffix === "desktop" ? langRef : null}
+    >
       <button
         type="button"
         className="btn-ghost language-selector-trigger"
