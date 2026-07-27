@@ -6,6 +6,7 @@ import { useTranslation } from '../i18n/useTranslation';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import "./MissionMap.css";
 import { getXPProgress, getLevelFromXP, xpForLevel, getRankTitle } from "../systems/gameEngine";
+import { preloadMonacoEditor } from "../components/LazyMonacoEditor";
 
 function getMissionCompletionRatio(completed, total) {
     if (!total) return 0;
@@ -67,6 +68,12 @@ export default function MissionMap() {
     const handleMissionClick = (mission) => {
         if (mission.unlocked) {
             navigate(`/mission/${mission.id}`);
+        }
+    };
+
+    const handleMissionHover = (mission) => {
+        if (mission.unlocked) {
+            preloadMonacoEditor();
         }
     };
 
@@ -281,6 +288,7 @@ export default function MissionMap() {
                                 <g
                                     className="path-node"
                                     onClick={() => handleMissionClick(mission)}
+                                    onMouseEnter={() => handleMissionHover(mission)}
                                     onKeyDown={(event) => {
                                         if (mission.unlocked && (event.key === 'Enter' || event.key === ' ')) {
                                             event.preventDefault();
@@ -367,6 +375,7 @@ export default function MissionMap() {
                         key={m.id}
                         className={`timeline-item ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
                         onClick={() => handleMissionClick(m)}
+                        onMouseEnter={() => handleMissionHover(m)}
                         disabled={!m.unlocked}
                         aria-label={ariaLabelFor(m)}
                     >
@@ -461,6 +470,7 @@ export default function MissionMap() {
                             key={m.id}
                             className={`mission-card ${m.completed ? 'completed' : ''} ${!m.unlocked ? 'locked' : ''}`}
                             onClick={() => handleMissionClick(m)}
+                            onMouseEnter={() => handleMissionHover(m)}
                             onKeyDown={(e) => {
                                 if (m.unlocked && (e.key === 'Enter' || e.key === ' ')) {
                                     e.preventDefault();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Editor from "@monaco-editor/react";
+import Editor from "../components/LazyMonacoEditor";
 import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";

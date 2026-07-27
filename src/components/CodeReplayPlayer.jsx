@@ -1,6 +1,6 @@
 // CodeReplayPlayer.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor from './LazyMonacoEditor';
 
 const PLAYBACK_SPEEDS = [1, 2, 4];
 

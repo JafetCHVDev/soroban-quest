@@ -1,0 +1,47 @@
+.editor-placeholder {
+  display: flex;
+  height: 100%;
+  min-height: 200px;
+  background: var(--editor-bg, #1e1e1e);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.editor-placeholder__gutter {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px;
+  gap: 10px;
+  background: var(--editor-gutter-bg, #252526);
+  color: var(--editor-gutter-fg, #6e7681);
+  font-size: 12px;
+  text-align: right;
+  user-select: none;
+}
+
+.editor-placeholder__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+.editor-placeholder__bar {
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.12) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: editor-placeholder-shimmer 1.4s ease infinite;
+}
+
+@keyframes editor-placeholder-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
