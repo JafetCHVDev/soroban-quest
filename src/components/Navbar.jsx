@@ -4,6 +4,7 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTranslation } from "../i18n/useTranslation";
 import { useGameState } from "../systems/GameStateContext";
 import LanguageSelector from "./LanguageSelector";
+import { resetOnboarding } from "./Onboarding";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
