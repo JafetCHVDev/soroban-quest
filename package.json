@@ -12,6 +12,7 @@
     "test:e2e": "npx playwright test --project=chromium",
     "test:visual": "npx playwright test --project=visual-chromium",
     "test:visual:update": "npx playwright test --project=visual-chromium --update-snapshots",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -29,17 +30,19 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
+    "@types/node": "^26.1.1",
     "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
     "@typescript-eslint/parser": "^8.62.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.4.5",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.7.0",
     "prettier": "^3.9.0",
+    "typescript": "^5.4.5",
     "vite": "^6.0.0",
     "vitest": "^4.0.18"
   }
