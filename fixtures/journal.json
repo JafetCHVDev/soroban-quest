@@ -1,0 +1,33 @@
+{
+  "soroban_quest_progress": {
+    "completedMissions": ["hello-soroban", "store-data"],
+    "xp": 440,
+    "level": 4,
+    "badges": ["first-steps"],
+    "streak": 5,
+    "lastLogin": "2026-01-01"
+  },
+  "soroban_quest_activity_log": [
+    {
+      "id": "journal-entry-1",
+      "timestamp": "2026-01-14T09:00:00.000Z",
+      "type": "MISSION_STARTED",
+      "data": { "missionId": "hello-soroban", "title": "Hello Soroban" },
+      "message": "Started mission: Hello Soroban"
+    },
+    {
+      "id": "journal-entry-2",
+      "timestamp": "2026-01-15T10:00:00.000Z",
+      "type": "MISSION_COMPLETED",
+      "data": { "missionId": "hello-soroban", "title": "Hello Soroban" },
+      "message": "Completed mission: Hello Soroban"
+    },
+    {
+      "id": "journal-entry-3",
+      "timestamp": "2026-01-15T11:00:00.000Z",
+      "type": "BADGE_EARNED",
+      "data": { "badgeId": "first-steps", "badgeName": "First Steps" },
+      "message": "Unlocked badge: First Steps"
+    }
+  ]
+}

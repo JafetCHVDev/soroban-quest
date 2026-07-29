@@ -104,6 +104,8 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Confirm snapshot update mode
+        run: echo "Updating visual regression baselines for ${{ github.ref_name }}"
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4

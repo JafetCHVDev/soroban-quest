@@ -1,0 +1,12 @@
+{
+  "soroban_quest_progress": {
+    "completedMissions": ["hello-soroban", "store-data"],
+    "xp": 650,
+    "level": 6,
+    "badges": ["first-steps"],
+    "streak": 7,
+    "gold": 1200,
+    "lastLogin": "2026-01-01"
+  },
+  "soroban_quest_activity_log": []
+}
