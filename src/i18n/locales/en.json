@@ -26,7 +26,6 @@
   "navbar": {
     "home": "Home",
     "campaigns": "Campaigns",
-    "quests": "Quests",
     "missions": "Missions",
     "profile": "Profile",
     "journal": "Journal",
@@ -40,16 +39,6 @@
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu",
     "replayTutorial": "Replay Tutorial"
-  },
-  "quests": {
-    "title": "Quests Catalog",
-    "searchPlaceholder": "Search missions by name or description...",
-    "allCampaigns": "All Campaigns",
-    "allDifficulties": "All Difficulties",
-    "allStatuses": "All Statuses",
-    "completed": "Completed",
-    "incomplete": "Incomplete",
-    "noMissions": "No missions found matching your criteria."
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -68,7 +57,18 @@
     "stats": {
       "missions": "Missions",
       "totalXp": "Total XP",
-      "backendNeeded": "Backend Needed"
+      "backendNeeded": "Backend Needed",
+      "missionsCompleted": "{{count}}/{{total}} Missions",
+      "xpEarned": "{{xp}} XP Earned",
+      "goldEarned": "{{gold}} Gold",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Level {{level}} — {{rank}}",
+      "nextMission": "Next Mission",
+      "continueFrom": "Continue from {{title}}",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickStats": "Quick Stats",
+      "streak": "Day Streak"
     },
     "howItWorks": {
       "title": "How It Works",

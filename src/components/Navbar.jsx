@@ -101,11 +101,6 @@ export default function Navbar({ onOpenShortcuts }) {
             </Link>
           </li>
           <li>
-            <Link to="/quests" className={isActive('/quests')}>
-              {t('navbar.quests') || 'Quests'}
-            </Link>
-          </li>
-          <li>
             <Link to="/missions" className={isActive('/missions')}>
               {t('navbar.missions')}
             </Link>
@@ -273,13 +268,6 @@ export default function Navbar({ onOpenShortcuts }) {
             {t('navbar.campaigns')}
           </Link>
           <Link
-            to="/quests"
-            onClick={() => setIsOpen(false)}
-            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
-          >
-            {t('navbar.quests') || 'Quests'}
-          </Link>
-          <Link
             to="/missions"
             onClick={() => setIsOpen(false)}
             style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
@@ -344,27 +332,6 @@ export default function Navbar({ onOpenShortcuts }) {
             <div
               style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', alignItems: 'center' }}
             >
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onOpenShortcuts();
-                }}
-                className="btn-ghost"
-                style={{
-                  padding: '0.5rem',
-                  borderRadius: '50%',
-                  minWidth: '44px',
-                  minHeight: '44px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                title="Keyboard Shortcuts"
-                aria-label="Keyboard Shortcuts"
-              >
-                <Keyboard size={20} />
-              </button>
-
               <button
                 onClick={toggleTheme}
                 className="btn-ghost"
