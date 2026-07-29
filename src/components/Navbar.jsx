@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import { useTranslation } from "../i18n/useTranslation";
-import { useGameState } from "../systems/GameStateContext";
-import LanguageSelector from "./LanguageSelector";
-import { resetOnboarding } from "./Onboarding";
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Sun, Moon, Keyboard } from 'lucide-react';
+import { useTranslation } from '../i18n/useTranslation';
+import { useGameState } from '../systems/GameStateContext';
+import LanguageSelector from './LanguageSelector';
+import { resetOnboarding } from './Onboarding';
 
-export default function Navbar() {
+export default function Navbar({ onOpenShortcuts }) {
   const [isOpen, setIsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const location = useLocation();
@@ -17,19 +17,33 @@ export default function Navbar() {
 
   const [theme, setTheme] = useState(() => {
     return (
-      localStorage.getItem("soroban_quest_theme") ||
-      (window.matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark")
+      localStorage.getItem('soroban_quest_theme') ||
+      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
     );
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("soroban_quest_theme", theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('soroban_quest_theme', theme);
   }, [theme]);
 
-  // Close the language dropdown on outside click or Escape
+  // Close mobile menu and reset body scroll on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (!langOpen) return;
     const onClick = (e) => {
@@ -38,18 +52,18 @@ export default function Navbar() {
       }
     };
     const onKey = (e) => {
-      if (e.key === "Escape") setLangOpen(false);
+      if (e.key === 'Escape') setLangOpen(false);
     };
-    document.addEventListener("mousedown", onClick);
-    document.addEventListener("keydown", onKey);
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener("mousedown", onClick);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
     };
   }, [langOpen]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   const handleLanguageChange = (code) => {
@@ -57,66 +71,67 @@ export default function Navbar() {
     setLangOpen(false);
   };
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
+  const isActive = (path) => (location.pathname === path ? 'active' : '');
 
-return (
+  return (
     <>
-      {/* SKIP TO CONTENT LINK (#102) */}
       <a href="#main-content" className="skip-to-content">
-        {t("common.skipToContent")}
+        {t('common.skipToContent')}
       </a>
 
-      <nav className="navbar" aria-label={t("navbar.ariaMain")}>
-        {/* LOGO */}
-        <Link to="/" className="navbar-logo" aria-label={t("navbar.ariaHome")}>
+      <nav className="navbar" aria-label={t('navbar.ariaMain')}>
+        <Link
+          to="/"
+          className="navbar-logo"
+          aria-label={t('navbar.ariaHome')}
+          style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+        >
           <span className="navbar-logo-text">SOROBAN QUEST</span>
         </Link>
 
-        {/* LINKS */}
         <ul className="navbar-links">
           <li>
-            <Link to="/" className={isActive("/")}>
-              {t("navbar.home")}
+            <Link to="/" className={isActive('/')}>
+              {t('navbar.home')}
             </Link>
           </li>
           <li>
-            <Link to="/campaigns" className={isActive("/campaigns")}>
-              {t("navbar.campaigns")}
+            <Link to="/campaigns" className={isActive('/campaigns')}>
+              {t('navbar.campaigns')}
             </Link>
           </li>
           <li>
-            <Link to="/missions" className={isActive("/missions")}>
-              {t("navbar.missions")}
+            <Link to="/missions" className={isActive('/missions')}>
+              {t('navbar.missions')}
             </Link>
           </li>
           <li>
-            <Link to="/profile" className={isActive("/profile")}>
-              {t("navbar.profile")}
+            <Link to="/profile" className={isActive('/profile')}>
+              {t('navbar.profile')}
             </Link>
           </li>
           <li>
-            <Link to="/journal" className={isActive("/journal")}>
-              {t("navbar.journal")}
+            <Link to="/journal" className={isActive('/journal')}>
+              {t('navbar.journal')}
             </Link>
           </li>
           <li>
-            <Link to="/leaderboard" className={isActive("/leaderboard")}>
-              {t("navbar.leaderboard")}
+            <Link to="/leaderboard" className={isActive('/leaderboard')}>
+              {t('navbar.leaderboard')}
             </Link>
           </li>
           <li>
-            <Link to="/achievements" className={isActive("/achievements")}>
-              {t("navbar.achievements")}
+            <Link to="/achievements" className={isActive('/achievements')}>
+              {t('navbar.achievements')}
             </Link>
           </li>
           <li>
-            <Link to="/shop" className={isActive("/shop")}>
-              {t("navbar.shop")}
+            <Link to="/shop" className={isActive('/shop')}>
+              {t('navbar.shop')}
             </Link>
           </li>
         </ul>
 
-        {/* PROFILE DISPLAY, LANGUAGE & THEME TOGGLE (DESKTOP) */}
         <div className="navbar-stats">
           <LanguageSelector
             idSuffix="desktop"
@@ -130,18 +145,44 @@ return (
           />
 
           <button
+            onClick={onOpenShortcuts}
+            className="btn-ghost"
+            style={{
+              padding: '0.5rem',
+              borderRadius: '50%',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Keyboard Shortcuts (Ctrl+K or ?)"
+            aria-label="Keyboard Shortcuts"
+          >
+            <Keyboard size={20} />
+          </button>
+
+          <button
             onClick={toggleTheme}
             className="btn-ghost"
-            style={{ padding: "0.5rem", borderRadius: "50%" }}
-            aria-label={t("common.toggleTheme")}
+            style={{
+              padding: '0.5rem',
+              borderRadius: '50%',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            aria-label={t('common.toggleTheme')}
           >
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
           </button>
           <span className="text-xl" aria-hidden="true">
             {profile.avatar}
           </span>
           <span className="text-sm font-semibold">
-            <span className="sr-only">{t("navbar.userProfile")} </span>
+            <span className="sr-only">{t('navbar.userProfile')} </span>
             {profile.name}
           </span>
           <span className="navbar-gold" title={`${progress.gold || 0} gold`}>
@@ -150,25 +191,38 @@ return (
           <button
             onClick={resetOnboarding}
             className="btn-ghost"
-            style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem" }}
-            title={t("navbar.replayTutorial")}
-            aria-label={t("navbar.replayTutorial")}
+            style={{
+              padding: '0.25rem 0.5rem',
+              fontSize: '0.75rem',
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title={t('navbar.replayTutorial')}
+            aria-label={t('navbar.replayTutorial')}
           >
             🎓
           </button>
         </div>
 
-        {/* HAMBURGER */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="hamburger-btn"
-          aria-label={isOpen ? t("navbar.closeMenu") : t("navbar.openMenu")}
+          style={{
+            minWidth: '44px',
+            minHeight: '44px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          aria-label={isOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
           aria-expanded={isOpen}
         >
-          {isOpen ? <X /> : <Menu />}
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* BACKDROP */}
         {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
         {/* MOBILE MENU */}
@@ -181,30 +235,64 @@ return (
           <Link to="/" onClick={() => setIsOpen(false)}>
             {t("navbar.home")}
           </Link>
-          <Link to="/campaigns" onClick={() => setIsOpen(false)}>
-            {t("navbar.campaigns")}
+          <Link
+            to="/campaigns"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.campaigns')}
           </Link>
-          <Link to="/missions" onClick={() => setIsOpen(false)}>
-            {t("navbar.missions")}
+          <Link
+            to="/missions"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.missions')}
           </Link>
-          <Link to="/profile" onClick={() => setIsOpen(false)}>
-            {t("navbar.profile")}
+          <Link
+            to="/profile"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.profile')}
           </Link>
-          <Link to="/journal" onClick={() => setIsOpen(false)}>
-            {t("navbar.journal")}
+          <Link
+            to="/journal"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.journal')}
           </Link>
-          <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
-            {t("navbar.leaderboard")}
+          <Link
+            to="/leaderboard"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.leaderboard')}
           </Link>
-          <Link to="/achievements" onClick={() => setIsOpen(false)}>
-            {t("navbar.achievements")}
+          <Link
+            to="/achievements"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.achievements')}
           </Link>
-          <Link to="/shop" onClick={() => setIsOpen(false)}>
-            {t("navbar.shop")}
+          <Link
+            to="/shop"
+            onClick={() => setIsOpen(false)}
+            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+          >
+            {t('navbar.shop')}
           </Link>
 
-          {/* MOBILE EXTRAS */}
-          <div className="mobile-stats">
+          <div
+            className="mobile-stats"
+            style={{
+              marginTop: 'auto',
+              paddingTop: '1rem',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
             <LanguageSelector
               idSuffix="mobile"
               langRef={langRef}
@@ -216,16 +304,30 @@ return (
               t={t}
             />
 
-            <button
-              onClick={toggleTheme}
-              className="btn-ghost"
-              style={{ padding: "0.5rem", borderRadius: "50%" }}
-              aria-label={t("common.toggleTheme")}
+            <div
+              style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', alignItems: 'center' }}
             >
-              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
-            <span aria-hidden="true">{profile.avatar}</span>
-            <span>{profile.name}</span>
+              <button
+                onClick={toggleTheme}
+                className="btn-ghost"
+                style={{
+                  padding: '0.5rem',
+                  borderRadius: '50%',
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                aria-label={t('common.toggleTheme')}
+              >
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+              <span aria-hidden="true" style={{ fontSize: '1.25rem' }}>
+                {profile.avatar}
+              </span>
+              <span style={{ fontWeight: '600' }}>{profile.name}</span>
+            </div>
           </div>
         </div>
       </nav>

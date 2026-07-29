@@ -26,7 +26,6 @@ const Shop = lazy(() => import("./pages/Shop"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
-  // Global React Router navigation scroll management
   useScrollToTop();
 
   useEffect(() => {
@@ -41,12 +40,12 @@ export default function App() {
         <GameStateProvider>
           <div className="app">
             <Navbar />
-            <main className="main-content">
+            <main className="main-content" id="main-content">
               <Suspense fallback={<LoadingScreen />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/missions" element={<MissionMap />} />
-                  <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/campaigns" element={<Campaigns />} />
                   <Route path="/mission/:missionId" element={<MissionDetail />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />
