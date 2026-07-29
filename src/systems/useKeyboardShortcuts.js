@@ -50,7 +50,7 @@ export function useKeyboardShortcuts(isOpen, setIsOpen) {
           navigate('/campaigns');
         } else if (event.key === '3') {
           event.preventDefault();
-          navigate('/quests');
+          navigate('/missions');
         } else if (event.key === '4') {
           event.preventDefault();
           navigate('/profile');

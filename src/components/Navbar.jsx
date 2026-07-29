@@ -79,11 +79,6 @@ export default function Navbar({ onOpenShortcuts }) {
             </Link>
           </li>
           <li>
-            <Link to="/quests" className={isActive('/quests')}>
-              {t('navbar.quests') || 'Quests'}
-            </Link>
-          </li>
-          <li>
             <Link to="/missions" className={isActive('/missions')}>
               {t('navbar.missions')}
             </Link>
@@ -183,9 +178,6 @@ export default function Navbar({ onOpenShortcuts }) {
           </Link>
           <Link to="/campaigns" onClick={() => setIsOpen(false)}>
             {t('navbar.campaigns')}
-          </Link>
-          <Link to="/quests" onClick={() => setIsOpen(false)}>
-            {t('navbar.quests') || 'Quests'}
           </Link>
           <Link to="/missions" onClick={() => setIsOpen(false)}>
             {t('navbar.missions')}

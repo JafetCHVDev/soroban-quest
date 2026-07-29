@@ -8,7 +8,6 @@ import Profile from "./pages/Profile";
 import Journal from "./pages/Journal";
 import Campaigns from "./pages/Campaigns";
 import SkillTree from "./pages/SkillTree";
-import Quests from "./pages/Quests";
 import Leaderboard from "./pages/Leaderboard";
 import Achievements from "./pages/Achievements";
 import Shop from "./pages/Shop";
@@ -52,7 +51,6 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/missions" element={<MissionMap />} />
                   <Route path="/campaigns" element={<Campaigns />} />
-                  <Route path="/quests" element={<Quests />} />
                   <Route path="/mission/:missionId" element={<MissionDetail />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />
