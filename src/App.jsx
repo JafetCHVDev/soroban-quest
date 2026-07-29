@@ -1,7 +1,10 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import { useKeyboardShortcuts } from "./systems/useKeyboardShortcuts";
 
 import useScrollToTop from "./hooks/useScrollToTop";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -26,8 +29,10 @@ const Shop = lazy(() => import("./pages/Shop"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
-  // Global React Router navigation scroll management
   useScrollToTop();
+
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  useKeyboardShortcuts(isShortcutsOpen, setIsShortcutsOpen);
 
   useEffect(() => {
     const state = loadProgress();
@@ -40,8 +45,8 @@ export default function App() {
       <ToastProvider>
         <GameStateProvider>
           <div className="app">
-            <Navbar />
-            <main className="main-content">
+            <Navbar onOpenShortcuts={() => setIsShortcutsOpen(true)} />
+            <main className="main-content" id="main-content">
               <Suspense fallback={<LoadingScreen />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -59,6 +64,11 @@ export default function App() {
               </Suspense>
             </main>
             <Footer />
+
+            <KeyboardShortcuts
+              isOpen={isShortcutsOpen}
+              onClose={() => setIsShortcutsOpen(false)}
+            />
           </div>
         </GameStateProvider>
       </ToastProvider>

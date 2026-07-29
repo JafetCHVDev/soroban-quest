@@ -616,5 +616,78 @@
     "next": "Siguiente",
     "prev": "Atrás",
     "skip": "Saltar tutorial"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "subtitle": "Navegación rápida y controles para usuarios avanzados",
+    "categories": {
+      "navigation": "Navegación",
+      "missionEditor": "Editor de misión",
+      "general": "General"
+    },
+    "descriptions": {
+      "home": "Ir al inicio",
+      "campaigns": "Ir a Campañas",
+      "missions": "Ir a Misiones",
+      "profile": "Ir a Perfil",
+      "journal": "Ir a Diario",
+      "runTests": "Ejecutar pruebas",
+      "resetTemplate": "Restablecer plantilla",
+      "showSolution": "Mostrar solución",
+      "toggleHints": "Alternar pistas",
+      "toggleTheme": "Alternar tema",
+      "openModal": "Abrir atajos de teclado",
+      "closeModal": "Cerrar modal"
+    },
+    "items": {
+      "home": {
+        "label": "Ir al inicio",
+        "keys": ["g", "h"]
+      },
+      "missions": {
+        "label": "Ir a Misiones / Mapa",
+        "keys": ["g", "m"]
+      },
+      "campaigns": {
+        "label": "Ir a Campañas",
+        "keys": ["g", "c"]
+      },
+      "profile": {
+        "label": "Ir a Perfil",
+        "keys": ["g", "p"]
+      },
+      "leaderboard": {
+        "label": "Ir a Ranking",
+        "keys": ["g", "l"]
+      },
+      "shop": {
+        "label": "Ir a Tienda",
+        "keys": ["g", "s"]
+      },
+      "journal": {
+        "label": "Ir a Diario",
+        "keys": ["g", "j"]
+      },
+      "runTests": {
+        "label": "Ejecutar pruebas (en el editor)",
+        "keys": ["Ctrl", "Enter"]
+      },
+      "resetCode": {
+        "label": "Restablecer código",
+        "keys": ["Ctrl", "Shift", "R"]
+      },
+      "toggleTheme": {
+        "label": "Alternar tema",
+        "keys": ["Ctrl", "Shift", "L"]
+      },
+      "shortcutsModal": {
+        "label": "Abrir atajos de teclado",
+        "keys": ["?", "Ctrl", "K"]
+      },
+      "close": {
+        "label": "Cerrar modal / diálogo",
+        "keys": ["Escape"]
+      }
+    }
   }
 }

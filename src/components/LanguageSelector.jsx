@@ -11,18 +11,19 @@ export default function LanguageSelector({
   languages,
   t,
 }) {
-  const currentLang =
-    languages.find((l) => l.code === language) || languages[0];
+  const currentLang = languages.find((l) => l.code === language) || languages[0];
 
   return (
-    <div className="language-selector" ref={idSuffix === "desktop" ? langRef : null}>
+    <div
+      className="language-selector"
+      ref={idSuffix === "desktop" ? langRef : null}
+    >
       <button
         type="button"
         className="btn-ghost language-selector-trigger"
         aria-haspopup="listbox"
         aria-expanded={langOpen}
         aria-label={t("common.selectLanguage")}
-        title={t("common.selectLanguage")} // <--- Native tooltip added
         onClick={() => setLangOpen((v) => !v)}
       >
         <Globe size={18} />

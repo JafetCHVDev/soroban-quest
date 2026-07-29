@@ -57,7 +57,18 @@
     "stats": {
       "missions": "Missions",
       "totalXp": "Total XP",
-      "backendNeeded": "Backend Needed"
+      "backendNeeded": "Backend Needed",
+      "missionsCompleted": "{{count}} / {{total}} Missions",
+      "xpEarned": "{{xp}} XP Earned",
+      "goldEarned": "{{gold}} Gold",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Level {{level}} • {{rank}}",
+      "nextMission": "Next Mission",
+      "continueFrom": "Continue from {{title}}",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickStats": "Quick Stats",
+      "streak": "Daily Streak"
     },
     "howItWorks": {
       "title": "How It Works",
@@ -88,19 +99,6 @@
         "title": "Progressive Path",
         "body": "From \"Hello World\" to multi-signature contracts. Each mission builds on the last, creating a structured path to Soroban mastery."
       }
-    },
-    "stats": {
-      "missionsCompleted": "{{count}}/{{total}} Missions",
-      "xpEarned": "{{xp}} XP Earned",
-      "goldEarned": "{{gold}} Gold",
-      "badgesUnlocked": "{{count}} Badges",
-      "currentLevel": "Level {{level}} — {{rank}}",
-      "nextMission": "Next Mission",
-      "continueFrom": "Continue from {{title}}",
-      "recentActivity": "Recent Activity",
-      "viewAll": "View All",
-      "quickStats": "Quick Stats",
-      "streak": "Day Streak"
     }
   },
   "footer": {
@@ -616,5 +614,64 @@
     "next": "Next",
     "prev": "Back",
     "skip": "Skip tutorial"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "subtitle": "Quick navigation and controls for power users",
+    "categories": {
+      "navigation": "Navigation",
+      "actions": "Actions",
+      "general": "General"
+    },
+    "items": {
+      "home": {
+        "label": "Go to Home",
+        "keys": ["g", "h"]
+      },
+      "missions": {
+        "label": "Go to Missions / Map",
+        "keys": ["g", "m"]
+      },
+      "campaigns": {
+        "label": "Go to Campaigns",
+        "keys": ["g", "c"]
+      },
+      "profile": {
+        "label": "Go to Profile",
+        "keys": ["g", "p"]
+      },
+      "leaderboard": {
+        "label": "Go to Leaderboard",
+        "keys": ["g", "l"]
+      },
+      "shop": {
+        "label": "Go to Shop",
+        "keys": ["g", "s"]
+      },
+      "journal": {
+        "label": "Go to Journal",
+        "keys": ["g", "j"]
+      },
+      "runTests": {
+        "label": "Run Tests (in Editor)",
+        "keys": ["Ctrl", "Enter"]
+      },
+      "resetCode": {
+        "label": "Reset Code",
+        "keys": ["Ctrl", "Shift", "R"]
+      },
+      "toggleTheme": {
+        "label": "Toggle Theme",
+        "keys": ["Ctrl", "Shift", "L"]
+      },
+      "shortcutsModal": {
+        "label": "Open Keyboard Shortcuts",
+        "keys": ["?", "Ctrl", "K"]
+      },
+      "close": {
+        "label": "Close Modal / Dialog",
+        "keys": ["Escape"]
+      }
+    }
   }
 }
