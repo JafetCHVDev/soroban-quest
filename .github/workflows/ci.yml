@@ -33,3 +33,23 @@ jobs:
 
       - name: Run build
         run: npm run build
+
+      - name: Check bundle size budgets
+        run: |
+          set -euo pipefail
+          max_chunk_bytes=204800
+          for chunk in dist/assets/*.js; do
+            size=$(stat -c%s "$chunk")
+            if [ "$size" -gt "$max_chunk_bytes" ]; then
+              echo "Bundle budget exceeded: $chunk is ${size} bytes (limit ${max_chunk_bytes})"
+              exit 1
+            fi
+          done
+
+          app_shell=$(find dist/assets -maxdepth 1 -name 'index-*.js' -printf '%s %p\n' | sort -nr | head -n1)
+          app_shell_size=${app_shell%% *}
+          if [ "${app_shell_size:-0}" -gt "$max_chunk_bytes" ]; then
+            echo "Initial app-shell budget exceeded: $app_shell"
+            exit 1
+          fi
+          echo "Bundle budgets passed. Largest app shell: $app_shell"

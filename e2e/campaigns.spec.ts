@@ -36,7 +36,10 @@ test.describe('Campaigns Page', () => {
     await expect(page.locator('[role="dialog"]')).toBeVisible();
 
     await page.goto('/#/missions');
+    await expect(page.locator('h1.section-title')).toHaveText('Mission Map');
     await page.goto('/#/campaigns');
+    await expect(page.locator('h1.section-title')).toHaveText('Campaigns');
+    await expect(page.locator('.campaign-detail-overlay')).toHaveCount(0);
 
     const firstUnlockedCampaignAgain = page.locator('.campaign-card:not(.locked)').first();
     await firstUnlockedCampaignAgain.click();

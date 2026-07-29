@@ -1,10 +1,22 @@
 import { defineConfig } from 'vite';
+import { env } from 'node:process';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
+
+const analyzer = env.ANALYZE === 'true'
+  ? visualizer({
+      filename: 'dist/bundle-stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      open: false,
+    })
+  : null;
 
 export default defineConfig({
   plugins: [
     react(),
+    analyzer,
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['docs/logo.svg'],
@@ -58,6 +70,22 @@ export default defineConfig({
               id.includes('node_modules/decode-named-character-reference') ||
               id.includes('node_modules/character-entities')) {
             return 'vendor-markdown';
+          }
+
+          if (id.includes('node_modules/react-router-dom') ||
+              id.includes('node_modules/@remix-run/router') ||
+              id.includes('node_modules/react-router')) {
+            return 'vendor-router';
+          }
+
+          if (id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/scheduler')) {
+            return 'vendor-react';
+          }
+
+          if (id.includes('node_modules/workbox-window')) {
+            return 'vendor-pwa';
           }
         },
       },

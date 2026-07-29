@@ -13,10 +13,11 @@ import React, {
 
 import en from './locales/en.json';
 import es from './locales/es.json';
+import fr from './locales/fr.json';
 import { setActiveLanguage } from './languageBridge.js';
 
-const LOCALES = { en, es };
-const SUPPORTED = ['en', 'es'];
+const LOCALES = { en, es, fr };
+const SUPPORTED = ['en', 'es', 'fr'];
 const STORAGE_KEY = 'soroban_quest_lang';
 const DEFAULT_LANG = 'en';
 

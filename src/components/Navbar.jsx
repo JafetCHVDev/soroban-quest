@@ -172,7 +172,13 @@ export default function Navbar({ onOpenShortcuts }) {
 
         {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
-        <div className={`mobile-menu ${isOpen ? 'open' : ''}`} aria-label={t('navbar.ariaMobile')}>
+        {/* MOBILE MENU */}
+        <div
+          className={`mobile-menu ${isOpen ? "open" : ""}`}
+          aria-label={t("navbar.ariaMobile")}
+          aria-hidden={!isOpen}
+          inert={!isOpen ? "" : undefined}
+        >
           <Link to="/" onClick={() => setIsOpen(false)}>
             {t('navbar.home')}
           </Link>

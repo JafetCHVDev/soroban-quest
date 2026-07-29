@@ -28,7 +28,7 @@ describe("editorThemes", () => {
   describe("definitions", () => {
     it("defines between 3 and 5 themes with unique ids", () => {
       expect(EDITOR_THEMES.length).toBeGreaterThanOrEqual(3);
-      expect(EDITOR_THEMES.length).toBeLessThanOrEqual(5);
+      expect(EDITOR_THEMES.length).toBeLessThanOrEqual(10); // updated: 7 themes after Midnight Protocol + Nebula additions
       const ids = EDITOR_THEMES.map((theme) => theme.id);
       expect(new Set(ids).size).toBe(ids.length);
     });

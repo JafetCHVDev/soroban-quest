@@ -108,8 +108,7 @@
       "heading": "Plataforma",
       "home": "Inicio",
       "missions": "Misiones",
-      "profile": "Perfil",
-      "glossary": "Glosario"
+      "profile": "Perfil"
     },
     "resources": {
       "heading": "Recursos",
@@ -156,6 +155,11 @@
   "profile": {
     "edit": "✏️ Editar perfil",
     "viewJournal": "📖 Ver diario",
+    "aria": {
+      "selectAvatar": "Seleccionar avatar {{avatar}}",
+      "completedListing": "Lista de misiones completadas",
+      "completedEntry": "{{title}}, ganaste {{xp}} XP"
+    },
     "editPanel": {
       "title": "Editar perfil",
       "nameLabel": "Nombre del aventurero",
@@ -308,6 +312,7 @@
     "chapterComplete": "✓ ¡Capítulo completado!",
     "back": "← Volver a campañas",
     "completeOf": "{{completed}}/{{total}} completadas",
+    "statusLabel": "Estado:",
     "lore": {
       "iconLabel": "Pergamino de historia del capítulo",
       "modalTitle": "Introducción del capítulo",
@@ -332,7 +337,9 @@
       "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completada",
-      "locked": "🔒 Bloqueada"
+      "locked": "🔒 Bloqueada",
+      "difficultyLabel": "Dificultad:",
+      "stateLabel": "Estado:"
     },
     "allCompleted": {
       "title": "¡Todas las misiones completadas!",
@@ -353,8 +360,10 @@
       "story": "Historia",
       "editor": "Editor",
       "tests": "Pruebas",
-      "replay": "📹 Repetición"
+      "replay": "📹 Repetición",
+      "ariaLabel": "Pestañas de sección de misión"
     },
+    "difficultyLabel": "Dificultad:",
     "notFound": {
       "title": "Misión no encontrada",
       "body": "La misión \"{{id}}\" no existe.",
@@ -366,13 +375,21 @@
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
       "running": "Ejecutando…",
+      "compile": "⚙️ Compilar y ejecutar",
+      "compiling": "Compilando…",
       "themeLabel": "Tema del editor"
     },
     "terminal": {
       "title": "Salida de pruebas",
       "placeholder": "Haz clic en \"Ejecutar pruebas\" para validar tu código…",
       "runningChecks": "🔍 Ejecutando verificaciones…",
-      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional."
+      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional.",
+      "compiling": "⚙️ Compilando contrato…",
+      "compileOk": "✅ Compilación exitosa en {{ms}}ms",
+      "compileFailed": "❌ La compilación falló ({{errors}} error(es))",
+      "compileFallback": "ℹ️ Usando el analizador del navegador (toolchain WASM real no cargado).",
+      "compileEngineWasm": "🦀 Compilado con el toolchain WASM de Soroban.",
+      "compileError": "❌ Error del compilador: {{message}}"
     },
     "status": {
       "checking": "Verificando…",
@@ -398,7 +415,8 @@
       "badgeEarnedOne": "🏅 ¡Nueva insignia obtenida!",
       "badgeEarnedMany": "🏅 ¡Nuevas insignias obtenidas!",
       "next": "Siguiente misión →",
-      "map": "Mapa de misiones"
+      "map": "Mapa de misiones",
+      "iconLabel": "Icono de trofeo — misión completada"
     },
     "replay": {
       "header": "📹 Mira tu solución",

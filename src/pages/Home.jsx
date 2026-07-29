@@ -33,6 +33,13 @@ export default function Home() {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+
+        // Respect user's motion preference — skip animation entirely
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            canvas.style.display = 'none';
+            return;
+        }
+
         const ctx = canvas.getContext('2d');
         let animId;
 
@@ -88,10 +95,10 @@ export default function Home() {
     if (loading) return <HomeSkeleton />;
 
     return (
-        <div>
+        <div id="main-content">
             {showOnboarding && <Onboarding />}
 
-            <section className="hero">
+            <section className="hero" aria-label="Hero introduction">
                 <canvas ref={canvasRef} className="hero-particles" />
 
                 <div className="hero-badge">

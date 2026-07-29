@@ -2,9 +2,9 @@ import React from "react";
 
 const LoadingScreen = () => {
   return (
-    <div className="quest-loading-overlay">
+    <div className="quest-loading-overlay" role="status" aria-live="polite" aria-label="Loading quest assets">
       {/* Radial Glow Ambient Effect */}
-      <div className="quest-loading-glow" />
+      <div className="quest-loading-glow" aria-hidden="true" />
 
       <div className="quest-loading-content">
         {/* Futuristic Custom Spinner */}

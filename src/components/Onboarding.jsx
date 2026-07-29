@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "../i18n/useTranslation";
 import "./Onboarding.css";
 
@@ -19,6 +19,7 @@ export function resetOnboarding() {
 export default function Onboarding() {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
+  const cardRef = useRef(null);
 
   const handleDismiss = useCallback(() => {
     markOnboardingDone();
@@ -38,13 +39,53 @@ export default function Onboarding() {
     handleDismiss();
   }, [handleDismiss]);
 
+  // Focus trap + initial focus
+  useEffect(() => {
+    if (step < 0 || !cardRef.current) return;
+
+    const card = cardRef.current;
+    const focusableSelectors =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () => Array.from(card.querySelectorAll(focusableSelectors));
+
+    // Move focus into the dialog on open/step change
+    const focusable = getFocusable();
+    if (focusable.length) focusable[0].focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleDismiss();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const els = getFocusable();
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    card.addEventListener("keydown", handleKeyDown);
+    return () => card.removeEventListener("keydown", handleKeyDown);
+  }, [step, handleDismiss]);
+
   if (step < 0 || step >= STEPS_COUNT) return null;
 
   const stepKey = `onboarding.step${step + 1}`;
 
   return (
     <div className="onboarding-overlay" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
-      <div className="onboarding-card">
+      <div className="onboarding-card" ref={cardRef}>
         <h2 id="onboarding-title">{t(`${stepKey}.title`)}</h2>
         <p>{t(`${stepKey}.body`)}</p>
 

@@ -6,6 +6,16 @@ This document catalogs potential improvements, organized by priority and impact.
 
 ## ✅ Completed
 
+### Real Soroban Compilation (WASM) — compiler architecture
+
+Done: Added a `WasmCompiler` system (`src/systems/wasmCompiler.js`) that runs
+compilation in a Web Worker (`compilerWorker.js`) with a 10s timeout, parses
+output into structured diagnostics, renders them as Monaco markers, and adds a
+"Compile & Run" button with terminal output on the mission page. Ships with a
+pluggable real-toolchain hook (`VITE_SOROBAN_WASM_URL`, module exporting
+`compileAndRun(code)`) and a graceful in-browser analyzer fallback
+(`sorobanAnalyzer.js`) for when a real WASM toolchain is not loaded. See #224.
+
 ### SkillTree — Add chapter 4-6 concepts
 
 Done: Added 3 new categories (Events, Protocols, DeFi) and all concepts from chapters 4-6.
@@ -112,10 +122,6 @@ Non-coding quests that test blockchain knowledge through multiple-choice or fill
 
 Present code with inefficient patterns; students must optimize for gas without changing behavior.
 
-### Real Soroban Compilation (WASM)
-
-Integrate the Soroban Rust compiler via WebAssembly for real compilation verification instead of the AST pattern matcher.
-
 ---
 
 ## 🎨 UX/UI
@@ -140,7 +146,7 @@ Each requires translating mission stories (19 missions × 7 chapters of lore), U
 
 ## 🧪 Testing
 
-- Add Vitest tests for `missionLoader.js`
+- ~~Add Vitest tests for `missionLoader.js`~~ ✅
 - Add Vitest tests for `campaigns.js` (getCampaignProgress, localizeCampaign)
 - Add Vitest tests for new missions structure/validity
 - Add E2E tests for the full mission flow (Playwright)

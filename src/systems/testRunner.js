@@ -9,11 +9,22 @@ export async function runTests(code, mission) {
     const results = [];
 
     // Step 1: Syntax basics
+    const syntaxResult = checkSyntaxBasics(code);
     results.push({
         phase: 'syntax',
         label: '🔍 Checking syntax...',
-        ...checkSyntaxBasics(code),
+        ...syntaxResult,
     });
+
+    if (!syntaxResult.passed) {
+        return {
+            results,
+            allPassed: false,
+            passedCount: 0,
+            totalCount: results.length,
+            summary: `❌ 0/${results.length} checks passed. Keep trying!`,
+        };
+    }
 
     await delay(300);
 
@@ -27,7 +38,8 @@ export async function runTests(code, mission) {
     await delay(300);
 
     // Step 3: Mission-specific checks
-    const validation = validateCode(code, mission.checks);
+    const checks = mission && Array.isArray(mission.checks) ? mission.checks : [];
+    const validation = validateCode(code, checks);
 
     for (let i = 0; i < validation.results.length; i++) {
         await delay(200);
