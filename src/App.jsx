@@ -17,6 +17,7 @@ import useScrollToTop from "./hooks/useScrollToTop";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ToastProvider } from "./systems/ToastContext";
 import { GameStateProvider } from "./systems/GameStateContext";
+import { SoundProvider } from "./systems/SoundContext";
 import LoadingScreen from "./components/LoadingScreen";
 import { loadProgress, saveProgress } from "./systems/storage";
 import { updateStreak } from "./systems/gameEngine";
@@ -37,6 +38,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <SoundProvider>
       <ToastProvider>
         <GameStateProvider>
           <div className="app">
@@ -62,6 +64,7 @@ export default function App() {
           </div>
         </GameStateProvider>
       </ToastProvider>
+      </SoundProvider>
     </ErrorBoundary>
   );
 }

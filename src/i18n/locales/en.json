@@ -38,7 +38,9 @@
     "userProfile": "User profile:",
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu",
-    "replayTutorial": "Replay Tutorial"
+    "replayTutorial": "Replay Tutorial",
+    "soundMute": "Mute sound effects",
+    "soundUnmute": "Unmute sound effects"
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -181,6 +183,7 @@
     "sections": {
       "badges": "🏅 Badges",
       "completedMissions": "✅ Completed Missions",
+      "sound": "🔊 Sound",
       "data": "⚙️ Data"
     },
     "noMissions": "No missions completed yet.",
@@ -210,6 +213,14 @@
         "imported": "Imported adventure progress from file"
       }
     }
+  },
+  "sound": {
+    "mute": "Mute sounds",
+    "unmute": "Unmute sounds",
+    "statusMuted": "Sound effects are off",
+    "statusOn": "Sound effects are on",
+    "volume": "Volume",
+    "volumeAriaLabel": "Sound effects volume"
   },
   "leaderboard": {
     "kicker": "Local multiplayer",

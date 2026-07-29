@@ -18,6 +18,7 @@ import CodeReplayPlayer from "../components/CodeReplayPlayer";
 import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from '../systems/useDocumentTitle';
+import { useSound } from "../systems/SoundContext";
 import {
   EDITOR_THEMES,
   registerEditorThemes,
@@ -41,6 +42,7 @@ export default function MissionDetail() {
 
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
+  const { sound } = useSound();
 
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true);
@@ -142,6 +144,7 @@ export default function MissionDetail() {
 
   const handleRunTests = useCallback(async () => {
     if (isRunning || !mission) return;
+    sound.playClick();
     setIsRunning(true);
     setTestResults([]);
 
@@ -175,6 +178,14 @@ export default function MissionDetail() {
 
       if (!newState.alreadyCompleted) {
         saveProgress(newState);
+        // --- Sound feedback ---
+        sound.playXPGained();
+        sound.playGoldEarned();
+        if (newState.leveledUp) sound.playLevelUp();
+        if (newState.newBadges?.length > 0) sound.playBadgeEarned();
+        // Mission-complete fanfare plays last after a short gap
+        setTimeout(() => sound.playMissionComplete(), 200);
+        // ---
         setVictoryData({
           xp: mission.xpReward,
           leveledUp: newState.leveledUp,
@@ -190,10 +201,11 @@ export default function MissionDetail() {
       }
     } else {
       if (showToast) showToast(t("missionDetail.toasts.validationFailed"), "error");
+      sound.playError();
     }
 
     setIsRunning(false);
-  }, [code, mission, missionId, isRunning, showToast, t]);
+  }, [code, mission, missionId, isRunning, showToast, t, sound]);
 
   const handleCompileAndRun = useCallback(async () => {
     if (isCompiling || isRunning || !mission) return;
@@ -451,6 +463,7 @@ export default function MissionDetail() {
   }
 
   const handleHint = () => {
+    sound.playClick();
     if (mission?.hints && hintIndex < mission.hints.length - 1) {
       const nextIndex = hintIndex + 1;
       setHintIndex(nextIndex);
@@ -469,6 +482,7 @@ export default function MissionDetail() {
   };
 
   const handleReset = () => {
+    sound.playClick();
     if (mission?.template) {
       setCode(mission.template);
       setTestResults([]);
@@ -478,6 +492,7 @@ export default function MissionDetail() {
   };
 
   const handleShowSolution = () => {
+    sound.playClick();
     if (mission?.solution) {
       setCode(mission.solution);
       if (showToast) showToast(t("missionDetail.toasts.solutionLoaded"), "info");

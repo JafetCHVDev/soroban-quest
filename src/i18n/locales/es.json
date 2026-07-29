@@ -38,7 +38,9 @@
     "userProfile": "Perfil de usuario:",
     "openMenu": "Abrir menú de navegación",
     "closeMenu": "Cerrar menú de navegación",
-    "replayTutorial": "Repetir tutorial"
+    "replayTutorial": "Repetir tutorial",
+    "soundMute": "Silenciar efectos de sonido",
+    "soundUnmute": "Activar efectos de sonido"
   },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
@@ -181,6 +183,7 @@
     "sections": {
       "badges": "🏅 Insignias",
       "completedMissions": "✅ Misiones completadas",
+      "sound": "🔊 Sonido",
       "data": "⚙️ Datos"
     },
     "noMissions": "Aún no has completado ninguna misión.",
@@ -210,6 +213,14 @@
         "imported": "Progreso de la aventura importado desde archivo"
       }
     }
+  },
+  "sound": {
+    "mute": "Silenciar sonidos",
+    "unmute": "Activar sonidos",
+    "statusMuted": "Efectos de sonido desactivados",
+    "statusOn": "Efectos de sonido activados",
+    "volume": "Volumen",
+    "volumeAriaLabel": "Volumen de efectos de sonido"
   },
   "leaderboard": {
     "kicker": "Multijugador local",
