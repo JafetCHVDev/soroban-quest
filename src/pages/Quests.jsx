@@ -1,91 +1,120 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "../i18n/useTranslation";
+import { missions, localizeMissions } from "../data/missions.js";
+import { campaigns, localizeCampaigns } from "../data/campaigns.js";
+import { loadProgress } from "../systems/storage.js";
 import "./Quests.css";
 
-export default function Quests() {
-  const { t } = useTranslation();
+const DIFFICULTY_ORDER = ["beginner", "intermediate", "advanced"];
+const DIFFICULTY_SWORDS = {
+  beginner: 2,
+  intermediate: 3,
+  advanced: 4,
+};
 
-  const [missionsList] = useState([
-    {
-      id: "mission-1",
-      title: "Introduction to Soroban",
-      description:
-        "Learn the foundational architecture of Stellar smart contracts.",
-      campaign: "Getting Started",
-      difficulty: "beginner",
-      swordsCount: 2,
-      completed: true,
-      xp: 500,
-    },
-    {
-      id: "mission-2",
-      title: "Token Storage Patterns",
-      description: "Master persistent state management and ledger entries.",
-      campaign: "Storage & State",
-      difficulty: "intermediate",
-      swordsCount: 3,
-      completed: false,
-      xp: 1200,
-    },
-  ]);
+export default function Quests() {
+  const { t, language } = useTranslation();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCampaign, setSelectedCampaign] = useState("ALL");
   const [selectedDifficulty, setSelectedDifficulty] = useState("ALL");
   const [completionStatus, setCompletionStatus] = useState("ALL");
+  const [progress, setProgress] = useState(() => loadProgress());
+
+  const localizedCampaigns = useMemo(
+    () => localizeCampaigns(campaigns, language),
+    [language],
+  );
+
+  const localizedMissions = useMemo(
+    () => localizeMissions(missions, language),
+    [language],
+  );
+
+  const campaignByMissionId = useMemo(() => {
+    return localizedCampaigns.reduce((acc, campaign) => {
+      (campaign.missionIds || []).forEach((id) => {
+        acc[id] = campaign;
+      });
+      return acc;
+    }, {});
+  }, [localizedCampaigns]);
+
+  useEffect(() => {
+    const handleStorageChange = () => setProgress(loadProgress());
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const campaigns = useMemo(() => {
-    if (!Array.isArray(missionsList)) return ["ALL"];
     return [
-      "ALL",
-      ...new Set(missionsList.map((m) => m?.campaign).filter(Boolean)),
+      { id: "ALL", title: t("quests.allCampaigns") },
+      ...localizedCampaigns.map((campaign) => ({
+        id: campaign.id,
+        title: campaign.title,
+      })),
     ];
-  }, [missionsList]);
+  }, [localizedCampaigns, t]);
 
   const difficulties = useMemo(() => {
-    if (!Array.isArray(missionsList)) return ["ALL"];
-    return [
-      "ALL",
-      ...new Set(missionsList.map((m) => m?.difficulty).filter(Boolean)),
-    ];
-  }, [missionsList]);
+    const unique = Array.from(
+      new Set(localizedMissions.map((mission) => mission.difficulty)),
+    ).filter(Boolean);
+
+    return ["ALL", ...DIFFICULTY_ORDER.filter((value) => unique.includes(value))];
+  }, [localizedMissions]);
 
   const filteredMissions = useMemo(() => {
-    if (!Array.isArray(missionsList)) return [];
-    return missionsList.filter((mission) => {
-      if (!mission) return false;
-      const title = mission.title || "";
-      const description = mission.description || "";
+    return localizedMissions
+      .map((mission) => ({
+        ...mission,
+        completed: Array.isArray(progress.completedMissions)
+          ? progress.completedMissions.includes(mission.id)
+          : false,
+        campaign: campaignByMissionId[mission.id]?.title ||
+          t("campaigns.chapter", { number: mission.chapter }),
+      }))
+      .filter((mission) => {
+        if (!mission) return false;
 
-      const matchesSearch =
-        title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        description.toLowerCase().includes(searchQuery.toLowerCase());
+        const title = mission.title || "";
+        const description =
+          mission.learningGoal || mission.story?.split("\n")[0] || "";
 
-      const matchesCampaign =
-        selectedCampaign === "ALL" || mission.campaign === selectedCampaign;
-      const matchesDifficulty =
-        selectedDifficulty === "ALL" ||
-        mission.difficulty === selectedDifficulty;
+        const matchesSearch =
+          title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          description.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesCompletion =
-        completionStatus === "ALL" ||
-        (completionStatus === "COMPLETED" && mission.completed) ||
-        (completionStatus === "INCOMPLETE" && !mission.completed);
+        const matchesCampaign =
+          selectedCampaign === "ALL" ||
+          campaignByMissionId[mission.id]?.id === selectedCampaign;
 
-      return (
-        matchesSearch &&
-        matchesCampaign &&
-        matchesDifficulty &&
-        matchesCompletion
-      );
-    });
+        const matchesDifficulty =
+          selectedDifficulty === "ALL" ||
+          mission.difficulty === selectedDifficulty;
+
+        const matchesCompletion =
+          completionStatus === "ALL" ||
+          (completionStatus === "COMPLETED" && mission.completed) ||
+          (completionStatus === "INCOMPLETE" && !mission.completed);
+
+        return (
+          matchesSearch &&
+          matchesCampaign &&
+          matchesDifficulty &&
+          matchesCompletion
+        );
+      });
   }, [
-    missionsList,
+    localizedMissions,
+    campaignByMissionId,
+    progress.completedMissions,
     searchQuery,
     selectedCampaign,
     selectedDifficulty,
     completionStatus,
+    t,
   ]);
 
   return (
@@ -107,14 +136,11 @@ export default function Quests() {
           onChange={(e) => setSelectedCampaign(e.target.value)}
           className="quests-select-filter"
         >
-          <option value="ALL">{t("quests.allCampaigns")}</option>
-          {campaigns
-            .filter((c) => c !== "ALL")
-            .map((camp) => (
-              <option key={camp} value={camp}>
-                {camp}
-              </option>
-            ))}
+          {campaigns.map((campaign) => (
+            <option key={campaign.id} value={campaign.id}>
+              {campaign.title}
+            </option>
+          ))}
         </select>
 
         <select
@@ -122,12 +148,12 @@ export default function Quests() {
           onChange={(e) => setSelectedDifficulty(e.target.value)}
           className="quests-select-filter"
         >
-          <option value="ALL">{t("quests.allDifficulties")}</option>
+          <option value="ALL">{t("missionMap.difficulty.all")}</option>
           {difficulties
             .filter((d) => d !== "ALL")
             .map((diff) => (
               <option key={diff} value={diff}>
-                {diff}
+                {t(`missionMap.difficulty.${diff}`)}
               </option>
             ))}
         </select>
@@ -154,30 +180,32 @@ export default function Quests() {
             >
               <div className="quest-card-top">
                 <div className="quest-card-header">
-                  <span className="quest-campaign-tag">{mission.campaign}</span>
-                  {mission.completed && (
-                    <span className="quest-completion-check" title="Completed">
-                      ✓
-                    </span>
-                  )}
-                </div>
-                <h3 className="quest-card-title">{mission.title}</h3>
-                <p className="quest-card-description">{mission.description}</p>
+                <span className="quest-campaign-tag">{mission.campaign}</span>
+                {mission.completed && (
+                  <span className="quest-completion-check" title={t("quests.completed")}>
+                    ✓
+                  </span>
+                )}
+              </div>
+              <h3 className="quest-card-title">{mission.title}</h3>
+              <p className="quest-card-description">
+                {mission.learningGoal || mission.story?.split("\n")[0] || ''}
+              </p>
               </div>
 
               <div className="quest-card-footer">
                 <div className="quest-meta-left">
                   <span
                     className="quest-swords active"
-                    title={`Difficulty: ${mission.difficulty}`}
+                    title={`${t(`missionMap.difficulty.${mission.difficulty}`)} ${t("missionMap.card.xp", { xp: mission.xpReward })}`}
                   >
-                    {"⚔️".repeat(mission.swordsCount || 3)}
+                    {"⚔️".repeat(DIFFICULTY_SWORDS[mission.difficulty] || 3)}
                   </span>
                 </div>
 
                 <div className="quest-xp-badge">
                   <span>⚡</span>
-                  <span>{mission.xp}</span>
+                  <span>{mission.xpReward}</span>
                 </div>
               </div>
             </Link>
