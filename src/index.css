@@ -396,6 +396,21 @@ button {
   font-family: var(--font-body);
 }
 
+/* ============ FOCUS VISIBLE ============ */
+/* Provide a consistent, high-visibility focus ring for all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Suppress focus ring for mouse users on elements that already have custom styles */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* ============ APP LAYOUT ============ */
 .app {
   display: flex;
@@ -1907,6 +1922,82 @@ button {
   .profile-header {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+/* ============ SKIP TO CONTENT ============ */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.6rem 1.2rem;
+  background: var(--cyan);
+  color: var(--bg-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: top var(--transition-fast);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* ============ SCREEN READER ONLY ============ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep skeleton shimmer but make it static */
+  .skeleton::after {
+    animation: none;
+  }
+
+  /* Disable xp bar shimmer */
+  .xp-bar-fill::after {
+    animation: none;
+  }
+
+  /* Disable hero entrance animations */
+  .hero-badge,
+  .hero-title,
+  .hero-subtitle,
+  .hero-actions,
+  .hero-stats {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Disable notfound float */
+  .notfound-card {
+    animation: none;
+  }
+
+  /* Hide the hero starfield canvas for users who prefer reduced motion */
+  .hero-particles {
+    display: none;
   }
 }
 

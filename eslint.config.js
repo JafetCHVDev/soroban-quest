@@ -17,6 +17,16 @@ export default [
       'playwright.config.js',
     ],
   },
+  {
+    files: ['vite.config.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   js.configs.recommended,
   {
     // Target both .js, .ts, and .tsx files inside src

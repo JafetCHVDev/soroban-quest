@@ -1,11 +1,17 @@
 import { useEffect } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
+import { useRef } from "react";
+import { measureNavigation } from "../systems/performanceMonitor";
 
 export default function useScrollToTop() {
   const { pathname } = useLocation();
   const navigationType = useNavigationType();
+  const previousPathname = useRef(pathname);
 
   useEffect(() => {
+    const stopNavigation = measureNavigation(previousPathname.current, pathname);
+    previousPathname.current = pathname;
+
     // Keep standard browser history back/forward placement untouched
     if (navigationType !== "POP") {
       
@@ -22,5 +28,8 @@ export default function useScrollToTop() {
         container.scrollTop = 0;
       });
     }
+
+    // Route content has mounted when this effect runs, so record the completed transition.
+    stopNavigation();
   }, [pathname, navigationType]);
 }

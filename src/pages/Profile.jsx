@@ -52,11 +52,39 @@ export default function Profile() {
   const fileInputRef = useRef(null);
 
   const [importPreview, setImportPreview] = useState(null);
+  const importModalRef = useRef(null);
 
   const xpProgress = getXPProgress(state);
   const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
   const rankTitle = t(`ranks.${rankIndex}`);
   const missions = getAllMissions(language);
+
+  // Focus trap for import preview modal
+  useEffect(() => {
+    if (!importPreview || !importModalRef.current) return;
+    const modal = importModalRef.current;
+    const focusableSelectors =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () => Array.from(modal.querySelectorAll(focusableSelectors));
+
+    const focusable = getFocusable();
+    if (focusable.length) focusable[0].focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); cancelImport(); return; }
+      if (e.key !== 'Tab') return;
+      const els = getFocusable();
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    modal.addEventListener('keydown', handleKeyDown);
+    return () => modal.removeEventListener('keydown', handleKeyDown);
+  }, [importPreview]);
 
   /* ---------------- SAVE PROFILE ---------------- */
   const saveUserProfile = () => {
@@ -431,9 +459,20 @@ export default function Profile() {
 
       {/* IMPORT PREVIEW MODAL */}
       {importPreview && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="card max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <h3 className="text-xl font-bold mb-4">Import Preview</h3>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          role="presentation"
+          onClick={cancelImport}
+        >
+          <div
+            className="card max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="import-preview-heading"
+            ref={importModalRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id="import-preview-heading" className="text-xl font-bold mb-4">Import Preview</h3>
             
             {importPreview.state && (
               <div className="mb-4">

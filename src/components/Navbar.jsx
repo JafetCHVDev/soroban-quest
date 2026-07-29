@@ -225,40 +225,15 @@ export default function Navbar({ onOpenShortcuts }) {
 
         {isOpen && <div className="backdrop" onClick={() => setIsOpen(false)} />}
 
-        <div className={`mobile-menu ${isOpen ? 'open' : ''}`} aria-label={t('navbar.ariaMobile')}>
-          <div
-            className="mobile-menu-header"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '1rem',
-              width: '100%',
-            }}
-          >
-            <span className="text-sm font-bold opacity-85">Navigation</span>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="btn-ghost"
-              style={{
-                minWidth: '44px',
-                minHeight: '44px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              aria-label={t('navbar.closeMenu')}
-            >
-              <X size={24} />
-            </button>
-          </div>
-
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
-          >
-            {t('navbar.home')}
+        {/* MOBILE MENU */}
+        <div
+          className={`mobile-menu ${isOpen ? "open" : ""}`}
+          aria-label={t("navbar.ariaMobile")}
+          aria-hidden={!isOpen}
+          inert={!isOpen ? "" : undefined}
+        >
+          <Link to="/" onClick={() => setIsOpen(false)}>
+            {t("navbar.home")}
           </Link>
           <Link
             to="/campaigns"

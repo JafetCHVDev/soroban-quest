@@ -7,6 +7,7 @@ import {
 } from "../systems/activityLogger";
 import { loadProgress } from "../systems/storage";
 import { useTranslation } from "../i18n/useTranslation";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import "./Journal.css";
 import useDocumentTitle from '../systems/useDocumentTitle';
 
@@ -160,6 +161,7 @@ export default function Journal() {
   const [filter, setFilter] = useState("ALL");
   const [dateFilter, setDateFilter] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const timelineRef = useRef(null);
   const progress = loadProgress();
 
@@ -180,17 +182,29 @@ export default function Journal() {
   });
 
   const handleClear = () => {
-    if (window.confirm(t("journal.confirmClear"))) {
-      clearLog();
-      setLog([]);
-    }
+    setShowClearConfirm(true);
+  };
+
+  const confirmClear = () => {
+    clearLog();
+    setLog([]);
+    setShowClearConfirm(false);
   };
 
   // Locale to use for time formatting (Intl falls back gracefully if unknown)
   const timeLocale = language === "es" ? "es" : "en";
 
   return (
-    <div className="journal-page">
+    <div id="main-content" className="journal-page">
+      <ConfirmationDialog
+        isOpen={showClearConfirm}
+        title={t("journal.clearLog")}
+        message={t("journal.confirmClear")}
+        confirmText={t("common.confirm")}
+        cancelText={t("common.cancel")}
+        onConfirm={confirmClear}
+        onCancel={() => setShowClearConfirm(false)}
+      />
       <div className="journal-header flex justify-between items-end">
         <div>
           <h1 className="journal-title">{t("journal.title")}</h1>
@@ -253,24 +267,26 @@ export default function Journal() {
           />
         </label>
 
-        <div className="journal-filters" aria-label={t("journal.typeFilterLabel")}>
+        <div className="journal-filters" aria-label={t("journal.typeFilterLabel")} role="group">
           {FILTER_DEFS.map((f) => (
             <button
               key={f.id}
               className={`filter-chip ${filter === f.id ? "active" : ""}`}
               onClick={() => setFilter(f.id)}
+              aria-pressed={filter === f.id}
             >
               {t(f.labelKey)}
             </button>
           ))}
         </div>
 
-        <div className="journal-filters" aria-label={t("journal.dateFilterLabel")}>
+        <div className="journal-filters" aria-label={t("journal.dateFilterLabel")} role="group">
           {DATE_FILTERS.map((f) => (
             <button
               key={f.id}
               className={`filter-chip ${dateFilter === f.id ? "active" : ""}`}
               onClick={() => setDateFilter(f.id)}
+              aria-pressed={dateFilter === f.id}
             >
               {t(f.labelKey)}
             </button>

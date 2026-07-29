@@ -66,13 +66,13 @@ export default function Leaderboard() {
           <table className="leaderboard-table">
             <thead>
               <tr>
-                <th>{t("leaderboard.columns.rank")}</th>
-                <th>{t("leaderboard.columns.player")}</th>
-                <th>{t("leaderboard.columns.xp")}</th>
-                <th>{t("leaderboard.columns.level")}</th>
-                <th>{t("leaderboard.columns.missions")}</th>
-                <th>{t("leaderboard.columns.badges")}</th>
-                <th>{t("leaderboard.columns.status")}</th>
+                <th scope="col">{t("leaderboard.columns.rank")}</th>
+                <th scope="col">{t("leaderboard.columns.player")}</th>
+                <th scope="col">{t("leaderboard.columns.xp")}</th>
+                <th scope="col">{t("leaderboard.columns.level")}</th>
+                <th scope="col">{t("leaderboard.columns.missions")}</th>
+                <th scope="col">{t("leaderboard.columns.badges")}</th>
+                <th scope="col">{t("leaderboard.columns.status")}</th>
               </tr>
             </thead>
             <tbody>

@@ -5,7 +5,7 @@ const NotFound = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="notfound-container">
+    <div id="main-content" className="notfound-container">
       <div className="notfound-card">
         <h1>404</h1>
         <h2>{t("notFound.title")}</h2>

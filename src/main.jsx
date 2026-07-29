@@ -24,7 +24,10 @@ function UpdatePrompt() {
   if (!needRefresh) return null;
 
   return (
-    <div style={{
+    <div
+      role="alert"
+      aria-live="assertive"
+      style={{
       position: 'fixed',
       bottom: '20px',
       right: '20px',
@@ -44,6 +47,7 @@ function UpdatePrompt() {
       <div style={{ display: 'flex', gap: '8px' }}>
         <button
           onClick={() => updateServiceWorker(true)}
+          aria-label="Update to new version"
           style={{
             flex: 1,
             background: 'white',
@@ -60,6 +64,7 @@ function UpdatePrompt() {
         </button>
         <button
           onClick={() => setNeedRefresh(false)}
+          aria-label="Dismiss update notification"
           style={{
             flex: 1,
             background: 'rgba(255, 255, 255, 0.2)',

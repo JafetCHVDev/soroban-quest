@@ -1,6 +1,6 @@
 // CodeReplayPlayer.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor from './LazyMonacoEditor';
 
 const PLAYBACK_SPEEDS = [1, 2, 4];
 
@@ -162,6 +162,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
           className="btn btn-ghost btn-sm"
           onClick={onClose}
           style={{ color: 'var(--text-muted)' }}
+          aria-label="Close replay"
         >
           ✕
         </button>
@@ -234,6 +235,8 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
                 className={`btn btn-sm ${playbackSpeed === speed ? 'btn-primary' : 'btn-ghost'}`}
                 onClick={() => setPlaybackSpeed(speed)}
                 style={{ minWidth: '2.5rem' }}
+                aria-label={`Playback speed ${speed}x`}
+                aria-pressed={playbackSpeed === speed}
               >
                 {speed}x
               </button>
@@ -259,6 +262,7 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
             max={duration}
             value={currentTime}
             onChange={(e) => jumpToTime(Number(e.target.value))}
+            aria-label={`Playback position: ${formatTime(currentTime)} of ${formatTime(duration)}`}
             style={{
               width: '100%',
               height: '4px',
@@ -343,24 +347,35 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
           {recording.events.map((event, index) => {
             const display = getEventDisplay(event.type);
             const isActive = index === currentEventIndex;
-            
+
+            const handleSelect = () => {
+              setCurrentEventIndex(index);
+              setCurrentTime(event.timestamp);
+              if (event.type === 'edit') {
+                setCurrentCode(event.content);
+              } else {
+                let lastEditCode = recording.events[0]?.content || '';
+                for (let i = 0; i <= index; i++) {
+                  if (recording.events[i].type === 'edit') {
+                    lastEditCode = recording.events[i].content;
+                  }
+                }
+                setCurrentCode(lastEditCode);
+              }
+            };
+
             return (
               <div
                 key={index}
-                onClick={() => {
-                  setCurrentEventIndex(index);
-                  setCurrentTime(event.timestamp);
-                  if (event.type === 'edit') {
-                    setCurrentCode(event.content);
-                  } else {
-                    // Find the last edit before this event
-                    let lastEditCode = recording.events[0]?.content || '';
-                    for (let i = 0; i <= index; i++) {
-                      if (recording.events[i].type === 'edit') {
-                        lastEditCode = recording.events[i].content;
-                      }
-                    }
-                    setCurrentCode(lastEditCode);
+                role="button"
+                tabIndex={0}
+                aria-label={`${display.text} at ${formatTime(event.timestamp)}${isActive ? ', current' : ''}`}
+                aria-current={isActive ? 'true' : undefined}
+                onClick={handleSelect}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleSelect();
                   }
                 }}
                 style={{
@@ -374,20 +389,13 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }) {
                   background: isActive ? 'var(--bg-primary)' : 'transparent',
                   border: isActive ? `1px solid ${display.color}` : '1px solid transparent',
                   opacity: isActive ? 1 : 0.7,
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  outline: 'none',
                 }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.target.style.background = 'var(--bg-secondary)';
-                    e.target.style.opacity = '1';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.target.style.background = 'transparent';
-                    e.target.style.opacity = '0.7';
-                  }
-                }}
+                onFocus={(e) => { if (!isActive) e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+                onBlur={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.opacity = '0.7'; }}
               >
                 <div
                   style={{
