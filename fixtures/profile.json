@@ -1,0 +1,15 @@
+{
+  "soroban_quest_progress": {
+    "completedMissions": ["hello-soroban", "store-data"],
+    "xp": 420,
+    "level": 4,
+    "badges": ["first-steps"],
+    "streak": 5,
+    "lastLogin": "2026-01-01"
+  },
+  "soroban_quest_profile": {
+    "name": "Stellar Guardian",
+    "avatar": "🛡️"
+  },
+  "soroban_quest_activity_log": []
+}

@@ -141,6 +141,22 @@ npm run build            # Build for production
 npm run preview          # Preview production build locally
 ```
 
+## Visual Regression Snapshots
+
+Visual regression coverage lives in `e2e/visual-regression.spec.ts` and uses a matrix of viewport and theme combinations. The suite relies on seeded fixture data under `fixtures/` so pages render deterministically, with frozen time and masked dynamic elements such as confetti.
+
+### Update snapshots locally
+
+```bash
+npm run test:visual:update
+```
+
+This regenerates the Playwright baselines under `e2e/snapshots/`.
+
+### Update snapshots in CI
+
+A manual workflow run is available from the GitHub Actions UI. Open the `E2E & Visual Regression Tests` workflow, choose the `Update Baseline Snapshots` job, and enable `update_snapshots` to create a PR with refreshed baselines.
+
 ## Development Workflow
 
 1. Sync your branch with upstream `main`.

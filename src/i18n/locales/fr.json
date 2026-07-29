@@ -1,0 +1,603 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français"
+  },
+  "common": {
+    "selectLanguage": "Choisir la langue",
+    "toggleTheme": "Changer de thème",
+    "back": "Retour",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "loading": "Chargement…",
+    "all": "Toutes",
+    "level": "Niveau",
+    "xp": "XP",
+    "chapter": "Chapitre",
+    "mission": "Mission",
+    "complete": "Terminer",
+    "completed": "Terminée",
+    "locked": "Verrouillée",
+    "unlocked": "Déverrouillée",
+    "skipToContent": "Passer au contenu principal"
+  },
+  "navbar": {
+    "home": "Accueil",
+    "campaigns": "Campagnes",
+    "missions": "Missions",
+    "profile": "Profil",
+    "journal": "Journal",
+    "leaderboard": "Classement",
+    "achievements": "Succès",
+    "shop": "Boutique",
+    "ariaMain": "Navigation principale",
+    "ariaHome": "Aller à la page d'accueil",
+    "ariaMobile": "Menu de navigation mobile",
+    "userProfile": "Profil de l'utilisateur :",
+    "openMenu": "Ouvrir le menu de navigation",
+    "closeMenu": "Fermer le menu de navigation",
+    "replayTutorial": "Revoir le tutoriel"
+  },
+  "home": {
+    "badge": "✨ Aucune configuration • Aucun portefeuille requis • Open source",
+    "title": {
+      "lead": "Maîtrisez les",
+      "brand": "Soroban",
+      "tail": "contrats intelligents"
+    },
+    "subtitle": "Lancez-vous dans une quête épique pour apprendre la plateforme de contrats intelligents de Stellar. Écrivez du vrai code Soroban dans votre navigateur, relevez des défis et faites progresser vos compétences en blockchain — sans aucune installation.",
+    "cta": {
+      "continueQuest": "⚔️ Continuer la quête",
+      "viewProgress": "📊 Voir la progression",
+      "beginJourney": "🚀 Commencer votre aventure",
+      "viewMissionMap": "🗺️ Voir la carte des missions"
+    },
+    "stats": {
+      "missions": "Missions",
+      "totalXp": "XP total",
+      "backendNeeded": "Backend requis"
+    },
+    "howItWorks": {
+      "title": "Comment ça marche",
+      "subtitle": "Votre parcours de zéro à la maîtrise de Soroban, entièrement dans le navigateur."
+    },
+    "features": {
+      "read": {
+        "title": "Lisez la quête",
+        "body": "Chaque mission déroule une histoire tout en enseignant les concepts fondamentaux de Soroban. Découvrez les contrats, le stockage, les jetons et bien plus à travers des défis guidés par le récit."
+      },
+      "write": {
+        "title": "Écrivez le code",
+        "body": "Utilisez l'éditeur Monaco intégré avec la coloration syntaxique Rust et l'autocomplétion Soroban. Les modèles vous donnent un point de départ — à vous d'écrire la logique."
+      },
+      "test": {
+        "title": "Lancez les tests",
+        "body": "Validez votre code avec un retour instantané. Chaque mission comporte des vérifications cachées qui contrôlent la structure, les fonctions et les motifs de votre contrat."
+      },
+      "xp": {
+        "title": "Gagnez de l'XP et montez de niveau",
+        "body": "Obtenez des points d'expérience pour chaque mission terminée. Débloquez des badges, gravissez les rangs et suivez votre parcours d'Initié à Souverain Stellaire."
+      },
+      "zeroBackend": {
+        "title": "Aucun backend",
+        "body": "Tout s'exécute dans votre navigateur. Aucun serveur, aucune base de données, aucun compte. Votre progression est enregistrée localement — exportez-la à tout moment sous forme de fichier JSON."
+      },
+      "path": {
+        "title": "Parcours progressif",
+        "body": "De « Hello World » aux contrats multi-signatures. Chaque mission s'appuie sur la précédente, créant un parcours structuré vers la maîtrise de Soroban."
+      }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} Missions",
+      "xpEarned": "{{xp}} XP gagnés",
+      "goldEarned": "{{gold}} Or",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Niveau {{level}} — {{rank}}",
+      "nextMission": "Mission suivante",
+      "continueFrom": "Continuer depuis {{title}}",
+      "recentActivity": "Activité récente",
+      "viewAll": "Tout voir",
+      "quickStats": "Statistiques rapides",
+      "streak": "Série de jours"
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "Plateforme",
+      "home": "Accueil",
+      "missions": "Missions",
+      "profile": "Profil",
+      "glossary": "Glossaire"
+    },
+    "resources": {
+      "heading": "Ressources",
+      "docs": "Documentation Soroban",
+      "sdk": "SDK Stellar",
+      "github": "GitHub",
+      "glossary": "Glossaire",
+      "faq": "FAQ"
+    },
+    "community": {
+      "heading": "Communauté",
+      "discord": "Discord",
+      "telegram": "Telegram",
+      "forum": "Forum Stellar",
+      "blog": "Blog Stellar"
+    },
+    "credits": {
+      "tagline": "Conçu pour l'écosystème Stellar",
+      "license": "Licence MIT"
+    }
+  },
+  "notFound": {
+    "title": "Cette quête n'existe pas",
+    "body": "Vous semblez vous être égaré dans l'espace lointain",
+    "back": "Retourner à la base"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "Une erreur s'est produite",
+      "body": "La quête a rencontré une erreur d'exécution. Consultez la console pour plus de détails.",
+      "reload": "Recharger",
+      "goHome": "Aller à l'accueil",
+      "report": "Signaler un problème"
+    },
+    "editor": {
+      "body": "Le chargement de l'éditeur a échoué",
+      "reset": "Réinitialiser l'éditeur"
+    },
+    "mission": {
+      "title": "Mission indisponible",
+      "retry": "Réessayer"
+    }
+  },
+  "profile": {
+    "edit": "✏️ Modifier le profil",
+    "viewJournal": "📖 Voir le journal",
+    "editPanel": {
+      "title": "Modifier le profil",
+      "nameLabel": "Nom de l'aventurier",
+      "avatarLegend": "Choisissez un avatar",
+      "namePlaceholder": "Saisir un nom"
+    },
+    "selector": {
+      "title": "Profil actif",
+      "help": "{{count}} sur {{max}} profils locaux utilisés.",
+      "meta": "Niveau {{level}} • {{xp}} XP",
+      "create": "Créer un profil",
+      "emptySlot": "Emplacement vide",
+      "defaultName": "Joueur {{number}}"
+    },
+    "stats": {
+      "missions": "Missions",
+      "badges": "Badges"
+    },
+    "sections": {
+      "badges": "🏅 Badges",
+      "completedMissions": "✅ Missions terminées",
+      "data": "⚙️ Données"
+    },
+    "noMissions": "Aucune mission terminée pour le moment.",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "Total : {{xp}} XP"
+    },
+    "data": {
+      "export": "Exporter",
+      "import": "Importer",
+      "reset": "Réinitialiser",
+      "confirmReset": "Réinitialiser toute la progression ? Cette action est irréversible.",
+      "status": {
+        "exported": "✅ Progression exportée !",
+        "imported": "✅ Progression importée avec succès !",
+        "importFailed": "❌ Fichier invalide — importation impossible.",
+        "resetDone": "🗑️ Progression réinitialisée."
+      },
+      "toast": {
+        "exported": "Progression exportée avec succès !",
+        "imported": "Progression importée avec succès !",
+        "importFailed": "Impossible d'importer le fichier. Vérifiez le format.",
+        "resetDone": "🗑️ Progression réinitialisée."
+      },
+      "log": {
+        "exported": "Progression de l'aventure exportée",
+        "imported": "Progression de l'aventure importée depuis un fichier"
+      }
+    }
+  },
+  "leaderboard": {
+    "kicker": "Multijoueur local",
+    "title": "Classement",
+    "subtitle": "Comparez l'XP, le niveau, les missions et les badges entre vos profils locaux.",
+    "manageProfiles": "Gérer les profils",
+    "championAria": "Champion local actuel",
+    "championSummary": "Niveau {{level}} • {{xp}} XP • {{missions}} missions terminées",
+    "tableTitle": "Classement local",
+    "profileCount": "{{count}} profils",
+    "active": "Actif",
+    "switch": "Changer",
+    "columns": {
+      "rank": "Rang",
+      "player": "Joueur",
+      "xp": "XP",
+      "level": "Niveau",
+      "missions": "Missions",
+      "badges": "Badges",
+      "status": "Statut"
+    }
+  },
+  "achievements": {
+    "kicker": "Coffre à badges",
+    "title": "Succès",
+    "subtitle": "Succès débloqués et verrouillés de {{name}}.",
+    "summaryAria": "Résumé des succès obtenus",
+    "unlocked": "Débloqués",
+    "progressAria": "Progression des succès obtenus",
+    "progress": "Progression",
+    "gridAria": "Collection de badges de succès",
+    "empty": "Terminez des missions pour gagner des succès et des badges !"
+  },
+  "journal": {
+    "title": "Journal d'aventure",
+    "subtitle": "Votre parcours à travers le royaume de Soroban, consigné pour l'éternité.",
+    "clearLog": "🗑️ Effacer le journal",
+    "confirmClear": "Effacer tout l'historique d'activité ?",
+    "controlsLabel": "Recherche et filtres du journal",
+    "searchLabel": "Rechercher des entrées du journal",
+    "searchPlaceholder": "Rechercher des entrées du journal...",
+    "typeFilterLabel": "Filtrer par type d'activité",
+    "dateFilterLabel": "Filtrer par date",
+    "summary": {
+      "missions": "Missions",
+      "badges": "Badges",
+      "level": "Niveau",
+      "totalXp": "XP total",
+      "streak": "Série de jours"
+    },
+    "filters": {
+      "all": "Tout",
+      "mission": "Mission",
+      "badge": "Badge",
+      "levelUp": "Montée de niveau",
+      "hint": "Indice",
+      "system": "Système"
+    },
+    "dateFilters": {
+      "all": "N'importe quand",
+      "today": "Aujourd'hui",
+      "week": "7 derniers jours",
+      "month": "Ce mois-ci"
+    },
+    "empty": "Aucune activité enregistrée pour le moment. Commencez votre première mission !",
+    "dates": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier"
+    },
+    "events": {
+      "missionStarted": "Mission commencée : {{title}}",
+      "missionCompleted": "Mission terminée : {{title}}",
+      "badgeEarned": "Badge « {{name}} » obtenu !",
+      "levelUp": "Niveau {{level}} atteint !",
+      "hintUsed": "Indice {{index}} utilisé",
+      "export": "Progression de l'aventure exportée",
+      "import": "Progression de l'aventure importée depuis un fichier",
+      "streakOne": "Série quotidienne : 1 jour !",
+      "streakMany": "Série quotidienne : {{count}} jours !"
+    },
+    "details": {
+      "targetXp": "XP cible atteint : {{xp}}",
+      "earnedXp": "{{xp}} XP gagnés"
+    },
+    "eventLabels": {
+      "mission": "Mission",
+      "badge": "Badge",
+      "levelUp": "Montée de niveau",
+      "hint": "Indice",
+      "system": "Système",
+      "streak": "Série"
+    }
+  },
+  "campaigns": {
+    "title": "Campagnes",
+    "subtitle": "Chapitres épiques axés sur l'histoire | Niveau {{level}} | {{completed}}/{{total}} missions au total",
+    "chapter": "Chapitre {{number}}",
+    "missionCount": "{{completed}}/{{total}} missions",
+    "lockedAt": "🔒 Atteignez le niveau {{level}} pour déverrouiller",
+    "chapterComplete": "✓ Chapitre terminé !",
+    "back": "← Retour aux campagnes",
+    "completeOf": "{{completed}}/{{total}} terminées",
+    "lore": {
+      "iconLabel": "Parchemin de l'histoire du chapitre",
+      "modalTitle": "Introduction du chapitre",
+      "beginChapter": "Commencer le chapitre {{number}}"
+    }
+  },
+  "missionMap": {
+    "title": "Carte des missions",
+    "subtitle": "{{completed}} missions sur {{total}} terminées",
+    "searchPlaceholder": "Rechercher des missions…",
+    "difficulty": {
+      "all": "Toutes",
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    },
+    "chapters": {
+      "all": "Tous les chapitres",
+      "n": "Chapitre {{number}}"
+    },
+    "card": {
+      "chapterMission": "Chapitre {{chapter}} • Mission {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ Terminée",
+      "locked": "🔒 Verrouillée"
+    },
+    "allCompleted": {
+      "title": "Toutes les missions terminées !",
+      "body": "Félicitations, {{rank}} ! Vous avez maîtrisé l'ensemble des {{xp}} XP de défis Soroban."
+    },
+    "noResults": "Aucune mission ne correspond à vos filtres.",
+    "aria": {
+      "missionPath": "Graphique du parcours des missions",
+      "missionTimeline": "Chronologie des missions",
+      "missionItem": "Mission {{order}} : {{title}}",
+      "missionItemCompleted": "Mission {{order}} : {{title}}, terminée",
+      "missionItemUnlocked": "Mission {{order}} : {{title}}, déverrouillée",
+      "missionItemLocked": "Mission {{order}} : {{title}}, verrouillée"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "Histoire",
+      "editor": "Éditeur",
+      "tests": "Tests",
+      "replay": "📹 Rejouer"
+    },
+    "notFound": {
+      "title": "Mission introuvable",
+      "body": "La mission « {{id}} » n'existe pas.",
+      "back": "← Retour à la carte des missions"
+    },
+    "editor": {
+      "reset": "↺ Réinitialiser",
+      "hint": "💡 Indice",
+      "solution": "👁️ Solution",
+      "run": "▶ Lancer les tests",
+      "running": "Exécution…",
+      "themeLabel": "Thème de l'éditeur"
+    },
+    "terminal": {
+      "title": "Sortie des tests",
+      "placeholder": "Cliquez sur « Lancer les tests » pour valider votre code…",
+      "runningChecks": "🔍 Exécution des vérifications…",
+      "alreadyCompleted": "🏅 Déjà terminée — aucun XP supplémentaire accordé."
+    },
+    "status": {
+      "checking": "Vérification…",
+      "passing": "{{passed}}/{{total}} vérifications réussies",
+      "allPassing": "{{passed}}/{{total}} vérifications réussies ✓",
+      "note": "vérifications en direct · suite complète au lancement des tests"
+    },
+    "toasts": {
+      "validated": "Paramètres de la mission validés !",
+      "validationFailed": "Validation échouée. Consultez le terminal.",
+      "hintUnlocked": "Indice {{index}} débloqué",
+      "codeReset": "Code réinitialisé au modèle",
+      "solutionLoaded": "Solution chargée dans l'éditeur"
+    },
+    "hint": {
+      "label": "💡 Indice {{index}} :"
+    },
+    "victory": {
+      "title": "Mission terminée !",
+      "youCompleted": "Vous avez terminé",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 Niveau supérieur ! Vous êtes maintenant Niveau {{level}} — {{rank}}",
+      "badgeEarnedOne": "🏅 Nouveau badge obtenu !",
+      "badgeEarnedMany": "🏅 Nouveaux badges obtenus !",
+      "next": "Mission suivante →",
+      "map": "Carte des missions"
+    },
+    "replay": {
+      "header": "📹 Revoyez votre solution",
+      "body": "Revisitez étape par étape votre processus de résolution.",
+      "start": "▶️ Démarrer la relecture"
+    },
+    "okashi": {
+      "button": "🚀 Essayer sur Okashi — Compiler et déployer",
+      "help": "Ouvre okashi.dev dans un nouvel onglet. Votre code est copié dans le presse-papiers — collez-le là-bas pour le compiler avec le vrai compilateur Soroban et le déployer sur Testnet."
+    }
+  },
+  "skillTree": {
+    "title": "Arbre de compétences Soroban",
+    "subtitle": "Suivez votre maîtrise des concepts des contrats intelligents Soroban",
+    "overall": "{{unlocked}}/{{total}} concepts maîtrisés",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": {
+        "title": "Concepts fondamentaux",
+        "description": "Composants fondamentaux de Soroban"
+      },
+      "Storage": {
+        "title": "Stockage et état",
+        "description": "Gestion des données persistantes"
+      },
+      "Types": {
+        "title": "Types de données",
+        "description": "Travailler avec différents types de données"
+      },
+      "Auth": {
+        "title": "Autorisation",
+        "description": "Contrôle d'accès et sécurité"
+      },
+      "Events": {
+        "title": "Événements",
+        "description": "Émission et gestion des événements de contrat"
+      },
+      "Protocols": {
+        "title": "Protocoles",
+        "description": "Motifs de protocoles DeFi du monde réel"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "Primitives de finance décentralisée"
+      }
+    },
+    "tooltip": {
+      "chapter": "Chapitre {{chapter}}"
+    },
+    "modal": {
+      "taughtIn": "Enseigné dans : {{title}}",
+      "chapterLabel": "Chapitre :",
+      "difficultyLabel": "Difficulté :",
+      "xpLabel": "Récompense XP :",
+      "learningGoal": "Objectif d'apprentissage :",
+      "completed": "✅ Terminée",
+      "notCompleted": "🔒 Pas encore terminée",
+      "startMission": "Commencer la mission",
+      "notCovered": "Ce concept n'est pas encore couvert par les missions disponibles."
+    }
+  },
+  "ranks": {
+    "0": "Initié",
+    "1": "Apprenti",
+    "2": "Scribe",
+    "3": "Codeur",
+    "4": "Architecte",
+    "5": "Sentinelle",
+    "6": "Gardien",
+    "7": "Maître Gardien",
+    "8": "Ancien",
+    "9": "Luminaire",
+    "10": "Souverain Stellaire"
+  },
+  "difficulty": {
+    "beginner": "débutant",
+    "intermediate": "intermédiaire",
+    "advanced": "avancé"
+  },
+  "badges": {
+    "first_contract": {
+      "name": "Premier contrat",
+      "description": "Terminez votre première mission"
+    },
+    "triple_threat": {
+      "name": "Triple menace",
+      "description": "Terminez 3 missions"
+    },
+    "five_star": {
+      "name": "Cinq étoiles",
+      "description": "Terminez 5 missions"
+    },
+    "completionist": {
+      "name": "Complétiste",
+      "description": "Terminez toutes les missions"
+    },
+    "level_3": {
+      "name": "Étoile montante",
+      "description": "Atteignez le niveau 3"
+    },
+    "level_5": {
+      "name": "Gardien Stellaire",
+      "description": "Atteignez le niveau 5"
+    },
+    "xp_1000": {
+      "name": "Amasseur d'XP",
+      "description": "Gagnez 1000 XP"
+    },
+    "speed_demon": {
+      "name": "Démon de vitesse",
+      "description": "Terminez une mission du premier coup"
+    },
+    "chapter_1": {
+      "name": "Éveil",
+      "description": "Terminez toutes les missions du Chapitre 1"
+    },
+    "chapter_2": {
+      "name": "Gardien de la mémoire",
+      "description": "Terminez toutes les missions du Chapitre 2"
+    },
+    "chapter_3": {
+      "name": "Maître forgeron",
+      "description": "Terminez toutes les missions du Chapitre 3"
+    },
+    "chapter_4": {
+      "name": "Architecte de données",
+      "description": "Terminez toutes les missions du Chapitre 4"
+    },
+    "chapter_5": {
+      "name": "Pionnier des protocoles",
+      "description": "Terminez toutes les missions du Chapitre 5"
+    },
+    "chapter_6": {
+      "name": "Maître de production",
+      "description": "Terminez toutes les missions du Chapitre 6"
+    },
+    "chapter_7": {
+      "name": "Sentinelle de sécurité",
+      "description": "Terminez toutes les missions du Chapitre 7"
+    }
+  },
+  "shop": {
+    "title": "Boutique",
+    "subtitle": "Dépensez votre Or en avatars, boosts et badges",
+    "ariaCategories": "Filtres de catégories de la boutique",
+    "categories": {
+      "all": "Tous",
+      "avatars": "Avatars",
+      "boosts": "Boosts",
+      "badges": "Badges"
+    },
+    "items": {
+      "avatarPack1": "Pack d'avatars 1",
+      "avatarPack1Desc": "Débloquez 5 nouvelles options d'avatar",
+      "avatarPack2": "Pack d'avatars 2",
+      "avatarPack2Desc": "Débloquez 5 options d'avatar exclusives",
+      "xpBoost": "Boost d'XP",
+      "xpBoostDesc": "Doublez l'XP de votre prochaine mission",
+      "streakFreeze": "Gel de série",
+      "streakFreezeDesc": "Protégez votre série pour un jour manqué",
+      "hintToken": "Jeton d'indice",
+      "hintTokenDesc": "Révélez un indice sans pénalité d'XP",
+      "premiumBadge": "Badge premium",
+      "premiumBadgeDesc": "Badge premium exclusif pour votre profil"
+    },
+    "buy": "Acheter",
+    "purchased": "Acheté",
+    "alreadyPurchased": "Vous possédez déjà cet article",
+    "insufficientFunds": "Pas assez d'Or pour acheter cet article",
+    "purchaseSuccess": "{{item}} acheté avec succès !",
+    "empty": "Aucun article trouvé dans cette catégorie",
+    "ariaPurchase": "Acheter {{item}} pour {{price}} Or",
+    "ariaPurchased": "{{item}} - Déjà acheté"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Bienvenue dans Soroban Quest !",
+      "body": "Lancez-vous dans une aventure ludique pour maîtriser le développement de contrats intelligents Soroban. Terminez des missions, gagnez de l'XP et de l'Or, et débloquez des succès."
+    },
+    "step2": {
+      "title": "Votre centre de progression",
+      "body": "La barre de navigation affiche votre niveau, votre XP, votre solde d'Or et votre profil. Utilisez-la pour naviguer entre les Missions, les Campagnes, le Profil, le Journal et plus encore."
+    },
+    "step3": {
+      "title": "Carte des missions et quêtes",
+      "body": "La carte des missions présente toutes les quêtes organisées par chapitre. Chaque mission propose un défi de codage Soroban avec une histoire, des indices et une validation automatisée."
+    },
+    "step4": {
+      "title": "Éditeur de code et validation",
+      "body": "Écrivez du code Rust Soroban dans l'éditeur Monaco intégré. Lancez des tests pour vérifier votre solution par rapport aux motifs de validation. Aucun serveur de compilation requis !"
+    },
+    "step5": {
+      "title": "Progression RPG",
+      "body": "Gagnez de l'XP et de l'Or pour chaque mission terminée. Montez de niveau pour débloquer de nouveaux rangs, chapitres et badges. Dépensez votre Or dans la Boutique pour des objets cosmétiques et des boosts."
+    },
+    "dismiss": "Compris !",
+    "next": "Suivant",
+    "prev": "Retour",
+    "skip": "Passer le tutoriel"
+  }
+}

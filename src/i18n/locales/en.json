@@ -119,8 +119,7 @@
       "heading": "Platform",
       "home": "Home",
       "missions": "Missions",
-      "profile": "Profile",
-      "glossary": "Glossary"
+      "profile": "Profile"
     },
     "resources": {
       "heading": "Resources",
@@ -167,6 +166,11 @@
   "profile": {
     "edit": "✏️ Edit Profile",
     "viewJournal": "📖 View Journal",
+    "aria": {
+      "selectAvatar": "Select avatar {{avatar}}",
+      "completedListing": "Completed missions list",
+      "completedEntry": "{{title}}, earned {{xp}} XP"
+    },
     "editPanel": {
       "title": "Edit Profile",
       "nameLabel": "Adventurer name",
@@ -319,6 +323,7 @@
     "chapterComplete": "✓ Chapter Complete!",
     "back": "← Back to Campaigns",
     "completeOf": "{{completed}}/{{total}} Complete",
+    "statusLabel": "Status:",
     "lore": {
       "iconLabel": "Chapter lore scroll",
       "modalTitle": "Chapter Introduction",
@@ -343,7 +348,9 @@
       "chapterMission": "Chapter {{chapter}} • Mission {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completed",
-      "locked": "🔒 Locked"
+      "locked": "🔒 Locked",
+      "difficultyLabel": "Difficulty:",
+      "stateLabel": "State:"
     },
     "allCompleted": {
       "title": "All Missions Complete!",
@@ -364,8 +371,10 @@
       "story": "Story",
       "editor": "Editor",
       "tests": "Tests",
-      "replay": "📹 Replay"
+      "replay": "📹 Replay",
+      "ariaLabel": "Mission section tabs"
     },
+    "difficultyLabel": "Difficulty:",
     "notFound": {
       "title": "Mission Not Found",
       "body": "The mission \"{{id}}\" doesn't exist.",
@@ -377,13 +386,21 @@
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
       "running": "Running…",
+      "compile": "⚙️ Compile & Run",
+      "compiling": "Compiling…",
       "themeLabel": "Editor theme"
     },
     "terminal": {
       "title": "Test Output",
       "placeholder": "Click \"Run Tests\" to validate your code…",
       "runningChecks": "🔍 Running validation checks…",
-      "alreadyCompleted": "🏅 Already completed — no additional XP awarded."
+      "alreadyCompleted": "🏅 Already completed — no additional XP awarded.",
+      "compiling": "⚙️ Compiling contract…",
+      "compileOk": "✅ Compilation succeeded in {{ms}}ms",
+      "compileFailed": "❌ Compilation failed ({{errors}} error(s))",
+      "compileFallback": "ℹ️ Using the in-browser analyzer (real WASM toolchain not loaded).",
+      "compileEngineWasm": "🦀 Compiled with the Soroban WASM toolchain.",
+      "compileError": "❌ Compiler error: {{message}}"
     },
     "status": {
       "checking": "Checking…",
@@ -409,7 +426,8 @@
       "badgeEarnedOne": "🏅 New badge earned!",
       "badgeEarnedMany": "🏅 New badges earned!",
       "next": "Next Mission →",
-      "map": "Mission Map"
+      "map": "Mission Map",
+      "iconLabel": "Trophy icon — mission complete"
     },
     "replay": {
       "header": "📹 Watch Your Solution",

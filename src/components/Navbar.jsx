@@ -180,6 +180,8 @@ export default function Navbar() {
         <div
           className={`mobile-menu ${isOpen ? "open" : ""}`}
           aria-label={t("navbar.ariaMobile")}
+          aria-hidden={!isOpen}
+          inert={!isOpen ? "" : undefined}
         >
           <Link to="/" onClick={() => setIsOpen(false)}>
             {t("navbar.home")}
