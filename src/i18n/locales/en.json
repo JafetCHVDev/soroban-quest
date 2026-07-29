@@ -26,6 +26,7 @@
   "navbar": {
     "home": "Home",
     "campaigns": "Campaigns",
+    "quests": "Quests",
     "missions": "Missions",
     "profile": "Profile",
     "journal": "Journal",
@@ -39,6 +40,16 @@
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu",
     "replayTutorial": "Replay Tutorial"
+  },
+  "quests": {
+    "title": "Quests Catalog",
+    "searchPlaceholder": "Search missions by name or description...",
+    "allCampaigns": "All Campaigns",
+    "allDifficulties": "All Difficulties",
+    "allStatuses": "All Statuses",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "noMissions": "No missions found matching your criteria."
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",

@@ -20,13 +20,14 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Journal = lazy(() => import("./pages/Journal"));
 const Campaigns = lazy(() => import("./pages/Campaigns"));
 const SkillTree = lazy(() => import("./pages/SkillTree"));
+const Quests = lazy(() => import("./pages/Quests"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const Achievements = lazy(() => import("./pages/Achievements"));
 const Shop = lazy(() => import("./pages/Shop"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
-  // Global React Router navigation scroll management
+  // Global React Router navigation scroll management hook
   useScrollToTop();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/missions" element={<MissionMap />} />
                   <Route path="/campaigns" element={<Campaigns />} />
+                  <Route path="/quests" element={<Quests />} /> {/* Added Quests route */}
                   <Route path="/mission/:missionId" element={<MissionDetail />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/journal" element={<Journal />} />
