@@ -113,17 +113,23 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 3: Hint Usage Flow
   // ═══════════════════════════════════════════════════════════════════════════════
-  test('Scenario 3: Should display hints and allow solution with hint guidance', async ({ page }) => {
+  test('Scenario 3: Should display hints and allow solution with hint guidance', async ({
+    page,
+  }) => {
     await page.goto('/#/mission/hello-soroban');
     await page.waitForLoadState('networkidle');
 
     // Look for "Show Hints" button
-    const showHintsBtn = page.locator('button:has-text("Hints"), button:has-text("Show Hints"), [class*="hint"]').first();
+    const showHintsBtn = page
+      .locator('button:has-text("Hints"), button:has-text("Show Hints"), [class*="hint"]')
+      .first();
     if (await showHintsBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
       await showHintsBtn.click();
 
       // Assert hints are displayed
-      const hintsContent = page.locator('[class*="hint"], [class*="Hint"], [role="dialog"]').first();
+      const hintsContent = page
+        .locator('[class*="hint"], [class*="Hint"], [role="dialog"]')
+        .first();
       await expect(hintsContent).toBeVisible({ timeout: 5000 });
     }
 
@@ -142,26 +148,35 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     const passedTests = page.locator('[class*="pass"], [class*="success"]').first();
     await expect(passedTests).toBeVisible({ timeout: 10000 });
   });
-});
 
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 4: Solution Reveal Flow
   // ═══════════════════════════════════════════════════════════════════════════════
-  test('Scenario 4: Should reveal solution with confirmation and penalty warning', async ({ page }) => {
+  test('Scenario 4: Should reveal solution with confirmation and penalty warning', async ({
+    page,
+  }) => {
     await page.goto('/#/mission/hello-soroban');
     await page.waitForLoadState('networkidle');
 
     // Look for "Show Solution" button
-    const showSolutionBtn = page.locator('button:has-text("Solution"), button:has-text("Show Solution"), [class*="solution"]').first();
+    const showSolutionBtn = page
+      .locator('button:has-text("Solution"), button:has-text("Show Solution"), [class*="solution"]')
+      .first();
     if (await showSolutionBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
       await showSolutionBtn.click();
 
       // Assert confirmation dialog appears
-      const confirmDialog = page.locator('[role="dialog"], .modal, [class*="confirmation"]').first();
+      const confirmDialog = page
+        .locator('[role="dialog"], .modal, [class*="confirmation"]')
+        .first();
       await expect(confirmDialog).toBeVisible({ timeout: 5000 });
 
       // Look for confirmation button (Confirm, Yes, Reveal, etc.)
-      const confirmBtn = page.locator('button:has-text("Confirm"), button:has-text("Yes"), button:has-text("Reveal"), button:has-text("OK")').first();
+      const confirmBtn = page
+        .locator(
+          'button:has-text("Confirm"), button:has-text("Yes"), button:has-text("Reveal"), button:has-text("OK")',
+        )
+        .first();
       if (await confirmBtn.isVisible()) {
         await confirmBtn.click();
 
@@ -176,7 +191,9 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 5: Campaign Progression Flow
   // ═══════════════════════════════════════════════════════════════════════════════
-  test('Scenario 5: Should unlock next campaign after completing all missions', async ({ page }) => {
+  test('Scenario 5: Should unlock next campaign after completing all missions', async ({
+    page,
+  }) => {
     // Pre-complete all missions in Chapter 1
     await page.goto('/');
     await page.evaluate(() => {
@@ -297,7 +314,12 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
 
     // If profile switching UI exists, verify it works
     const profileCards = page.locator('[class*="profile"], [data-testid*="profile"]');
-    if (await profileCards.first().isVisible({ timeout: 5000 }).catch(() => false)) {
+    if (
+      await profileCards
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false)
+    ) {
       // Profile UI exists
       expect(profileCards).toBeDefined();
     }
@@ -333,7 +355,9 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // Look for export button
-    const exportBtn = page.locator('button:has-text("Export"), button:has-text("Download")').first();
+    const exportBtn = page
+      .locator('button:has-text("Export"), button:has-text("Download")')
+      .first();
     if (await exportBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Set up download handler
       const downloadPromise = page.waitForEvent('download');
