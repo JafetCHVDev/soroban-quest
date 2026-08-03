@@ -18,13 +18,14 @@ const BASE_TITLE = 'Soroban Quest';
  */
 export default function useDocumentTitle(title) {
     useEffect(() => {
+        const previousTitle = document.title;
         if (!title) {
             document.title = BASE_TITLE;
-            return;
+        } else {
+            document.title = `${title} | ${BASE_TITLE}`;
         }
-        const fullTitle = `${title} | ${BASE_TITLE}`;
-        if (document.title !== fullTitle) {
-            document.title = fullTitle;
-        }
+        return () => {
+            document.title = previousTitle;
+        };
     }, [title]);
 }
