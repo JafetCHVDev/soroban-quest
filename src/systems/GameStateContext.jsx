@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import {
   loadProgress,
   saveProgress,
@@ -11,6 +11,8 @@ import {
   setActiveProfileId,
   MAX_PROFILES
 } from "./storage";
+import { authService } from "./authService";
+import { cloudSyncService, scheduleCloudSync } from "./cloudSync";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import { useTranslation } from "../i18n/useTranslation";
 
@@ -25,6 +27,13 @@ export const GameStateProvider = ({ children }) => {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [resetConfirmResolve, setResetConfirmResolve] = useState(null);
 
+  useEffect(() => {
+    authService.initialize();
+    if (authService.isAuthenticated()) {
+      cloudSyncService.syncFromCloud();
+    }
+  }, []);
+
   const refreshActiveState = useCallback(() => {
     setProgressState(loadProgress());
     setProfileState(loadProfile());
@@ -36,17 +45,20 @@ export const GameStateProvider = ({ children }) => {
     saveProgress(newProgress);
     setProgressState(newProgress);
     setProfiles(loadProfiles());
+    scheduleCloudSync();
   }, []);
 
   const updateProfile = useCallback((newProfile) => {
     saveProfile(newProfile);
     setProfileState(newProfile);
     setProfiles(loadProfiles());
+    scheduleCloudSync();
   }, []);
 
   const switchProfile = useCallback((profileId) => {
     setActiveProfileId(profileId);
     refreshActiveState();
+    scheduleCloudSync();
   }, [refreshActiveState]);
 
   const createProfile = useCallback((profileData) => {
@@ -56,6 +68,7 @@ export const GameStateProvider = ({ children }) => {
       setActiveProfileId(nextProfile.id);
     }
     refreshActiveState();
+    scheduleCloudSync();
     return nextProfile;
   }, [refreshActiveState]);
 
@@ -71,6 +84,7 @@ export const GameStateProvider = ({ children }) => {
     setProgressState(defaultState);
     setProfiles(loadProfiles());
     setIsResetConfirmOpen(false);
+    scheduleCloudSync();
 
     if (resetConfirmResolve) {
       resetConfirmResolve(true);

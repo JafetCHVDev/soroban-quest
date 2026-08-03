@@ -23,8 +23,36 @@
     "unlocked": "Unlocked",
     "skipToContent": "Skip to main content"
   },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "subtitle": "Master Soroban Quest with quick key combinations",
+    "sections": {
+      "navigation": "Navigation",
+      "editor": "Code Editor",
+      "general": "General"
+    },
+    "nav": {
+      "home": "Go to Home",
+      "campaigns": "Go to Campaigns",
+      "missions": "Go to Missions",
+      "profile": "Go to Profile",
+      "journal": "Go to Journal"
+    },
+    "editor": {
+      "runTests": "Run Code / Tests",
+      "resetTemplate": "Reset Template",
+      "showSolution": "Show Solution",
+      "toggleHints": "Toggle Hints",
+      "toggleTheme": "Toggle Editor Theme"
+    },
+    "general": {
+      "openModal": "Open Shortcuts Modal",
+      "closeModal": "Close Any Modal"
+    }
+  },
   "navbar": {
     "home": "Home",
+    "quests": "Quests",
     "campaigns": "Campaigns",
     "missions": "Missions",
     "profile": "Profile",
@@ -39,6 +67,21 @@
     "openMenu": "Open navigation menu",
     "closeMenu": "Close navigation menu",
     "replayTutorial": "Replay Tutorial"
+  },
+  "quests": {
+    "title": "Quest Catalog",
+    "subtitle": "Browse, search, and filter all available missions.",
+    "searchPlaceholder": "Search missions...",
+    "allCampaigns": "All Campaigns",
+    "allDifficulties": "All Difficulties",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "allStatus": "All Status",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "done": "Done",
+    "noResults": "No missions found matching your criteria."
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",

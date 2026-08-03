@@ -29,6 +29,11 @@
   margin-bottom: var(--space-lg);
 }
 
+.mission-progress-legend > div {
+  display: flex;
+  flex-direction: column;
+}
+
 .mission-progress-title {
   margin: 0;
   font-family: var(--font-display);
@@ -79,19 +84,19 @@
   letter-spacing: 0.01em;
 }
 
-.mission-progress-value[data-variant="green"] {
+.mission-progress-value[data-variant='green'] {
   color: #34d399;
 }
 
-.mission-progress-value[data-variant="cyan"] {
+.mission-progress-value[data-variant='cyan'] {
   color: #22d3ee;
 }
 
-.mission-progress-value[data-variant="gold"] {
+.mission-progress-value[data-variant='gold'] {
   color: var(--gold);
 }
 
-.mission-progress-value[data-variant="purple"] {
+.mission-progress-value[data-variant='purple'] {
   color: var(--purple);
 }
 
@@ -145,4 +150,3 @@
     font-size: 1.25rem;
   }
 }
-

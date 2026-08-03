@@ -23,8 +23,36 @@
     "unlocked": "Desbloqueada",
     "skipToContent": "Saltar al contenido principal"
   },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "subtitle": "Domina Soroban Quest con combinaciones rápidas",
+    "sections": {
+      "navigation": "Navegación",
+      "editor": "Editor de código",
+      "general": "General"
+    },
+    "nav": {
+      "home": "Ir a Inicio",
+      "campaigns": "Ir a Campañas",
+      "missions": "Ir a Misiones",
+      "profile": "Ir a Perfil",
+      "journal": "Ir a Diario"
+    },
+    "editor": {
+      "runTests": "Ejecutar código / Pruebas",
+      "resetTemplate": "Restablecer plantilla",
+      "showSolution": "Mostrar solución",
+      "toggleHints": "Alternar pistas",
+      "toggleTheme": "Alternar tema del editor"
+    },
+    "general": {
+      "openModal": "Abrir atajos de teclado",
+      "closeModal": "Cerrar cualquier ventana"
+    }
+  },
   "navbar": {
     "home": "Inicio",
+    "quests": "Búsquedas",
     "campaigns": "Campañas",
     "missions": "Misiones",
     "profile": "Perfil",
@@ -39,6 +67,21 @@
     "openMenu": "Abrir menú de navegación",
     "closeMenu": "Cerrar menú de navegación",
     "replayTutorial": "Repetir tutorial"
+  },
+  "quests": {
+    "title": "Catálogo de Misiones",
+    "subtitle": "Explora, busca y filtra todas las misiones disponibles.",
+    "searchPlaceholder": "Buscar misiones...",
+    "allCampaigns": "Todas las Campañas",
+    "allDifficulties": "Todas las Dificultades",
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado",
+    "allStatus": "Todos los Estados",
+    "completed": "Completadas",
+    "incomplete": "Incompletas",
+    "done": "Hecho",
+    "noResults": "No se encontraron misiones que coincidan con tus criterios."
   },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
