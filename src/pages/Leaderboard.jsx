@@ -14,6 +14,7 @@ export default function Leaderboard() {
   const rankedProfiles = [...profiles].sort((a, b) => {
     if (b.progress.xp !== a.progress.xp) return b.progress.xp - a.progress.xp;
     if (b.progress.level !== a.progress.level) return b.progress.level - a.progress.level;
+    if ((b.progress.duelWins || 0) !== (a.progress.duelWins || 0)) return (b.progress.duelWins || 0) - (a.progress.duelWins || 0);
     return b.progress.completedMissions.length - a.progress.completedMissions.length;
   });
 
@@ -72,6 +73,7 @@ export default function Leaderboard() {
                 <th scope="col">{t("leaderboard.columns.level")}</th>
                 <th scope="col">{t("leaderboard.columns.missions")}</th>
                 <th scope="col">{t("leaderboard.columns.badges")}</th>
+                <th scope="col">Duel wins</th>
                 <th scope="col">{t("leaderboard.columns.status")}</th>
               </tr>
             </thead>
@@ -93,6 +95,7 @@ export default function Leaderboard() {
                     <td>{slot.progress.level}</td>
                     <td>{slot.progress.completedMissions.length}</td>
                     <td>{slot.progress.badges.length}</td>
+                    <td>{slot.progress.duelWins || 0}</td>
                     <td>
                       {isActive ? (
                         <span className="leaderboard-status active">

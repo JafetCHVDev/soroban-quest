@@ -107,6 +107,7 @@ export default function Navbar({ onOpenShortcuts }) {
               {t('navbar.leaderboard')}
             </Link>
           </li>
+          <li><Link to="/duel" className={isActive('/duel')}>Speed Duel</Link></li>
           <li>
             <Link to="/achievements" className={isActive('/achievements')}>
               {t('navbar.achievements')}
@@ -214,6 +215,7 @@ export default function Navbar({ onOpenShortcuts }) {
           <Link to="/leaderboard" onClick={() => setIsOpen(false)}>
             {t('navbar.leaderboard')}
           </Link>
+          <Link to="/duel" onClick={() => setIsOpen(false)}>Speed Duel</Link>
           <Link to="/achievements" onClick={() => setIsOpen(false)}>
             {t('navbar.achievements')}
           </Link>
