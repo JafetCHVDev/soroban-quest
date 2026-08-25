@@ -1,7 +1,5 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -28,6 +26,7 @@ const SkillTree = lazy(() => import('./pages/SkillTree'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const Achievements = lazy(() => import('./pages/Achievements'));
 const Shop = lazy(() => import('./pages/Shop'));
+const Duel = lazy(() => import('./pages/Duel'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function AppContent() {
@@ -90,6 +89,7 @@ function AppContent() {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/duel" element={<Duel />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

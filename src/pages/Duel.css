@@ -1,0 +1,34 @@
+.duel-page { max-width: 960px; margin: 0 auto; padding: var(--space-2xl) var(--space-xl); }
+.duel-header { margin-bottom: var(--space-xl); }
+.duel-header h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 7vw, 4.5rem); margin: .35rem 0; }
+.duel-header p:last-child { color: var(--text-secondary); max-width: 640px; }
+.duel-kicker { display: flex; align-items: center; gap: .45rem; color: var(--gold); font-weight: 800; text-transform: uppercase; font-size: .78rem; letter-spacing: .08em; }
+.duel-lobby, .duel-arena { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-xl); }
+.duel-lobby { max-width: 560px; }
+.duel-lobby-icon { color: var(--cyan); margin-bottom: var(--space-md); }
+.duel-lobby h2 { margin: 0 0 var(--space-xl); font-family: var(--font-display); }
+.duel-lobby label { display: block; color: var(--text-secondary); font-size: .85rem; margin: var(--space-md) 0 var(--space-xs); }
+.duel-lobby label span { color: var(--text-muted); }
+.duel-lobby select, .duel-lobby input { width: 100%; padding: .8rem .9rem; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); }
+.duel-start { width: 100%; margin-top: var(--space-xl); }
+.duel-lobby-note { color: var(--text-muted); font-size: .85rem; margin: var(--space-lg) 0 0; }
+.duel-room { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: var(--space-md); color: var(--text-secondary); }
+.duel-room strong { color: var(--text-primary); letter-spacing: .08em; }
+.icon-button { display: grid; place-items: center; color: var(--text-secondary); background: transparent; border: 0; cursor: pointer; }
+.duel-waiting, .duel-countdown, .duel-result { min-height: 320px; display: grid; place-items: center; align-content: center; text-align: center; gap: .6rem; }
+.duel-waiting h2, .duel-result h2 { margin: 0; font-family: var(--font-display); }
+.duel-waiting p, .duel-result p { color: var(--text-secondary); }
+.duel-countdown strong { display: block; color: var(--cyan); font: 800 7rem/1 var(--font-display); }
+.duel-race { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--space-xl); align-items: center; padding: var(--space-2xl) 0; }
+.duel-player { text-align: center; }
+.duel-avatar { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto var(--space-md); border-radius: 50%; background: var(--cyan-dim); font-size: 2rem; }
+.duel-player h2 { margin: 0 0 var(--space-lg); font-family: var(--font-display); }
+.duel-progress { text-align: left; margin-bottom: var(--space-lg); }
+.duel-progress span { display: block; color: var(--text-muted); font-size: .8rem; }
+.duel-progress strong { display: block; margin: .25rem 0 .5rem; }
+.duel-progress > div { height: 8px; overflow: hidden; background: var(--bg-tertiary); border-radius: 99px; }
+.duel-progress i { display: block; height: 100%; background: var(--cyan); transition: width .3s ease; }
+.duel-vs { color: var(--gold); font: 800 1.4rem var(--font-display); }
+.duel-forfeit { display: flex; align-items: center; gap: .4rem; margin: auto; color: var(--text-muted); background: transparent; border: 0; cursor: pointer; }
+.duel-result-icon { font-size: 3rem; }
+@media (max-width: 680px) { .duel-page { padding: var(--space-xl) var(--space-md); } .duel-race { grid-template-columns: 1fr; gap: var(--space-md); } .duel-vs { text-align: center; } }

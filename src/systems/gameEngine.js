@@ -159,6 +159,8 @@ function getDefaultState() {
     purchasedItems: [],
     xpBoostActive: false,
     streakFreezeUsed: false,
+    duelWins: 0,
+    duelLosses: 0,
   };
 }
 
