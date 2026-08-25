@@ -103,6 +103,78 @@ Complète le modèle de code pour passer toutes les vérifications. Les Gardiens
                     'La ligne de retour complète : `vec![&env, symbol_short!("Hello"), to]`',
                 ],
             },
+            ko: {
+                title: '첫 번째 컨트랙트',
+                story: `# 🌌 각성
+
+**스텔라 시타델**의 문 앞에 서 있습니다. 알려진 우주의 가장자리를 도는 찬란한 요새입니다. 소로반의 수호자들이 당신의 도착을 감지했습니다.
+
+*"또 다른 탐구자군요,"* 고대 수호자가 속삭입니다. *"당신의 가치를 증명하려면, 첫 번째 스마트 컨트랙트를 만들어야 합니다."*
+
+## 당신의 미션
+
+첫 번째 소로반 스마트 컨트랙트를 만드세요 — 이름을 받아 인사를 반환하는 \`hello\` 함수가 있는 간단한 컨트랙트입니다.
+
+## 배울 내용
+
+- \`#[contract]\`와 \`#[contractimpl]\` 속성
+- \`Env\` 타입 — 블록체인으로의 진입점
+- 문자열형 값을 위한 \`Symbol\` 타입
+- \`Vec<Symbol>\`를 반환하는 방법
+
+## 핵심 개념
+
+\`\`\`rust
+#[contract]          // 구조체를 컨트랙트로 표시
+#[contractimpl]      // 컨트랙트 메소드를 포함
+Env                  // 실행 환경
+Symbol               // 작고 효율적인 문자열 타입
+\`\`\`
+
+모든 검사를 통과하도록 코드 템플릿을 완성하세요. 수호자들이 당신의 첫 번째 컨트랙트를 기다립니다! ⚔️`,
+                learningGoal: 'hello 함수가 있는 첫 번째 소로반 스마트 컨트랙트를 만드세요',
+                hints: [
+                    '`pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`로 시작하세요',
+                    '첫 번째 인수로 `&env`와 함께 `vec![]` 매크로를 사용하세요',
+                    '완전한 반환 라인: `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
+            pt: {
+                title: 'O Primeiro Contrato',
+                story: `# 🌌 O Despertar
+
+Você está diante dos portões da **Cidadela Estelar**, uma fortaleza reluzente orbitando a borda do espaço conhecido. Os Guardiões de Soroban perceberam sua chegada.
+
+*"Mais um buscador,"* sussurra o Guardião Ancião. *"Para provar seu valor, você deve forjar seu primeiro contrato inteligente."*
+
+## Sua Missão
+
+Crie seu primeiro contrato inteligente Soroban — um contrato simples com uma função \`hello\` que recebe um nome e retorna uma saudação.
+
+## O Que Você Aprenderá
+
+- Os atributos \`#[contract]\` e \`#[contractimpl]\`
+- O tipo \`Env\` — sua porta de entrada para a blockchain
+- O tipo \`Symbol\` para valores do tipo string
+- Como retornar um \`Vec<Symbol>\`
+
+## Conceitos-Chave
+
+\`\`\`rust
+#[contract]          // Marca sua struct como um contrato
+#[contractimpl]      // Contém os métodos do contrato
+Env                  // O ambiente de execução
+Symbol               // Um tipo de string pequeno e eficiente
+\`\`\`
+
+Complete o modelo de código para passar em todas as verificações. Os Guardiões aguardam seu primeiro contrato! ⚔️`,
+                learningGoal: 'Crie seu primeiro contrato inteligente Soroban com uma função hello',
+                hints: [
+                    'Comece com `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
+                    'Use a macro `vec![]` com `&env` como primeiro argumento',
+                    'A linha de retorno completa: `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};

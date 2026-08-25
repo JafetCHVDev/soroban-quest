@@ -62,6 +62,36 @@ Complétez ces contrats fondamentaux pour débloquer le **Chapitre 2 : Chambre d
 
 **0/2 missions** • **Niveau 1 requis**`,
       },
+      pt: {
+        title: 'Capítulo 1: O Despertar',
+        description: 'Domine seus primeiros contratos Soroban. Forje seu caminho como um Guardião Estelar.',
+        lore: `# 🌌 Capítulo 1: O Despertar
+
+Você está diante dos portões da **Cidadela Estelar**, orbitando a borda do espaço conhecido. Os antigos **Guardiões de Soroban** perceberam sua chegada.
+
+*"Mais um buscador,"* sussurra o Guardião Ancião. *"A blockchain chama aqueles com o código para responder."*
+
+## Seu Destino Aguarda
+
+Complete estes contratos fundamentais para desbloquear o **Capítulo 2: Cofre da Memória**.
+
+**0/2 missões** • **Nível 1 necessário**`,
+      },
+      ko: {
+        title: '챕터 1: 각성',
+        description: '첫 번째 소로반 컨트랙트를 마스터하세요. 스텔라 수호자로서의 길을 개척하세요.',
+        lore: `# 🌌 챕터 1: 각성
+
+알려진 우주의 가장자리를 도는 **스텔라 시타델**의 문 앞에 서 있습니다. 고대 **소로반의 수호자들**이 당신의 도착을 감지했습니다.
+
+*"또 다른 탐구자군요,"* 고대 수호자가 속삭입니다. *"블록체인이 응답할 코드를 가진 자들을 부릅니다."*
+
+## 당신의 운명이 기다립니다
+
+이러한 기초 컨트랙트를 완료하여 **챕터 2: 기억의 금고**를 잠금 해제하세요.
+
+**0/2 미션** • **레벨 1 필요**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #8b5cf6 50%, #f59e0b 100%)',
     chapterNumber: 1,
@@ -116,6 +146,36 @@ La **Tour des Signaux** s'estompe derrière vous. Vous descendez dans la **Chamb
 Maîtrisez la gestion de l'état pour accéder au **Chapitre 3 : Forge de Jetons**.
 
 **0/2 missions** • **Niveau 3 requis**`,
+      },
+      pt: {
+        title: 'Capítulo 2: Cofre da Memória',
+        description: 'Desbloqueie armazenamento persistente e controle de acesso. A memória define o verdadeiro poder.',
+        lore: `# 🔐 Capítulo 2: Cofre da Memória
+
+A **Torre de Sinal** desaparece atrás de você. Você desce para o **Cofre da Memória**, onde a sabedoria ancestral persiste através de eras.
+
+*"Um contrato sem memória é um pensamento passageiro,"* murmura o Guardião do Cofre. *"Para perdurar, você deve armazenar e proteger."*
+
+## A Segunda Prova
+
+Domine o gerenciamento de estado para acessar o **Capítulo 3: Forja de Tokens**.
+
+**0/2 missões** • **Nível 3 necessário**`,
+      },
+      ko: {
+        title: '챕터 2: 기억의 금고',
+        description: '영구 저장소와 접근 제어를 잠금 해제하세요. 기억이 진정한 힘을 정의합니다.',
+        lore: `# 🔐 챕터 2: 기억의 금고
+
+**신호 탑**이 뒤로 사라집니다. 고대의 지혜가 영겁을 통해 지속되는 **기억의 금고**로 내려갑니다.
+
+*"기억이 없는 컨트랙트는 순간적인 생각일 뿐입니다,"* 금고 지킴이가 중얼거립니다. *"지속하려면, 저장하고 보호해야 합니다."*
+
+## 두 번째 시련
+
+상태 관리를 마스터하여 **챕터 3: 토큰 단조장**에 접근하세요.
+
+**0/2 미션** • **레벨 3 필요**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #8b5cf6 0%, #f59e0b 50%, #ef4444 100%)',
@@ -172,6 +232,36 @@ Complétez la Forge de Jetons pour obtenir le statut de **Gardien Légendaire**.
 
 **0/3 missions** • **Niveau 5 requis**`,
       },
+      pt: {
+        title: 'Capítulo 3: Forja de Tokens',
+        description: 'Cunhe tokens, domine bloqueios temporais, governe com multi-assinatura. Torne-se o Guardião Mestre.',
+        lore: `# ⚒️ Capítulo 3: Forja de Tokens
+
+O **Portal do Tempo** vibra com poder. Você entra na **Forja de Tokens** — coração da economia Stellar.
+
+*"A verdadeira maestria cria valor que perdura,"* declara o Mestre Forjador. *"Tokens, tempo, confiança — forje todos eles."*
+
+## Desafio Final
+
+Complete a Forja de Tokens para conquistar o status de **Guardião Lendário**.
+
+**0/3 missões** • **Nível 5 necessário**`,
+      },
+      ko: {
+        title: '챕터 3: 토큰 단조장',
+        description: '토큰을 발행하고, 시간 잠금을 마스터하며, 다중 서명으로 통치하세요. 마스터 수호자가 되세요.',
+        lore: `# ⚒️ 챕터 3: 토큰 단조장
+
+**크로노 게이트**가 힘으로 윙윙거립니다. **토큰 단조장** — 스텔라 경제의 심장부로 들어갑니다.
+
+*"진정한 숙련은 지속되는 가치를 창조합니다,"* 단조장의 주인이 선언합니다. *"토큰, 시간, 신뢰 — 모든 것을 단조하세요."*
+
+## 최종 도전
+
+토큰 단조장을 완료하여 **전설의 수호자** 지위를 획득하세요.
+
+**0/3 미션** • **레벨 5 필요**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #06d6a0 100%)',
     chapterNumber: 3,
@@ -226,6 +316,36 @@ Au-delà de la Salle des Pactes, vous découvrez la **Forteresse de Données** �
 Construisez des contrats axés sur les données pour débloquer le **Chapitre 5 : Protocoles Avancés**.
 
 **0/3 missions** • **Niveau 7 requis**`,
+      },
+      pt: {
+        title: 'Capítulo 4: Fortaleza de Dados',
+        description: 'Domine o gerenciamento de estado complexo com Maps, eventos e aprovações delegadas.',
+        lore: `# 🏦 Capítulo 4: Fortaleza de Dados
+
+Além do Salão dos Pactos, você descobre a **Fortaleza de Dados** — um vasto repositório onde estados sofisticados são projetados.
+
+*"Os dados são a base de todos os grandes contratos,"* declara o Arquiteto. *"Aprenda a gerenciar estados multiusuário, emitir eventos e delegar autoridade."*
+
+## A Quarta Prova
+
+Construa contratos orientados a dados para desbloquear o **Capítulo 5: Protocolos Avançados**.
+
+**0/3 missões** • **Nível 7 necessário**`,
+      },
+      ko: {
+        title: '챕터 4: 데이터 요새',
+        description: 'Map, 이벤트, 위임된 승인으로 복잡한 상태 관리를 마스터하세요.',
+        lore: `# 🏦 챕터 4: 데이터 요새
+
+협정의 홀 너머에서 **데이터 요새**를 발견합니다 — 정교한 상태가 설계되는 거대한 저장소입니다.
+
+*"데이터는 모든 위대한 컨트랙트의 기초입니다,"* 건축가가 선언합니다. *"다중 사용자 상태를 관리하고, 이벤트를 방출하며, 권한을 위임하는 것을 배우세요."*
+
+## 네 번째 시련
+
+데이터 기반 컨트랙트를 구축하여 **챕터 5: 고급 프로토콜**을 잠금 해제하세요.
+
+**0/3 미션** • **레벨 7 필요**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
@@ -282,6 +402,36 @@ Maîtrisez les modèles de protocoles avancés pour atteindre le **Chapitre 6 : 
 
 **0/3 missions** • **Niveau 9 requis**`,
       },
+      pt: {
+        title: 'Capítulo 5: Protocolos Avançados',
+        description: 'Construa protocolos DeFi do mundo real — crowdfunding, escrow e assinaturas.',
+        lore: `# 🔄 Capítulo 5: Protocolos Avançados
+
+A **Arena Crowdforge** vibra com energia. Você entra no reino dos protocolos DeFi do mundo real.
+
+*"Estes são os contratos que movem a nova economia,"* diz o Pioneiro de Protocolos. *"Crowdfunding, escrow, assinaturas — construa todos eles."*
+
+## A Quinta Prova
+
+Domine padrões de protocolos avançados para alcançar o **Capítulo 6: Sistemas de Produção**.
+
+**0/3 missões** • **Nível 9 necessário**`,
+      },
+      ko: {
+        title: '챕터 5: 고급 프로토콜',
+        description: '실제 DeFi 프로토콜을 구축하세요 — 크라우드펀딩, 에스크로, 구독.',
+        lore: `# 🔄 챕터 5: 고급 프로토콜
+
+**크라우드포지 아레나**가 에너지로 북적입니다. 실제 DeFi 프로토콜의 영역에 들어갑니다.
+
+*"이것들이 새로운 경제를 움직이는 컨트랙트들입니다,"* 프로토콜 개척자가 말합니다. *"크라우드펀딩, 에스크로, 구독 — 모든 것을 구축하세요."*
+
+## 다섯 번째 시련
+
+고급 프로토콜 패턴을 마스터하여 **챕터 6: 프로덕션 시스템**에 도달하세요.
+
+**0/3 미션** • **레벨 9 필요**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
     chapterNumber: 5,
@@ -337,6 +487,36 @@ Complétez tous les Systèmes de Production pour gagner le titre d'**Architecte 
 
 **0/4 missions** • **Niveau 12 requis**`,
       },
+      pt: {
+        title: 'Capítulo 6: Sistemas de Produção',
+        description: 'Implante contratos de nível de produção — flash loans, RBAC, oráculos e governança.',
+        lore: `# ⚡ Capítulo 6: Sistemas de Produção
+
+O **Cofre do Relâmpago** crepita com poder. Você alcançou o ápice do desenvolvimento Soroban.
+
+*"Você está entre os melhores engenheiros de contratos do ecossistema Stellar,"* proclama o Grande Ancião. *"Flash loans, segurança baseada em funções, oráculos de preços, governança on-chain — domine os sistemas que definem DeFi."*
+
+## Desafio Final
+
+Complete todos os Sistemas de Produção para conquistar o título de **Arquiteto Estelar**.
+
+**0/4 missões** • **Nível 12 necessário**`,
+      },
+      ko: {
+        title: '챕터 6: 프로덕션 시스템',
+        description: '프로덕션급 컨트랙트를 배포하세요 — 플래시 론, RBAC, 오라클, 거버넌스.',
+        lore: `# ⚡ 챕터 6: 프로덕션 시스템
+
+**번개 금고**가 힘으로 딱딱거립니다. 소로반 개발의 정점에 도달했습니다.
+
+*"당신은 스텔라 생태계의 최고 컨트랙트 엔지니어 중 한 명입니다,"* 대장로가 선언합니다. *"플래시 론, 역할 기반 보안, 가격 오라클, 온체인 거버넌스 — DeFi를 정의하는 시스템들을 마스터하세요."*
+
+## 최종 관문
+
+모든 프로덕션 시스템을 완료하여 **스텔라 건축가** 칭호를 획득하세요.
+
+**0/4 미션** • **레벨 12 필요**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
     chapterNumber: 6,
@@ -391,6 +571,36 @@ La **Forge des Vulnérabilités** repose dans les profondeurs de la Citadelle. I
 Corrigez les vulnérabilités de sécurité pour compléter le défi Sécurité et CTF.
 
 **0/2 missions** • **Niveau 14 requis**`,
+      },
+      pt: {
+        title: 'Capítulo 7: Segurança e CTF',
+        description: 'Cace vulnerabilidades e corrija falhas de segurança em contratos comprometidos.',
+        lore: `# 🛡️ Capítulo 7: Segurança e CTF
+
+A **Forja de Vulnerabilidades** repousa nas profundezas da Cidadela. Aqui, contratos quebrados são restaurados.
+
+*"Um guardião deve conhecer as falhas antes que o inimigo as explore,"* adverte o Sábio da Segurança. *"Reentrância, controle de acesso, overflow — enfrente todos eles."*
+
+## O Desafio de Segurança
+
+Corrija vulnerabilidades de segurança para completar o desafio de Segurança e CTF.
+
+**0/2 missões** • **Nível 14 necessário**`,
+      },
+      ko: {
+        title: '챕터 7: 보안 & CTF',
+        description: '취약점을 추적하고 손상된 컨트랙트의 보안 결함을 수정하세요.',
+        lore: `# 🛡️ 챕터 7: 보안 & CTF
+
+**취약점 단조장**이 시타델 깊은 곳에 있습니다. 여기서 깨진 컨트랙트들이 완전해집니다.
+
+*"수호자는 적이 악용하기 전에 결함을 알아야 합니다,"* 보안 현자가 경고합니다. *"재진입, 접근 제어, 오버플로 — 모든 것과 맞서세요."*
+
+## 보안 관문
+
+보안 취약점을 수정하여 보안 & CTF 관문을 완료하세요.
+
+**0/2 미션** • **레벨 14 필요**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',

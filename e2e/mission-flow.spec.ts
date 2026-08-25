@@ -142,7 +142,6 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     const passedTests = page.locator('[class*="pass"], [class*="success"]').first();
     await expect(passedTests).toBeVisible({ timeout: 10000 });
   });
-});
 
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 4: Solution Reveal Flow
