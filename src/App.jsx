@@ -1,7 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import React, { lazy, Suspense, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -12,6 +10,7 @@ import { GameStateProvider } from './systems/GameStateContext';
 import LoadingScreen from './components/LoadingScreen';
 import { loadProgress, saveProgress } from './systems/storage';
 import { updateStreak } from './systems/gameEngine';
+import { scheduleCloudSync } from './systems/cloudSync';
 import { useKeyboardShortcuts } from './systems/useKeyboardShortcuts';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
 import './systems/Toast.css';
@@ -106,28 +105,6 @@ export default function App() {
       <ToastProvider>
         <GameStateProvider>
           <AppContent />
-          <div className="app">
-            <Navbar />
-            <main className="main-content">
-              <Suspense fallback={<LoadingScreen />}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/missions" element={<MissionMap />} />
-                  <Route path="/quests" element={<Quests />} /> {/* Added /quests route */}
-                  <Route path="/campaigns" element={<Campaigns />} />
-                  <Route path="/mission/:missionId" element={<MissionDetail />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/journal" element={<Journal />} />
-                  <Route path="/skills" element={<SkillTree />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/achievements" element={<Achievements />} />
-                  <Route path="/shop" element={<Shop />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </main>
-            <Footer />
-          </div>
         </GameStateProvider>
       </ToastProvider>
     </ErrorBoundary>
