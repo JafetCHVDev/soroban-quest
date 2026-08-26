@@ -1,59 +1,66 @@
 import { describe, it, expect } from 'vitest';
 import { estimateGas } from '../gasEstimator.js';
 
-describe('Gas Estimator', () => {
-    it('calculates storage operations correctly', () => {
-        const code = `
-            env.storage().persistent().set(&key, &value);
-            let val = env.storage().persistent().get(&key).unwrap_or(0);
-        `;
-        // 1 set (1000) + 1 get (500) = 1500
-        expect(estimateGas(code)).toBe(1500);
+describe('gasEstimator', () => {
+    it('returns 0 for empty or invalid input', () => {
+        expect(estimateGas('')).toBe(0);
+        expect(estimateGas(null)).toBe(0);
     });
 
-    it('penalizes loops', () => {
+    it('estimates cost for storage operations', () => {
         const code = `
-            for item in list {
+            env.storage().persistent().set(&key, &val); // 500
+            env.storage().instance().get(&key); // 400
+            env.storage().temporary().get(&key); // 200
+        `;
+        expect(estimateGas(code)).toBe(1100);
+    });
+
+    it('estimates cost for loops', () => {
+        const code = `
+            for item in vec.iter() { // 200 + 200
                 // do something
             }
-            while x > 0 {
-                x -= 1;
-            }
-            loop {
+            while true { // 200
                 break;
             }
         `;
-        // 3 loops * 200 = 600
         expect(estimateGas(code)).toBe(600);
     });
 
-    it('penalizes clones and allocations', () => {
+    it('estimates cost for cloning', () => {
         const code = `
-            let my_vec = vec![&env, 1, 2, 3];
-            let other_vec = Vec::new(&env);
-            let map = Map::new(&env);
-            let s = String::from_slice(&env, "hello");
-            let cloned = data.clone();
+            let x = data.clone(); // 50
         `;
-        // vec![] (100) + Vec::new (100) + Map::new (100) + String::from_slice (50) + clone (50) = 400
-        expect(estimateGas(code)).toBe(400);
+        expect(estimateGas(code)).toBe(50);
     });
 
-    it('scores inefficient code higher than efficient code (storage)', () => {
+    it('ignores comments', () => {
+        const code = `
+            // env.storage().persistent().set(&key, &val);
+            /* env.storage().instance().get(&key); */
+            let x = 1;
+        `;
+        expect(estimateGas(code)).toBe(0);
+    });
+
+    it('calculates total correctly for a combined scenario', () => {
         const inefficient = `
-            let val1 = env.storage().persistent().get(&key).unwrap_or(0);
-            let val2 = env.storage().persistent().get(&key).unwrap_or(0);
-            env.storage().persistent().set(&key, val1 + val2);
+            let mut result = Vec::new(&env); // 20
+            for i in 0..10 { // 200
+                let val: u32 = env.storage().instance().get(&key).unwrap(); // 400
+                result.push_back(val.clone()); // 50
+            }
         `;
+        expect(estimateGas(inefficient)).toBe(670);
+
         const efficient = `
-            let val = env.storage().persistent().get(&key).unwrap_or(0);
-            env.storage().persistent().set(&key, val * 2);
+            let val: u32 = env.storage().instance().get(&key).unwrap(); // 400
+            let mut result = Vec::new(&env); // 20
+            for i in 0..10 { // 200
+                result.push_back(val);
+            }
         `;
-        const inefficientScore = estimateGas(inefficient); // 2 get (1000) + 1 set (1000) = 2000
-        const efficientScore = estimateGas(efficient);     // 1 get (500) + 1 set (1000) = 1500
-        
-        expect(inefficientScore).toBe(2000);
-        expect(efficientScore).toBe(1500);
-        expect(inefficientScore).toBeGreaterThan(efficientScore);
+        expect(estimateGas(efficient)).toBe(620);
     });
 });

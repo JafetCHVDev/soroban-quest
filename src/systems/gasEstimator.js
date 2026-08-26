@@ -1,51 +1,40 @@
 /* ==========================================
-   Gas Estimator — Heuristic scorer for
-   Soroban/Rust code resource usage
+   Gas Estimator — Static cost heuristic
    ========================================== */
 
 export function estimateGas(code) {
-  let score = 0;
+    if (!code || typeof code !== 'string') return 0;
+    
+    let totalGas = 0;
+    
+    // Remove comments to prevent false positives
+    const cleanCode = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
 
-  // Normalize code for easier matching
-  const normalized = code.replace(/\s+/g, ' ');
+    // 1. Storage Operations
+    const persistentMatches = cleanCode.match(/storage\(\)\s*\.\s*persistent\(\)/g) || [];
+    totalGas += persistentMatches.length * 500;
 
-  // 1. Storage Operations
-  // env.storage().persistent().set(...)
-  const storageSets = (code.match(/storage\(\)\s*\.\s*(persistent|temporary|instance)\(\)\s*\.\s*set/g) || []).length;
-  const storageGets = (code.match(/storage\(\)\s*\.\s*(persistent|temporary|instance)\(\)\s*\.\s*get/g) || []).length;
-  
-  score += storageSets * 1000;
-  score += storageGets * 500;
+    const instanceMatches = cleanCode.match(/storage\(\)\s*\.\s*instance\(\)/g) || [];
+    totalGas += instanceMatches.length * 400;
 
-  // 2. Loops
-  const forLoops = (code.match(/\bfor\s+[^{]+\{/g) || []).length;
-  const whileLoops = (code.match(/\bwhile\s+[^{]+\{/g) || []).length;
-  const rawLoops = (code.match(/\bloop\s*\{/g) || []).length;
+    const temporaryMatches = cleanCode.match(/storage\(\)\s*\.\s*temporary\(\)/g) || [];
+    totalGas += temporaryMatches.length * 200;
 
-  score += (forLoops + whileLoops + rawLoops) * 200;
+    // 2. Loop Constructs
+    const loopMatches = cleanCode.match(/\b(for\s|while\s|loop\s*\{)/g) || [];
+    totalGas += loopMatches.length * 200;
+    
+    // Also catch `.iter()` or `.into_iter()`
+    const iterMatches = cleanCode.match(/\.(iter|into_iter)\(\)/g) || [];
+    totalGas += iterMatches.length * 200;
 
-  // 3. Data Structures & Allocations
-  const vecCreates = (code.match(/vec!\[/g) || []).length;
-  const vecNews = (code.match(/\bVec::new\(\)/g) || []).length;
-  const mapCreates = (code.match(/\bMap::new\(\)/g) || []).length;
-  const stringCreates = (code.match(/\bString::from_slice/g) || []).length;
+    // 3. Allocations / Cloning
+    const cloneMatches = cleanCode.match(/\.clone\(\)/g) || [];
+    totalGas += cloneMatches.length * 50;
 
-  score += (vecCreates + vecNews) * 100;
-  score += mapCreates * 100;
-  score += stringCreates * 50;
+    // 4. Data Structures (Vec, Map creations)
+    const dataStructMatches = cleanCode.match(/\b(Vec::new|Map::new|vec!|map!)/g) || [];
+    totalGas += dataStructMatches.length * 20;
 
-  // 4. Clones
-  const clones = (code.match(/\.clone\(\)/g) || []).length;
-  score += clones * 50;
-
-  // 5. Method calls
-  const pushes = (code.match(/\.push_back\(|\.push_front\(/g) || []).length;
-  score += pushes * 20;
-
-  const symbolShorts = (code.match(/symbol_short!/g) || []).length;
-  const symbolNews = (code.match(/Symbol::new/g) || []).length;
-  score += symbolShorts * 10;
-  score += symbolNews * 20;
-
-  return score;
+    return totalGas;
 }
