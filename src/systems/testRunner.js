@@ -53,8 +53,25 @@ export async function runTests(code, mission) {
     await delay(300);
 
     // Final summary
-    const allPassed = results.every(r => r.passed);
-    const passedCount = results.filter(r => r.passed).length;
+    let allPassed = results.every(r => r.passed);
+    let passedCount = results.filter(r => r.passed).length;
+
+    if (mission && mission.type === 'gas-optimization' && allPassed) {
+        const { estimateGas } = await import('./gasEstimator.js');
+        const gasScore = estimateGas(code);
+        const targetGas = mission.targetGas || 0;
+        const passedGas = gasScore <= targetGas;
+        
+        results.push({
+            phase: 'gas',
+            label: `⛽ Gas Optimization Score: ${gasScore} (Target: ${targetGas})`,
+            passed: passedGas,
+            message: passedGas ? `✓ Efficient enough (${gasScore} <= ${targetGas})` : `✗ Code uses too much gas (${gasScore} > ${targetGas}). Try optimizing!`
+        });
+
+        allPassed = results.every(r => r.passed);
+        passedCount = results.filter(r => r.passed).length;
+    }
 
     return {
         results,

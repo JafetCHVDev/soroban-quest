@@ -3929,6 +3929,58 @@ impl ConfigContract {
         ],
         conceptsIntroduced: ['access control', 'authorization fix', 'admin guard', 'security audit'],
     },
+    {
+        id: 'gas-opt-storage',
+        chapter: 2,
+        order: 99,
+        difficulty: 'intermediate',
+        xpReward: 200,
+        type: 'gas-optimization',
+        targetGas: 1500,
+        i18n: {
+            en: {
+                title: 'Gas Optimization: Storage',
+                story: `# ⛽ The Efficiency Forge\n\nGas is precious on Soroban. The Guardians notice your contract uses too much gas by reading the same storage key multiple times. Optimize it by caching the value in a local variable!`,
+                learningGoal: 'Optimize storage reads to save gas',
+                hints: [
+                    'Instead of calling \`get\` twice, call it once and store the result in a variable like \`let val = ...\`',
+                ]
+            }
+        },
+        template: \`#![no_std]\nuse soroban_sdk::{contract, contractimpl, Env, Symbol};\n\n#[contract]\npub struct StorageOptContract;\n\nconst KEY: Symbol = Symbol::short("KEY");\n\n#[contractimpl]\nimpl StorageOptContract {\n    pub fn increment_twice(env: Env) {\n        let val1: u32 = env.storage().instance().get(&KEY).unwrap_or(0);\n        let val2: u32 = env.storage().instance().get(&KEY).unwrap_or(0);\n        env.storage().instance().set(&KEY, &(val1 + val2 + 2));\n    }\n}\`,
+        solution: \`#![no_std]\nuse soroban_sdk::{contract, contractimpl, Env, Symbol};\n\n#[contract]\npub struct StorageOptContract;\n\nconst KEY: Symbol = Symbol::short("KEY");\n\n#[contractimpl]\nimpl StorageOptContract {\n    pub fn increment_twice(env: Env) {\n        let val: u32 = env.storage().instance().get(&KEY).unwrap_or(0);\n        env.storage().instance().set(&KEY, &((val * 2) + 2));\n    }\n}\`,
+        checks: [
+            { type: 'has_function', name: 'increment_twice', params: ['env'], message: "Missing 'increment_twice' function" },
+            { type: 'storage_operation', operation: 'set', message: 'Must update storage' }
+        ],
+        conceptsIntroduced: ['gas optimization', 'caching storage reads'],
+    },
+    {
+        id: 'gas-opt-loops',
+        chapter: 2,
+        order: 100,
+        difficulty: 'intermediate',
+        xpReward: 200,
+        type: 'gas-optimization',
+        targetGas: 350,
+        i18n: {
+            en: {
+                title: 'Gas Optimization: Loop Allocations',
+                story: `# ⛽ The Efficiency Forge II\n\nAllocating and cloning inside a loop wastes precious gas. Refactor the code to avoid unnecessary allocations inside the loop.`,
+                learningGoal: 'Optimize loops and avoid unnecessary allocations',
+                hints: [
+                    'Avoid creating \`Vec::new(&env)\` inside the loop if you just want to return it.',
+                    'Avoid \`.clone()\` if you can pass by value or reference directly.'
+                ]
+            }
+        },
+        template: \`#![no_std]\nuse soroban_sdk::{contract, contractimpl, Env, Vec};\n\n#[contract]\npub struct LoopOptContract;\n\n#[contractimpl]\nimpl LoopOptContract {\n    pub fn process_data(env: Env, data: Vec<u32>) -> Vec<u32> {\n        let mut result = Vec::new(&env);\n        for item in data.iter() {\n            let mut temp = Vec::new(&env);\n            temp.push_back(item.clone());\n            result.push_back(temp.get(0).unwrap());\n        }\n        result\n    }\n}\`,
+        solution: \`#![no_std]\nuse soroban_sdk::{contract, contractimpl, Env, Vec};\n\n#[contract]\npub struct LoopOptContract;\n\n#[contractimpl]\nimpl LoopOptContract {\n    pub fn process_data(env: Env, data: Vec<u32>) -> Vec<u32> {\n        let mut result = Vec::new(&env);\n        for item in data.iter() {\n            result.push_back(item);\n        }\n        result\n    }\n}\`,
+        checks: [
+            { type: 'has_function', name: 'process_data', params: ['env', 'data'], message: "Missing 'process_data' function" },
+        ],
+        conceptsIntroduced: ['gas optimization', 'loop allocations'],
+    }
 ];
 
 /**

@@ -820,14 +820,26 @@ export default function MissionDetail() {
                 </span>
               ) : (
                 testResults.map((r, i) => (
-                  <span
-                    key={i}
-                    className={`terminal-line ${
-                      r.passed === true ? "pass" : r.passed === false ? "fail" : "info"
-                    }`}
-                  >
-                    {r.message}
-                  </span>
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span
+                      className={`terminal-line ${
+                        r.passed === true ? "pass" : r.passed === false ? "fail" : "info"
+                      }`}
+                    >
+                      {r.message}
+                    </span>
+                    {r.phase === 'gas' && (
+                      <div style={{ marginTop: '0.5rem', marginBottom: '0.5rem', padding: '0.75rem', background: 'rgba(255, 165, 0, 0.1)', border: '1px solid rgba(255, 165, 0, 0.3)', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ fontSize: '2rem' }}>⛽</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>Gas Optimization Result</div>
+                          <div style={{ color: r.passed ? 'var(--green)' : 'var(--red)', fontSize: '0.9rem' }}>
+                            {r.passed ? 'Target Met! Code is efficient.' : 'Target Exceeded! Code uses too much gas.'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ))
               )}
             </div>
