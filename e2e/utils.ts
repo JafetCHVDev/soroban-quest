@@ -54,15 +54,16 @@ export async function maskDynamicElements(page: Page) {
 }
 
 export async function waitForMonaco(page: Page) {
-  const editor = page.locator('.monaco-editor textarea, .monaco-editor');
-  await expect(editor.first()).toBeVisible({ timeout: 20000 });
+  await page.locator('.mission-detail').waitFor({ state: 'attached', timeout: 20000 });
+  const editorTab = page.getByRole('tab', { name: /editor/i });
+  if (await editorTab.isVisible().catch(() => false)) {
+    await editorTab.click();
+  }
+  await expect(page.locator('.monaco-editor').first()).toBeVisible({ timeout: 20000 });
 }
 
 export async function fillMonacoEditor(page: Page, content: string) {
-  // Wait for Monaco editor to load
   await waitForMonaco(page);
-
-  // Try to focus the editor by clicking on it directly
   const editorHost = page.locator('.monaco-editor').first();
   await editorHost.click({ position: { x: 200, y: 100 }, force: true });
 
@@ -71,14 +72,33 @@ export async function fillMonacoEditor(page: Page, content: string) {
 
   // Select all and type new content
   await page.keyboard.press('Control+A');
-  await page.keyboard.type(content, { delay: 10 });
+  await page.keyboard.insertText(content);
 }
+
+export const HELLO_SOROBAN_SOLUTION = `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
+        vec![&env, symbol_short!("Hello"), to]
+    }
+}`;
 
 /**
  * Wait for test runner results to appear
  */
 export async function waitForTestResults(page: Page) {
-  const testResultsContainer = page.locator('[class*="test-results"], [class*="TestResults"], .results, [data-testid="test-results"]');
+  const testsTab = page.locator('.tab-btn:has-text("Tests"), button[role="tab"]:has-text("Tests")');
+  if (await testsTab.first().isVisible().catch(() => false)) {
+    await testsTab.first().click();
+  }
+  const testResultsContainer = page.locator(
+    '.terminal-line, [class*="test-results"], [class*="TestResults"], [data-testid="test-results"]',
+  );
   await expect(testResultsContainer.first()).toBeVisible({ timeout: 30000 });
 }
 
@@ -117,11 +137,27 @@ export async function waitForConfetti(page: Page) {
  * Get mission data from localStorage
  */
 export async function getMissionProgressFromStorage(page: Page) {
-  const progress = await page.evaluate(() => {
+  return page.evaluate(() => {
+    const profilesData = localStorage.getItem('soroban_quest_profiles');
+    if (profilesData) {
+      try {
+        const profiles = JSON.parse(profilesData);
+        const activeId = localStorage.getItem('soroban_quest_active_profile');
+        const slot = profiles.find((entry) => entry.id === activeId) || profiles[0];
+        if (slot?.progress) return slot.progress;
+      } catch {
+        /* fall through */
+      }
+    }
+
     const progressData = localStorage.getItem('soroban_quest_progress');
-    return progressData ? JSON.parse(progressData) : null;
+    if (!progressData) return null;
+    try {
+      return JSON.parse(progressData);
+    } catch {
+      return null;
+    }
   });
-  return progress;
 }
 
 /**

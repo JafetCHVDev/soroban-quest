@@ -50,6 +50,7 @@ Top-level app code lives in `src/`.
 - `src/systems/gameEngine.js`: XP, gold, level progression, mission completion, attempt tracking, and badge awards.
 - `src/systems/storage.js`: localStorage load/save plus progress export/import/reset.
 - `src/systems/codeValidator.js`: check runner and individual validation check implementations.
+- `src/systems/securityLinter.js`: advisory security heuristics (non-blocking notes and Monaco warnings).
 - `src/systems/testRunner.js`: orchestrates syntax, structure, and mission checks with progressive output.
 - `src/systems/missionLoader.js`: mission retrieval, chapter grouping, unlock logic, and next/previous mission helpers.
 - `src/systems/activityLogger.js`: persistent activity journal for user history.

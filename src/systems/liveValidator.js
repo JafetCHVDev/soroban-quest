@@ -1,3 +1,5 @@
+import { lintSecurity } from "./securityLinter.js";
+
 // Constants
 export const Severity = {
   Error: 8,   // monaco.MarkerSeverity.Error
@@ -5,6 +7,8 @@ export const Severity = {
   Info: 2,
   Hint: 1,
 };
+
+export const SECURITY_MARKER_SOURCE = "SorobanQuest Security";
 
 const LIVE_CHECK_TYPES = new Set([
   "has_function",
@@ -209,10 +213,33 @@ function validateCheck(check, code) {
 }
 
 
+function securityNotesToMarkers(notes) {
+  return notes.map((note) => ({
+    severity: note.severity === "info" ? Severity.Info : Severity.Warning,
+    message: note.message,
+    startLineNumber: note.line,
+    startColumn: note.column,
+    endLineNumber: note.line,
+    endColumn: note.endColumn,
+    source: SECURITY_MARKER_SOURCE,
+    code: note.rule,
+  }));
+}
+
+function emptyLiveResult(code) {
+  const securityNotes = lintSecurity(code || "");
+  return {
+    markers: securityNotesToMarkers(securityNotes),
+    passCount: 0,
+    totalCount: 0,
+    securityNotes,
+  };
+}
+
 // Public API
 export function runLiveValidation(code, mission) {
   if (!mission?.checks) {
-    return { markers: [], passCount: 0, totalCount: 0 };
+    return emptyLiveResult(code);
   }
 
   const liveChecks = mission.checks.filter((c) => LIVE_CHECK_TYPES.has(c.type));
@@ -228,7 +255,13 @@ export function runLiveValidation(code, mission) {
     }
   }
 
-  return { markers, passCount, totalCount: liveChecks.length };
+  const securityNotes = lintSecurity(code || "");
+  return {
+    markers: [...markers, ...securityNotesToMarkers(securityNotes)],
+    passCount,
+    totalCount: liveChecks.length,
+    securityNotes,
+  };
 }
 
 export function createDebouncedValidator(waitMs = 500, onResult) {

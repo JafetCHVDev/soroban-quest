@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { runLiveValidation, createDebouncedValidator } from '../liveValidator';
+import { runLiveValidation, createDebouncedValidator, SECURITY_MARKER_SOURCE } from '../liveValidator';
 import { Severity } from '../liveValidator';
 
 describe('runLiveValidation', () => {
@@ -205,6 +205,36 @@ describe('createDebouncedValidator', () => {
     vi.advanceTimersByTime(100);
     expect(onResult.mock.calls[1][0].passCount).toBe(1);
     expect(onResult).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('advisory security notes', () => {
+  it('attaches security notes without changing pass counts', () => {
+    const code = `pub fn transfer(env: Env, from: Address, amount: i128) {
+    env.storage().instance().set(&from, &amount);
+  }`;
+    const result = runLiveValidation(code, {
+      checks: [{ type: 'has_function', name: 'transfer' }],
+    });
+    expect(result.passCount).toBe(1);
+    expect(result.totalCount).toBe(1);
+    expect(result.securityNotes.length).toBeGreaterThan(0);
+    expect(result.markers.some((m) => m.source === SECURITY_MARKER_SOURCE)).toBe(true);
+    expect(
+      result.markers
+        .filter((m) => m.source === SECURITY_MARKER_SOURCE)
+        .every((m) => m.severity === Severity.Warning || m.severity === Severity.Info),
+    ).toBe(true);
+  });
+
+  it('still returns security notes when the mission has no live checks', () => {
+    const code = `pub fn transfer(env: Env, from: Address, amount: i128) {
+    env.storage().instance().set(&from, &amount);
+  }`;
+    const result = runLiveValidation(code, { checks: [] });
+    expect(result.passCount).toBe(0);
+    expect(result.totalCount).toBe(0);
+    expect(result.securityNotes.length).toBeGreaterThan(0);
   });
 });
 

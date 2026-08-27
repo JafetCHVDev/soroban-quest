@@ -9,7 +9,8 @@ import { completeMission, recordAttempt } from "../systems/gameEngine";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useOkashi, TOAST_STATES } from "../systems/useokashi";
-import { createDebouncedValidator } from "../systems/liveValidator";
+import { createDebouncedValidator, SECURITY_MARKER_SOURCE } from "../systems/liveValidator";
+import SecurityNotes from "../components/SecurityNotes";
 import { getWasmCompiler, WasmCompiler, COMPILE_MARKER_OWNER } from "../systems/wasmCompiler";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
@@ -28,6 +29,7 @@ import {
 import "./MissionDetail.css"
 
 const LIVE_MARKER_OWNER = "soroban-quest-live";
+const SECURITY_MARKER_OWNER = "soroban-quest-security";
 const MAX_RANK_INDEX = 10;
 
 export default function MissionDetail() {
@@ -61,6 +63,7 @@ export default function MissionDetail() {
 
   const [livePassCount, setLivePassCount] = useState(0);
   const [liveTotalCount, setLiveTotalCount] = useState(0);
+  const [securityNotes, setSecurityNotes] = useState([]);
   const [activeTab, setActiveTab] = useState("story");
   const [editorTheme, setEditorTheme] = useState(() => loadEditorTheme());
   const [editorFontSize, setEditorFontSize] = useState(() => {
@@ -100,6 +103,7 @@ export default function MissionDetail() {
         setShowVictory(false);
         setLivePassCount(0);
         setLiveTotalCount(0);
+        setSecurityNotes([]);
         setActiveTab("story");
         setLoading(false);
         logActivity(
@@ -125,13 +129,17 @@ export default function MissionDetail() {
     const validator = createDebouncedValidator(500, (result) => {
       setLivePassCount(result.passCount);
       setLiveTotalCount(result.totalCount);
-      applyMonacoMarkers(result.markers);
+      setSecurityNotes(result.securityNotes || []);
+      const allMarkers = result.markers || [];
+      applyMonacoMarkers(allMarkers.filter((m) => m.source !== SECURITY_MARKER_SOURCE));
+      applySecurityMarkers(allMarkers.filter((m) => m.source === SECURITY_MARKER_SOURCE));
     });
     validatorRef.current = validator;
 
     return () => {
       validator.cancel();
       clearMonacoMarkers();
+      clearSecurityMarkers();
     };
   }, []);
 
@@ -392,6 +400,23 @@ export default function MissionDetail() {
     if (!monaco || !editor) return;
     const model = editor.getModel();
     if (model) monaco.editor.setModelMarkers(model, LIVE_MARKER_OWNER, []);
+  }
+
+  function applySecurityMarkers(markers) {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+    const model = editor.getModel();
+    if (!model) return;
+    monaco.editor.setModelMarkers(model, SECURITY_MARKER_OWNER, markers);
+  }
+
+  function clearSecurityMarkers() {
+    const monaco = monacoRef.current;
+    const editor = editorRef.current;
+    if (!monaco || !editor) return;
+    const model = editor.getModel();
+    if (model) monaco.editor.setModelMarkers(model, SECURITY_MARKER_OWNER, []);
   }
 
   function applyCompileMarkers(markers) {
@@ -798,6 +823,7 @@ export default function MissionDetail() {
               </span>
             </div>
           )}
+          <SecurityNotes notes={securityNotes} t={t} />
         </div>
 
         {/* ---------------- Terminal Panel ---------------- */}

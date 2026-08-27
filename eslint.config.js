@@ -13,6 +13,7 @@ export default [
       'dist',
       'node_modules',
       'playwright-report',
+      'test-results',
       'vite.config.ts',
       'playwright.config.js',
     ],

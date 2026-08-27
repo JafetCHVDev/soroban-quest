@@ -83,6 +83,14 @@
     "done": "Done",
     "noResults": "No missions found matching your criteria."
   },
+  "theoryQuest": {
+    "submit": "Submit answer",
+    "correct": "Correct!",
+    "incorrect": "Not quite.",
+    "correctToast": "Answer is correct!",
+    "incorrectToast": "Try again — review the explanation.",
+    "completed": "This theory quest has already been completed."
+  },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
     "title": {
@@ -439,6 +447,30 @@
       "passing": "{{passed}}/{{total}} checks passing",
       "allPassing": "{{passed}}/{{total}} checks passing ✓",
       "note": "live checks · full suite on Run Tests"
+    },
+    "securityNotes": {
+      "title": "Security Notes",
+      "advisory": "Advisory only. These notes do not block mission completion.",
+      "count": "{{count}}",
+      "line": "Line {{line}}",
+      "rules": {
+        "missingAuth": {
+          "title": "Missing authorization before state change",
+          "body": "{{functionName}} writes storage without require_auth() first."
+        },
+        "uncheckedArithmetic": {
+          "title": "Unchecked arithmetic on token amounts",
+          "body": "{{functionName}} uses wrapping or multiplying arithmetic on token amounts without a checked call."
+        },
+        "reentrancy": {
+          "title": "External call before state write",
+          "body": "{{functionName}} makes an external call before writing storage. Update state first."
+        },
+        "storageUnwrap": {
+          "title": "Storage read uses unwrap",
+          "body": "{{functionName}} unwraps a storage get on a user-supplied key. Missing values will panic."
+        }
+      }
     },
     "toasts": {
       "validated": "Mission Parameters Validated!",

@@ -20,6 +20,8 @@ import { useGameState } from '../systems/GameStateContext';
 import { logActivity, ACTIVITY_TYPES } from '../systems/activityLogger';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from '../i18n/useTranslation';
+import { authService } from '../systems/authService';
+import { cloudSyncService, getCloudSyncStatus } from '../systems/cloudSync';
 
 // Total rank entries: 0..10. Anything >= 10 maps to the last rank.
 const MAX_RANK_INDEX = 10;
@@ -50,6 +52,11 @@ export default function Profile() {
 
   const [importPreview, setImportPreview] = useState(null);
   const importModalRef = useRef(null);
+  const [authForm, setAuthForm] = useState({ email: '', username: '' });
+  const [syncStatus, setSyncStatus] = useState(() => getCloudSyncStatus());
+  const [syncMessage, setSyncMessage] = useState(
+    'Sign in to sync progress across browsers. Progress stays on this device until you opt in.',
+  );
 
   const xpProgress = getXPProgress(state);
   const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
@@ -188,6 +195,37 @@ export default function Profile() {
 
   const cancelImport = () => {
     setImportPreview(null);
+  };
+
+  const handleAuthSubmit = async (mode) => {
+    try {
+      if (mode === 'signup') {
+        authService.signUp(authForm.email, authForm.username);
+      } else {
+        authService.signIn(authForm.email, authForm.username);
+      }
+      await cloudSyncService.migrateLocalData();
+      setSyncStatus(getCloudSyncStatus());
+      setSyncMessage('Signed in. Cloud sync is local-first and opt-in.');
+      showToast('Signed in for cloud sync', 'success');
+    } catch (err) {
+      const message = err?.message || 'Could not sign in';
+      setSyncMessage(message);
+      showToast(message, 'error');
+    }
+  };
+
+  const handleSyncNow = async () => {
+    setSyncStatus('syncing');
+    await cloudSyncService.syncLocalToCloud();
+    setSyncStatus(getCloudSyncStatus());
+    setSyncMessage('Progress sync finished.');
+  };
+
+  const handleSignOut = () => {
+    authService.signOut();
+    setSyncStatus(getCloudSyncStatus());
+    setSyncMessage('Signed out. Progress stays on this device.');
   };
 
   const handleReset = async () => {

@@ -9,7 +9,7 @@ test.describe('Profile and Data Management', () => {
 
   test('editing name and avatar persists after reload', async ({ page }) => {
     await page.click('button:has-text("Edit Profile")');
-    await page.fill('input[placeholder="Enter name"]', 'Star Voyager');
+    await page.fill('#profile-name-edit-input, input[placeholder="Enter name"], input[placeholder="Display name"]', 'Star Voyager');
     await page.click('button:has-text("🐉")');
     await page.click('button:has-text("Save")');
 

@@ -25,6 +25,7 @@ test.describe('Streak System', () => {
       localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
     });
 
+    await page.reload();
     await page.goto('/#/journal');
     await expect(page.locator('.summary-stat').nth(4).locator('.summary-stat-value')).toHaveText('5');
   });

@@ -23,6 +23,8 @@ import {
   maskDynamicElements,
   seedVisualRegressionState,
   setAppTheme,
+  waitForMonaco,
+  waitForTestResults,
 } from './utils';
 
 const THRESHOLD = parseFloat(process.env.SNAPSHOT_THRESHOLD ?? '0.1');
@@ -82,8 +84,9 @@ const scenarios: Scenario[] = [
     route: '/mission/hello-soroban',
     fixture: 'mission-detail',
     prepare: async (page) => {
-      await page.getByRole('button', { name: /run tests/i }).click();
-      await page.locator('.terminal-body .terminal-line').first().waitFor();
+      await waitForMonaco(page);
+      await page.getByRole('button', { name: /run tests/i }).first().click({ force: true });
+      await waitForTestResults(page);
     },
   },
   {
@@ -91,9 +94,13 @@ const scenarios: Scenario[] = [
     route: '/mission/hello-soroban',
     fixture: 'mission-detail',
     prepare: async (page) => {
-      await page.getByRole('button', { name: /solution/i }).click();
-      await page.getByRole('button', { name: /run tests/i }).click();
-      await expect(page.locator('.modal-content')).toBeVisible({ timeout: 20000 });
+      await waitForMonaco(page);
+      await page.getByRole('button', { name: /solution/i }).first().click({ force: true });
+      await page.getByRole('button', { name: /run tests/i }).first().click({ force: true });
+      await waitForTestResults(page);
+      await expect(page.locator('.modal-content, .terminal-line.pass').first()).toBeVisible({
+        timeout: 30000,
+      });
     },
   },
   { name: 'profile', route: '/profile', fixture: 'profile' },

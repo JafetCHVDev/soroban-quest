@@ -381,6 +381,30 @@
       "allPassing": "{{passed}}/{{total}} vérifications réussies ✓",
       "note": "vérifications en direct · suite complète au lancement des tests"
     },
+    "securityNotes": {
+      "title": "Notes de sécurité",
+      "advisory": "Avis uniquement. Ces notes n'empêchent pas de terminer la mission.",
+      "count": "{{count}}",
+      "line": "Ligne {{line}}",
+      "rules": {
+        "missingAuth": {
+          "title": "Autorisation manquante avant un changement d'état",
+          "body": "{{functionName}} écrit dans le stockage sans require_auth() d'abord."
+        },
+        "uncheckedArithmetic": {
+          "title": "Arithmétique non contrôlée sur des montants de jeton",
+          "body": "{{functionName}} utilise une arithmétique wrapping ou de multiplication sur des montants de jeton sans appel checked."
+        },
+        "reentrancy": {
+          "title": "Appel externe avant écriture d'état",
+          "body": "{{functionName}} effectue un appel externe avant d'écrire le stockage. Mettez à jour l'état d'abord."
+        },
+        "storageUnwrap": {
+          "title": "Lecture de stockage avec unwrap",
+          "body": "{{functionName}} unwrap un get de stockage sur une clé fournie par l'utilisateur. Une valeur absente provoquera un panic."
+        }
+      }
+    },
     "toasts": {
       "validated": "Paramètres de la mission validés !",
       "validationFailed": "Validation échouée. Consultez le terminal.",

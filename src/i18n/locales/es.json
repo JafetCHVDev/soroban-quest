@@ -83,6 +83,14 @@
     "done": "Hecho",
     "noResults": "No se encontraron misiones que coincidan con tus criterios."
   },
+  "theoryQuest": {
+    "submit": "Enviar respuesta",
+    "correct": "¡Correcto!",
+    "incorrect": "No del todo.",
+    "correctToast": "¡Respuesta correcta!",
+    "incorrectToast": "Inténtalo de nuevo — revisa la explicación.",
+    "completed": "Esta teoría ya ha sido completada."
+  },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
     "title": {
@@ -439,6 +447,30 @@
       "passing": "{{passed}}/{{total}} verificaciones pasando",
       "allPassing": "{{passed}}/{{total}} verificaciones pasando ✓",
       "note": "verificaciones en vivo · suite completa al ejecutar pruebas"
+    },
+    "securityNotes": {
+      "title": "Notas de seguridad",
+      "advisory": "Solo asesoramiento. Estas notas no impiden completar la misión.",
+      "count": "{{count}}",
+      "line": "Línea {{line}}",
+      "rules": {
+        "missingAuth": {
+          "title": "Falta autorización antes de cambiar el estado",
+          "body": "{{functionName}} escribe en el almacenamiento sin require_auth() primero."
+        },
+        "uncheckedArithmetic": {
+          "title": "Aritmética sin control en montos de token",
+          "body": "{{functionName}} usa aritmética wrapping o de multiplicación en montos de token sin una llamada checked."
+        },
+        "reentrancy": {
+          "title": "Llamada externa antes de escribir estado",
+          "body": "{{functionName}} hace una llamada externa antes de escribir almacenamiento. Actualiza el estado primero."
+        },
+        "storageUnwrap": {
+          "title": "Lectura de almacenamiento usa unwrap",
+          "body": "{{functionName}} hace unwrap de un get de almacenamiento sobre una clave del usuario. Un valor ausente provocará pánico."
+        }
+      }
     },
     "toasts": {
       "validated": "¡Parámetros de la misión validados!",

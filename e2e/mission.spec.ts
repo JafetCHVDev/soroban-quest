@@ -39,6 +39,7 @@ test.describe('Mission Flow', () => {
       localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
     });
 
+    await page.reload();
     await page.goto('/#/journal');
     await expect(page.locator('.summary-stat').nth(3)).toContainText('100');
   });
