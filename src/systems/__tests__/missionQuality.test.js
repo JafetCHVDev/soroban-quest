@@ -14,7 +14,7 @@
  * Related issue: #228
  */
 
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { validateCode } from '../codeValidator.js';
 
 // ---------------------------------------------------------------------------
