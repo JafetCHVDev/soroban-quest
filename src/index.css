@@ -3,7 +3,7 @@
    RPG-inspired dark theme for Stellar/Soroban
    ========================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap");
 
 .notfound-container {
   height: 100vh;
@@ -249,9 +249,9 @@
   --border-glow: rgba(6, 214, 160, 0.6);
 
   /* Typography */
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-code: "JetBrains Mono", "Fira Code", monospace;
-  --font-display: "Orbitron", sans-serif;
+  --font-body: "Inter", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: "JetBrains Mono", "Noto Sans KR", "Fira Code", monospace;
+  --font-display: "Orbitron", "Noto Sans KR", sans-serif;
 
   /* Spacing */
   --space-xs: 0.25rem;

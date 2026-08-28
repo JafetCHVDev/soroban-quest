@@ -1,0 +1,698 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "pt": "Português",
+    "ko": "한국어"
+  },
+  "common": {
+    "selectLanguage": "언어 선택",
+    "toggleTheme": "테마 전환",
+    "back": "뒤로",
+    "close": "닫기",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "loading": "로딩 중…",
+    "all": "전체",
+    "level": "레벨",
+    "xp": "XP",
+    "chapter": "챕터",
+    "mission": "미션",
+    "complete": "완료",
+    "completed": "완료됨",
+    "locked": "잠금",
+    "unlocked": "해제됨",
+    "skipToContent": "메인 콘텐츠로 이동"
+  },
+  "shortcuts": {
+    "title": "키보드 단축키",
+    "subtitle": "빠른 키 조합으로 소로반 퀘스트를 마스터하세요",
+    "sections": {
+      "navigation": "네비게이션",
+      "editor": "코드 에디터",
+      "general": "일반"
+    },
+    "nav": {
+      "home": "홈으로 이동",
+      "campaigns": "캠페인으로 이동",
+      "missions": "미션으로 이동",
+      "profile": "프로필로 이동",
+      "journal": "저널로 이동"
+    },
+    "editor": {
+      "runTests": "코드 / 테스트 실행",
+      "resetTemplate": "템플릿 초기화",
+      "showSolution": "솔루션 보기",
+      "toggleHints": "힌트 전환",
+      "toggleTheme": "에디터 테마 전환"
+    },
+    "general": {
+      "openModal": "단축키 모달 열기",
+      "closeModal": "모든 모달 닫기"
+    }
+  },
+  "navbar": {
+    "home": "홈",
+    "quests": "퀘스트",
+    "campaigns": "캠페인",
+    "missions": "미션",
+    "profile": "프로필",
+    "journal": "저널",
+    "leaderboard": "리더보드",
+    "achievements": "업적",
+    "shop": "상점",
+    "ariaMain": "메인 네비게이션",
+    "ariaHome": "홈페이지로 이동",
+    "ariaMobile": "모바일 네비게이션 메뉴",
+    "userProfile": "사용자 프로필:",
+    "openMenu": "네비게이션 메뉴 열기",
+    "closeMenu": "네비게이션 메뉴 닫기",
+    "replayTutorial": "튜토리얼 다시보기"
+  },
+  "quests": {
+    "title": "퀘스트 카탈로그",
+    "subtitle": "사용 가능한 모든 미션을 탐색, 검색 및 필터링하세요.",
+    "searchPlaceholder": "미션 검색...",
+    "allCampaigns": "모든 캠페인",
+    "allDifficulties": "모든 난이도",
+    "beginner": "초급",
+    "intermediate": "중급",
+    "advanced": "고급",
+    "allStatus": "모든 상태",
+    "completed": "완료됨",
+    "incomplete": "미완료",
+    "done": "완료",
+    "noResults": "기준에 맞는 미션을 찾을 수 없습니다."
+  },
+  "theoryQuest": {
+    "submit": "답변 제출",
+    "correct": "정답!",
+    "incorrect": "아직 아닙니다.",
+    "correctToast": "답변이 정답입니다!",
+    "incorrectToast": "다시 시도해보세요 — 설명을 검토하세요.",
+    "completed": "이 이론 퀘스트는 이미 완료되었습니다."
+  },
+  "home": {
+    "badge": "✨ 제로 설정 • 지갑 불필요 • 오픈 소스",
+    "title": {
+      "lead": "마스터하세요",
+      "brand": "소로반",
+      "tail": "스마트 컨트랙트"
+    },
+    "subtitle": "스텔라의 스마트 컨트랙트 플랫폼을 배우는 장대한 모험을 시작하세요. 브라우저에서 실제 소로반 코드를 작성하고, 도전 과제를 해결하며, 블록체인 스킬을 레벨업하세요 — 설치 불필요.",
+    "cta": {
+      "continueQuest": "⚔️ 퀘스트 계속하기",
+      "viewProgress": "📊 진행 상황 보기",
+      "beginJourney": "🚀 여정 시작하기",
+      "viewMissionMap": "🗺️ 미션 맵 보기"
+    },
+    "stats": {
+      "missions": "미션",
+      "totalXp": "총 XP",
+      "backendNeeded": "백엔드 필요"
+    },
+    "howItWorks": {
+      "title": "작동 방식",
+      "subtitle": "브라우저에서 완전히 제로에서 소로반 마스터까지의 경로."
+    },
+    "features": {
+      "read": {
+        "title": "퀘스트 읽기",
+        "body": "각 미션은 핵심 소로반 개념을 가르치면서 스토리를 전개합니다. 내러티브 기반 도전을 통해 컨트랙트, 스토리지, 토큰 등에 대해 배우세요."
+      },
+      "write": {
+        "title": "코드 작성",
+        "body": "Rust 구문 강조 및 소로반 자동완성이 포함된 내장 Monaco 에디터를 사용하세요. 템플릿으로 시작하고 — 당신이 로직을 채우세요."
+      },
+      "test": {
+        "title": "테스트 실행",
+        "body": "즉석 피드백으로 코드를 검증하세요. 각 미션에는 컨트랙트 구조, 함수 및 패턴을 확인하는 숨겨진 검사가 있습니다."
+      },
+      "xp": {
+        "title": "XP 획득 및 레벨업",
+        "body": "완료된 각 미션에 대해 경험치를 획득하세요. 배지를 해제하고, 랭크를 올리고, 초보자에서 스텔라 소버린까지의 여정을 추적하세요."
+      },
+      "zeroBackend": {
+        "title": "제로 백엔드",
+        "body": "모든 것이 브라우저에서 실행됩니다. 서버, 데이터베이스, 계정 없음. 진행 상황은 로컬에 저장됩니다 — 언제든지 JSON 파일로 내보내세요."
+      },
+      "path": {
+        "title": "점진적 경로",
+        "body": "\"Hello World\"부터 다중 서명 컨트랙트까지. 각 미션은 이전 것을 기반으로 하여 소로반 마스터리까지의 구조화된 경로를 만듭니다."
+      }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} 미션",
+      "xpEarned": "{{xp}} XP 획득",
+      "goldEarned": "{{gold}} 골드",
+      "badgesUnlocked": "{{count}} 배지",
+      "currentLevel": "레벨 {{level}} — {{rank}}",
+      "nextMission": "다음 미션",
+      "continueFrom": "{{title}}에서 계속",
+      "recentActivity": "최근 활동",
+      "viewAll": "모두 보기",
+      "quickStats": "빠른 통계",
+      "streak": "연속 일수"
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "플랫폼",
+      "home": "홈",
+      "missions": "미션",
+      "profile": "프로필"
+    },
+    "resources": {
+      "heading": "리소스",
+      "docs": "소로반 문서",
+      "sdk": "스텔라 SDK",
+      "github": "GitHub",
+      "glossary": "용어집",
+      "faq": "FAQ"
+    },
+    "community": {
+      "heading": "커뮤니티",
+      "discord": "Discord",
+      "telegram": "Telegram",
+      "forum": "스텔라 포럼",
+      "blog": "스텔라 블로그"
+    },
+    "credits": {
+      "tagline": "스텔라 생태계를 위해 제작",
+      "license": "MIT 라이선스"
+    }
+  },
+  "notFound": {
+    "title": "이 퀘스트는 존재하지 않습니다",
+    "body": "깊은 우주로 방황하신 것 같습니다",
+    "back": "기지로 돌아가기"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "문제가 발생했습니다",
+      "body": "퀘스트에서 런타임 오류가 발생했습니다. 자세한 내용은 콘솔을 확인하세요.",
+      "reload": "새로고침",
+      "goHome": "홈으로 이동",
+      "report": "문제 신고"
+    },
+    "editor": {
+      "body": "에디터 로드 실패",
+      "reset": "에디터 초기화"
+    },
+    "mission": {
+      "title": "미션을 사용할 수 없음",
+      "retry": "다시 시도"
+    }
+  },
+  "profile": {
+    "edit": "✏️ 프로필 편집",
+    "viewJournal": "📖 저널 보기",
+    "aria": {
+      "selectAvatar": "아바타 {{avatar}} 선택",
+      "completedListing": "완료된 미션 목록",
+      "completedEntry": "{{title}}, {{xp}} XP 획득"
+    },
+    "editPanel": {
+      "title": "프로필 편집",
+      "nameLabel": "모험가 이름",
+      "avatarLegend": "아바타 선택",
+      "namePlaceholder": "이름 입력"
+    },
+    "selector": {
+      "title": "활성 프로필",
+      "help": "{{max}}개 중 {{count}}개의 로컬 프로필이 사용 중입니다.",
+      "meta": "레벨 {{level}} • {{xp}} XP",
+      "create": "프로필 생성",
+      "emptySlot": "빈 슬롯",
+      "defaultName": "플레이어 {{number}}"
+    },
+    "stats": {
+      "missions": "미션",
+      "badges": "배지"
+    },
+    "sections": {
+      "badges": "🏅 배지",
+      "completedMissions": "✅ 완료된 미션",
+      "data": "⚙️ 데이터"
+    },
+    "noMissions": "아직 완료된 미션이 없습니다.",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "총계: {{xp}} XP"
+    },
+    "data": {
+      "export": "내보내기",
+      "import": "가져오기",
+      "reset": "초기화",
+      "confirmReset": "모든 진행 상황을 초기화하시겠습니까? 이는 되돌릴 수 없습니다.",
+      "status": {
+        "exported": "✅ 진행 상황 내보내기 완료!",
+        "imported": "✅ 진행 상황 가져오기 성공!",
+        "importFailed": "❌ 잘못된 파일 — 가져올 수 없습니다.",
+        "resetDone": "🗑️ 진행 상황 초기화 완료."
+      },
+      "toast": {
+        "exported": "진행 상황을 성공적으로 내보냈습니다!",
+        "imported": "진행 상황을 성공적으로 가져왔습니다!",
+        "importFailed": "파일을 가져올 수 없습니다. 형식을 확인하세요.",
+        "resetDone": "🗑️ 진행 상황이 초기화되었습니다."
+      },
+      "log": {
+        "exported": "모험 진행 상황 내보냄",
+        "imported": "파일에서 모험 진행 상황 가져옴"
+      }
+    }
+  },
+  "leaderboard": {
+    "kicker": "로컬 멀티플레이어",
+    "title": "리더보드",
+    "subtitle": "로컬 프로필 간의 XP, 레벨, 미션 및 배지를 비교하세요.",
+    "manageProfiles": "프로필 관리",
+    "championAria": "현재 로컬 챔피언",
+    "championSummary": "레벨 {{level}} • {{xp}} XP • {{missions}}개 미션 완료",
+    "tableTitle": "로컬 순위",
+    "profileCount": "{{count}}개 프로필",
+    "active": "활성",
+    "switch": "전환",
+    "columns": {
+      "rank": "순위",
+      "player": "플레이어",
+      "xp": "XP",
+      "level": "레벨",
+      "missions": "미션",
+      "badges": "배지",
+      "status": "상태"
+    }
+  },
+  "achievements": {
+    "kicker": "배지 보관함",
+    "title": "업적",
+    "subtitle": "{{name}}의 해제된 업적과 잠긴 업적.",
+    "summaryAria": "업적 완료 요약",
+    "unlocked": "해제됨",
+    "progressAria": "업적 완료 진행률",
+    "progress": "완료",
+    "gridAria": "업적 배지 컬렉션",
+    "empty": "미션을 완료하여 업적과 배지를 획득하세요!"
+  },
+  "journal": {
+    "title": "모험 저널",
+    "subtitle": "소로반 영역을 통한 당신의 여정, 영원히 기록됩니다.",
+    "clearLog": "🗑️ 로그 지우기",
+    "confirmClear": "모든 활동 기록을 지우시겠습니까?",
+    "controlsLabel": "저널 검색 및 필터",
+    "searchLabel": "저널 항목 검색",
+    "searchPlaceholder": "저널 항목 검색...",
+    "typeFilterLabel": "활동 유형으로 필터링",
+    "dateFilterLabel": "날짜로 필터링",
+    "summary": {
+      "missions": "미션",
+      "badges": "배지",
+      "level": "레벨",
+      "totalXp": "총 XP",
+      "streak": "연속 일수"
+    },
+    "filters": {
+      "all": "전체",
+      "mission": "미션",
+      "badge": "배지",
+      "levelUp": "레벨업",
+      "hint": "힌트",
+      "system": "시스템"
+    },
+    "dateFilters": {
+      "all": "언제든지",
+      "today": "오늘",
+      "week": "지난 7일",
+      "month": "이번 달"
+    },
+    "empty": "아직 기록된 활동이 없습니다. 첫 번째 미션을 시작하세요!",
+    "dates": {
+      "today": "오늘",
+      "yesterday": "어제"
+    },
+    "events": {
+      "missionStarted": "미션 시작: {{title}}",
+      "missionCompleted": "미션 완료: {{title}}",
+      "badgeEarned": "\"{{name}}\" 배지를 획득했습니다!",
+      "levelUp": "레벨 {{level}}에 도달했습니다!",
+      "hintUsed": "힌트 {{index}} 사용",
+      "export": "모험 진행 상황 내보냄",
+      "import": "파일에서 모험 진행 상황 가져옴",
+      "streakOne": "일일 연속: 1일!",
+      "streakMany": "일일 연속: {{count}}일!"
+    },
+    "details": {
+      "targetXp": "목표 XP 달성: {{xp}}",
+      "earnedXp": "{{xp}} XP 획득"
+    },
+    "eventLabels": {
+      "mission": "미션",
+      "badge": "배지",
+      "levelUp": "레벨업",
+      "hint": "힌트",
+      "system": "시스템",
+      "streak": "연속"
+    }
+  },
+  "campaigns": {
+    "title": "캠페인",
+    "subtitle": "장대한 스토리 중심 챕터 | 레벨 {{level}} | {{completed}}/{{total}} 총 미션",
+    "chapter": "챕터 {{number}}",
+    "missionCount": "{{completed}}/{{total}} 미션",
+    "lockedAt": "🔒 레벨 {{level}}에 도달하여 해제하세요",
+    "chapterComplete": "✓ 챕터 완료!",
+    "back": "← 캠페인으로 돌아가기",
+    "completeOf": "{{completed}}/{{total}} 완료",
+    "statusLabel": "상태:",
+    "lore": {
+      "iconLabel": "챕터 로어 두루마리",
+      "modalTitle": "챕터 소개",
+      "beginChapter": "챕터 {{number}} 시작"
+    }
+  },
+  "missionMap": {
+    "title": "미션 맵",
+    "subtitle": "{{total}}개 미션 중 {{completed}}개 완료",
+    "searchPlaceholder": "미션 검색…",
+    "difficulty": {
+      "all": "전체",
+      "beginner": "초급",
+      "intermediate": "중급",
+      "advanced": "고급"
+    },
+    "chapters": {
+      "all": "모든 챕터",
+      "n": "챕터 {{number}}"
+    },
+    "card": {
+      "chapterMission": "챕터 {{chapter}} • 미션 {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ 완료됨",
+      "locked": "🔒 잠김",
+      "difficultyLabel": "난이도:",
+      "stateLabel": "상태:"
+    },
+    "allCompleted": {
+      "title": "모든 미션 완료!",
+      "body": "축하합니다, {{rank}}! 당신은 {{xp}} XP 상당의 모든 소로반 도전을 마스터했습니다."
+    },
+    "noResults": "필터에 맞는 미션을 찾을 수 없습니다.",
+    "aria": {
+      "missionPath": "미션 경로 그래프",
+      "missionTimeline": "미션 타임라인",
+      "missionItem": "미션 {{order}}: {{title}}",
+      "missionItemCompleted": "미션 {{order}}: {{title}}, 완료됨",
+      "missionItemUnlocked": "미션 {{order}}: {{title}}, 해제됨",
+      "missionItemLocked": "미션 {{order}}: {{title}}, 잠김"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "스토리",
+      "editor": "에디터",
+      "tests": "테스트",
+      "replay": "📹 재생",
+      "ariaLabel": "미션 섹션 탭"
+    },
+    "difficultyLabel": "난이도:",
+    "notFound": {
+      "title": "미션을 찾을 수 없음",
+      "body": "미션 \"{{id}}\"가 존재하지 않습니다.",
+      "back": "← 미션 맵으로 돌아가기"
+    },
+    "editor": {
+      "reset": "↺ 초기화",
+      "hint": "💡 힌트",
+      "solution": "👁️ 솔루션",
+      "run": "▶ 테스트 실행",
+      "running": "실행 중…",
+      "compile": "⚙️ 컴파일 및 실행",
+      "compiling": "컴파일 중…",
+      "themeLabel": "에디터 테마"
+    },
+    "terminal": {
+      "title": "테스트 출력",
+      "placeholder": "코드를 검증하려면 \"테스트 실행\"을 클릭하세요…",
+      "runningChecks": "🔍 검증 체크 실행 중…",
+      "alreadyCompleted": "🏅 이미 완료됨 — 추가 XP가 지급되지 않습니다.",
+      "compiling": "⚙️ 컨트랙트 컴파일 중…",
+      "compileOk": "✅ {{ms}}ms 만에 컴파일 성공",
+      "compileFailed": "❌ 컴파일 실패 ({{errors}}개 오류)",
+      "compileFallback": "ℹ️ 브라우저 내 분석기 사용 (실제 WASM 툴체인이 로드되지 않음).",
+      "compileEngineWasm": "🦀 소로반 WASM 툴체인으로 컴파일됨.",
+      "compileError": "❌ 컴파일러 오류: {{message}}"
+    },
+    "status": {
+      "checking": "확인 중…",
+      "passing": "{{passed}}/{{total}} 검사 통과",
+      "allPassing": "{{passed}}/{{total}} 검사 통과 ✓",
+      "note": "실시간 검사 · 테스트 실행에서 전체 스위트"
+    },
+    "securityNotes": {
+      "title": "보안 주의사항",
+      "advisory": "권고사항입니다. 이 주의사항들은 미션 완료를 차단하지 않습니다.",
+      "count": "{{count}}",
+      "line": "라인 {{line}}",
+      "rules": {
+        "missingAuth": {
+          "title": "상태 변경 전 인증 누락",
+          "body": "{{functionName}}이 require_auth() 없이 먼저 스토리지에 쓰고 있습니다."
+        },
+        "uncheckedArithmetic": {
+          "title": "토큰 수량에 대한 미검증 산술",
+          "body": "{{functionName}}이 검증된 호출 없이 토큰 수량에 래핑 또는 곱셈 산술을 사용합니다."
+        },
+        "reentrancy": {
+          "title": "상태 쓰기 전 외부 호출",
+          "body": "{{functionName}}이 스토리지에 쓰기 전에 외부 호출을 합니다. 상태를 먼저 업데이트하세요."
+        },
+        "storageUnwrap": {
+          "title": "스토리지 읽기에서 unwrap 사용",
+          "body": "{{functionName}}이 사용자가 제공한 키에서 스토리지 get을 unwrap합니다. 누락된 값은 패닉을 일으킵니다."
+        }
+      }
+    },
+    "toasts": {
+      "validated": "미션 매개변수 검증 완료!",
+      "validationFailed": "검증 실패. 터미널을 확인하세요.",
+      "hintUnlocked": "힌트 {{index}} 해제됨",
+      "codeReset": "코드가 템플릿으로 초기화됨",
+      "solutionLoaded": "솔루션이 에디터에 로드됨"
+    },
+    "hint": {
+      "label": "💡 힌트 {{index}}:"
+    },
+    "victory": {
+      "title": "미션 완료!",
+      "youCompleted": "완료하셨습니다",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 레벨업! 이제 레벨 {{level}} — {{rank}}입니다",
+      "badgeEarnedOne": "🏅 새 배지 획득!",
+      "badgeEarnedMany": "🏅 새 배지들 획득!",
+      "next": "다음 미션 →",
+      "map": "미션 맵",
+      "iconLabel": "트로피 아이콘 — 미션 완료"
+    },
+    "replay": {
+      "header": "📹 당신의 솔루션 보기",
+      "body": "문제 해결 과정을 단계별로 검토하세요.",
+      "start": "▶️ 재생 시작"
+    },
+    "okashi": {
+      "button": "🚀 Okashi에서 시도 — 컴파일 및 배포",
+      "help": "새 탭에서 okashi.dev를 엽니다. 코드가 클립보드에 복사됩니다 — 거기에 붙여넣어 실제 소로반 컴파일러로 컴파일하고 테스트넷에 배포하세요."
+    }
+  },
+  "skillTree": {
+    "title": "소로반 스킬 트리",
+    "subtitle": "소로반 스마트 컨트랙트 개념의 마스터리를 추적하세요",
+    "overall": "{{unlocked}}/{{total}} 개념 마스터됨",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": {
+        "title": "핵심 개념",
+        "description": "소로반의 기본 빌딩 블록"
+      },
+      "Storage": {
+        "title": "스토리지 및 상태",
+        "description": "영구 데이터 관리"
+      },
+      "Types": {
+        "title": "데이터 타입",
+        "description": "다양한 데이터 타입 작업"
+      },
+      "Auth": {
+        "title": "인증",
+        "description": "액세스 제어 및 보안"
+      },
+      "Events": {
+        "title": "이벤트",
+        "description": "컨트랙트 이벤트 방출 및 처리"
+      },
+      "Protocols": {
+        "title": "프로토콜",
+        "description": "실제 DeFi 프로토콜 패턴"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "탈중앙화 금융 기본요소"
+      }
+    },
+    "tooltip": {
+      "chapter": "챕터 {{chapter}}"
+    },
+    "modal": {
+      "taughtIn": "학습 위치: {{title}}",
+      "chapterLabel": "챕터:",
+      "difficultyLabel": "난이도:",
+      "xpLabel": "XP 보상:",
+      "learningGoal": "학습 목표:",
+      "completed": "✅ 완료됨",
+      "notCompleted": "🔒 아직 완료되지 않음",
+      "startMission": "미션 시작",
+      "notCovered": "이 개념은 아직 사용 가능한 미션에서 다루어지지 않습니다."
+    }
+  },
+  "ranks": {
+    "0": "초심자",
+    "1": "견습생",
+    "2": "서기관",
+    "3": "코더",
+    "4": "건축가",
+    "5": "파수꾼",
+    "6": "수호자",
+    "7": "마스터 수호자",
+    "8": "장로",
+    "9": "빛의 현자",
+    "10": "스텔라 소버린"
+  },
+  "difficulty": {
+    "beginner": "초급",
+    "intermediate": "중급",
+    "advanced": "고급"
+  },
+  "badges": {
+    "first_contract": {
+      "name": "첫 번째 컨트랙트",
+      "description": "첫 번째 미션을 완료하세요"
+    },
+    "triple_threat": {
+      "name": "트리플 위협",
+      "description": "3개의 미션을 완료하세요"
+    },
+    "five_star": {
+      "name": "파이브 스타",
+      "description": "5개의 미션을 완료하세요"
+    },
+    "completionist": {
+      "name": "완벽주의자",
+      "description": "모든 미션을 완료하세요"
+    },
+    "level_3": {
+      "name": "떠오르는 별",
+      "description": "레벨 3에 도달하세요"
+    },
+    "level_5": {
+      "name": "스텔라 수호자",
+      "description": "레벨 5에 도달하세요"
+    },
+    "xp_1000": {
+      "name": "XP 수집가",
+      "description": "1000 XP를 획득하세요"
+    },
+    "speed_demon": {
+      "name": "스피드 데몬",
+      "description": "첫 시도에 미션을 완료하세요"
+    },
+    "chapter_1": {
+      "name": "각성",
+      "description": "챕터 1의 모든 미션을 완료하세요"
+    },
+    "chapter_2": {
+      "name": "기억의 수호자",
+      "description": "챕터 2의 모든 미션을 완료하세요"
+    },
+    "chapter_3": {
+      "name": "대장장이 마스터",
+      "description": "챕터 3의 모든 미션을 완료하세요"
+    },
+    "chapter_4": {
+      "name": "데이터 건축가",
+      "description": "챕터 4의 모든 미션을 완료하세요"
+    },
+    "chapter_5": {
+      "name": "프로토콜 개척자",
+      "description": "챕터 5의 모든 미션을 완료하세요"
+    },
+    "chapter_6": {
+      "name": "프로덕션 마스터",
+      "description": "챕터 6의 모든 미션을 완료하세요"
+    },
+    "chapter_7": {
+      "name": "보안 파수꾼",
+      "description": "챕터 7의 모든 미션을 완료하세요"
+    }
+  },
+  "shop": {
+    "title": "상점",
+    "subtitle": "골드로 아바타, 부스트 및 배지를 구매하세요",
+    "ariaCategories": "상점 카테고리 필터",
+    "categories": {
+      "all": "전체",
+      "avatars": "아바타",
+      "boosts": "부스트",
+      "badges": "배지"
+    },
+    "items": {
+      "avatarPack1": "아바타 팩 1",
+      "avatarPack1Desc": "5개의 새로운 아바타 옵션을 해제하세요",
+      "avatarPack2": "아바타 팩 2",
+      "avatarPack2Desc": "5개의 독점 아바타 옵션을 해제하세요",
+      "xpBoost": "XP 부스트",
+      "xpBoostDesc": "다음 미션에서 2배 XP",
+      "streakFreeze": "연속 동결",
+      "streakFreezeDesc": "하루 놓쳐도 연속을 보호하세요",
+      "hintToken": "힌트 토큰",
+      "hintTokenDesc": "XP 페널티 없이 힌트를 공개하세요",
+      "premiumBadge": "프리미엄 배지",
+      "premiumBadgeDesc": "프로필용 독점 프리미엄 배지"
+    },
+    "buy": "구매",
+    "purchased": "구매됨",
+    "alreadyPurchased": "이미 이 아이템을 소유하고 있습니다",
+    "insufficientFunds": "이 아이템을 구매하기에 골드가 부족합니다",
+    "purchaseSuccess": "{{item}}을(를) 성공적으로 구매했습니다!",
+    "empty": "이 카테고리에서 아이템을 찾을 수 없습니다",
+    "ariaPurchase": "{{price}} 골드로 {{item}} 구매",
+    "ariaPurchased": "{{item}} - 이미 구매됨"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "소로반 퀘스트에 오신 것을 환영합니다!",
+      "body": "소로반 스마트 컨트랙트 개발을 마스터하는 게임화된 여정을 시작하세요. 미션을 완료하고, XP와 골드를 획득하며, 업적을 해제하세요."
+    },
+    "step2": {
+      "title": "진행 상황 허브",
+      "body": "네비게이션 바는 레벨, XP, 골드 잔액 및 프로필을 보여줍니다. 이를 사용해 미션, 캠페인, 프로필, 저널 등을 탐색하세요."
+    },
+    "step3": {
+      "title": "미션 맵 및 퀘스트",
+      "body": "미션 맵은 챕터별로 구성된 모든 퀘스트를 보여줍니다. 각 미션은 스토리, 힌트 및 자동 검증이 포함된 소로반 코딩 도전을 제시합니다."
+    },
+    "step4": {
+      "title": "코드 에디터 및 검증",
+      "body": "내장된 Monaco 에디터에서 Rust 소로반 코드를 작성하세요. 테스트를 실행하여 검증 패턴에 대해 솔루션을 확인하세요. 컴파일 서버가 필요하지 않습니다!"
+    },
+    "step5": {
+      "title": "RPG 진행",
+      "body": "완료된 각 미션에 대해 XP와 골드를 획득하세요. 레벨업하여 새로운 랭크, 챕터 및 배지를 해제하세요. 상점에서 골드를 사용해 장식용 아이템과 부스트를 구매하세요."
+    },
+    "dismiss": "알겠습니다!",
+    "next": "다음",
+    "prev": "이전",
+    "skip": "튜토리얼 건너뛰기"
+  }
+}

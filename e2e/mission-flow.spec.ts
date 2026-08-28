@@ -5,8 +5,6 @@ import {
   fillMonacoEditor,
   HELLO_SOROBAN_SOLUTION,
   waitForTestResults,
-  checkXPDisplay,
-  verifyLocalStorageState,
   waitForConfetti,
   getMissionProgressFromStorage,
   isMissionCompleted,
@@ -298,7 +296,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 8: Export/Import Flow
   // ═══════════════════════════════════════════════════════════════════════════════
-  test('Scenario 8: Should export and import profile data correctly', async ({ page, context }) => {
+  test('Scenario 8: Should export and import profile data correctly', async ({ page }) => {
     // Set up initial progress
     await page.goto('/');
     await page.evaluate(() => {
@@ -318,7 +316,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     });
 
     // Get initial state
-    const initialProgress = await getMissionProgressFromStorage(page);
+    // const initialProgress = await getMissionProgressFromStorage(page);
 
     // Navigate to profile or find export button
     await page.goto('/#/profile');
@@ -337,7 +335,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
         const download = await downloadPromise;
         // Could be used to verify file content
         expect(download).toBeDefined();
-      } catch (e) {
+      } catch {
         // Download might not work in all environments
       }
     }

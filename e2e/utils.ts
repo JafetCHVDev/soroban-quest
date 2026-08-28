@@ -107,7 +107,7 @@ export async function waitForTestResults(page: Page) {
  */
 export async function checkXPDisplay(page: Page, expectedXP: number) {
   // Look for XP display in common locations (Navbar, stats, modal)
-  const xpElements = page.locator('text=/XP|xp.*\\d+/, [class*="xp"], [class*="XP"], [data-testid*="xp"]');
+  // const xpElements = page.locator('text=/XP|xp.*\\d+/, [class*="xp"], [class*="XP"], [data-testid*="xp"]');
   
   // Try to find exact XP value in the page text
   const xpText = page.locator(`text=/${expectedXP}/`);
@@ -117,7 +117,7 @@ export async function checkXPDisplay(page: Page, expectedXP: number) {
 /**
  * Verify localStorage state via page.evaluate()
  */
-export async function verifyLocalStorageState(page: Page, key: string, expectedValue: any) {
+export async function verifyLocalStorageState(page: Page, key: string, expectedValue: unknown) {
   const value = await page.evaluate((storageKey) => {
     const item = localStorage.getItem(storageKey);
     return item ? JSON.parse(item) : null;
@@ -136,7 +136,7 @@ export async function waitForConfetti(page: Page) {
 
 interface ProfileEntry {
   id: string;
-  progress?: any;
+  progress?: unknown;
 }
 
 /**

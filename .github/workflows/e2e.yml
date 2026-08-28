@@ -39,11 +39,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache-e2e
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-${{ runner.os }}-
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
       - name: Run functional E2E tests
         run: npm run test:e2e
+        env:
+          # Optimize for CI environment
+          CI: true
+          PWTEST_SKIP_BROWSER_DOWNLOAD: false
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -68,6 +80,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache-visual
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-${{ runner.os }}-
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -76,6 +96,9 @@ jobs:
         env:
           SNAPSHOT_THRESHOLD: ${{ env.SNAPSHOT_THRESHOLD }}
           SNAPSHOT_MAX_DIFF: ${{ env.SNAPSHOT_MAX_DIFF }}
+          # Optimize for CI environment
+          CI: true
+          PWTEST_SKIP_BROWSER_DOWNLOAD: false
 
       - name: Upload visual diff artifacts on failure
         if: failure()
