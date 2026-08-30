@@ -188,3 +188,9 @@
     height: 100%;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-btn {
+    transition: none;
+  }
+}

@@ -34,12 +34,6 @@ export default function Home() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Respect user's motion preference — skip animation entirely
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            canvas.style.display = 'none';
-            return;
-        }
-
         const ctx = canvas.getContext('2d');
         let animId;
 
@@ -48,6 +42,25 @@ export default function Home() {
             canvas.height = canvas.offsetHeight;
         };
         resize();
+
+        // Respect user's motion preference — render initial static frame without animation loop
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const staticStars = Array.from({ length: 120 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.5 + 0.3,
+                opacity: Math.random() * 0.7 + 0.3,
+            }));
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            staticStars.forEach((star) => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(139, 92, 246, ${star.opacity})`;
+                ctx.fill();
+            });
+            return;
+        }
+
         window.addEventListener('resize', resize);
 
         const stars = Array.from({ length: 120 }, () => ({

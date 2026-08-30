@@ -81,3 +81,24 @@
   50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-overlay {
+    animation: none;
+    opacity: 1;
+  }
+
+  .dialog-content {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .dialog-icon {
+    animation: none;
+  }
+
+  .btn-confirm:hover {
+    transform: none;
+  }
+}

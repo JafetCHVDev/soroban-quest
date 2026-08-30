@@ -2062,26 +2062,7 @@ a:focus:not(:focus-visible),
 
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  /* Keep skeleton shimmer but make it static */
-  .skeleton::after {
-    animation: none;
-  }
-
-  /* Disable xp bar shimmer */
-  .xp-bar-fill::after {
-    animation: none;
-  }
-
-  /* Disable hero entrance animations */
+  /* Hero entrance — snap to final visible state */
   .hero-badge,
   .hero-title,
   .hero-subtitle,
@@ -2092,14 +2073,75 @@ a:focus:not(:focus-visible),
     transform: none;
   }
 
-  /* Disable notfound float */
+  /* 404 page float */
   .notfound-card {
+    animation: none;
+    transform: none;
+  }
+
+  /* Staggered fade-in utility — show immediately */
+  .fade-in {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* Terminal typewriter lines — show immediately */
+  .terminal-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Modal / confirmation dialog overlay & content */
+  .modal-overlay,
+  .dialog-overlay {
     animation: none;
   }
 
-  /* Hide the hero starfield canvas for users who prefer reduced motion */
-  .hero-particles {
-    display: none;
+  .modal-content,
+  .dialog-content {
+    animation: none;
+    transform: none;
+  }
+
+  .dialog-icon {
+    animation: none;
+  }
+
+  /* Skeleton & shimmer loaders — freeze static */
+  .skeleton::after,
+  .xp-bar-fill::after {
+    animation: none;
+  }
+
+  /* Spinner — stop rotation */
+  .spinner {
+    animation: none;
+  }
+
+  /* Mobile slide-in menu — remove transition */
+  .mobile-menu {
+    transition: none;
+  }
+
+  /* Campaign detail overlay & content */
+  .campaign-detail-overlay {
+    animation: none;
+  }
+
+  .campaign-detail {
+    animation: none;
+    transform: none;
+  }
+
+  /* Hover transforms — neutralise */
+  .campaign-card:hover,
+  .mission-item:hover,
+  .summary-stat:hover,
+  .profile-selector-card:hover,
+  .profile-selector-card.active,
+  .btn-confirm:hover {
+    transform: none;
   }
 }
 

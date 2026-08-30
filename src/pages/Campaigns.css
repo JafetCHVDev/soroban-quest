@@ -408,3 +408,30 @@
   border-radius: var(--radius-md);
   margin-top: auto;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .campaign-card {
+    transition: none;
+  }
+
+  .campaign-card:hover {
+    transform: none;
+  }
+
+  .mission-item {
+    transition: none;
+  }
+
+  .mission-item:hover {
+    transform: none;
+  }
+
+  .skill-badge {
+    transition: none;
+  }
+
+  .skeleton-pulse {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}

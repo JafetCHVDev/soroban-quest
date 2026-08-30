@@ -8,6 +8,7 @@ test.describe('SkillTree Page', () => {
 
   test('is reachable by route and renders skill categories', async ({ page }) => {
     await page.goto('/#/skills');
+    await page.waitForLoadState('networkidle');
 
     await expect(page).toHaveURL(/#\/skills/);
     await expect(page.locator('.skill-tree-title')).toHaveText('Soroban Skill Tree');
@@ -17,6 +18,7 @@ test.describe('SkillTree Page', () => {
 
   test('renders locked visualization for initial progress', async ({ page }) => {
     await page.goto('/#/skills');
+    await page.waitForLoadState('networkidle');
 
     const lockedNodes = page.locator('.concept-node.locked');
     await expect(lockedNodes.first()).toBeVisible();
@@ -26,6 +28,7 @@ test.describe('SkillTree Page', () => {
 
   test('opens concept modal with mission details', async ({ page }) => {
     await page.goto('/#/skills');
+    await page.waitForLoadState('networkidle');
 
     await page
       .locator('.concept-node .concept-name')

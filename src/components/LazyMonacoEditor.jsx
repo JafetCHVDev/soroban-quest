@@ -14,6 +14,10 @@ export default function LazyMonacoEditor(props) {
   const handleMount = (editor, monaco) => {
     stopEditorLoad.current?.();
     stopEditorLoad.current = null;
+    if (typeof window !== 'undefined') {
+      window.__MONACO_EDITOR__ = editor;
+      window.monaco = monaco;
+    }
     props.onMount?.(editor, monaco);
   };
 

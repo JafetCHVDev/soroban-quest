@@ -5,6 +5,7 @@ test.describe('Campaigns Page', () => {
   test.beforeEach(async ({ page }) => {
     await clearLocalStorageBeforePageLoad(page);
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
   });
 
   test('is reachable from navbar and renders campaign cards', async ({ page }) => {
@@ -17,6 +18,7 @@ test.describe('Campaigns Page', () => {
 
   test('opens lore modal on first visit and campaign details are visible', async ({ page }) => {
     await page.goto('/#/campaigns');
+    await page.waitForLoadState('networkidle');
 
     const firstUnlockedCampaign = page.locator('.campaign-card:not(.locked)').first();
     await firstUnlockedCampaign.click();
@@ -30,6 +32,7 @@ test.describe('Campaigns Page', () => {
 
   test('lore modal is shown only once per campaign', async ({ page }) => {
     await page.goto('/#/campaigns');
+    await page.waitForLoadState('networkidle');
 
     const firstUnlockedCampaign = page.locator('.campaign-card:not(.locked)').first();
     await firstUnlockedCampaign.click();

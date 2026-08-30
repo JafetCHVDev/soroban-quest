@@ -121,3 +121,9 @@
   font-size: 0.8rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .shortcuts-close-btn {
+    transition: none;
+  }
+}

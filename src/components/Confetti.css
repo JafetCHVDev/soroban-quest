@@ -44,7 +44,7 @@
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .confetti-piece {
-    animation: none;
-    opacity: 0;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

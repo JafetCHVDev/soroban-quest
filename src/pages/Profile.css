@@ -230,3 +230,22 @@
   background: rgba(248, 113, 113, 0.15);
   color: #f87171;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-selector-card {
+    transition: none;
+  }
+
+  .profile-selector-card:hover,
+  .profile-selector-card.active {
+    transform: none;
+  }
+
+  .avatar-btn-node {
+    transition: none;
+  }
+
+  .avatar-btn-node.active {
+    transform: none;
+  }
+}
