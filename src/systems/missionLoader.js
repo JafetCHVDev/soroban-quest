@@ -8,10 +8,20 @@
    ========================================== */
 
 import { missions, localizeMission } from '../data/missions';
+import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
+}
+
+export function getAllTheoryQuests(lang = getActiveLanguage()) {
+    return theoryQuests.map((q) => localizeTheoryQuest(q, lang));
+}
+
+export function getTheoryQuestById(id, lang = getActiveLanguage()) {
+    const quest = theoryQuests.find((item) => item.id === id);
+    return quest ? localizeTheoryQuest(quest, lang) : null;
 }
 
 export function getMissionById(id, lang = getActiveLanguage()) {

@@ -19,6 +19,7 @@ import './systems/Toast.css';
 const Home = lazy(() => import('./pages/Home'));
 const MissionMap = lazy(() => import('./pages/MissionMap'));
 const MissionDetail = lazy(() => import('./pages/MissionDetail'));
+const TheoryQuestDetail = lazy(() => import('./pages/TheoryQuestDetail'));
 const Quests = lazy(() => import('./pages/Quests')); // Added Quests page
 const Profile = lazy(() => import('./pages/Profile'));
 const Journal = lazy(() => import('./pages/Journal'));
@@ -83,6 +84,7 @@ function AppContent() {
             <Route path="/quests" element={<Quests />} />
             <Route path="/campaigns" element={<Campaigns />} />
             <Route path="/mission/:missionId" element={<MissionDetail />} />
+            <Route path="/theory/:questId" element={<TheoryQuestDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/skills" element={<SkillTree />} />

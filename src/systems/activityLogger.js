@@ -60,7 +60,8 @@ export function logActivity(type, data = {}, message = "") {
 export function getActivityLog() {
   try {
     const data = localStorage.getItem(LOG_KEY);
-    return data ? JSON.parse(data) : [];
+    const log = data ? JSON.parse(data) : [];
+    return Array.isArray(log) ? log : [];
   } catch {
     return [];
   }

@@ -360,18 +360,19 @@ function JournalEntry({ entry, progressXp, timeLocale, t }) {
 }
 
 function formatDateHeader(date, t, language) {
+  const d = new Date(date);
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
 
-  if (isSameDay(date, today)) return t('journal.dates.today');
-  if (isSameDay(date, yesterday)) return t('journal.dates.yesterday');
+  if (isSameDay(d, today)) return t('journal.dates.today');
+  if (isSameDay(d, yesterday)) return t('journal.dates.yesterday');
 
   const locale = language === 'es' ? 'es' : 'en-US';
-  return date.toLocaleDateString(locale, {
+  return d.toLocaleDateString(locale, {
     month: 'long',
     day: 'numeric',
-    year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
+    year: d.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
   });
 }
 

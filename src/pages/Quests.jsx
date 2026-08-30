@@ -4,13 +4,20 @@ import { Search, CheckCircle, Clock, Trophy, Filter } from 'lucide-react';
 import { useTranslation } from '../i18n/useTranslation';
 import { useGameState } from '../systems/GameStateContext';
 import { missions } from '../data/missions';
+import { theoryQuests } from '../data/theoryQuests';
 import './Quests.css';
 
 export default function Quests() {
   const { t, language } = useTranslation();
   const { progress } = useGameState();
 
-  const allMissions = missions || [];
+  const allMissions = [...(missions || []), ...(theoryQuests || [])].map((item) => ({
+    ...item,
+    type: item.type || 'mission',
+    title: item.i18n?.[language]?.title || item.i18n?.en?.title || item.title || item.id,
+    description: item.i18n?.[language]?.story || item.i18n?.en?.story || item.story || '',
+    path: item.type === 'theory' ? `/theory/${item.id}` : `/mission/${item.id}`,
+  }));
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCampaign, setSelectedCampaign] = useState('all');
@@ -127,9 +134,9 @@ export default function Quests() {
           const campaignBadgeText = mission.campaign || `Chapter ${mission.chapter || 1}`;
 
           return (
-            <Link key={mission.id} to={`/mission/${mission.id}`} className="quest-card">
+            <Link key={mission.id} to={mission.path} className="quest-card">
               <div className="quest-card-top">
-                <span className="quest-campaign-badge">{campaignBadgeText}</span>
+                <span className="quest-campaign-badge">{mission.type === 'theory' ? 'Theory' : campaignBadgeText}</span>
                 {isCompleted && (
                   <span className="quest-completed-badge">
                     <CheckCircle size={14} /> {t('quests.done', 'Completed')}

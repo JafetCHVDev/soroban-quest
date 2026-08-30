@@ -83,6 +83,14 @@
     "done": "Done",
     "noResults": "No missions found matching your criteria."
   },
+  "theoryQuest": {
+    "submit": "Submit answer",
+    "correct": "Correct!",
+    "incorrect": "Not quite.",
+    "correctToast": "Answer is correct!",
+    "incorrectToast": "Try again — review the explanation.",
+    "completed": "This theory quest has already been completed."
+  },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
     "title": {
@@ -98,9 +106,17 @@
       "viewMissionMap": "🗺️ View Mission Map"
     },
     "stats": {
-      "missions": "Missions",
-      "totalXp": "Total XP",
-      "backendNeeded": "Backend Needed"
+      "missionsCompleted": "{{count}}/{{total}} Missions",
+      "xpEarned": "{{xp}} XP Earned",
+      "goldEarned": "{{gold}} Gold",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Level {{level}} — {{rank}}",
+      "nextMission": "Next Mission",
+      "continueFrom": "Continue from {{title}}",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickStats": "Quick Stats",
+      "streak": "Day Streak"
     },
     "howItWorks": {
       "title": "How It Works",
@@ -131,19 +147,6 @@
         "title": "Progressive Path",
         "body": "From \"Hello World\" to multi-signature contracts. Each mission builds on the last, creating a structured path to Soroban mastery."
       }
-    },
-    "stats": {
-      "missionsCompleted": "{{count}}/{{total}} Missions",
-      "xpEarned": "{{xp}} XP Earned",
-      "goldEarned": "{{gold}} Gold",
-      "badgesUnlocked": "{{count}} Badges",
-      "currentLevel": "Level {{level}} — {{rank}}",
-      "nextMission": "Next Mission",
-      "continueFrom": "Continue from {{title}}",
-      "recentActivity": "Recent Activity",
-      "viewAll": "View All",
-      "quickStats": "Quick Stats",
-      "streak": "Day Streak"
     }
   },
   "footer": {
@@ -415,6 +418,10 @@
     "editor": {
       "reset": "↺ Reset",
       "hint": "💡 Hint",
+      "goldHint": "🪙 Hint ({{cost}} gold)",
+      "goldHintTitle": "Spend {{cost}} gold to instantly reveal the next hint",
+      "goldHintInsufficient": "Not enough gold — need {{cost}} to unlock this hint",
+      "goldHintUnlocked": "🪙 Hint (unlocked)",
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
       "running": "Running…",
@@ -468,6 +475,8 @@
       "validated": "Mission Parameters Validated!",
       "validationFailed": "Validation failed. Check terminal.",
       "hintUnlocked": "Hint {{index}} unlocked",
+      "hintGoldUnlocked": "Hint {{index}} unlocked for {{cost}} gold",
+      "hintInsufficientGold": "Not enough gold — need {{cost}} to unlock this hint",
       "codeReset": "Code reset to template",
       "solutionLoaded": "Solution loaded into editor"
     },

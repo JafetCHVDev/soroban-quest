@@ -107,6 +107,24 @@ Alternatively, missions can be authored in Markdown format with YAML frontmatter
 - Include both `en` and `es` translations in the `i18n` block.
 - Prefer checks that validate learning goals directly (function signatures, types, storage patterns, auth patterns).
 
+### Mission Authoring CLI
+
+Use the scaffold command to create a reviewable draft instead of adding a raw object directly to `src/data/missions.js`:
+
+```bash
+npm run mission:new
+```
+
+The prompts create `src/data/missions/authored/<id>.json` with locale-key references, a matching Markdown story stub, and matching `missions.<id>` entries in both `src/i18n/locales/en.json` and `src/i18n/locales/es.json`. The prompts can also be automated in scripts with flags such as `--id=storage-basics --chapter=2 --order=4 --difficulty=beginner --xp=150 --title="Storage Basics" --es-title="Conceptos de almacenamiento"`.
+
+Edit the generated JSON and locale entries, then validate all mission data before opening a pull request. Authored JSON missions are discovered automatically by the application:
+
+```bash
+npm run mission:validate
+```
+
+Validation checks mission fields, localized content and locale-key resolution, check types and their required properties, duplicate IDs/orders, campaign-to-mission references, and every JSON file in `src/data/missions/authored/`. CI runs the same command.
+
 ## Validation Check Types Reference
 
 Based on `src/systems/codeValidator.js`. Every listed type currently exists in code.
