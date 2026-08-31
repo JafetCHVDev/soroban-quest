@@ -109,9 +109,17 @@
       "viewMissionMap": "🗺️ Ver mapa de misiones"
     },
     "stats": {
-      "missions": "Misiones",
-      "totalXp": "XP total",
-      "backendNeeded": "Backend necesario"
+      "missionsCompleted": "{{count}}/{{total}} Misiones",
+      "xpEarned": "{{xp}} XP Ganados",
+      "goldEarned": "{{gold}} Oro",
+      "badgesUnlocked": "{{count}} Insignias",
+      "currentLevel": "Nivel {{level}} — {{rank}}",
+      "nextMission": "Siguiente Misión",
+      "continueFrom": "Continuar desde {{title}}",
+      "recentActivity": "Actividad Reciente",
+      "viewAll": "Ver Todo",
+      "quickStats": "Estadísticas Rápidas",
+      "streak": "Racha diaria"
     },
     "howItWorks": {
       "title": "Cómo funciona",
@@ -142,19 +150,6 @@
         "title": "Camino progresivo",
         "body": "Desde \"Hello World\" hasta contratos multi-firma. Cada misión se apoya en la anterior, creando una ruta estructurada hacia el dominio de Soroban."
       }
-    },
-    "stats": {
-      "missionsCompleted": "{{count}}/{{total}} Misiones",
-      "xpEarned": "{{xp}} XP Ganados",
-      "goldEarned": "{{gold}} Oro",
-      "badgesUnlocked": "{{count}} Insignias",
-      "currentLevel": "Nivel {{level}} — {{rank}}",
-      "nextMission": "Siguiente Misión",
-      "continueFrom": "Continuar desde {{title}}",
-      "recentActivity": "Actividad Reciente",
-      "viewAll": "Ver Todo",
-      "quickStats": "Estadísticas Rápidas",
-      "streak": "Racha diaria"
     }
   },
   "footer": {
@@ -426,6 +421,10 @@
     "editor": {
       "reset": "↺ Reiniciar",
       "hint": "💡 Pista",
+      "goldHint": "🪙 Pista ({{cost}} oro)",
+      "goldHintTitle": "Gasta {{cost}} de oro para revelar la siguiente pista al instante",
+      "goldHintInsufficient": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
+      "goldHintUnlocked": "🪙 Pista (desbloqueada)",
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
       "running": "Ejecutando…",
@@ -479,6 +478,8 @@
       "validated": "¡Parámetros de la misión validados!",
       "validationFailed": "Validación fallida. Revisa la terminal.",
       "hintUnlocked": "Pista {{index}} desbloqueada",
+      "hintGoldUnlocked": "Pista {{index}} desbloqueada por {{cost}} de oro",
+      "hintInsufficientGold": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
       "codeReset": "Código restablecido a la plantilla",
       "solutionLoaded": "Solución cargada en el editor"
     },

@@ -28,6 +28,16 @@ export default [
       },
     },
   },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   js.configs.recommended,
   {
     // E2E test files configuration

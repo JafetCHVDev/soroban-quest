@@ -13,6 +13,13 @@
 
 import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
 import { createMissionFromMarkdown } from '../systems/missionParser.js';
+import enLocale from '../i18n/locales/en.json';
+import esLocale from '../i18n/locales/es.json';
+
+const authoredMissions = Object.values(
+    import.meta.glob('./missions/authored/*.json', { eager: true, import: 'default' }),
+);
+const missionLocales = { en: enLocale, es: esLocale };
 
 export const DEFAULT_MISSION_LANG = 'en';
 
@@ -3929,6 +3936,7 @@ impl ConfigContract {
         ],
         conceptsIntroduced: ['access control', 'authorization fix', 'admin guard', 'security audit'],
     },
+    ...authoredMissions,
 ];
 
 /**
@@ -3946,12 +3954,15 @@ export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
         (i18n && (i18n[lang] || i18n[DEFAULT_MISSION_LANG])) || {};
     const fallback = (i18n && i18n[DEFAULT_MISSION_LANG]) || {};
 
-    const pick = (field) =>
-        locale[field] != null
-            ? locale[field]
-            : fallback[field] != null
-            ? fallback[field]
-            : neutral[field];
+    const resolve = (value, language) => {
+        if (typeof value !== 'string' || !value.startsWith('missions.')) return value;
+        return value.split('.').reduce((current, part) => current?.[part], missionLocales[language]);
+    };
+
+    const pick = (field) => {
+        const value = locale[field] != null ? locale[field] : fallback[field] != null ? fallback[field] : neutral[field];
+        return resolve(value, locale === i18n?.[lang] ? lang : DEFAULT_MISSION_LANG);
+    };
 
     return {
         ...neutral,

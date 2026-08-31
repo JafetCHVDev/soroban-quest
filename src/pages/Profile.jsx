@@ -7,6 +7,8 @@ import {
   loadProfile,
   saveProfile,
   readAndValidateFile,
+  mergeProgress,
+  summarizeMerge,
   defaultProfile,
 } from '../systems/storage';
 
@@ -62,6 +64,11 @@ export default function Profile() {
   const rankIndex = Math.min(Math.max(state.level - 1, 0), MAX_RANK_INDEX);
   const rankTitle = t(`ranks.${rankIndex}`);
   const missions = getAllMissions(language);
+
+  // Combined result if the player chooses to merge the imported backup with
+  // their current on-device progress (shown in the import preview modal).
+  const mergeSummary =
+    importPreview?.state ? summarizeMerge(state, importPreview.state) : null;
 
   // Focus trap for import preview modal
   useEffect(() => {
@@ -164,13 +171,16 @@ export default function Profile() {
     }
   };
 
-  const confirmImport = async () => {
+  const confirmImport = async (mode = 'overwrite') => {
     if (!importPreview) return;
 
     try {
-      await exportProgress(importPreview); // Note: keeping original storage flow pattern
       if (importPreview.state) {
-        updateProgress(importPreview.state);
+        const nextState =
+          mode === 'merge'
+            ? mergeProgress(state, importPreview.state)
+            : { ...importPreview.state };
+        updateProgress(nextState);
       }
       if (importPreview.profile) {
         updateProfile(importPreview.profile);
@@ -179,7 +189,12 @@ export default function Profile() {
       const successMsg = t('profile.data.status.imported');
       setImportStatus(successMsg);
 
-      showToast('Progress state imported successfully!', 'success');
+      showToast(
+        mode === 'merge'
+          ? 'Progress merged successfully!'
+          : 'Progress state imported successfully!',
+        'success'
+      );
       showToast(successMsg, 'success');
       logActivity(ACTIVITY_TYPES.IMPORT, {}, t('profile.data.log.imported'));
     } catch {
@@ -593,6 +608,36 @@ export default function Profile() {
               </div>
             )}
 
+            {mergeSummary && (
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">If you Merge (combined with current progress)</h4>
+                <ul className="list-disc list-inside text-sm">
+                  <li>
+                    XP: {mergeSummary.xp.before} → {mergeSummary.xp.after}
+                  </li>
+                  <li>
+                    Gold: {mergeSummary.gold.before} → {mergeSummary.gold.after}
+                  </li>
+                  <li>
+                    Level: {mergeSummary.level.before} → {mergeSummary.level.after}
+                  </li>
+                  <li>
+                    Completed Missions: {mergeSummary.completedMissions.before} →{' '}
+                    {mergeSummary.completedMissions.after} (+
+                    {mergeSummary.completedMissions.added})
+                  </li>
+                  <li>
+                    Badges: {mergeSummary.badges.before} → {mergeSummary.badges.after} (+
+                    {mergeSummary.badges.added})
+                  </li>
+                  <li>
+                    Skill Points: {mergeSummary.skillPoints.before} →{' '}
+                    {mergeSummary.skillPoints.after} (+{mergeSummary.skillPoints.added})
+                  </li>
+                </ul>
+              </div>
+            )}
+
             {importPreview.profile && (
               <div className="mb-4">
                 <h4 className="font-semibold mb-2">Profile</h4>
@@ -603,9 +648,22 @@ export default function Profile() {
               </div>
             )}
 
-            <div className="flex gap-2 mt-4">
-              <button type="button" className="btn btn-primary" onClick={confirmImport}>
-                Confirm Import
+            <div className="flex gap-2 mt-4 flex-wrap">
+              {importPreview.state && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => confirmImport('merge')}
+                >
+                  Merge
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => confirmImport('overwrite')}
+              >
+                Overwrite
               </button>
               <button type="button" className="btn btn-ghost" onClick={cancelImport}>
                 Cancel

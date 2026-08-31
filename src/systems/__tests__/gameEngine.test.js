@@ -25,6 +25,9 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
+  spendGoldForHint,
+  isHintGoldUnlocked,
+  HINT_GOLD_COST,
   _BADGES,
 } from "../gameEngine";
 
@@ -233,6 +236,57 @@ describe("gameEngine core logic", () => {
       const out = checkBadges(s);
       expect(Array.isArray(out.badges)).toBe(true);
       expect(Array.isArray(out.newBadges)).toBe(true);
+    });
+  });
+
+  describe("gold-cost hint system", () => {
+    it("default state has an empty goldUnlockedHints map", () => {
+      const s = getDefaultState();
+      expect(s.goldUnlockedHints).toEqual({});
+    });
+
+    it("deducts gold and records the unlocked hint", () => {
+      const s = { ...baseState, gold: 100 };
+      const out = spendGoldForHint(s, "hello-soroban", 0);
+      expect(out.gold).toBe(100 - HINT_GOLD_COST);
+      expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(true);
+      expect(out.insufficientGold).toBe(false);
+    });
+
+    it("does not re-charge an already gold-unlocked hint on revisit", () => {
+      const s = { ...baseState, gold: 100 };
+      const first = spendGoldForHint(s, "hello-soroban", 0);
+      const goldAfterFirst = first.gold;
+      const second = spendGoldForHint(first, "hello-soroban", 0);
+      expect(second.gold).toBe(goldAfterFirst);
+      expect(second.hintAlreadyUnlocked).toBe(true);
+    });
+
+    it("refuses to unlock when the player cannot afford the cost", () => {
+      const s = { ...baseState, gold: HINT_GOLD_COST - 1 };
+      const out = spendGoldForHint(s, "hello-soroban", 0);
+      expect(out.gold).toBe(HINT_GOLD_COST - 1);
+      expect(out.insufficientGold).toBe(true);
+      expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(false);
+    });
+
+    it("tracks unlocked hints independently per mission and index", () => {
+      let s = { ...baseState, gold: 500 };
+      s = spendGoldForHint(s, "mission-a", 0);
+      s = spendGoldForHint(s, "mission-a", 1);
+      s = spendGoldForHint(s, "mission-b", 0);
+      expect(isHintGoldUnlocked(s, "mission-a", 0)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-a", 1)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-b", 0)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-a", 2)).toBe(false);
+      expect(isHintGoldUnlocked(s, "mission-b", 1)).toBe(false);
+      expect(s.gold).toBe(500 - HINT_GOLD_COST * 3);
+    });
+
+    it("supports a custom cost argument", () => {
+      const s = { ...baseState, gold: 100 };
+      const out = spendGoldForHint(s, "hello-soroban", 0, 10);
+      expect(out.gold).toBe(90);
     });
   });
 
