@@ -15,6 +15,8 @@
     "test:visual:update": "npx playwright test --project=visual-chromium --update-snapshots",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch",
     "mission:new": "node scripts/create-mission.mjs",
     "mission:validate": "node scripts/validate-missions.mjs"
   },
@@ -35,6 +37,9 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.6",
     "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.0",
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
     "@typescript-eslint/parser": "^8.62.0",
     "@vitejs/plugin-react": "^4.3.4",

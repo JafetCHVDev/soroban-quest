@@ -25,6 +25,7 @@ export const DEFAULT_MISSION_LANG = 'en';
 
 const helloSorobanContent = createMissionFromMarkdown(helloSorobanMarkdown);
 
+/* eslint-disable no-useless-escape */
 export const missions = [
     {
         id: 'hello-soroban',
