@@ -48,6 +48,42 @@ export default [
   },
   js.configs.recommended,
   {
+    // E2E test files configuration
+    files: ['e2e/**/*.{js,ts}'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      parser: tsParser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': ts,
+    },
+    rules: {
+      ...ts.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      'no-undef': 'off', // Playwright provides globals
+    },
+  },
+  {
     // Target both .js, .ts, and .tsx files inside src
     files: ['src/**/*.{js,ts,tsx}'],
     languageOptions: {

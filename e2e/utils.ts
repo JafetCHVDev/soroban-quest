@@ -39,13 +39,21 @@ export async function seedVisualRegressionState(page: Page, fixtureName: string)
 }
 
 export async function maskDynamicElements(page: Page) {
+  // Use a more efficient single style injection
   await page.addStyleTag({
     content: `
-      .confetti-container, .confetti-piece {
+      .confetti-container, .confetti-piece,
+      .toast, [role="status"],
+      .loading-spinner, .progress-bar,
+      [data-testid="dynamic-content"] {
         visibility: hidden !important;
+        opacity: 0 !important;
       }
-      .toast, [role="status"] {
-        display: none !important;
+      *, *:before, *:after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
       }
     `,
   });
@@ -95,7 +103,7 @@ export async function waitForTestResults(page: Page) {
   const testResultsContainer = page.locator(
     '.terminal-line, [class*="test-results"], [class*="TestResults"], [data-testid="test-results"]',
   );
-  await expect(testResultsContainer.first()).toBeVisible({ timeout: 30000 });
+  await expect(testResultsContainer.first()).toBeVisible({ timeout: 20000 }); // Reduced from 30000
 }
 
 /**
@@ -103,7 +111,7 @@ export async function waitForTestResults(page: Page) {
  */
 export async function checkXPDisplay(page: Page, expectedXP: number) {
   // Look for XP display in common locations (Navbar, stats, modal)
-  const xpElements = page.locator('text=/XP|xp.*\\d+/, [class*="xp"], [class*="XP"], [data-testid*="xp"]');
+  // const xpElements = page.locator('text=/XP|xp.*\\d+/, [class*="xp"], [class*="XP"], [data-testid*="xp"]');
   
   // Try to find exact XP value in the page text
   const xpText = page.locator(`text=/${expectedXP}/`);
@@ -113,7 +121,7 @@ export async function checkXPDisplay(page: Page, expectedXP: number) {
 /**
  * Verify localStorage state via page.evaluate()
  */
-export async function verifyLocalStorageState(page: Page, key: string, expectedValue: any) {
+export async function verifyLocalStorageState(page: Page, key: string, expectedValue: unknown) {
   const value = await page.evaluate((storageKey) => {
     const item = localStorage.getItem(storageKey);
     return item ? JSON.parse(item) : null;
@@ -130,6 +138,11 @@ export async function waitForConfetti(page: Page) {
   await expect(confetti).toBeVisible({ timeout: 10000 });
 }
 
+interface ProfileEntry {
+  id: string;
+  progress?: unknown;
+}
+
 /**
  * Get mission data from localStorage
  */
@@ -138,9 +151,9 @@ export async function getMissionProgressFromStorage(page: Page) {
     const profilesData = localStorage.getItem('soroban_quest_profiles');
     if (profilesData) {
       try {
-        const profiles = JSON.parse(profilesData);
+        const profiles: ProfileEntry[] = JSON.parse(profilesData);
         const activeId = localStorage.getItem('soroban_quest_active_profile');
-        const slot = profiles.find((entry) => entry.id === activeId) || profiles[0];
+        const slot = profiles.find((entry: ProfileEntry) => entry.id === activeId) || profiles[0];
         if (slot?.progress) return slot.progress;
       } catch {
         /* fall through */

@@ -50,7 +50,7 @@ type Scenario = {
   name: string;
   route: string;
   fixture: string;
-  prepare?: (page: import('@playwright/test').Page) => Promise<void>;
+  prepare?: (_page: import('@playwright/test').Page) => Promise<void>;
 };
 
 const scenarios: Scenario[] = [
@@ -75,7 +75,7 @@ const scenarios: Scenario[] = [
       await page.locator('.search-input').fill('storage');
       await page.locator('.difficulty-filters button').nth(2).click();
       await page.locator('.chapter-filters button').nth(1).click();
-      await page.waitForTimeout(250);
+      await page.waitForTimeout(150); // Reduced from 250ms
     },
   },
   { name: 'mission-detail', route: '/mission/hello-soroban', fixture: 'mission-detail' },
@@ -113,7 +113,7 @@ const scenarios: Scenario[] = [
       await page.locator('input[type="search"]').fill('mission');
       await page.locator('.filter-chip').filter({ hasText: 'Mission' }).click();
       await page.locator('.filter-chip').filter({ hasText: 'Today' }).click();
-      await page.waitForTimeout(250);
+      await page.waitForTimeout(150); // Reduced from 250ms
     },
   },
   { name: 'skill-tree', route: '/skills', fixture: 'skill-tree' },
@@ -126,15 +126,15 @@ const scenarios: Scenario[] = [
     fixture: 'shop',
     prepare: async (page) => {
       await page.locator('.shop-item-btn').filter({ hasText: /buy/i }).first().click();
-      await page.waitForTimeout(250);
+      await page.waitForTimeout(150); // Reduced from 250ms
     },
   },
   { name: 'not-found', route: '/does-not-exist', fixture: 'home' },
 ];
 
 async function waitForPageReady(page: import('@playwright/test').Page) {
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(400);
+  await page.waitForLoadState('networkidle', { timeout: 15000 });
+  await page.waitForTimeout(200); // Reduced from 400ms
 }
 
 async function prepareScenarioPage(page: import('@playwright/test').Page, viewport: (typeof viewports)[number], theme: (typeof themes)[number], scenario: Scenario) {
@@ -143,14 +143,19 @@ async function prepareScenarioPage(page: import('@playwright/test').Page, viewpo
   await clearLocalStorageBeforePageLoad(page);
   await setAppTheme(page, theme.value);
   await seedVisualRegressionState(page, scenario.fixture);
+  
+  // Navigate and wait for page to be ready
   await page.goto(scenario.route);
   await waitForPageReady(page);
 
+  // Execute scenario-specific preparation
   if (scenario.prepare) {
     await scenario.prepare(page);
   }
 
+  // Apply masking and ensure page is stable
   await maskDynamicElements(page);
+  await page.waitForTimeout(100); // Final stabilization wait
 }
 
 for (const viewport of viewports) {
