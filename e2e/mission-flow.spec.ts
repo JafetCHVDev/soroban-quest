@@ -12,6 +12,32 @@ import {
   isMissionCompleted,
 } from './utils';
 
+const CORRECT_SOLUTION = `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
+        vec![&env, symbol_short!("Hello"), to]
+    }
+}`;
+
+const INCORRECT_SOLUTION = `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
+        Vec::new(&env)
+    }
+}`;
+
 test.describe('Mission Gameplay Flow — Complete Tests', () => {
   test.beforeEach(async ({ page }) => {
     await clearLocalStorageBeforePageLoad(page);
@@ -30,7 +56,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await firstCampaign.click();
 
     // Wait for campaign detail overlay
-    const campaignOverlay = page.locator('.campaign-detail-overlay, .missions-list').first();
+    const campaignOverlay = page.locator('.campaign-detail-overlay');
     await expect(campaignOverlay).toBeVisible({ timeout: 10000 });
 
     // Click first mission (hello-soroban)
@@ -44,7 +70,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     // Wait for Monaco editor to load
     await waitForMonaco(page);
 
-    await fillMonacoEditor(page, HELLO_SOROBAN_SOLUTION);
+    await fillMonacoEditor(page, CORRECT_SOLUTION);
 
     // Click "Run Tests" button
     const runTestsBtn = page.locator('button:has-text("Run Tests")').first();
@@ -80,11 +106,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     // Wait for Monaco editor
     await waitForMonaco(page);
 
-    // Write incorrect solution (missing parts)
-    const incorrectSolution = `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
-  vec![&env]
-}`;
-    await fillMonacoEditor(page, incorrectSolution);
+    await fillMonacoEditor(page, INCORRECT_SOLUTION);
 
     // Click "Run Tests"
     const runTestsBtn = page.locator('button:has-text("Run Tests")').first();
@@ -143,48 +165,54 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await page.goto('/#/mission/hello-soroban');
     await page.waitForLoadState('networkidle');
 
-    // Look for "Show Solution" button
-    const showSolutionBtn = page.locator('button:has-text("Solution"), button:has-text("Show Solution"), [class*="solution"]').first();
-    if (await showSolutionBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await showSolutionBtn.click();
+    await waitForMonaco(page);
 
-      // Assert confirmation dialog appears
-      const confirmDialog = page.locator('[role="dialog"], .modal, [class*="confirmation"]').first();
-      await expect(confirmDialog).toBeVisible({ timeout: 5000 });
+    // Click "Solution" button — handler loads solution directly into editor
+    const showSolutionBtn = page.locator('button:has-text("Solution"), button[aria-label*="solution"]').first();
+    await expect(showSolutionBtn).toBeVisible({ timeout: 5000 });
+    await showSolutionBtn.click();
 
-      // Look for confirmation button (Confirm, Yes, Reveal, etc.)
-      const confirmBtn = page.locator('button:has-text("Confirm"), button:has-text("Yes"), button:has-text("Reveal"), button:has-text("OK")').first();
-      if (await confirmBtn.isVisible()) {
-        await confirmBtn.click();
+    // Wait for editor content to update
+    await page.waitForTimeout(500);
 
-        // Assert solution code loads in editor
-        await waitForMonaco(page);
-        const editorContent = page.locator('.monaco-editor');
-        await expect(editorContent).toBeVisible({ timeout: 5000 });
+    // Assert solution code loads in editor
+    const editorHasContent = await page.evaluate(() => {
+      const editors = (window as any).monaco?.editor?.getEditors?.();
+      if (editors && editors.length > 0) {
+        return editors[0].getValue().length > 0;
       }
-    }
+      return false;
+    });
+    expect(editorHasContent).toBe(true);
   });
 
   // ═══════════════════════════════════════════════════════════════════════════════
   // SCENARIO 5: Campaign Progression Flow
   // ═══════════════════════════════════════════════════════════════════════════════
   test('Scenario 5: Should unlock next campaign after completing all missions', async ({ page }) => {
-    // Pre-complete all missions in Chapter 1
+    // Pre-complete all missions in Chapter 1 with enough XP for level 3 (campaign 2 requires level 3)
     await page.goto('/');
     await page.evaluate(() => {
-      const progress = {
-        completedMissions: ['hello-soroban', 'greetings-protocol'],
-        xp: 2000,
-        level: 3,
-        badges: [],
-        firstTryMissions: ['hello-soroban', 'greetings-protocol'],
-        streak: 0,
-        lastLogin: null,
-        gold: 100,
-        purchasedItems: [],
-        missionAttempts: {},
+      const profileSlot = {
+        id: 'player-1',
+        profile: { name: 'Player 1', avatar: '🛡️' },
+        progress: {
+          completedMissions: ['hello-soroban', 'greetings-protocol'],
+          xp: 2000,
+          level: 3,
+          badges: [],
+          firstTryMissions: ['hello-soroban', 'greetings-protocol'],
+          streak: 0,
+          lastLogin: null,
+          gold: 100,
+          purchasedItems: [],
+          missionAttempts: {},
+        },
       };
-      localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
+      localStorage.setItem('soroban_quest_profiles', JSON.stringify([profileSlot]));
+      localStorage.setItem('soroban_quest_active_profile', 'player-1');
+      localStorage.removeItem('soroban_quest_progress');
+      localStorage.removeItem('soroban_quest_profile');
     });
 
     await page.reload();
@@ -210,21 +238,28 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     // Start with cleared localStorage (level 1)
     await page.goto('/');
 
-    // Manually award enough XP to trigger level up (XP for level 2 is 500)
+    // Manually set initial state
     await page.evaluate(() => {
-      const progress = {
-        completedMissions: [],
-        xp: 0,
-        level: 1,
-        badges: [],
-        firstTryMissions: [],
-        streak: 0,
-        lastLogin: null,
-        gold: 0,
-        purchasedItems: [],
-        missionAttempts: {},
+      const profileSlot = {
+        id: 'player-1',
+        profile: { name: 'Stellar Guardian', avatar: '🛡️' },
+        progress: {
+          completedMissions: [],
+          xp: 0,
+          level: 1,
+          badges: [],
+          firstTryMissions: [],
+          streak: 0,
+          lastLogin: null,
+          gold: 0,
+          purchasedItems: [],
+          missionAttempts: {},
+        },
       };
-      localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
+      localStorage.setItem('soroban_quest_profiles', JSON.stringify([profileSlot]));
+      localStorage.setItem('soroban_quest_active_profile', 'player-1');
+      localStorage.removeItem('soroban_quest_progress');
+      localStorage.removeItem('soroban_quest_profile');
     });
 
     await page.reload();
@@ -238,7 +273,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     const runTestsBtn = page.locator('button:has-text("Run Tests")').first();
     await runTestsBtn.click({ force: true });
 
-    // Wait for completion
+    // Wait for completion & progress save
     await waitForTestResults(page);
     await waitForConfetti(page);
 
@@ -302,19 +337,26 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     // Set up initial progress
     await page.goto('/');
     await page.evaluate(() => {
-      const progress = {
-        completedMissions: ['hello-soroban'],
-        xp: 100,
-        level: 1,
-        badges: ['first_contract'],
-        firstTryMissions: ['hello-soroban'],
-        streak: 1,
-        lastLogin: new Date().toISOString().split('T')[0],
-        gold: 50,
-        purchasedItems: [],
-        missionAttempts: { 'hello-soroban': 1 },
+      const profileSlot = {
+        id: 'player-1',
+        profile: { name: 'Stellar Guardian', avatar: '🛡️' },
+        progress: {
+          completedMissions: ['hello-soroban'],
+          xp: 100,
+          level: 1,
+          badges: ['first_contract'],
+          firstTryMissions: ['hello-soroban'],
+          streak: 1,
+          lastLogin: new Date().toISOString().split('T')[0],
+          gold: 50,
+          purchasedItems: [],
+          missionAttempts: { 'hello-soroban': 1 },
+        },
       };
-      localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
+      localStorage.setItem('soroban_quest_profiles', JSON.stringify([profileSlot]));
+      localStorage.setItem('soroban_quest_active_profile', 'player-1');
+      localStorage.removeItem('soroban_quest_progress');
+      localStorage.removeItem('soroban_quest_profile');
     });
 
     // Get initial state
@@ -383,7 +425,8 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await runTestsBtn.click({ force: true });
 
     await waitForTestResults(page);
-    await expect(page.locator('.mission-detail, .terminal-line').first()).toBeVisible();
+    const passed = page.locator('.terminal-line.pass');
+    await expect(passed.first()).toBeVisible();
   });
 
   test('Scenario 10: Should complete mission on mobile viewport (375x667)', async ({ page }) => {
@@ -396,6 +439,13 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     const mainContent = page.locator('.main-content, main');
     await expect(mainContent).toBeVisible();
 
+    // On mobile, click the Editor tab to show the editor panel
+    const editorTab = page.locator('.mobile-tabs .tab-btn').nth(1);
+    if (await editorTab.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await editorTab.click();
+      await page.waitForTimeout(500);
+    }
+
     // Verify editor is accessible on mobile
     await waitForMonaco(page);
     await fillMonacoEditor(page, HELLO_SOROBAN_SOLUTION);
@@ -405,7 +455,8 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await runTestsBtn.click({ force: true });
 
     await waitForTestResults(page);
-    await expect(page.locator('.mission-detail, .terminal-line').first()).toBeVisible();
+    const passed = page.locator('.terminal-line.pass');
+    await expect(passed.first()).toBeVisible();
   });
 
   // ═══════════════════════════════════════════════════════════════════════════════
@@ -439,10 +490,7 @@ test.describe('Mission Gameplay Flow — Complete Tests', () => {
     await page.waitForLoadState('networkidle');
 
     await waitForMonaco(page);
-    const incorrectSolution = `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol> {
-  vec![]
-}`;
-    await fillMonacoEditor(page, incorrectSolution);
+    await fillMonacoEditor(page, INCORRECT_SOLUTION);
 
     const runTestsBtn = page.locator('button:has-text("Run Tests")').first();
     await runTestsBtn.click({ force: true });

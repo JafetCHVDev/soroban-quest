@@ -62,6 +62,21 @@ Complétez ces contrats fondamentaux pour débloquer le **Chapitre 2 : Chambre d
 
 **0/2 missions** • **Niveau 1 requis**`,
       },
+      ja: {
+        title: 'チャプター1: 目覚めの刻',
+        description: '最初のSoroban契約をマスター。Stellar Guardianとしてのあなたの道を鍛造してください。',
+        lore: `# 🌌 チャプター1: 目覚めの刻
+
+**Stellar Citadel**の門に立っています。既知の宇宙の端の軌道を回っています。古代の**Sorobanの守護者**があなたの到着を感じました。
+
+*"また別のシーカーか,"* エルダーガーディアンがささやきます。*"ブロックチェーンは応答するコードを持つ者を呼んでいます。"*
+
+## あなたの運命が待っています
+
+これらの基礎契約を完了して**チャプター2: 記憶の金庫**をアンロック。
+
+**0/2 ミッション** • **レベル1 必須**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #8b5cf6 50%, #f59e0b 100%)',
     chapterNumber: 1,
@@ -116,6 +131,21 @@ La **Tour des Signaux** s'estompe derrière vous. Vous descendez dans la **Chamb
 Maîtrisez la gestion de l'état pour accéder au **Chapitre 3 : Forge de Jetons**.
 
 **0/2 missions** • **Niveau 3 requis**`,
+      },
+      ja: {
+        title: 'チャプター2: 記憶の金庫',
+        description: '永続ストレージとアクセス制御をアンロック。記憶が本当の力を定義します。',
+        lore: `# 🔐 チャプター2: 記憶の金庫
+
+**信号塔**があなたの後ろで消えています。**記憶の金庫**に下ります。ここは古代の知恵が永遠を通じて存続する場所です。
+
+*"記憶のない契約は一瞬の考え,"* 金庫の番人がつぶやきます。*"存続するには、保存し保護する必要があります。"*
+
+## 第二の試験
+
+状態管理をマスターして**チャプター3: トークン鍛造所**にアクセス。
+
+**0/2 ミッション** • **レベル3 必須**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #8b5cf6 0%, #f59e0b 50%, #ef4444 100%)',
@@ -172,6 +202,21 @@ Complétez la Forge de Jetons pour obtenir le statut de **Gardien Légendaire**.
 
 **0/3 missions** • **Niveau 5 requis**`,
       },
+      ja: {
+        title: 'チャプター3: トークン鍛造所',
+        description: 'トークンを鋳造し、時間ロックをマスター、マルチシグで統治。マスターガーディアンになってください。',
+        lore: `# ⚒️ チャプター3: トークン鍛造所
+
+**時間の門**が力で振動しています。あなたは**トークン鍛造所**に入ります — Stellar経済の中心。
+
+*"真の習得は永続する価値を生み出します,"* 鍛冶職人が宣言します。*"トークン、時間、信頼 — すべてを鍛造してください。"*
+
+## 最終チャレンジ
+
+トークン鍛造所を完了して**伝説のガーディアン**ステータスを獲得。
+
+**0/3 ミッション** • **レベル5 必須**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #06d6a0 100%)',
     chapterNumber: 3,
@@ -226,6 +271,21 @@ Au-delà de la Salle des Pactes, vous découvrez la **Forteresse de Données** �
 Construisez des contrats axés sur les données pour débloquer le **Chapitre 5 : Protocoles Avancés**.
 
 **0/3 missions** • **Niveau 7 requis**`,
+      },
+      ja: {
+        title: 'チャプター4: データ要塞',
+        description: 'Map、イベント、委譲承認を使用した複雑な状態管理をマスター。',
+        lore: `# 🏦 チャプター4: データ要塞
+
+協約の間を超えて、**データ要塞**を発見します — 高度な状態が構築される広大なリポジトリ。
+
+*"データはすべての偉大な契約の基礎である,"* アーキテクトが宣言します。*"マルチユーザー状態の管理、イベント発行、権限委譲を学んでください。"*
+
+## 第四の試験
+
+データ駆動型契約を構築して**チャプター5: 先進的なプロトコル**をアンロック。
+
+**0/3 ミッション** • **レベル7 必須**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
@@ -282,6 +342,21 @@ Maîtrisez les modèles de protocoles avancés pour atteindre le **Chapitre 6 : 
 
 **0/3 missions** • **Niveau 9 requis**`,
       },
+      ja: {
+        title: 'チャプター5: 先進的なプロトコル',
+        description: '実世界のDeFiプロトコルを構築 — クラウドファンディング、エスクロー、サブスクリプション。',
+        lore: `# 🔄 チャプター5: 先進的なプロトコル
+
+**Crowdforgeの競技場**がエネルギーで鳴っています。あなたは実世界のDeFiプロトコルの領域に入ります。
+
+*"これらは新しい経済に電力を供給する契約である,"* プロトコルパイオニアが言います。*"クラウドファンディング、エスクロー、サブスクリプション — すべて構築してください。"*
+
+## 第五の試験
+
+先進的なプロトコルパターンをマスターして**チャプター6: 生産システム**に到達。
+
+**0/3 ミッション** • **レベル9 必須**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
     chapterNumber: 5,
@@ -337,6 +412,21 @@ Complétez tous les Systèmes de Production pour gagner le titre d'**Architecte 
 
 **0/4 missions** • **Niveau 12 requis**`,
       },
+      ja: {
+        title: 'チャプター6: 生産システム',
+        description: '生産グレードの契約をデプロイ — フラッシュローン、RBAC、オラクル、ガバナンス。',
+        lore: `# ⚡ チャプター6: 生産システム
+
+**稲妻の金庫**が力で劈いています。あなたはSoroban開発の頂点に到達しました。
+
+*"あなたはStellarエコシステムの最高のコントラクトエンジニアの間に立っている,"* グレートエルダーが宣言します。*"フラッシュローン、ロールベースセキュリティ、価格オラクル、オンチェーンガバナンス — DeFiを定義するシステムをマスター。"*
+
+## 最終試練
+
+すべての生産システムを完了して**Stellar Architect**のタイトルを獲得。
+
+**0/4 ミッション** • **レベル12 必須**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
     chapterNumber: 6,
@@ -391,6 +481,21 @@ La **Forge des Vulnérabilités** repose dans les profondeurs de la Citadelle. I
 Corrigez les vulnérabilités de sécurité pour compléter le défi Sécurité et CTF.
 
 **0/2 missions** • **Niveau 14 requis**`,
+      },
+      ja: {
+        title: 'チャプター7: セキュリティ & CTF',
+        description: '脆弱性を狩り、危険にさらされた契約のセキュリティ欠陥を修正。',
+        lore: `# 🛡️ チャプター7: セキュリティ & CTF
+
+**脆弱性鍛造所**がシタデルの深くに横たわっています。ここで、破損した契約は全体になります。
+
+*"守護者は敵が利用する前に欠陥を知る必要があります,"* セキュリティセージが警告します。*"再入攻撃、アクセス制御、オーバーフロー — すべてに直面してください。"*
+
+## セキュリティ試練
+
+セキュリティ脆弱性を修正してセキュリティ & CTF試練を完了。
+
+**0/2 ミッション** • **レベル14 必須**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',

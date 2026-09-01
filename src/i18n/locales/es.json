@@ -73,6 +73,7 @@
     "subtitle": "Explora, busca y filtra todas las misiones disponibles.",
     "searchPlaceholder": "Buscar misiones...",
     "allCampaigns": "Todas las Campañas",
+    "standalone": "Independiente",
     "allDifficulties": "Todas las Dificultades",
     "beginner": "Principiante",
     "intermediate": "Intermedio",
@@ -82,6 +83,14 @@
     "incomplete": "Incompletas",
     "done": "Hecho",
     "noResults": "No se encontraron misiones que coincidan con tus criterios."
+  },
+  "theoryQuest": {
+    "submit": "Enviar respuesta",
+    "correct": "¡Correcto!",
+    "incorrect": "No del todo.",
+    "correctToast": "¡Respuesta correcta!",
+    "incorrectToast": "Inténtalo de nuevo — revisa la explicación.",
+    "completed": "Esta teoría ya ha sido completada."
   },
   "home": {
     "badge": "✨ Sin configuración • Sin billetera • Código abierto",
@@ -98,9 +107,17 @@
       "viewMissionMap": "🗺️ Ver mapa de misiones"
     },
     "stats": {
-      "missions": "Misiones",
-      "totalXp": "XP total",
-      "backendNeeded": "Backend necesario"
+      "missionsCompleted": "{{count}}/{{total}} Misiones",
+      "xpEarned": "{{xp}} XP Ganados",
+      "goldEarned": "{{gold}} Oro",
+      "badgesUnlocked": "{{count}} Insignias",
+      "currentLevel": "Nivel {{level}} — {{rank}}",
+      "nextMission": "Siguiente Misión",
+      "continueFrom": "Continuar desde {{title}}",
+      "recentActivity": "Actividad Reciente",
+      "viewAll": "Ver Todo",
+      "quickStats": "Estadísticas Rápidas",
+      "streak": "Racha diaria"
     },
     "howItWorks": {
       "title": "Cómo funciona",
@@ -131,19 +148,6 @@
         "title": "Camino progresivo",
         "body": "Desde \"Hello World\" hasta contratos multi-firma. Cada misión se apoya en la anterior, creando una ruta estructurada hacia el dominio de Soroban."
       }
-    },
-    "stats": {
-      "missionsCompleted": "{{count}}/{{total}} Misiones",
-      "xpEarned": "{{xp}} XP Ganados",
-      "goldEarned": "{{gold}} Oro",
-      "badgesUnlocked": "{{count}} Insignias",
-      "currentLevel": "Nivel {{level}} — {{rank}}",
-      "nextMission": "Siguiente Misión",
-      "continueFrom": "Continuar desde {{title}}",
-      "recentActivity": "Actividad Reciente",
-      "viewAll": "Ver Todo",
-      "quickStats": "Estadísticas Rápidas",
-      "streak": "Racha diaria"
     }
   },
   "footer": {
@@ -374,10 +378,12 @@
     },
     "chapters": {
       "all": "Todos los capítulos",
-      "n": "Capítulo {{number}}"
+      "n": "Capítulo {{number}}",
+      "standalone": "Independiente"
     },
     "card": {
       "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
+      "standaloneMission": "Independiente • Misión {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completada",
       "locked": "🔒 Bloqueada",
@@ -415,6 +421,10 @@
     "editor": {
       "reset": "↺ Reiniciar",
       "hint": "💡 Pista",
+      "goldHint": "🪙 Pista ({{cost}} oro)",
+      "goldHintTitle": "Gasta {{cost}} de oro para revelar la siguiente pista al instante",
+      "goldHintInsufficient": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
+      "goldHintUnlocked": "🪙 Pista (desbloqueada)",
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
       "running": "Ejecutando…",
@@ -468,6 +478,8 @@
       "validated": "¡Parámetros de la misión validados!",
       "validationFailed": "Validación fallida. Revisa la terminal.",
       "hintUnlocked": "Pista {{index}} desbloqueada",
+      "hintGoldUnlocked": "Pista {{index}} desbloqueada por {{cost}} de oro",
+      "hintInsufficientGold": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
       "codeReset": "Código restablecido a la plantilla",
       "solutionLoaded": "Solución cargada en el editor"
     },

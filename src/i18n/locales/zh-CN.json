@@ -1,0 +1,592 @@
+{
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "zh-CN": "简体中文"
+  },
+  "common": {
+    "selectLanguage": "选择语言",
+    "toggleTheme": "切换主题",
+    "back": "返回",
+    "close": "关闭",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "loading": "加载中…",
+    "all": "全部",
+    "level": "等级",
+    "xp": "XP",
+    "chapter": "章节",
+    "mission": "任务",
+    "complete": "完成",
+    "completed": "已完成",
+    "locked": "已锁定",
+    "unlocked": "已解锁",
+    "skipToContent": "跳到主要内容"
+  },
+  "shortcuts": {
+    "title": "键盘快捷键",
+    "subtitle": "用快速组合键掌握 Soroban Quest",
+    "sections": {
+      "navigation": "导航",
+      "editor": "代码编辑器",
+      "general": "通用"
+    },
+    "nav": {
+      "home": "前往首页",
+      "campaigns": "前往战役",
+      "missions": "前往任务",
+      "profile": "前往个人资料",
+      "journal": "前往日志"
+    },
+    "editor": {
+      "runTests": "运行代码 / 测试",
+      "resetTemplate": "重置模板",
+      "showSolution": "显示解答",
+      "toggleHints": "切换提示",
+      "toggleTheme": "切换编辑器主题"
+    },
+    "general": {
+      "openModal": "打开快捷键窗口",
+      "closeModal": "关闭任意窗口"
+    }
+  },
+  "navbar": {
+    "home": "首页",
+    "quests": "任务",
+    "campaigns": "战役",
+    "missions": "任务",
+    "profile": "个人资料",
+    "journal": "日志",
+    "leaderboard": "排行榜",
+    "achievements": "成就",
+    "shop": "商店",
+    "ariaMain": "主导航",
+    "ariaHome": "前往首页",
+    "ariaMobile": "移动端导航菜单",
+    "userProfile": "用户资料：",
+    "openMenu": "打开导航菜单",
+    "closeMenu": "关闭导航菜单",
+    "replayTutorial": "重放教程"
+  },
+  "quests": {
+    "title": "任务目录",
+    "subtitle": "浏览、搜索并筛选所有可用任务。",
+    "searchPlaceholder": "搜索任务...",
+    "allCampaigns": "全部战役",
+    "standalone": "独立",
+    "allDifficulties": "全部难度",
+    "beginner": "初级",
+    "intermediate": "中级",
+    "advanced": "高级",
+    "allStatus": "全部状态",
+    "completed": "已完成",
+    "incomplete": "未完成",
+    "done": "已完成",
+    "noResults": "没有符合条件的任务。"
+  },
+  "theoryQuest": {
+    "submit": "提交答案",
+    "correct": "正确！",
+    "incorrect": "不完全正确。",
+    "correctToast": "答案正确！",
+    "incorrectToast": "再试一次 — 查看说明。",
+    "completed": "这个理论任务已完成。"
+  },
+  "home": {
+    "badge": "✨ 零配置 • 无需钱包 • 开源",
+    "title": {
+      "lead": "掌握",
+      "brand": "Soroban",
+      "tail": "智能合约"
+    },
+    "subtitle": "踏上学习 Stellar 智能合约平台的冒险之旅。在浏览器中编写真实的 Soroban 代码，解决挑战并提升你的区块链技能——无需安装。",
+    "cta": {
+      "continueQuest": "⚔️ 继续任务",
+      "viewProgress": "📊 查看进度",
+      "beginJourney": "🚀 开始旅程",
+      "viewMissionMap": "🗺️ 查看任务地图"
+    },
+    "howItWorks": {
+      "title": "它如何运作",
+      "subtitle": "从零到 Soroban 精通的旅程，全部在浏览器中完成。"
+    },
+    "features": {
+      "read": {
+        "title": "阅读任务",
+        "body": "每个任务都讲述故事，并教授核心的 Soroban 概念。通过叙事驱动的挑战学习合约、存储、代币等内容。"
+      },
+      "write": {
+        "title": "编写代码",
+        "body": "使用内置 Monaco 编辑器，支持 Rust 语法高亮和 Soroban 自动补全。模板可以帮助你开始，只需填充逻辑即可。"
+      },
+      "test": {
+        "title": "运行测试",
+        "body": "通过即时反馈验证你的代码。每个任务都包含隐藏检查，验证你的合约结构、函数和模式。"
+      },
+      "xp": {
+        "title": "获得 XP 并升级",
+        "body": "每完成一个任务都能获得经验值。解锁徽章、提升等级，并追踪你从新手到 Stellar 主宰的旅程。"
+      },
+      "zeroBackend": {
+        "title": "零后端",
+        "body": "一切都在浏览器中运行。没有服务器、数据库或账户。你的进度保存在本地——并可随时导出为 JSON 文件。"
+      },
+      "path": {
+        "title": "渐进式路线",
+        "body": "从 “Hello World” 到多签名合约。每个任务都建立在前一个任务之上，形成通往 Soroban 精通的结构化路径。"
+      }
+    },
+    "stats": {
+      "missionsCompleted": "{{count}}/{{total}} 个任务",
+      "xpEarned": "已获得 {{xp}} XP",
+      "goldEarned": "{{gold}} 金币",
+      "badgesUnlocked": "{{count}} 个徽章",
+      "currentLevel": "等级 {{level}} — {{rank}}",
+      "nextMission": "下一任务",
+      "continueFrom": "继续：{{title}}",
+      "recentActivity": "最近活动",
+      "viewAll": "查看全部",
+      "quickStats": "快速统计",
+      "streak": "连续天数"
+    }
+  },
+  "footer": {
+    "platform": {
+      "heading": "平台",
+      "home": "首页",
+      "missions": "任务",
+      "profile": "个人资料"
+    },
+    "resources": {
+      "heading": "资源",
+      "docs": "Soroban 文档",
+      "sdk": "Stellar SDK",
+      "github": "GitHub",
+      "glossary": "术语表",
+      "faq": "FAQ"
+    },
+    "community": {
+      "heading": "社区",
+      "discord": "Discord",
+      "telegram": "Telegram",
+      "forum": "Stellar 论坛",
+      "blog": "Stellar 博客"
+    },
+    "credits": {
+      "tagline": "为 Stellar 生态系统构建",
+      "license": "MIT 许可证"
+    }
+  },
+  "notFound": {
+    "title": "该任务不存在",
+    "body": "你似乎迷失在深空之中",
+    "back": "返回基地"
+  },
+  "errorBoundary": {
+    "generic": {
+      "title": "出现了错误",
+      "body": "任务遇到了运行时错误。请检查控制台获取详细信息。",
+      "reload": "重新加载",
+      "goHome": "返回首页",
+      "report": "报告问题"
+    },
+    "editor": {
+      "body": "编辑器加载失败",
+      "reset": "重置编辑器"
+    },
+    "mission": {
+      "title": "任务不可用",
+      "retry": "重试"
+    }
+  },
+  "profile": {
+    "edit": "✏️ 编辑资料",
+    "viewJournal": "📖 查看日志",
+    "aria": {
+      "selectAvatar": "选择头像 {{avatar}}",
+      "completedListing": "已完成任务列表",
+      "completedEntry": "{{title}}，获得 {{xp}} XP"
+    },
+    "editPanel": {
+      "title": "编辑资料",
+      "nameLabel": "冒险者名称",
+      "avatarLegend": "选择头像",
+      "namePlaceholder": "输入名称"
+    },
+    "selector": {
+      "title": "当前资料",
+      "help": "正在使用 {{count}} / {{max}} 个本地配置文件。",
+      "meta": "等级 {{level}} • {{xp}} XP",
+      "create": "创建资料",
+      "emptySlot": "空白槽位",
+      "defaultName": "玩家 {{number}}"
+    },
+    "stats": {
+      "missions": "任务",
+      "badges": "徽章"
+    },
+    "sections": {
+      "badges": "🏅 徽章",
+      "completedMissions": "✅ 已完成任务",
+      "data": "⚙️ 数据"
+    },
+    "noMissions": "尚未完成任何任务。",
+    "xpBar": {
+      "current": "{{current}} / {{needed}} XP",
+      "total": "总计：{{xp}} XP"
+    },
+    "data": {
+      "export": "导出",
+      "import": "导入",
+      "reset": "重置",
+      "confirmReset": "重置所有进度？此操作无法撤销。",
+      "status": {
+        "exported": "✅ 进度已导出！",
+        "imported": "✅ 进度已成功导入！",
+        "importFailed": "❌ 文件无效 — 无法导入。",
+        "resetDone": "🗑️ 进度已重置。"
+      },
+      "toast": {
+        "exported": "进度已成功导出！",
+        "imported": "进度已成功导入！",
+        "importFailed": "无法导入文件。请检查格式。",
+        "resetDone": "🗑️ 进度已重置。"
+      },
+      "log": {
+        "exported": "已导出冒险进度",
+        "imported": "已从文件导入冒险进度"
+      }
+    }
+  },
+  "leaderboard": {
+    "kicker": "本地联机",
+    "title": "排行榜",
+    "subtitle": "比较你本地配置文件中的 XP、等级、任务和徽章。",
+    "manageProfiles": "管理资料",
+    "championAria": "当前本地冠军",
+    "championSummary": "等级 {{level}} • {{xp}} XP • {{missions}} 个任务已完成",
+    "tableTitle": "本地排名",
+    "profileCount": "{{count}} 个资料",
+    "active": "当前",
+    "switch": "切换",
+    "columns": {
+      "rank": "排名",
+      "player": "玩家",
+      "xp": "XP",
+      "level": "等级",
+      "missions": "任务",
+      "badges": "徽章",
+      "status": "状态"
+    }
+  },
+  "achievements": {
+    "kicker": "徽章库",
+    "title": "成就",
+    "subtitle": "{{name}} 已解锁和未解锁的成就。",
+    "summaryAria": "成就完成情况概览",
+    "unlocked": "已解锁",
+    "progressAria": "成就完成进度",
+    "progress": "完成度",
+    "gridAria": "成就徽章集合",
+    "empty": "完成任务以获得成就和徽章！"
+  },
+  "journal": {
+    "title": "冒险日志",
+    "subtitle": "你在 Soroban 世界中的旅程，已永久记录。",
+    "clearLog": "🗑️ 清空日志",
+    "confirmClear": "清空所有活动历史？",
+    "controlsLabel": "日志搜索和筛选",
+    "searchLabel": "搜索日志条目",
+    "searchPlaceholder": "搜索日志条目...",
+    "typeFilterLabel": "按活动类型筛选",
+    "dateFilterLabel": "按日期筛选",
+    "summary": {
+      "missions": "任务",
+      "badges": "徽章",
+      "level": "等级",
+      "totalXp": "总 XP",
+      "streak": "连续天数"
+    },
+    "filters": {
+      "all": "全部",
+      "mission": "任务",
+      "badge": "徽章",
+      "levelUp": "升级",
+      "hint": "提示",
+      "system": "系统"
+    },
+    "dateFilters": {
+      "all": "任何时间",
+      "today": "今天",
+      "week": "最近 7 天",
+      "month": "本月"
+    },
+    "empty": "尚未记录任何活动。开始你的第一项任务吧！",
+    "dates": {
+      "today": "今天",
+      "yesterday": "昨天"
+    },
+    "events": {
+      "missionStarted": "已开始任务：{{title}}",
+      "missionCompleted": "已完成任务：{{title}}",
+      "badgeEarned": "获得了 \"{{name}}\" 徽章！",
+      "levelUp": "已达到等级 {{level}}！",
+      "hintUsed": "已使用提示 {{index}}",
+      "export": "已导出冒险进度",
+      "import": "已从文件导入冒险进度",
+      "streakOne": "连续签到：1 天！",
+      "streakMany": "连续签到：{{count}} 天！"
+    },
+    "details": {
+      "targetXp": "目标 XP 已达到：{{xp}}",
+      "earnedXp": "已获得 {{xp}} XP"
+    },
+    "eventLabels": {
+      "mission": "任务",
+      "badge": "徽章",
+      "levelUp": "升级",
+      "hint": "提示",
+      "system": "系统",
+      "streak": "连续签到"
+    }
+  },
+  "campaigns": {
+    "title": "战役",
+    "subtitle": "史诗剧情章节 | 等级 {{level}} | 共 {{completed}}/{{total}} 个任务",
+    "chapter": "第 {{number}} 章",
+    "missionCount": "{{completed}}/{{total}} 个任务",
+    "lockedAt": "🔒 需要达到等级 {{level}} 才能解锁",
+    "chapterComplete": "✓ 章节完成！",
+    "back": "← 返回战役",
+    "completeOf": "{{completed}}/{{total}} 完成",
+    "statusLabel": "状态：",
+    "lore": {
+      "iconLabel": "章节设定卷轴",
+      "modalTitle": "章节介绍",
+      "beginChapter": "开始第 {{number}} 章"
+    }
+  },
+  "missionMap": {
+    "title": "任务地图",
+    "subtitle": "已完成 {{completed}} / {{total}} 个任务",
+    "searchPlaceholder": "搜索任务…",
+    "difficulty": {
+      "all": "全部",
+      "beginner": "初级",
+      "intermediate": "中级",
+      "advanced": "高级"
+    },
+    "chapters": {
+      "all": "全部章节",
+      "n": "第 {{number}} 章",
+      "standalone": "独立"
+    },
+    "card": {
+      "chapterMission": "第 {{chapter}} 章 • 任务 {{mission}}",
+      "standaloneMission": "独立 • 任务 {{mission}}",
+      "xp": "⚡ {{xp}} XP",
+      "completed": "✓ 已完成",
+      "locked": "🔒 已锁定",
+      "difficultyLabel": "难度：",
+      "stateLabel": "状态："
+    },
+    "allCompleted": {
+      "title": "全部任务已完成！",
+      "body": "恭喜，{{rank}}！你已掌握价值 {{xp}} XP 的所有 Soroban 挑战。"
+    },
+    "noResults": "没有符合筛选条件的任务。",
+    "aria": {
+      "missionPath": "任务路径图",
+      "missionTimeline": "任务时间线",
+      "missionItem": "任务 {{order}}：{{title}}",
+      "missionItemCompleted": "任务 {{order}}：{{title}}，已完成",
+      "missionItemUnlocked": "任务 {{order}}：{{title}}，已解锁",
+      "missionItemLocked": "任务 {{order}}：{{title}}，已锁定"
+    }
+  },
+  "missionDetail": {
+    "tabs": {
+      "story": "故事",
+      "editor": "编辑器",
+      "tests": "测试",
+      "replay": "📹 回放",
+      "ariaLabel": "任务区选项卡"
+    },
+    "difficultyLabel": "难度：",
+    "notFound": {
+      "title": "未找到任务",
+      "body": "任务 \"{{id}}\" 不存在。",
+      "back": "← 返回任务地图"
+    },
+    "editor": {
+      "reset": "↺ 重置",
+      "hint": "💡 提示",
+      "goldHint": "🪙 提示 ({{cost}} 金币)",
+      "goldHintTitle": "花费 {{cost}} 金币立即揭示下一条提示",
+      "goldHintInsufficient": "金币不足 — 需要 {{cost}} 才能解锁此提示",
+      "goldHintUnlocked": "🪙 提示 (已解锁)",
+      "solution": "👁️ 解答",
+      "run": "▶ 运行测试",
+      "running": "运行中…",
+      "compile": "⚙️ 编译并运行",
+      "compiling": "编译中…",
+      "themeLabel": "编辑器主题"
+    },
+    "terminal": {
+      "title": "测试输出",
+      "placeholder": "点击“运行测试”来验证你的代码…",
+      "runningChecks": "🔍 正在运行验证检查…",
+      "alreadyCompleted": "🏅 已完成，不再奖励额外 XP。",
+      "compiling": "⚙️ 正在编译合约…",
+      "compileOk": "✅ 编译成功，用时 {{ms}}ms",
+      "compileFailed": "❌ 编译失败（{{errors}} 个错误）",
+      "compileFallback": "ℹ️ 正在使用浏览器内置分析器（真实 WASM 工具链尚未加载）。",
+      "compileEngineWasm": "🦀 已使用 Soroban WASM 工具链编译。",
+      "compileError": "❌ 编译器错误：{{message}}"
+    },
+    "status": {
+      "checking": "正在检查…",
+      "passing": "{{passed}}/{{total}} 项检查通过",
+      "allPassing": "{{passed}}/{{total}} 项检查通过 ✓",
+      "note": "实时检查 · 点击运行测试执行完整套件"
+    },
+    "securityNotes": {
+      "title": "安全提示",
+      "advisory": "仅供参考。这些提示不会阻止任务完成。",
+      "count": "{{count}}",
+      "line": "第 {{line}} 行",
+      "rules": {
+        "missingAuth": {
+          "title": "状态变更前缺少授权",
+          "body": "{{functionName}} 在写入存储前没有先调用 require_auth()。"
+        },
+        "uncheckedArithmetic": {
+          "title": "代币数量使用未检查的算术运算",
+          "body": "{{functionName}} 对代币数量使用了包装或乘法运算，且未调用检查方法。"
+        },
+        "reentrancy": {
+          "title": "写入状态前进行外部调用",
+          "body": "{{functionName}} 在写入存储前进行了外部调用。请先更新状态。"
+        },
+        "storageUnwrap": {
+          "title": "存储读取使用 unwrap",
+          "body": "{{functionName}} 对用户提供的键执行了存储读取 unwrap。缺少的值会导致程序崩溃。"
+        }
+      }
+    },
+    "toasts": {
+      "validated": "任务参数验证通过！",
+      "validationFailed": "验证失败。请检查终端。",
+      "hintUnlocked": "提示 {{index}} 已解锁",
+      "hintGoldUnlocked": "提示 {{index}} 已用 {{cost}} 金币解锁",
+      "hintInsufficientGold": "金币不足 — 需要 {{cost}} 才能解锁此提示",
+      "codeReset": "代码已重置为模板",
+      "solutionLoaded": "解答已加载到编辑器"
+    },
+    "hint": { "label": "💡 提示 {{index}}：" },
+    "victory": {
+      "title": "任务完成！",
+      "youCompleted": "你已完成",
+      "xpGained": "+{{xp}} XP",
+      "levelUp": "🎉 升级！你现在是等级 {{level}} — {{rank}}",
+      "badgeEarnedOne": "🏅 获得新徽章！",
+      "badgeEarnedMany": "🏅 获得新徽章！",
+      "next": "下一任务 →",
+      "map": "任务地图",
+      "iconLabel": "奖杯图标 — 任务完成"
+    },
+    "replay": {
+      "header": "📹 观看你的解答",
+      "body": "逐步回顾你的解题过程。",
+      "start": "▶️ 开始回放"
+    },
+    "okashi": {
+      "button": "🚀 在 Okashi 上尝试 — 编译并部署",
+      "help": "在新标签页打开 okashi.dev。你的代码会复制到剪贴板，可粘贴到那里使用真实的 Soroban 编译器编译并部署到测试网。"
+    }
+  },
+  "skillTree": {
+    "title": "Soroban 技能树",
+    "subtitle": "追踪你对 Soroban 智能合约概念的掌握程度",
+    "overall": "已掌握 {{unlocked}}/{{total}} 个概念",
+    "categoryProgress": "{{unlocked}}/{{total}}",
+    "categories": {
+      "Core": { "title": "核心概念", "description": "Soroban 的基础构件" },
+      "Storage": { "title": "存储与状态", "description": "管理持久化数据" },
+      "Types": { "title": "数据类型", "description": "使用不同的数据类型" },
+      "Auth": { "title": "授权", "description": "访问控制与安全性" },
+      "Events": { "title": "事件", "description": "发送并处理合约事件" },
+      "Protocols": { "title": "协议", "description": "现实世界中的 DeFi 协议模式" },
+      "DeFi": { "title": "DeFi", "description": "去中心化金融基础要素" }
+    },
+    "tooltip": { "chapter": "第 {{chapter}} 章" },
+    "modal": {
+      "taughtIn": "讲解任务：{{title}}",
+      "chapterLabel": "章节：",
+      "difficultyLabel": "难度：",
+      "xpLabel": "XP 奖励：",
+      "learningGoal": "学习目标：",
+      "completed": "✅ 已完成",
+      "notCompleted": "🔒 尚未完成",
+      "startMission": "开始任务",
+      "notCovered": "可用任务尚未涵盖此概念。"
+    }
+  },
+  "ranks": {
+    "0": "新手", "1": "学徒", "2": "抄写员", "3": "程序员", "4": "架构师",
+    "5": "哨兵", "6": "守护者", "7": "大师守护者", "8": "长老", "9": "启明星", "10": "星际主宰"
+  },
+  "difficulty": { "beginner": "初级", "intermediate": "中级", "advanced": "高级" },
+  "badges": {
+    "first_contract": { "name": "首份合约", "description": "完成你的第一个任务" },
+    "triple_threat": { "name": "三重威胁", "description": "完成 3 个任务" },
+    "five_star": { "name": "五星成就", "description": "完成 5 个任务" },
+    "completionist": { "name": "全能完成者", "description": "完成所有任务" },
+    "level_3": { "name": "冉冉新星", "description": "达到等级 3" },
+    "level_5": { "name": "星际守护者", "description": "达到等级 5" },
+    "xp_1000": { "name": "XP 收藏家", "description": "获得 1000 XP" },
+    "speed_demon": { "name": "疾速达人", "description": "首次尝试就完成任务" },
+    "chapter_1": { "name": "觉醒", "description": "完成第 1 章的所有任务" },
+    "chapter_2": { "name": "记忆守护者", "description": "完成第 2 章的所有任务" },
+    "chapter_3": { "name": "锻造大师", "description": "完成第 3 章的所有任务" },
+    "chapter_4": { "name": "数据架构师", "description": "完成第 4 章的所有任务" },
+    "chapter_5": { "name": "协议先锋", "description": "完成第 5 章的所有任务" },
+    "chapter_6": { "name": "生产大师", "description": "完成第 6 章的所有任务" },
+    "chapter_7": { "name": "安全哨兵", "description": "完成第 7 章的所有任务" }
+  },
+  "shop": {
+    "title": "商店",
+    "subtitle": "使用金币购买头像、增益和徽章",
+    "ariaCategories": "商店分类筛选",
+    "categories": { "all": "全部", "avatars": "头像", "boosts": "增益", "badges": "徽章" },
+    "items": {
+      "avatarPack1": "头像包 1", "avatarPack1Desc": "解锁 5 个新的头像选项",
+      "avatarPack2": "头像包 2", "avatarPack2Desc": "解锁 5 个专属头像选项",
+      "xpBoost": "XP 增益", "xpBoostDesc": "下一项任务获得双倍 XP",
+      "streakFreeze": "连续记录保护", "streakFreezeDesc": "保护你的连续记录免受一天遗漏影响",
+      "hintToken": "提示令牌", "hintTokenDesc": "揭示提示且不扣除 XP",
+      "premiumBadge": "高级徽章", "premiumBadgeDesc": "个人资料专属高级徽章"
+    },
+    "buy": "购买",
+    "purchased": "已购买",
+    "alreadyPurchased": "你已经拥有此物品",
+    "insufficientFunds": "金币不足，无法购买此物品",
+    "purchaseSuccess": "成功购买 {{item}}！",
+    "empty": "此分类中没有找到物品",
+    "ariaPurchase": "花费 {{price}} 金币购买 {{item}}",
+    "ariaPurchased": "{{item}} - 已购买"
+  },
+  "onboarding": {
+    "step1": { "title": "欢迎来到 Soroban Quest！", "body": "踏上游戏化学习之旅，掌握 Soroban 智能合约开发。完成任务、赚取 XP 和金币，并解锁成就。" },
+    "step2": { "title": "你的进度中心", "body": "导航栏显示你的等级、XP、金币余额和资料。使用它在任务、战役、个人资料、日志等页面之间导航。" },
+    "step3": { "title": "任务地图与任务", "body": "任务地图按章节展示所有任务。每项任务都提供 Soroban 编程挑战、故事、提示和自动验证。" },
+    "step4": { "title": "代码编辑器与验证", "body": "在内置 Monaco 编辑器中编写 Rust Soroban 代码。运行测试，将你的解答与验证模式进行比对。无需编译服务器！" },
+    "step5": { "title": "RPG 式成长", "body": "每完成一项任务即可获得 XP 和金币。升级以解锁新等级、章节和徽章。在商店使用金币购买外观物品和增益。" },
+    "dismiss": "知道了！",
+    "next": "下一步",
+    "prev": "返回",
+    "skip": "跳过教程"
+  }
+}

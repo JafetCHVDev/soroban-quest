@@ -45,3 +45,10 @@
   0% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .editor-placeholder__bar {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}

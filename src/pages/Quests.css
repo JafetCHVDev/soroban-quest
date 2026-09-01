@@ -222,3 +222,22 @@
   font-weight: 500;
   margin: 0;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .quest-card {
+    transition: none;
+  }
+
+  .quest-card:hover {
+    transform: none;
+  }
+
+  .quest-card-title {
+    transition: none;
+  }
+
+  .quests-input,
+  .quests-select {
+    transition: none;
+  }
+}

@@ -40,3 +40,14 @@ playwright-report/
 # NOTE: e2e/snapshots/ is intentionally NOT ignored – baseline PNGs are committed.
 # Temporary diff images generated during a failed run are stored in test-results/
 # which is already excluded above.
+
+# Lint output (temporary debug artifacts)
+lint-output.txt
+final-lint.txt
+
+# Japanese localization work (separate PR #308)
+JAPANESE_TRANSLATIONS_INSTRUCTIONS.md
+japanese_i18n_updates.json
+soroban-quest-japanese-translations.json
+src/i18n/locales/ja.json
+src/i18n/__tests__/japanese-localization.test.js

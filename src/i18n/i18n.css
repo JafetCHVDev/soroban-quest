@@ -71,7 +71,7 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  min-width: 170px;
+  min-width: 200px;
   list-style: none;
   margin: 0;
   padding: 0.35rem;
@@ -139,6 +139,30 @@
 
 .language-selector-option-name {
   flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .language-selector-trigger {
+    transition: none;
+  }
+
+  .language-selector-active-badge {
+    transition: none;
+  }
+
+  .language-selector-chevron {
+    transition: none;
+  }
+
+  .language-selector-menu {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .language-selector-option {
+    transition: none;
+  }
 }
 
 /* On mobile, anchor the menu to the left of the trigger so it stays in-viewport */

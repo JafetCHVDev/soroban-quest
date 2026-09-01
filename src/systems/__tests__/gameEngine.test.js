@@ -15,7 +15,7 @@ vi.mock("../activityLogger", () => {
 
 import {
   xpForLevel,
-  _xpForNextLevel,
+  xpForNextLevel,
   getLevelFromXP,
   getRankTitle,
   getXPProgress,
@@ -25,7 +25,10 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
-  _BADGES,
+  BADGES,
+  HINT_GOLD_COST,
+  isHintGoldUnlocked,
+  spendGoldForHint,
 } from "../gameEngine";
 
 describe("gameEngine core logic", () => {
@@ -236,6 +239,57 @@ describe("gameEngine core logic", () => {
     });
   });
 
+  describe("gold-cost hint system", () => {
+    it("default state has an empty goldUnlockedHints map", () => {
+      const s = getDefaultState();
+      expect(s.goldUnlockedHints).toEqual({});
+    });
+
+    it("deducts gold and records the unlocked hint", () => {
+      const s = { ...baseState, gold: 100 };
+      const out = spendGoldForHint(s, "hello-soroban", 0);
+      expect(out.gold).toBe(100 - HINT_GOLD_COST);
+      expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(true);
+      expect(out.insufficientGold).toBe(false);
+    });
+
+    it("does not re-charge an already gold-unlocked hint on revisit", () => {
+      const s = { ...baseState, gold: 100 };
+      const first = spendGoldForHint(s, "hello-soroban", 0);
+      const goldAfterFirst = first.gold;
+      const second = spendGoldForHint(first, "hello-soroban", 0);
+      expect(second.gold).toBe(goldAfterFirst);
+      expect(second.hintAlreadyUnlocked).toBe(true);
+    });
+
+    it("refuses to unlock when the player cannot afford the cost", () => {
+      const s = { ...baseState, gold: HINT_GOLD_COST - 1 };
+      const out = spendGoldForHint(s, "hello-soroban", 0);
+      expect(out.gold).toBe(HINT_GOLD_COST - 1);
+      expect(out.insufficientGold).toBe(true);
+      expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(false);
+    });
+
+    it("tracks unlocked hints independently per mission and index", () => {
+      let s = { ...baseState, gold: 500 };
+      s = spendGoldForHint(s, "mission-a", 0);
+      s = spendGoldForHint(s, "mission-a", 1);
+      s = spendGoldForHint(s, "mission-b", 0);
+      expect(isHintGoldUnlocked(s, "mission-a", 0)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-a", 1)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-b", 0)).toBe(true);
+      expect(isHintGoldUnlocked(s, "mission-a", 2)).toBe(false);
+      expect(isHintGoldUnlocked(s, "mission-b", 1)).toBe(false);
+      expect(s.gold).toBe(500 - HINT_GOLD_COST * 3);
+    });
+
+    it("supports a custom cost argument", () => {
+      const s = { ...baseState, gold: 100 };
+      const out = spendGoldForHint(s, "hello-soroban", 0, 10);
+      expect(out.gold).toBe(90);
+    });
+  });
+
   describe("utility getters", () => {
     it("getRankTitle returns expected strings", () => {
       expect(getRankTitle(1)).toBeDefined();
@@ -249,6 +303,29 @@ describe("gameEngine core logic", () => {
       expect(p.needed).toBeGreaterThan(0);
       expect(p.percentage).toBeGreaterThanOrEqual(0);
       expect(p.percentage).toBeLessThanOrEqual(100);
+    });
+  });
+
+  describe("inventory and equip logic", () => {
+    it("awardXP doubles XP when xp-boost is equipped", () => {
+      const s = { ...baseState, inventory: { owned: ['xp-boost'], equipped: ['xp-boost'] }, xp: 0, level: 1 };
+      const newState = awardXP(s, 50);
+      expect(newState.xp).toBe(100);
+    });
+
+    it("updateStreak uses streak-freeze when equipped", () => {
+      const today = new Date().toISOString().split("T")[0];
+      const twoDaysAgo = new Date();
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+      
+      const s = { 
+        ...baseState, 
+        lastLogin: twoDaysAgo.toISOString(), 
+        streak: 5, 
+        inventory: { owned: ['streak-freeze'], equipped: ['streak-freeze'] } 
+      };
+      const out = updateStreak(s);
+      expect(out.streak).toBe(5); // Streak freeze worked, streak preserved
     });
   });
 });
