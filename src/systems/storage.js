@@ -256,6 +256,7 @@ export function validateImportData(data) {
 /* =========================
    PROGRESS
 ========================= */
+//To Load Progress for activating profile slot
 export function loadProgress() {
   const activeSlot = getActiveProfileSlot();
   const legacyProgress = readLegacyProgress();
@@ -300,6 +301,7 @@ export function resetProgress() {
 /* =========================
    PROFILE
 ========================= */
+//To load, save, rest, and default profile
 export const defaultProfile = {
   name: "Stellar Guardian",
   avatar: "🛡️",
