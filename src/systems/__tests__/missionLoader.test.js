@@ -25,9 +25,11 @@ afterEach(() => {
 
 describe('missionLoader', () => {
   describe('getAllMissions', () => {
-    it('returns all 19 missions', () => {
-      expect(getAllMissions()).toHaveLength(19);
+    it('returns all missions (19 campaign + 3 standalone = 22)', () => {
+      expect(getAllMissions()).toHaveLength(22);
       expect(getAllMissions()).toHaveLength(missions.length);
+      const campaign = getAllMissions().filter((m) => !m.standalone);
+      expect(campaign).toHaveLength(19);
     });
 
     it('returns render-ready (localized) objects, not raw i18n data', () => {
@@ -45,7 +47,11 @@ describe('missionLoader', () => {
     it('preserves language-neutral fields for every mission', () => {
       for (const mission of getAllMissions('en')) {
         expect(mission.id).toBeTruthy();
-        expect(typeof mission.chapter).toBe('number');
+        if (mission.standalone) {
+          expect(mission.chapter === undefined || mission.chapter === null || typeof mission.chapter === 'number').toBe(true);
+        } else {
+          expect(typeof mission.chapter).toBe('number');
+        }
         expect(typeof mission.order).toBe('number');
         expect(typeof mission.xpReward).toBe('number');
       }
@@ -107,16 +113,21 @@ describe('missionLoader', () => {
   });
 
   describe('getMissionsByChapter', () => {
-    it('groups every mission under its chapter', () => {
+    it('groups every campaign mission under its chapter (standalone excluded)', () => {
       const chapters = getMissionsByChapter('en');
 
-      // 7 chapters, 19 missions total across them.
+      // 7 chapters, 19 campaign missions total across them (standalone excluded).
       expect(Object.keys(chapters)).toHaveLength(7);
       const total = Object.values(chapters).reduce(
         (sum, list) => sum + list.length,
         0,
       );
       expect(total).toBe(19);
+      // Ensure standalone missions are not present in chapter grouping
+      const allIds = Object.values(chapters).flat().map((m) => m.id);
+      expect(allIds).not.toContain('standalone-storage-dojo');
+      expect(allIds).not.toContain('standalone-auth-guard');
+      expect(allIds).not.toContain('standalone-vector-lab');
     });
 
     it('places the correct missions in chapter 1', () => {

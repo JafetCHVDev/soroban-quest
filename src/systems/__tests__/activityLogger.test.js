@@ -14,6 +14,19 @@ describe("activityLogger", () => {
 
   beforeEach(() => {
     storage = {};
+    const mockWindow = {
+      dispatchEvent: vi.fn(),
+    };
+    vi.stubGlobal("window", mockWindow);
+    vi.stubGlobal(
+      "CustomEvent",
+      class CustomEvent {
+        constructor(type, eventInitDict) {
+          this.type = type;
+          this.detail = eventInitDict?.detail;
+        }
+      }
+    );
 
     vi.stubGlobal("localStorage", {
       getItem: vi.fn((key) => storage[key] || null),

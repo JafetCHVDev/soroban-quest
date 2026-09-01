@@ -45,7 +45,9 @@ export function logActivity(type, data = {}, message = "") {
     localStorage.setItem(LOG_KEY, JSON.stringify(updatedLog));
     
     // Dispatch custom event for real-time UI updates if needed
-    window.dispatchEvent(new CustomEvent("activity_logged", { detail: newEntry }));
+    if (typeof window !== "undefined" && typeof window.dispatchEvent === "function") {
+      window.dispatchEvent(new CustomEvent("activity_logged", { detail: newEntry }));
+    }
   } catch (error) {
     console.error("Failed to log activity:", error);
   }

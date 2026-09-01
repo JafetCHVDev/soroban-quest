@@ -98,7 +98,7 @@ export function validateMission(mission, path = 'mission') {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(mission.id || '')) {
     addError(errors, `${path}.id`, 'must be a URL-safe kebab-case identifier');
   }
-  if (!Number.isInteger(mission.chapter) || mission.chapter < 1) {
+  if (!mission.standalone && (!Number.isInteger(mission.chapter) || mission.chapter < 1)) {
     addError(errors, `${path}.chapter`, 'must be a positive integer');
   }
   if (!Number.isInteger(mission.order) || mission.order < 1) {

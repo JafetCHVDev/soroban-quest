@@ -5,6 +5,7 @@ test.describe('Profile and Data Management', () => {
   test.beforeEach(async ({ page }) => {
     await clearLocalStorageBeforePageLoad(page);
     await page.goto('/#/profile');
+    await page.waitForLoadState('networkidle');
   });
 
   test('editing name and avatar persists after reload', async ({ page }) => {

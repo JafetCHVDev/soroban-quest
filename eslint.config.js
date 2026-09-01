@@ -15,17 +15,25 @@ export default [
       'playwright-report',
       'test-results',
       'vite.config.ts',
+      'vite.config.js',
       'playwright.config.js',
     ],
   },
   {
-    files: ['vite.config.js'],
+    files: ['vite.config.ts'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
+      parser: tsParser,
       globals: {
         ...globals.node,
       },
+    },
+    plugins: {
+      '@typescript-eslint': ts,
+    },
+    rules: {
+      ...ts.configs.recommended.rules,
     },
   },
   {
@@ -126,4 +134,12 @@ export default [
       },
     },
   },
+  {
+    // Disable no-useless-escape for data files with i18n content (backticks in template strings)
+    files: ['src/data/missions.js', 'src/data/campaigns.js'],
+    rules: {
+      'no-useless-escape': 'off',
+    },
+  },
 ];
+

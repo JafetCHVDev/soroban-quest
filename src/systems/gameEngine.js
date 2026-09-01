@@ -2,6 +2,7 @@
    Game Engine — XP, Levels, Badges
    ========================================== */
 import { logActivity, ACTIVITY_TYPES } from "./activityLogger";
+import { playSound, SOUND_TYPES } from "./soundManager";
 
 
 const LEVEL_BASE = 500;
@@ -156,6 +157,10 @@ function getDefaultState() {
     missionAttempts: {},
     streak: 0,
     lastLogin: null,
+    inventory: {
+      owned: [],
+      equipped: [],
+    },
     purchasedItems: [],
     xpBoostActive: false,
     streakFreezeUsed: false,
@@ -198,13 +203,18 @@ export function getXPProgress(state) {
 }
 
 export function awardXP(state, amount) {
-  const hasBoost = state.purchasedItems?.includes('xp-boost');
+  // Check if XP Boost is equipped
+  const hasBoost = (state.inventory?.equipped || []).includes('xp-boost') || (state.purchasedItems || []).includes('xp-boost');
   const multiplied = hasBoost ? amount * 2 : amount;
   const newXP = state.xp + multiplied;
   const newLevel = getLevelFromXP(newXP);
   const leveledUp = newLevel > state.level;
 
+  playSound(SOUND_TYPES.XP_GAINED);
+
   if (leveledUp) {
+    playSound(SOUND_TYPES.LEVEL_UP);
+
     logActivity(ACTIVITY_TYPES.LEVEL_UP, { level: newLevel }, `Reached Level ${newLevel}!`);
   }
 
@@ -215,18 +225,24 @@ export function awardXP(state, amount) {
     leveledUp,
   };
 
-  if (hasBoost) {
+  // If boosted via old system, remove it.
+  if (hasBoost && (state.purchasedItems || []).includes('xp-boost')) {
     nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'xp-boost');
   }
 
   return nextState;
 }
 
+
 export const GOLD_PER_MISSION_RATIO = 0.5;
 
 export function awardGold(state, xpReward) {
   const goldEarned = Math.floor(xpReward * GOLD_PER_MISSION_RATIO);
+
+  playSound(SOUND_TYPES.GOLD_EARNED);
+
   logActivity(ACTIVITY_TYPES.GOLD_EARNED, { amount: goldEarned }, `Earned ${goldEarned} gold!`);
+
   return {
     ...state,
     gold: (state.gold || 0) + goldEarned,
@@ -311,6 +327,8 @@ export function completeMission(state, missionId, xpReward) {
   newState = awardGold(newState, xpReward);
   newState = checkBadges(newState);
 
+  playSound(SOUND_TYPES.MISSION_COMPLETE);
+
   logActivity(ACTIVITY_TYPES.MISSION_COMPLETED, { missionId }, `Successfully completed mission: ${missionId}`);
 
   return newState;
@@ -331,7 +349,14 @@ export function checkBadges(state) {
   for (const badge of BADGES) {
     if (!state.badges.includes(badge.id) && badge.condition(state)) {
       newBadges.push(badge.id);
-      logActivity(ACTIVITY_TYPES.BADGE_EARNED, { badgeId: badge.id, badgeName: badge.name }, `Earned the "${badge.name}" badge!`);
+
+      playSound(SOUND_TYPES.BADGE_EARNED);
+
+      logActivity(
+        ACTIVITY_TYPES.BADGE_EARNED,
+        { badgeId: badge.id, badgeName: badge.name },
+        `Earned the "${badge.name}" badge!`,
+      );
     }
   }
 
@@ -356,9 +381,11 @@ export function updateStreak(state) {
     const diffTime = Math.abs(now - last);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+    const hasFreeze = (state.inventory?.equipped || []).includes('streak-freeze') || (state.purchasedItems || []).includes('streak-freeze');
+
     if (diffDays === 1) {
       newStreak = (state.streak || 0) + 1;
-    } else if (diffDays > 1 && (state.purchasedItems || []).includes('streak-freeze')) {
+    } else if (diffDays > 1 && hasFreeze) {
       newStreak = state.streak || 0;
       consumedFreeze = true;
     }
@@ -372,7 +399,7 @@ export function updateStreak(state) {
     lastLogin: today,
   };
 
-  if (consumedFreeze) {
+  if (consumedFreeze && (state.purchasedItems || []).includes('streak-freeze')) {
     nextState.purchasedItems = (state.purchasedItems || []).filter(id => id !== 'streak-freeze');
   }
 

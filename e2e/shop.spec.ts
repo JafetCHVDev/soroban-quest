@@ -218,6 +218,8 @@ test.describe('Shop Page', () => {
 
     expect(stored).not.toBeNull();
     expect(stored.gold).toBe(100);
-    expect(stored.purchasedItems).toContain('streak-freeze');
+    // Purchases are now tracked in inventory.owned (see storage.js legacy migration)
+    // rather than the old purchasedItems array.
+    expect(stored.inventory.owned).toContain('streak-freeze');
   });
 });

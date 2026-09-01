@@ -169,6 +169,12 @@
   color: var(--text-muted);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .achievements-progress-fill {
+    transition: none;
+  }
+}
+
 @media (max-width: 720px) {
   .achievements-page {
     padding: var(--space-xl) var(--space-md);

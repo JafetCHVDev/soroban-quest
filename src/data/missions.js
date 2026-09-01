@@ -25,6 +25,7 @@ export const DEFAULT_MISSION_LANG = 'en';
 
 const helloSorobanContent = createMissionFromMarkdown(helloSorobanMarkdown);
 
+/* eslint-disable no-useless-escape */
 export const missions = [
     {
         id: 'hello-soroban',
@@ -108,6 +109,43 @@ Complète le modèle de code pour passer toutes les vérifications. Les Gardiens
                     'Commence par `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
                     'Utilise la macro `vec![]` avec `&env` comme premier argument',
                     'La ligne de retour complète : `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
+            ja: {
+                title: 'はじめての契約',
+                story: `# 🌌 目覚めの刻
+
+未知の星系へと流れ着いたあなた。古い魔法書『Stellar』の中に、強大な力を秘めたスマートコントラクトの技術が眠っていることを知りました。
+
+Sorobanの領地に到着したあなたの前に、一人の老賢者が現れました。「ようこそ、契約魔法師よ。まずはこの基本の力を習得しなければならん。『hello』という最も単純な呪文を唱える準備はできているか？」
+
+## あなたの使命
+
+あなたの最初の任務は、\`hello\`という関数を持つスマートコントラクトを作成することです。このシンプルな契約は、Sorobanの世界での基本的な魔法の力を象徴しています。
+
+## これから学ぶこと
+
+- Rustでスマートコントラクトを記述する基本的な構文
+- \`#[contractimpl]\`マクロを使用した関数の定義方法
+- Soroban環境での最初の展開と実行
+
+## 重要なコンセプト
+
+契約の基本構造を理解することが、すべての冒険の第一歩です。
+
+\`\`\`rust
+#[contract]          // structを契約としてマーク
+#[contractimpl]      // 契約実装ブロック
+Env                  // 実行環境
+Symbol               // 効率的な文字列型
+\`\`\`
+
+テンプレートコードを完成させ、すべての検証に合格してください。老賢者があなたの契約を待っています！ ⚔️`,
+                learningGoal: 'Sorobanで最初のスマートコントラクトを作成し、基本的な関数を実装する',
+                hints: [
+                    '\`pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>\`から始める',
+                    '第一引数として\`&env\`を持つ\`vec!\`マクロを使用する',
+                    '完全な戻り文: \`vec![&env, symbol_short!("Hello"), to]\`',
                 ],
             },
         },
@@ -259,6 +297,41 @@ u32                 // Unsigned 32-bit integer
                     'La signature de la fonction greet : `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
                     'Pour count_chars : `pub fn count_chars(env: Env, text: String) -> u32`',
                     'Utilise `text.len()` pour obtenir la longueur de la chaîne',
+                ],
+            },
+            ja: {
+                title: '挨拶のプロトコル',
+                story: `# 📡 信号塔
+
+最初の門が開きました。**信号塔**へ進むあなた。Stellarネットワーク中にメッセージが波及しています。
+
+*"通信は力だ,"* 塔の管理人は言います。*"君のコントラクトはデータを管理することを学ばねばならない — 入力を受け入れ、構造化された応答を返すのだ。"*
+
+## あなたの使命
+
+複数の関数を持つコントラクトを構築してください:
+- \`greet\` — 名前を受け取り、パーソナライズされた挨拶を返す
+- \`count_chars\` — 文字列を受け取り、その長さをu32として返す
+
+## これから学ぶこと
+
+- 単一コントラクト内に複数の関数を実装する方法
+- Soroban内で\`String\`型を使用すること
+- 関数から異なるタイプを返す方法
+- \`symbol_short!\`マクロ
+
+## 重要なコンセプト
+
+\`\`\`rust
+String              // Soroban内のフル文字列型
+symbol_short!()     // 短いリテラルからSymbolを作成
+u32                 // 符号なし32ビット整数
+\`\`\``,
+                learningGoal: '異なる戻り値型を持つマルチ関数コントラクトを構築する',
+                hints: [
+                    'greet関数の署名: \`pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>\`',
+                    'count_charsの場合: \`pub fn count_chars(env: Env, text: String) -> u32\`',
+                    '\`text.len()\`を使用して文字列の長さを取得する',
                 ],
             },
         },
@@ -418,6 +491,41 @@ env.storage().instance().get(&key)          // Read (returns Option)
                     'Utilise `env.storage().instance().get(&COUNTER)` pour lire le décompte',
                     'Utilise `.unwrap_or(0)` pour renvoyer 0 par défaut quand aucune valeur n\'existe',
                     'Utilise `env.storage().instance().set(&COUNTER, &new_count)` pour enregistrer le nouveau décompte',
+                ],
+            },
+            ja: {
+                title: '数の庫',
+                story: `# 🔐 永遠の記憶の金庫
+
+**メモリの金庫**へ下ります。ここに古代人たちが時を超えて存続する知恵を保管しました。
+
+*"記憶のない契約は、魂のない意識のある者のようだ,"* 金庫の守護者はつぶやきます。*"保存と取得を学ぶのだ — 記憶することを。"*
+
+## あなたの使命
+
+その値を保存するカウンターコントラクトを作成してください:
+- \`increment\` — カウンターを1増やす
+- \`get_count\` — 現在のカウント値を返す
+
+## これから学ぶこと
+
+- \`env.storage().instance()\`を使用した**永続的ストレージ**
+- 状態の読み書き
+- ストレージのための\`Symbol\`キーパターン
+- \`.unwrap_or()\`を使用したデフォルト値
+
+## 重要なコンセプト
+
+\`\`\`rust
+env.storage().instance().set(&key, &value)  // 書き込み
+env.storage().instance().get(&key)          // 読み取り（Optionを返す）
+.unwrap_or(default)                         // Noneの場合はデフォルト
+\`\`\``,
+                learningGoal: '永続的ストレージを使用して状態を持つカウンターコントラクトを作成する',
+                hints: [
+                    '\`env.storage().instance().get(&COUNTER)\`を使用してカウントを読み取る',
+                    '値が存在しない場合のデフォルトとして\`.unwrap_or(0)\`を使用する',
+                    '\`env.storage().instance().set(&COUNTER, &new_count)\`を使用して新しいカウントを保存する',
                 ],
             },
         },
@@ -588,6 +696,42 @@ Map<Address, Symbol>        // Key-value mapping
                     'La fonction init stocke l\'admin : `env.storage().instance().set(&ADMIN, &admin)`',
                     'Dans register, appelle `who.require_auth()` avant de stocker',
                     'Stocke avec : `env.storage().instance().set(&who, &name)`',
+                ],
+            },
+            ja: {
+                title: '守護者の記録簿',
+                story: `# 📋 守護者の記録簿
+
+評議会の会議室は古代の光で輝いています。あなたの前には**守護者の記録簿**が横たわっています — 自分たちの価値を証明したすべての者の国勢調査。
+
+*"王国を保護するには、誰が行動できるかを制御する必要がある,"* 評議会の首長が宣言します。*"アクセス制御の芸術を学ぶのだ。"*
+
+## あなたの使命
+
+アクセス制御付きのレジストリコントラクトを構築してください:
+- \`register\` — 新しい守護者を登録（その名前を保存）
+- \`get_guardian\` — アドレスで守護者の名前を取得
+- 初期化時に設定される\`admin\`アドレス
+
+## これから学ぶこと
+
+- ユーザーアイデンティティの\`Address\`型
+- アクセス制御のための\`require_auth()\`
+- キーと値のペアのために\`Map\`型で作業する
+- コントラクト初期化パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+Address                     // アカウント/アイデンティティを表す
+address.require_auth()      // 呼び出し元が認可されていることを保証
+Map<Address, Symbol>        // キー・値マッピング
+\`\`\``,
+                learningGoal: 'AddressとrequireAuthを使用したアクセス制御を実装する',
+                hints: [
+                    'init関数はadminを保存する: \`env.storage().instance().set(&ADMIN, &admin)\`',
+                    'registerで、保存する前に\`who.require_auth()\`を呼び出す',
+                    '保存: \`env.storage().instance().set(&who, &name)\`',
                 ],
             },
         },
@@ -771,6 +915,44 @@ let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
                     'Pour mint : récupère l\'admin depuis le stockage, appelle admin.require_auth(), puis mets à jour le solde',
                     'Pour balance : `env.storage().persistent().get(&account).unwrap_or(0)`',
                     'Pour transfer : require_auth de l\'expéditeur, lis les deux soldes, mets à jour les deux',
+                ],
+            },
+            ja: {
+                title: 'トークン鍛造所',
+                story: `# ⚒️ トークン鍛造所
+
+シタデルの最奥部には**トークン鍛造所**があります。ここで、デジタル資産が純粋なロジックから鋳造されます。
+
+*"通貨はあらゆる経済の生命の血だ,"* 鍛冶職人は言います。*"君はアカウント間で転送できるトークンを作成するのだ。"*
+
+## あなたの使命
+
+シンプルなトークンコントラクトを作成してください:
+- \`mint\` — アドレス用のトークンを作成（管理者のみ）
+- \`balance\` — アドレスの残高を返す
+- \`transfer\` — トークンを1つのアドレスから別のアドレスに移動
+
+## これから学ぶこと
+
+- トークン残高管理
+- 認可付き転送ロジック
+- 管理者制限機能
+- 残高のための整数演算
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 管理者確認パターン
+admin.require_auth();
+
+// 残高管理
+let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
+\`\`\``,
+                learningGoal: 'mint、balance、transfer機能を持つ基本的なトークンを構築する',
+                hints: [
+                    'mintの場合: ストレージからadminを取得し、admin.require_auth()を呼び出し、残高を更新',
+                    'balanceの場合: \`env.storage().persistent().get(&account).unwrap_or(0)\`',
+                    'transferの場合: 送信者からrequire_auth、両方の残高を読み取り、両方を更新',
                 ],
             },
         },
@@ -958,6 +1140,41 @@ panic!("message")        // Abort with error
                     'Utilise `env.ledger().sequence()` pour obtenir le numéro de grand livre actuel',
                     'Compare : `if current_seq < unlock_at { panic!("Still locked"); }`',
                     'Nettoie le stockage après le déverrouillage : `env.storage().instance().remove(&key)`',
+                ],
+            },
+            ja: {
+                title: '時間の鍵',
+                story: `# ⏳ 時間の門
+
+**時間の門**があなたの前に立ちはだかります。その機構はグレートブックのリズムで動いています。
+
+*"時間は武器だ,"* 時間の守護者が言います。*"ブロックの流れに従ってロックと解除を学ぶのだ。"*
+
+## あなたの使命
+
+時間ロック付きの金庫を作成してください:
+- \`lock\` — 特定のレッジャーシーケンス番号までトークンをロック
+- \`unlock\` — ロック期間が過ぎたらトークンを解放
+- \`get_lock_info\` — ロックが有効期限切れになるときを返す
+
+## これから学ぶこと
+
+- 時間的ロジックのためのレッジャーシーケンス/タイムスタンプ
+- ブロックチェーン状態に基づく条件付き実行
+- 現在のブロック用\`env.ledger().sequence()\`
+- エラー処理のpanic!パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+env.ledger().sequence()  // 現在のレッジャーシーケンス番号
+panic!("message")        // エラーで中止
+\`\`\``,
+                learningGoal: 'レッジャーシーケンスを使用した時間ベースの条件付きロジックを実装する',
+                hints: [
+                    '現在のレッジャー番号を取得するために\`env.ledger().sequence()\`を使用する',
+                    '比較: \`if current_seq < unlock_at { panic!("Still locked"); }\`',
+                    'ロック解除後ストレージをクリア: \`env.storage().instance().remove(&key)\`',
                 ],
             },
         },
@@ -1165,6 +1382,46 @@ env.storage().instance().set(&signer_key, &true);
                     'Dans create_pact : stocke la description, le nombre requis et un décompte initial de signatures à 0',
                     'Dans sign_pact : lis le décompte actuel, incrémente-le de 1, enregistre-le à nouveau',
                     'Dans is_complete : compare signed >= required',
+                ],
+            },
+            ja: {
+                title: '多者協約',
+                story: `# 🤝 協約の間
+
+**協約の間**に到達しました。これはガーディアンの中であなたの場所を獲得する前の最終的な課題です。
+
+*"スマートコントラクトの真の力,"* グレートエルダーが宣言します。*"それは見知らぬ者同士の間に信頼を生み出すことなのだ。"*
+
+## あなたの使命
+
+複数署名を持つ協約コントラクトを作成してください:
+- \`create_pact\` — N個の署名を必要とする協約を作成
+- \`sign_pact\` — 当事者が協約に署名することを許可
+- \`is_complete\` — すべての必要な署名が集まったかどうかを確認
+- \`get_signers\` — 誰が署名したかを返す
+
+## これから学ぶこと
+
+- コントラクト内の複雑なデータ構造
+- マルチパーティ認可
+- ストレージでのカウントと追跡
+- 実世界のガバナンスパターンの構築
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 署名者数を追跡
+let count: u32 = env.storage().instance()
+    .get(&SIGNER_COUNT).unwrap_or(0);
+
+// 動的キーで保存
+env.storage().instance().set(&signer_key, &true);
+\`\`\``,
+                learningGoal: '複雑な状態管理を持つ複数署名協約コントラクトを構築する',
+                hints: [
+                    'create_pactで: 説明、必要な数、初期署名カウント0を保存',
+                    'sign_pactで: 現在のカウントを読み取り、1を加算し、戻す',
+                    'is_completeで: signed >= requiredを比較',
                 ],
             },
         },
@@ -1397,6 +1654,52 @@ env.storage().instance().set(&BALANCES, &balances);
                     'Pour deposit : récupère le solde actuel, ajoute le montant, enregistre à nouveau',
                 ],
             },
+            ja: {
+                title: '金庫番',
+                story: `# 🏦 データの砦
+
+協約の間を超えて**データの砦**が広がります。ここで無数のユーザー残高が保存され、保護されます。
+
+*"単一の残高は取るに足らないものだ,"* 金庫のアーキテクトが言います。*"多くを管理する — これはストレージアーキテクチャの芸術なのだ。"*
+
+## あなたの使命
+
+複数のユーザー残高を管理する金庫コントラクトを構築してください:
+- \`deposit\` — ユーザーの残高に資金を追加（ユーザーが認証される必要あり）
+- \`withdraw\` — ユーザーの残高から資金を差し引く（ユーザーが認証される必要あり）
+- \`get_balance\` — ユーザーの現在の残高を返す
+
+## これから学ぶこと
+
+- マルチユーザー状態用の\`Map<Address, i128>\`
+- ユーザーごとの認可用\`Env::require_auth()\`
+- 複雑なキーを持つ永続ストレージ
+- 安全な算術パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 複数残高用Map
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// ユーザーごとの認可
+user.require_auth();
+
+// 更新と永続化
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Mapストレージパターンを使用したマルチユーザー金庫を構築する',
+                hints: [
+                    'Map<Address, i128>を使用してユーザー残高を保存',
+                    'ユーザー残高を変更する前にuser.require_auth()を呼び出す',
+                    '.unwrap_or(Map::new(&env))でストレージからMapを読み取る',
+                    'depositの場合: 現在の残高を取得、金額を追加、戻す',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
@@ -1617,6 +1920,50 @@ keys.push_back(key);
                     'Ajoute de nouvelles clés avec keys.push_back(key)',
                 ],
             },
+            ja: {
+                title: '事象の放射',
+                story: `# 📡 信号の灯台
+
+データの砦のてっぺんに立つ**信号の灯台**は、Stellarネットワーク中にイベントを放送しています。
+
+*"話す契約は理解される契約だ,"* 灯台の管理人が言います。*"イベントは世界に何が起きたかを知らせるのだ。"*
+
+## あなたの使命
+
+キー・バリューデータを保存し、状態変更ごとにイベントを発行するコントラクトを作成してください:
+- \`set_value\` — 値を保存し、キーと値を含むイベントを発行
+- \`get_value\` — キーで保存された値を取得
+- \`get_all_keys\` — すべての保存されたキーを返す
+
+## これから学ぶこと
+
+- イベント発行用\`env.events().publish()\`
+- 動的キー追跡用\`Vec<Symbol>\`
+- イベント駆動型コントラクトアーキテクチャ
+- Stellarのパブリッシュ・サブスクライブパターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// イベント発行
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Vecでキーを追跡
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'キー・バリューストアコントラクトにイベント発行を実装する',
+                hints: [
+                    'env.events().publish()をトピックSymbolとイベントデータで使用',
+                    'Vec<Symbol>を使用してすべての保存されたキーを追跡',
+                    'keys.push_back(key)で新しいキーを追加',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
@@ -1817,6 +2164,46 @@ env.storage().instance().get(&(owner, spender))
                     'Utilise un tuple (Address, Address) comme clé de stockage composée',
                     'Dans approve : stocke l\'allocation pour la paire (owner, spender)',
                     'Dans transfer_from : require_auth du spender, vérifie l\'allocation, décrémente-la, mets à jour les soldes',
+                ],
+            },
+            ja: {
+                title: '許可管理者',
+                story: `# ✋ 委譲の間
+
+データの砦の中に**委譲の間**があります。ここで信頼は指定によって形式化されます。
+
+*"常に自分自身で行動することはできない,"* 委譲の主人が説明します。*"時には他の者に自分の名前で行動する力を与える必要があるのだ。"*
+
+## あなたの使命
+
+ユーザーが他の者に自分の代わりに支出するよう承認できるコントラクトを構築してください:
+- \`approve\` — オーナーは指定された金額で支出者を認可
+- \`transfer_from\` — 支出者はオーナーから受取人に転送
+- \`allowance\` — 支出者がいくら支出するよう認可されているかを確認
+
+## これから学ぶこと
+
+- ネストされたキー・バリューパターン（owner -> spender -> allowance）
+- 委譲された認可
+- 二重アドレス・ストレージキー
+- 指定額減少パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 指定用複合ストレージキー
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// ネストされた指定を読み取る
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: '指定と委譲転送システムを実装する',
+                hints: [
+                    'タプル(Address, Address)を複合ストレージキーとして使用',
+                    'approveで: (owner, spender)ペアの指定を保存',
+                    'transfer_fromで: spenderからrequire_auth、指定を確認、減少、残高更新',
                 ],
             },
         },
@@ -2029,6 +2416,52 @@ if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
                     'Dans init : stocke le montant objectif et la séquence de grand livre de la date limite',
                     'Dans contribute : vérifie que la date limite n\'est pas passée, ajoute le montant au total',
                     'Dans check_goal : compare le total collecté à l\'objectif',
+                ],
+            },
+            ja: {
+                title: '群衆からの資金',
+                story: `# 🎯 Crowdforgeの競技場
+
+**Crowdforgeの競技場**に入ります。ここで集団的な力はアイデアに生命を与えます。
+
+*"単独ではお前は強いが,"* 競売人が発表します。*"一緒なら、お前たちは星を動かせるのだ。人々が資金提供できるキャンペーンを構築するのだ。"*
+
+## あなたの使命
+
+クラウドファンディングコントラクトを作成してください:
+- \`init\` — 資金調達目標と期限（レッジャーシーケンス）を設定
+- \`contribute\` — 貢献者からの資金を追加
+- \`check_goal\` — 総貢献度 >= 目標の場合trueを返す
+- \`get_total_raised\` — 集めた総資金を返す
+
+## これから学ぶこと
+
+- 時間ベースの期限用レッジャーシーケンス
+- エスクロー型資金累積
+- 条件付きチェックによる目標追跡
+- 複数貢献者との状態管理
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 集めた総額を追跡
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// 期限を確認
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: '目標と期限追跡を備えたクラウドファンディングコントラクトを構築する',
+                hints: [
+                    'initで: 目標金額と期限レッジャーシーケンスを保存',
+                    'contributeで: 期限が過ぎていないことを確認、金額を総計に追加',
+                    'check_goalで: 集めた総額を目標と比較',
                 ],
             },
         },
@@ -2252,6 +2685,50 @@ arbiter.require_auth();
                     'Dans refund : require_auth de l\'arbitre, rembourse à l\'acheteur',
                 ],
             },
+            ja: {
+                title: 'エスクローの使者',
+                story: `# 🤲 信頼の交換
+
+Crowdforgeの競技場の奥深くには**信頼の交換**があります。ここで見知らぬ者間の取引が仲介されます。
+
+*"信頼はもっとも希少な通貨だ,"* エスクロー仲介者が言います。*"条件が満たされるまで価値を保持するシステムを構築するのだ。"*
+
+## あなたの使命
+
+買い手、売り手、仲介者を持つエスクロー契約を作成してください:
+- \`init\` — 買い手、売り手、仲介者のアドレスでエスクローを設定
+- \`deposit\` — 買い手がエスクローに資金を預ける
+- \`release\` — 仲介者が売り手へ資金を解放
+- \`refund\` — 仲介者が買い手に払い戻す
+
+## これから学ぶこと
+
+- マルチパーティコントラクト初期化
+- 3者認可パターン
+- エスクロー・ライフサイクル用ステートマシン
+- 紛争解決パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// マルチパーティ初期化
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// 仲介者のみの機能
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: '紛争解決を備えたマルチパーティエスクロー契約を実装する',
+                hints: [
+                    'initで: 買い手、売り手、仲介者のアドレスを保存',
+                    'depositで: 買い手からrequire_auth、金額を保存',
+                    'releaseで: 仲介者からrequire_auth、売り手に転送',
+                    'refundで: 仲介者からrequire_auth、買い手に払い戻す',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -2472,6 +2949,48 @@ if env.ledger().sequence() >= next_billing {
                     'Dans subscribe : stocke le plan, définis next_billing à sequence + intervalle',
                     'Dans collect : vérifie si sequence >= next_billing, si c\'est le cas collecte et mets à jour next_billing',
                     'Dans cancel : nettoie les données d\'abonnement du stockage',
+                ],
+            },
+            ja: {
+                title: '継続の契約',
+                story: `# 🔄 周期エンジン
+
+先進プロトコルの地区の中核に**周期エンジン**が鼓動しています。自動化された周期的な協約に電力を供給しています。
+
+*"最も強力なコントラクトは、注意を払わずに機能するもだ,"* エンジンの番人が言います。*"定期的な支払いを集めるサブスクリプションを構築するのだ。"*
+
+## あなたの使命
+
+サブスクリプション管理コントラクトを作成してください:
+- \`subscribe\` — ユーザーがプランを購読（プラン、次の請求を保存）
+- \`collect\` — 請求が期限切れの場合、サブスクリプション料金を徴収
+- \`cancel\` — サブスクリプションをキャンセル
+- \`get_subscription\` — ユーザーのサブスクリプション情報を返す
+
+## これから学ぶこと
+
+- レッジャーシーケンス付き定期請求ロジック
+- サブスクリプション状態管理
+- キャンセルと払い戻しパターン
+- 時間間隔計算
+
+## 重要なコンセプト
+
+\`\`\`rust
+// サブスクリプション期間を追跡
+let interval: u32 = 1000; // 約1000レッジャーごとに請求
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// 請求が期限切れかを確認
+if env.ledger().sequence() >= next_billing {
+    // 支払いを徴収
+}
+\`\`\``,
+                learningGoal: '定期請求を備えた定期サブスクリプションコントラクトを構築する',
+                hints: [
+                    'subscribeで: プランを保存、next_billingをsequence + intervalに設定',
+                    'collectで: sequence >= next_billingを確認、その場合は徴収して更新',
+                    'cancelで: ストレージからサブスクリプションデータをクリア',
                 ],
             },
         },
@@ -2702,6 +3221,48 @@ env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
                     'Dans repay : vérifie que le prêt existe, rends les fonds plus les frais au pool, nettoie le prêt',
                 ],
             },
+            ja: {
+                title: '閃光の融資',
+                story: `# ⚡ 稲妻の金庫
+
+シタデルの最下層には**稲妻の金庫**があります。ここで資本は光の速度で動きます。
+
+*"フラッシュローンはコントラクト設計の最終試験だ,"* 稲妻の統治者が言います。*"借りて、使い、一つのトランザクション内に返すのだ。"*
+
+## あなたの使命
+
+簡略化されたフラッシュローンプールを構築してください:
+- \`init\` — プール残高を設定
+- \`flash_loan\` — プールから借りる（呼び出し内に返す必要あり）
+- \`get_pool_balance\` — 現在のプール残高を返す
+- \`repay\` — 借りた金額と小額の手数料を返す
+
+## これから学ぶこと
+
+- フラッシュローン機構（簡略版）
+- プール残高管理
+- ローンライフサイクル追跡
+- 返済時の手数料パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// アクティブなローンを追跡
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// 手数料を払い戻す
+let fee = amount / 100; // 1%手数料
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: '簡略化されたフラッシュローンプールコントラクトを構築する',
+                hints: [
+                    'initで: 初期プール残高を保存',
+                    'flash_loanで: プールが十分あることを確認、プールから差引、ローンを記録',
+                    'repayで: ローンが存在することを確認、手数料付き資金をプールに返す、ローンをクリア',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
@@ -2919,6 +3480,49 @@ env.storage().instance()
                     'Dans has_role : vérifie si la clé du rôle existe et est true',
                 ],
             },
+            ja: {
+                title: '許可と役割',
+                story: `# 🛡️ 役割の間
+
+稲妻の金庫を超えて**役割の間**が立ちはだかります。ここでアクセスは構造化された許可によって統治されます。
+
+*"さまよう者がすべてのドアへのアクセスを意図されていない,"* 役割の主人が宣言します。*"役割がしたり来ないことを定義するシステムを構築するのだ。"*
+
+## あなたの使命
+
+ロールベースアクセス制御コントラクトを作成してください:
+- \`grant_role\` — 管理者がユーザーにロールを付与
+- \`revoke_role\` — 管理者がユーザーからロールを取得
+- \`has_role\` — ユーザーが特定のロールを持っているかを確認
+- \`get_admin\` — コントラクトの管理者を返す
+
+## これから学ぶこと
+
+- ロールベースアクセス制御（RBAC）パターン
+- 管理者のみの特権機能
+- ロールメンバーシップ用複合キー
+- 柔軟な許可アーキテクチャ
+
+## 重要なコンセプト
+
+\`\`\`rust
+// ロールを付与
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// ロールメンバーシップを確認
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'ロールベースアクセス制御コントラクトを実装する',
+                hints: [
+                    'initで: 管理者アドレスを保存',
+                    'grant_roleで: 管理者からrequire_auth、ユーザーのロールメンバーシップを保存',
+                    'revoke_roleで: 管理者からrequire_auth、ロールメンバーシップを削除',
+                    'has_roleで: ロールキーが存在してtrueであることを確認',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3122,6 +3726,48 @@ pub fn update_price(env: Env, asset: Symbol, price: i128) {
                     'Dans get_price : recherche et renvoie le prix de l\'actif',
                     'Dans get_last_updated : renvoie la séquence stockée pour l\'actif',
                     'Dans get_all_assets : utilise un traqueur Vec<Symbol> similaire à event-emitter',
+                ],
+            },
+            ja: {
+                title: 'オラクルフィード',
+                story: `# 📊 オラクルの塔
+
+本番システムの集落の頂上に立つ**オラクルの塔**は、オフチェーンデータがブロックチェーンに入る場所です。
+
+*「スマートコントラクトはデータなしでは盲目です」* と、オラクルの賢者は言います。*「オンチェーンとオフチェーンの世界の間に橋を架けてください。」*
+
+## あなたのミッション
+
+価格オラクルコントラクトを作成してください：
+- \`update_price\` — 管理者がアセットペアの価格を更新します
+- \`get_price\` — アセットペアの現在の価格を返します
+- \`get_last_updated\` — 価格が最後に更新された時刻を返します
+- \`get_all_assets\` — 追跡されているすべてのアセットペアを返します
+
+## 学ぶこと
+
+- オラクルデータフィードパターン
+- 管理者専用の更新関数
+- タイムスタンプ/シーケンス追跡
+- Vec<Symbol>を使用したアセットペア管理
+
+## 重要な概念
+
+\`\`\`rust
+// メタデータ付きの価格を保存
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: '管理者アップデートを使用したオンチェーン価格オラクルを構築してください',
+                hints: [
+                    'update_priceで：管理者からrequire_auth、価格とシーケンスを保存',
+                    'get_priceで：資産の価格をルックアップして返す',
+                    'get_last_updatedで：資産用に保存されたシーケンスを返す',
+                    'get_all_assetsで：event-emitterと同様のVec<Symbol>トラッカーを使用',
                 ],
             },
         },
@@ -3355,6 +4001,49 @@ let no_votes: u32 = /* count votes where value is false */
                     'Dans create_proposal : stocke la description, la date limite, les décomptes oui/non',
                     'Dans vote : vérifie que la proposition est active, enregistre le choix du votant, mets à jour les totaux',
                     'Dans execute : vérifie que la proposition est adoptée (oui > non), marque-la comme exécutée',
+                ],
+            },
+            ja: {
+                title: 'シンプルガバナー',
+                story: `# 🏛️ 統治の殿堂
+
+最後の部屋が待っています — **統治の殿堂**は、全王国の運命が集団の意志によって決定される場所です。
+
+*「最高のスマートコントラクトはコミュニティに自分たちを統治する権限を与えます」* と、大長老は宣言します。*「提案が投票を通じて法律になるシステムを構築してください。」*
+
+## あなたのミッション
+
+提案と投票を備えたガバナンスコントラクトを作成してください：
+- \`create_proposal\` — 説明と投票期間を含む提案を作成します
+- \`vote\` — アクティブな提案に投票（はい/いいえ）を投じます
+- \`execute\` — 提案が可決された場合、その提案を実行します
+- \`get_proposal\` — 提案の詳細を返します
+
+## 学ぶこと
+
+- オンチェーン統治メカニズム
+- 提案ライフサイクル（作成→投票→実行）
+- Map<Address, bool>での投票集計
+- 定足数と承認閾値ロジック
+
+## 重要な概念
+
+\`\`\`rust
+// 提案ごとの投票を追跡
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// 承認を数える
+let yes_votes: u32 = /* valueがtrueの投票を数える */
+let no_votes: u32 = /* valueがfalseの投票を数える */
+\`\`\``,
+                learningGoal: '提案と投票を備えた完全なオンチェーン統治システムを構築してください',
+                hints: [
+                    'create_proposalで：説明、期限、はい/いいえのカウントを保存',
+                    'voteで：提案がアクティブかどうかを確認し、投票者の選択を記録し、合計を更新',
+                    'executeで：提案が可決されたことを確認し（はい>いいえ）、実行済みとしてマーク',
                 ],
             },
         },
@@ -3621,6 +4310,53 @@ env.storage().instance().set(&MUTEX, &false);
                     'Mets mutex à true avant la mise à jour du solde, à false après',
                 ],
             },
+            ja: {
+                title: 'リエントランシーガード',
+                story: `# 🛡️ 脆弱性の鍛冶場
+
+シタデルの奥深くに**脆弱性の鍛冶場**があります。ここは壊れたコントラクトが修復される場所です。
+
+*「スマートコントラクトで最も危険な脆弱性は」* と、セキュリティの賢者は警告します、*「リエントランシーです。状態を保持しながら外部コードを呼び出すコントラクトは悪用される可能性があります。」*
+
+## あなたのミッション
+
+以下のvaultコントラクトはリエントランシーに対して脆弱です — 資金を送信した後に残高を更新します。**ミューテックスガード**パターンを使用してそれを修正してください：リエントランシーを防止するブール値フラグです。
+
+脆弱なコードは以下のものです：
+- \`withdraw\`は状態を更新する前に資金を送信します（バグ）
+- リエントランシー保護がない
+
+以下のように修正してください：
+1. \`false\`に初期化されたミューテックスブール値ストレージキーを追加
+2. \`withdraw\`の開始時に\`true\`に設定
+3. \`withdraw\`の終了時に\`false\`に設定
+4. エントリでミューテックスをチェックし、ロック済みの場合はpanicをトリガー
+
+## 学ぶこと
+
+- リエントランシー脆弱性の特定
+- 予防のためのミューテックス/ガードパターン
+- チェック・エフェクト・インタラクションパターン
+- セキュリティファースト開発の考え方
+
+## 重要な概念
+
+\`\`\`rust
+// ミューテックスガードパターン
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... 脆弱な操作 ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'ミューテックスガードパターンを使用してリエントランシー脆弱性を修正',
+                hints: [
+                    'ミューテックス定数を追加：`const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'withdrawの開始時、ミューテックスがtrueか確認し、その場合panicをトリガー',
+                    'ミューテックスを残高更新前にtrueに、その後falseに設定',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3844,6 +4580,51 @@ env.storage().instance().set(&FEE, &new_fee);
                     'La fonction init est correcte — elle stocke déjà l\'admin correctement',
                 ],
             },
+            ja: {
+                title: 'アクセス制御の修正',
+                story: `# 🔓 パーミッション侵害
+
+**パーミッション侵害**は、故障した認可ロジックが修復される訓練場です。
+
+*「最も一般的な2番目の脆弱性は」* と、セキュリティの賢者は説明します、*「アクセス制御の欠落です。管理者に限定されるべき関数は誰でも呼び出すことができます。」*
+
+## あなたのミッション
+
+以下のコントラクトは\`admin\`アドレスを保存していますが、特権関数で\`require_auth()\`を使用することはありません。適切なアクセス制御を追加してください。
+
+脆弱なコードは以下のものです：
+- 定義されているが検証されない\`ADMIN\`定数
+- 誰でも呼び出せる\`set_fee\`および\`pause\`関数
+- どこにも\`require_auth()\`呼び出しがない
+
+以下のように修正してください：
+1. \`set_fee\`と\`pause\`に\`require_auth()\`チェックを追加
+2. 認証をチェックする前にストレージから管理者アドレスを読み込む
+
+## 学ぶこと
+
+- アクセス制御脆弱性の特定
+- 適切な\`require_auth()\`配置
+- 管理者専用関数パターン
+- 多層防御の原則
+
+## 重要な概念
+
+\`\`\`rust
+// 正しいアクセス制御
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// 現在、特権操作を実行
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'require_auth()チェックを追加してアクセス制御の欠落を修正',
+                hints: [
+                    'set_feeで：ストレージからADMINを読み込み、admin.require_auth()を呼び出す',
+                    'pauseで：ストレージからADMINを読み込み、admin.require_auth()を呼び出す',
+                    'init関数は大丈夫です — 既に管理者を正しく保存しています',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3935,6 +4716,515 @@ impl ConfigContract {
             { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
         ],
         conceptsIntroduced: ['access control', 'authorization fix', 'admin guard', 'security audit'],
+    },
+
+    /* ==========================================
+       Standalone Missions — outside campaign structure
+       Self-contained drills, no level gating. Filtered out of
+       campaign progression but still count toward XP/gold.
+       ========================================== */
+
+    {
+        id: 'standalone-storage-dojo',
+        standalone: true,
+        order: 20,
+        difficulty: 'beginner',
+        xpReward: 120,
+        i18n: {
+            en: {
+                title: 'Storage Dojo',
+                story: `# 🥋 Storage Dojo
+
+Welcome to the **Storage Dojo** — a quiet training hall outside the campaign path.
+
+*"Before mastering complex protocols, drill the basics until they are reflex,"* says the Dojo Master.
+
+## Your Mission
+
+Build a minimal storage contract that can save and retrieve a single value:
+
+- \`set_value\` — stores a \`u32\` under a fixed key
+- \`get_value\` — retrieves the stored value (defaults to \`0\` if empty)
+
+## What You'll Learn
+
+- \`env.storage().instance().set(&key, &value)\` — write
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — read with default
+- The \`symbol_short!\` macro for storage keys
+
+## Key Concepts
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Practice basic instance storage: set and get a u32 value',
+                hints: [
+                    'Define `const VALUE: Symbol = symbol_short!("VALUE");` at the top',
+                    'In set_value: `env.storage().instance().set(&VALUE, &value)`',
+                    'In get_value: `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+            es: {
+                title: 'Dojo de Almacenamiento',
+                story: `# 🥋 Dojo de Almacenamiento
+
+Bienvenido al **Dojo de Almacenamiento** — una sala de entrenamiento tranquila fuera del camino de campaña.
+
+*"Antes de dominar protocolos complejos, practica lo básico hasta que sea un reflejo,"* dice el Maestro del Dojo.
+
+## Tu Misión
+
+Construye un contrato mínimo que pueda guardar y recuperar un solo valor:
+
+- \`set_value\` — almacena un \`u32\` bajo una clave fija
+- \`get_value\` — recupera el valor almacenado (por defecto \`0\` si está vacío)
+
+## Lo Que Aprenderás
+
+- \`env.storage().instance().set(&key, &value)\` — escribir
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — leer con valor por defecto
+- La macro \`symbol_short!\` para claves de almacenamiento
+
+## Conceptos Clave
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Practica el almacenamiento básico instance: guardar y obtener un valor u32',
+                hints: [
+                    'Define `const VALUE: Symbol = symbol_short!("VALUE");` al inicio',
+                    'En set_value: `env.storage().instance().set(&VALUE, &value)`',
+                    'En get_value: `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+            fr: {
+                title: 'Dojo de Stockage',
+                story: `# 🥋 Dojo de Stockage
+
+Bienvenue au **Dojo de Stockage** — une salle d'entraînement paisible en dehors du chemin de campagne.
+
+*"Avant de maîtriser les protocoles complexes, répète les bases jusqu'au réflexe,"* dit le Maître du Dojo.
+
+## Ta Mission
+
+Construis un contrat minimal capable de sauvegarder et récupérer une seule valeur :
+
+- \`set_value\` — stocke un \`u32\` sous une clé fixe
+- \`get_value\` — récupère la valeur stockée (par défaut \`0\` si vide)
+
+## Ce Que Tu Apprendras
+
+- \`env.storage().instance().set(&key, &value)\` — écrire
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — lire avec défaut
+- La macro \`symbol_short!\` pour les clés de stockage
+
+## Concepts Clés
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Pratique le stockage instance de base : enregistrer et récupérer une valeur u32',
+                hints: [
+                    'Définis `const VALUE: Symbol = symbol_short!("VALUE");` en haut',
+                    'Dans set_value : `env.storage().instance().set(&VALUE, &value)`',
+                    'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const VALUE: Symbol = symbol_short!("VALUE");
+
+#[contract]
+pub struct StorageDojo;
+
+#[contractimpl]
+impl StorageDojo {
+    // TODO: Create 'set_value' function
+    // Parameters: env: Env, value: u32
+    // Should store the value under VALUE key
+
+    // TODO: Create 'get_value' function
+    // Parameters: env: Env
+    // Returns: u32
+    // Should return the stored value or 0 if not set
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const VALUE: Symbol = symbol_short!("VALUE");
+
+#[contract]
+pub struct StorageDojo;
+
+#[contractimpl]
+impl StorageDojo {
+    pub fn set_value(env: Env, value: u32) {
+        env.storage().instance().set(&VALUE, &value);
+    }
+
+    pub fn get_value(env: Env) -> u32 {
+        env.storage().instance().get(&VALUE).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'set_value', params: ['env', 'value'], message: "Missing 'set_value' function" },
+            { type: 'has_function', name: 'get_value', params: ['env'], message: "Missing 'get_value' function" },
+            { type: 'returns_type', function: 'get_value', returnType: 'u32', message: "'get_value' should return u32" },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set to store the value' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get to read the value' },
+            { type: 'uses_type', typeName: 'Symbol', message: 'Must use Symbol for the storage key' },
+        ],
+        conceptsIntroduced: ['storage', 'instance', 'set', 'get', 'unwrap_or'],
+    },
+
+    {
+        id: 'standalone-auth-guard',
+        standalone: true,
+        order: 21,
+        difficulty: 'beginner',
+        xpReward: 150,
+        i18n: {
+            en: {
+                title: 'Auth Guard Drill',
+                story: `# 🛡️ Auth Guard Drill
+
+Step into the **Guard Post** — a standalone drill for authorization.
+
+*"Every state change must prove who asked for it,"* warns the Guard Captain.
+
+## Your Mission
+
+Build a contract that gates a privileged action behind \`require_auth\`:
+
+- \`init\` — stores an admin address
+- \`protected_action\` — requires auth from the caller, flips a \`DONE\` flag to \`true\`
+- \`is_done\` — returns whether the flag is set
+
+## What You'll Learn
+
+- \`Address\` type for identities
+- \`address.require_auth()\` guard
+- Storing and checking a boolean flag
+
+## Key Concepts
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: 'Practice require_auth gating for a protected state change',
+                hints: [
+                    'Store admin in init: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'In protected_action: read caller auth with `user.require_auth()`',
+                    'Set flag: `env.storage().instance().set(&DONE, &true)`',
+                ],
+            },
+            es: {
+                title: 'Ejercicio de Guardia de Autorización',
+                story: `# 🛡️ Ejercicio de Guardia de Autorización
+
+Entra al **Puesto de Guardia** — un ejercicio aislado de autorización.
+
+*"Cada cambio de estado debe probar quién lo solicitó,"* advierte el Capitán de la Guardia.
+
+## Tu Misión
+
+Construye un contrato que proteja una acción privilegiada con \`require_auth\`:
+
+- \`init\` — guarda una dirección admin
+- \`protected_action\` — requiere auth del llamante, cambia la bandera \`DONE\` a \`true\`
+- \`is_done\` — devuelve si la bandera está activa
+
+## Lo Que Aprenderás
+
+- El tipo \`Address\` para identidades
+- Guardia \`address.require_auth()\`
+- Almacenar y verificar una bandera booleana
+
+## Conceptos Clave
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: 'Practica el control require_auth para un cambio de estado protegido',
+                hints: [
+                    'Guarda admin en init: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'En protected_action: verifica con `user.require_auth()`',
+                    'Activa la bandera: `env.storage().instance().set(&DONE, &true)`',
+                ],
+            },
+            fr: {
+                title: "Exercice du Garde d'Autorisation",
+                story: `# 🛡️ Exercice du Garde d'Autorisation
+
+Entre dans le **Poste de Garde** — un exercice isolé pour l'autorisation.
+
+*"Chaque changement d'état doit prouver qui l'a demandé,"* avertit le Capitaine de la Garde.
+
+## Ta Mission
+
+Construis un contrat qui protège une action privilégiée avec \`require_auth\` :
+
+- \`init\` — enregistre une adresse admin
+- \`protected_action\` — exige l'auth de l'appelant, met le drapeau \`DONE\` à \`true\`
+- \`is_done\` — renvoie si le drapeau est activé
+
+## Ce Que Tu Apprendras
+
+- Le type \`Address\` pour les identités
+- Le garde \`address.require_auth()\`
+- Stocker et vérifier un drapeau booléen
+
+## Concepts Clés
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: "Pratique le contrôle require_auth pour un changement d'état protégé",
+                hints: [
+                    "Stocke admin dans init : `env.storage().instance().set(&ADMIN, &admin)`",
+                    "Dans protected_action : vérifie avec `user.require_auth()`",
+                    "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const DONE: Symbol = symbol_short!("DONE");
+
+#[contract]
+pub struct AuthGuard;
+
+#[contractimpl]
+impl AuthGuard {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, admin: Address
+    // Should store admin
+
+    // TODO: Create 'protected_action' function
+    // Parameters: env: Env, user: Address
+    // Should call user.require_auth() and set DONE to true
+
+    // TODO: Create 'is_done' function
+    // Parameters: env: Env
+    // Returns: bool
+    // Should return the DONE flag or false
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const DONE: Symbol = symbol_short!("DONE");
+
+#[contract]
+pub struct AuthGuard;
+
+#[contractimpl]
+impl AuthGuard {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+        env.storage().instance().set(&DONE, &false);
+    }
+
+    pub fn protected_action(env: Env, user: Address) {
+        user.require_auth();
+        env.storage().instance().set(&DONE, &true);
+    }
+
+    pub fn is_done(env: Env) -> bool {
+        env.storage().instance().get(&DONE).unwrap_or(false)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'admin'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'protected_action', params: ['env', 'user'], message: "Missing 'protected_action' function" },
+            { type: 'has_function', name: 'is_done', params: ['env'], message: "Missing 'is_done' function" },
+            { type: 'returns_type', function: 'is_done', returnType: 'bool', message: "'is_done' should return bool" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth() for access control', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+            { type: 'uses_type', typeName: 'Address', message: 'Must use Address type' },
+        ],
+        conceptsIntroduced: ['Address', 'require_auth', 'access control', 'bool storage'],
+    },
+
+    {
+        id: 'standalone-vector-lab',
+        standalone: true,
+        order: 22,
+        difficulty: 'beginner',
+        xpReward: 130,
+        i18n: {
+            en: {
+                title: 'Vector Lab',
+                story: `# 🧪 Vector Lab
+
+Enter the **Vector Lab** — a hands-on workshop for Soroban's most flexible collection.
+
+*"Vectors hold the many, order the many, return the many,"* says the Lab Technician.
+
+## Your Mission
+
+Create a contract that builds and inspects Vectors:
+
+- \`make_sequence\` — returns a \`Vec<u32>\` containing \`[1, 2, 3]\`
+- \`get_length\` — takes a \`Vec<u32>\` and returns its length as \`u32\`
+
+## What You'll Learn
+
+- \`Vec\` type and the \`vec![&env, ...]\` macro
+- \`Vec::len()\` for length
+- Passing Vectors between functions
+
+## Key Concepts
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Practice creating and inspecting Vec<u32> collections',
+                hints: [
+                    'Use `vec![&env, 1u32, 2u32, 3u32]` to build the sequence',
+                    'Signature for get_length: `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Return length with `vals.len()`',
+                ],
+            },
+            es: {
+                title: 'Laboratorio de Vectores',
+                story: `# 🧪 Laboratorio de Vectores
+
+Entra al **Laboratorio de Vectores** — un taller práctico para la colección más flexible de Soroban.
+
+*"Los vectores contienen a los muchos, ordenan a los muchos, devuelven a los muchos,"* dice el Técnico de Laboratorio.
+
+## Tu Misión
+
+Crea un contrato que construya e inspeccione Vectores:
+
+- \`make_sequence\` — devuelve un \`Vec<u32>\` que contiene \`[1, 2, 3]\`
+- \`get_length\` — recibe un \`Vec<u32>\` y devuelve su longitud como \`u32\`
+
+## Lo Que Aprenderás
+
+- El tipo \`Vec\` y la macro \`vec![&env, ...]\`
+- \`Vec::len()\` para la longitud
+- Pasar Vectores entre funciones
+
+## Conceptos Clave
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Practica crear e inspeccionar colecciones Vec<u32>',
+                hints: [
+                    'Usa `vec![&env, 1u32, 2u32, 3u32]` para construir la secuencia',
+                    'Firma para get_length: `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Devuelve la longitud con `vals.len()`',
+                ],
+            },
+            fr: {
+                title: 'Laboratoire de Vecteurs',
+                story: `# 🧪 Laboratoire de Vecteurs
+
+Entre dans le **Laboratoire de Vecteurs** — un atelier pratique pour la collection la plus flexible de Soroban.
+
+*"Les vecteurs contiennent le multiple, ordonnent le multiple, renvoient le multiple,"* dit le Technicien de Laboratoire.
+
+## Ta Mission
+
+Crée un contrat qui construit et inspecte des Vecteurs :
+
+- \`make_sequence\` — renvoie un \`Vec<u32>\` contenant \`[1, 2, 3]\`
+- \`get_length\` — reçoit un \`Vec<u32>\` et renvoie sa longueur en \`u32\`
+
+## Ce Que Tu Apprendras
+
+- Le type \`Vec\` et la macro \`vec![&env, ...]\`
+- \`Vec::len()\` pour la longueur
+- Passer des Vecteurs entre les fonctions
+
+## Concepts Clés
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Pratique la création et l\'inspection de collections Vec<u32>',
+                hints: [
+                    'Utilise `vec![&env, 1u32, 2u32, 3u32]` pour construire la séquence',
+                    'Signature pour get_length : `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Renvoie la longueur avec `vals.len()`',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
+
+#[contract]
+pub struct VectorLab;
+
+#[contractimpl]
+impl VectorLab {
+    // TODO: Create 'make_sequence' function
+    // Parameters: env: Env
+    // Returns: Vec<u32>
+    // Should return vec![&env, 1u32, 2u32, 3u32]
+
+    // TODO: Create 'get_length' function
+    // Parameters: env: Env, vals: Vec<u32>
+    // Returns: u32
+    // Should return vals.len()
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
+
+#[contract]
+pub struct VectorLab;
+
+#[contractimpl]
+impl VectorLab {
+    pub fn make_sequence(env: Env) -> Vec<u32> {
+        vec![&env, 1u32, 2u32, 3u32]
+    }
+
+    pub fn get_length(env: Env, vals: Vec<u32>) -> u32 {
+        vals.len()
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'make_sequence', params: ['env'], message: "Missing 'make_sequence' function" },
+            { type: 'returns_type', function: 'make_sequence', returnType: 'Vec<u32>', message: "'make_sequence' should return Vec<u32>" },
+            { type: 'has_function', name: 'get_length', params: ['env', 'vals'], message: "Missing 'get_length' function" },
+            { type: 'returns_type', function: 'get_length', returnType: 'u32', message: "'get_length' should return u32" },
+            { type: 'contains_pattern', pattern: 'vec![', message: 'Must use vec! macro', description: 'vec! macro' },
+            { type: 'uses_type', typeName: 'Vec', message: 'Must use Vec type' },
+        ],
+        conceptsIntroduced: ['Vec', 'vec! macro', 'len', 'collections'],
     },
     ...authoredMissions,
 ];

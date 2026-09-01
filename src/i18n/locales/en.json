@@ -76,6 +76,7 @@
     "subtitle": "Browse, search, and filter all available missions.",
     "searchPlaceholder": "Search missions...",
     "allCampaigns": "All Campaigns",
+    "standalone": "Standalone",
     "allDifficulties": "All Difficulties",
     "beginner": "Beginner",
     "intermediate": "Intermediate",
@@ -380,10 +381,12 @@
     },
     "chapters": {
       "all": "All Chapters",
-      "n": "Chapter {{number}}"
+      "n": "Chapter {{number}}",
+      "standalone": "Standalone"
     },
     "card": {
       "chapterMission": "Chapter {{chapter}} • Mission {{mission}}",
+      "standaloneMission": "Standalone • Mission {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completed",
       "locked": "🔒 Locked",

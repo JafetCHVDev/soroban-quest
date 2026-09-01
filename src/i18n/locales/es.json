@@ -76,6 +76,7 @@
     "subtitle": "Explora, busca y filtra todas las misiones disponibles.",
     "searchPlaceholder": "Buscar misiones...",
     "allCampaigns": "Todas las Campañas",
+    "standalone": "Independiente",
     "allDifficulties": "Todas las Dificultades",
     "beginner": "Principiante",
     "intermediate": "Intermedio",
@@ -380,10 +381,12 @@
     },
     "chapters": {
       "all": "Todos los capítulos",
-      "n": "Capítulo {{number}}"
+      "n": "Capítulo {{number}}",
+      "standalone": "Independiente"
     },
     "card": {
       "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
+      "standaloneMission": "Independiente • Misión {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completada",
       "locked": "🔒 Bloqueada",

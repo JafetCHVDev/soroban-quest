@@ -75,6 +75,7 @@
     "subtitle": "浏览、搜索并筛选所有可用任务。",
     "searchPlaceholder": "搜索任务...",
     "allCampaigns": "全部战役",
+    "standalone": "独立",
     "allDifficulties": "全部难度",
     "beginner": "初级",
     "intermediate": "中级",
@@ -379,10 +380,12 @@
     },
     "chapters": {
       "all": "全部章节",
-      "n": "第 {{number}} 章"
+      "n": "第 {{number}} 章",
+      "standalone": "独立"
     },
     "card": {
       "chapterMission": "第 {{chapter}} 章 • 任务 {{mission}}",
+      "standaloneMission": "独立 • 任务 {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ 已完成",
       "locked": "🔒 已锁定",
@@ -420,6 +423,10 @@
     "editor": {
       "reset": "↺ 重置",
       "hint": "💡 提示",
+      "goldHint": "🪙 提示 ({{cost}} 金币)",
+      "goldHintTitle": "花费 {{cost}} 金币立即揭示下一条提示",
+      "goldHintInsufficient": "金币不足 — 需要 {{cost}} 才能解锁此提示",
+      "goldHintUnlocked": "🪙 提示 (已解锁)",
       "solution": "👁️ 解答",
       "run": "▶ 运行测试",
       "running": "运行中…",
@@ -473,6 +480,8 @@
       "validated": "任务参数验证通过！",
       "validationFailed": "验证失败。请检查终端。",
       "hintUnlocked": "提示 {{index}} 已解锁",
+      "hintGoldUnlocked": "提示 {{index}} 已用 {{cost}} 金币解锁",
+      "hintInsufficientGold": "金币不足 — 需要 {{cost}} 才能解锁此提示",
       "codeReset": "代码已重置为模板",
       "solutionLoaded": "解答已加载到编辑器"
     },

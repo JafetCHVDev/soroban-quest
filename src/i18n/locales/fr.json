@@ -329,10 +329,12 @@
     },
     "chapters": {
       "all": "Tous les chapitres",
-      "n": "Chapitre {{number}}"
+      "n": "Chapitre {{number}}",
+      "standalone": "Autonome"
     },
     "card": {
       "chapterMission": "Chapitre {{chapter}} • Mission {{mission}}",
+      "standaloneMission": "Autonome • Mission {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Terminée",
       "locked": "🔒 Verrouillée"
@@ -366,6 +368,10 @@
     "editor": {
       "reset": "↺ Réinitialiser",
       "hint": "💡 Indice",
+      "goldHint": "🪙 Indice ({{cost}} or)",
+      "goldHintTitle": "Dépensez {{cost}} or pour révéler le prochain indice",
+      "goldHintInsufficient": "Pas assez d'or — besoin de {{cost}} pour déverrouiller",
+      "goldHintUnlocked": "🪙 Indice (déverrouillé)",
       "solution": "👁️ Solution",
       "run": "▶ Lancer les tests",
       "running": "Exécution…",
@@ -411,6 +417,8 @@
       "validated": "Paramètres de la mission validés !",
       "validationFailed": "Validation échouée. Consultez le terminal.",
       "hintUnlocked": "Indice {{index}} débloqué",
+      "hintGoldUnlocked": "Indice {{index}} débloqué pour {{cost}} or",
+      "hintInsufficientGold": "Pas assez d'or — besoin de {{cost}} pour déverrouiller",
       "codeReset": "Code réinitialisé au modèle",
       "solutionLoaded": "Solution chargée dans l'éditeur"
     },

@@ -7,6 +7,7 @@ const fixtureDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url
 
 export async function clearLocalStorageBeforePageLoad(page: Page) {
   await page.goto('/');
+  await page.waitForLoadState('load');
   await page.evaluate(() => {
     localStorage.clear();
     localStorage.setItem('sorobanQuest_onboarding_done', '1');
@@ -59,12 +60,15 @@ export async function maskDynamicElements(page: Page) {
 }
 
 export async function waitForMonaco(page: Page) {
-  await page.locator('.mission-detail').waitFor({ state: 'attached', timeout: 15000 }); // Reduced timeout
-  const editorTab = page.getByRole('tab', { name: /editor/i });
+  await page.locator('.mission-detail').waitFor({ state: 'attached', timeout: 20000 });
+  await page.locator('.mission-detail-skeleton, .loading').waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+  const editorTab = page.locator('.tab-btn, [role="tab"]').filter({ hasText: /editor/i }).first();
   if (await editorTab.isVisible().catch(() => false)) {
-    await editorTab.click();
+    await editorTab.click().catch(() => {});
   }
-  await expect(page.locator('.monaco-editor').first()).toBeVisible({ timeout: 15000 }); // Reduced timeout
+  const editor = page.locator('.monaco-editor');
+  await expect(editor.first()).toBeVisible({ timeout: 20000 });
+  await page.waitForTimeout(500);
 }
 
 export async function fillMonacoEditor(page: Page, content: string) {

@@ -32,6 +32,7 @@ export function getMissionById(id, lang = getActiveLanguage()) {
 export function getMissionsByChapter(lang = getActiveLanguage()) {
     const chapters = {};
     for (const mission of missions) {
+        if (mission.standalone) continue;
         const ch = mission.chapter || 1;
         if (!chapters[ch]) chapters[ch] = [];
         chapters[ch].push(localizeMission(mission, lang));
@@ -39,27 +40,52 @@ export function getMissionsByChapter(lang = getActiveLanguage()) {
     return chapters;
 }
 
+export function getStandaloneMissions(lang = getActiveLanguage()) {
+    return missions.filter((m) => m.standalone).map((m) => localizeMission(m, lang));
+}
+
+export function getCampaignMissions(lang = getActiveLanguage()) {
+    return missions.filter((m) => !m.standalone).map((m) => localizeMission(m, lang));
+}
+
 export function getNextMission(currentId, lang = getActiveLanguage()) {
-    const idx = missions.findIndex(m => m.id === currentId);
-    if (idx === -1 || idx === missions.length - 1) return null;
-    return localizeMission(missions[idx + 1], lang);
+    const campaignMissions = missions.filter((m) => !m.standalone);
+    const mission = missions.find((m) => m.id === currentId);
+    if (!mission) return null;
+    // For standalone missions, next is null (no campaign sequence)
+    if (mission.standalone) return null;
+    const idx = campaignMissions.findIndex((m) => m.id === currentId);
+    if (idx === -1 || idx === campaignMissions.length - 1) return null;
+    return localizeMission(campaignMissions[idx + 1], lang);
 }
 
 export function getPreviousMission(currentId, lang = getActiveLanguage()) {
-    const idx = missions.findIndex(m => m.id === currentId);
+    const campaignMissions = missions.filter((m) => !m.standalone);
+    const mission = missions.find((m) => m.id === currentId);
+    if (!mission) return null;
+    if (mission.standalone) return null;
+    const idx = campaignMissions.findIndex((m) => m.id === currentId);
     if (idx <= 0) return null;
-    return localizeMission(missions[idx - 1], lang);
+    return localizeMission(campaignMissions[idx - 1], lang);
 }
 
 export function isMissionUnlocked(missionId, completedMissions) {
     // Language-neutral: relies only on ids and order.
-    const idx = missions.findIndex(m => m.id === missionId);
+    const mission = missions.find((m) => m.id === missionId);
+    if (!mission) return false;
+
+    // Standalone missions are always unlocked — no campaign gating
+    if (mission.standalone) return true;
+
+    // Campaign progression: only consider non-standalone missions in sequence
+    const campaignMissions = missions.filter((m) => !m.standalone);
+    const idx = campaignMissions.findIndex((m) => m.id === missionId);
     if (idx === -1) return false;
 
-    // First mission is always unlocked
+    // First campaign mission is always unlocked
     if (idx === 0) return true;
 
-    // Subsequent missions require the previous one to be completed
-    const prevMission = missions[idx - 1];
+    // Subsequent campaign missions require the previous campaign mission to be completed
+    const prevMission = campaignMissions[idx - 1];
     return completedMissions.includes(prevMission.id);
 }

@@ -81,7 +81,7 @@ describe("testRunner system", () => {
   describe("Phase 2 - Structural Validation", () => {
     it("fails structural check when no function definitions are found", async () => {
       const codeNoFn = `
-        // soroban_sdk usage but no fn
+        // soroban_sdk usage but no function
         use soroban_sdk::Env;
       `;
       const result = await runTests(codeNoFn, { checks: [] });

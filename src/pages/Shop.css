@@ -202,3 +202,21 @@
 .shop-empty-icon {
   font-size: 2.5rem;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-category-btn {
+    transition: none;
+  }
+
+  .shop-item {
+    transition: none;
+  }
+
+  .shop-item:hover {
+    transform: none;
+  }
+
+  .shop-item-btn {
+    transition: none;
+  }
+}

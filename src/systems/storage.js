@@ -55,7 +55,17 @@ function readLegacyProgress() {
   try {
     const progressData = localStorage.getItem(PROGRESS_KEY);
     if (!progressData) return null;
-    return { ...getDefaultState(), ...JSON.parse(progressData) };
+    const parsed = JSON.parse(progressData);
+    
+    // Migration: purchasedItems -> inventory
+    if (!parsed.inventory) {
+      parsed.inventory = {
+        owned: parsed.purchasedItems || [],
+        equipped: [],
+      };
+    }
+    
+    return { ...getDefaultState(), ...parsed };
   } catch {
     return null;
   }
