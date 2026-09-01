@@ -10,6 +10,7 @@ import { GameStateProvider } from './systems/GameStateContext';
 import LoadingScreen from './components/LoadingScreen';
 import { loadProgress, saveProgress } from './systems/storage';
 import { updateStreak } from './systems/gameEngine';
+import { scheduleCloudSync } from './systems/cloudSync';
 import { useKeyboardShortcuts } from './systems/useKeyboardShortcuts';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
 import { scheduleCloudSync } from './systems/cloudSync';
