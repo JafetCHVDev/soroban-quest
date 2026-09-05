@@ -1,0 +1,192 @@
+{
+  "hello-soroban": {
+    "title": "目覚めの刻",
+    "story": "🌌 **Sorobanの世界へようこそ**\n\n未知の星系へと流れ着いたあなた。古い魔法書『Stellar』の中に、強大な力を秘めたスマートコントラクトの技術が眠っていることを知りました。\n\nSorobanの領地に到着したあなたの前に、一人の老賢者が現れました。「ようこそ、契約魔法師よ。まずはこの基本の力を習得しなければならん。『hello』という最も単純な呪文を唱える準備はできているか？」\n\n## Your Mission\nあなたの最初の任務は、`hello`という関数を持つスマートコントラクトを作成することです。このシンプルな契約は、Sorobanの世界での基本的な魔法の力を象徴しています。\n\n## What You'll Learn\n- Rustでスマートコントラクトを記述する基本的な構文\n- `#[contractimpl]`マクロを使用した関数の定義方法\n- Soroban環境での最初の展開と実行\n\n## Key Concepts\n契約の基本構造を理解することが、すべての冒険の第一歩です。\n\n```rust\n#[contractimpl]\npub struct HelloContract;\n\n#[contractimpl]\nimpl HelloContract {\n    pub fn hello(env: Env, to: Symbol) -> Symbol {\n        symbol_short!(\"Hello\")\n    }\n}\n```",
+    "learningGoal": "Sorobanで最初のスマートコントラクトを作成し、基本的な関数を実装する",
+    "hints": [
+      "スマートコントラクトの最も基本的な形は、環境（Env）と最低限の関数で構成されています",
+      "`Symbol`型は、スマートコントラクト内で文字列を表現する最も効率的な方法です",
+      "マクロ`#[contractimpl]`を使用することで、Sorobanはあなたのコードを自動的にコンパイルしてくれます"
+    ]
+  },
+  "greetings-protocol": {
+    "title": "挨拶の儀式",
+    "story": "🌌 **複数の魔法を習得する時が来た**\n\n初めの試験を通り抜けたあなた。老賢者は微笑み、「よくやったな。だが一つの呪文だけでは足りん。複数の力を組み合わせることで、真の魔法師になるのだ」と告げました。\n\n今度の試験では、二つの異なる魔法を使いこなす必要があります。一つは相手に挨拶する力、もう一つは文字の数を数える古い魔法です。\n\n## Your Mission\n`greet`関数と`count_chars`関数の両方を実装する複数関数型のスマートコントラクトを作成してください。\n\n## What You'll Learn\n- 単一のコントラクト内に複数の関数を実装する方法\n- 異なるパラメータ型と戻り値型の扱い方\n- 文字列操作の基本的なロジック\n\n## Key Concepts\n複数の関数を組み合わせることで、より複雑で有用な魔法を生み出すことができます。\n\n```rust\n#[contractimpl]\npub struct GreetingsContract;\n\n#[contractimpl]\nimpl GreetingsContract {\n    pub fn greet(env: Env, name: String) -> String {\n        format!(\"Hello, {}\", name)\n    }\n    \n    pub fn count_chars(env: Env, text: String) -> u32 {\n        text.len() as u32\n    }\n}\n```",
+    "learningGoal": "単一のコントラクト内に複数の相互作用する関数を実装する",
+    "hints": [
+      "同じ`impl`ブロック内に複数の関数を定義することで、すべてがコントラクトの一部となります",
+      "異なるパラメータ型を使用することで、関数は異なる入力に対応できます",
+      "`String`型を使うときは、UTF-8エンコーディングとその長さについて注意が必要です"
+    ]
+  },
+  "counter-vault": {
+    "title": "数の庫",
+    "story": "🌌 **永遠の記憶を手に入れる**\n\nあなたの力が増してきたことを感じた老賢者は、新たな試練を用意しました。「これまでの魔法は一度きりのものだった。だが真の力とは、時を超えて何かを記憶し、それを変化させる能力なのだ」\n\nあなたの前には、一つの古い金庫が置かれています。この金庫の中には、永遠に保存される一つの数字があります。あなたはこの数字を増やし、減らし、そして読み出す力を身につけなければなりません。\n\n## Your Mission\n永続的な状態を管理するスマートコントラクトを作成してください。`increment`（増加）、`decrement`（減少）、`get`（読み取り）という3つの関数を実装します。\n\n## What You'll Learn\n- スマートコントラクト内での永続的な状態管理\n- ledger（台帳）へのデータ書き込みと読み取り\n- 状態変更関数の設計と実装\n\n## Key Concepts\nSorobanの台帳は、ブロックチェーンの不変の記録として機能します。\n\n```rust\n#[contractimpl]\npub struct CounterVault {\n    count: i32,\n}\n\n#[contractimpl]\nimpl CounterVault {\n    pub fn increment(env: Env) -> i32 {\n        let count: i32 = env.storage().instance().get(&symbol_short!(\"count\")).unwrap_or(0);\n        let new_count = count + 1;\n        env.storage().instance().set(&symbol_short!(\"count\"), &new_count);\n        new_count\n    }\n    \n    pub fn get(env: Env) -> i32 {\n        env.storage().instance().get(&symbol_short!(\"count\")).unwrap_or(0)\n    }\n}\n```",
+    "learningGoal": "スマートコントラクト内で永続的な状態を管理し、その値を変更・取得する",
+    "hints": [
+      "Envの`storage()`メソッドを使うことで、ブロックチェーン上に永遠にデータを保存できます",
+      "Symbol型をキーとして使うことで、異なる値を区別することができます",
+      "`unwrap_or()`メソッドは、値が存在しない場合のデフォルト値を指定するのに便利です"
+    ]
+  },
+  "guardian-ledger": {
+    "title": "守護者の記録簿",
+    "story": "🌌 **複数の秘密を守る責任**\n\nあなたの訓練が進むにつれ、老賢者はより複雑な試練を与えました。「一つの数字を守ることはできたな。だが世界には、多くの異なるものを追跡する必要があるのだ。例えば、多くの魔法師たちの力を個別に記録し、管理する必要があるとしたら？」\n\nあなたの前には、巨大な記録簿が現れました。この簿には、多くのキーと、それぞれに対応する値が記録されます。\n\n## Your Mission\nマップ（キーと値のペア）を使ったストレージを実装するスマートコントラクトを作成してください。アドレスをキー、バランスを値として管理します。\n\n## What You'll Learn\n- `Map`データ構造を使用した複数の値の管理\n- キー・バリュー型の永続ストレージパターン\n- 複数ユーザーの状態を独立して追跡する方法\n\n## Key Concepts\nマップを使うことで、多くの異なる主体の情報を一つのコントラクト内で追跡できます。\n\n```rust\n#[contractimpl]\npub struct GuardianLedger;\n\n#[contractimpl]\nimpl GuardianLedger {\n    pub fn set_balance(env: Env, account: Address, amount: i128) {\n        let balances: Map<Address, i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        balances.set(account, amount);\n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n    }\n    \n    pub fn get_balance(env: Env, account: Address) -> i128 {\n        let balances: Map<Address, i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        balances.get(account).unwrap_or(0)\n    }\n}\n```",
+    "learningGoal": "マップストレージを使用して複数のキーと値を管理し、ユーザーごとの状態を追跡する",
+    "hints": [
+      "Mapは多くの異なるユーザーやアカウントの情報を効率的に管理するために設計されています",
+      "`unwrap_or_else()`を使うことで、Mapが存在しない場合に新しいMapを作成できます",
+      "Address型は、スマートコントラクト内でユーザーを一意に識別するための標準的な方法です"
+    ]
+  },
+  "token-forge": {
+    "title": "トークン鍛造所",
+    "story": "🌌 **新しい通貨を生み出す力**\n\nあなたの実力が認められ、老賢者は驚くべき任務を与えました。「今、お前にはトークン、つまり新しい通貨を鍛造する力を与える。これは単なるゲームではない。実在する価値を創造するのだ」\n\nあなたは焼けた火の前に立ち、金属を打ち叩き始めます。各打撃により、新しいトークンが生まれ、バランスが記録されます。そして、これらのトークンを他の者に譲渡する力も必要です。\n\n## Your Mission\nトークンの作成、残高の管理、転送機能を備えたスマートコントラクトを実装してください。\n\n## What You'll Learn\n- トークンの初期化と供給管理\n- アカウント間のバランス追跡\n- トークンの転送ロジックと検証\n- 十分な残高があることの確認\n\n## Key Concepts\nトークンコントラクトはブロックチェーン経済の基礎となります。\n\n```rust\n#[contractimpl]\npub struct TokenForge;\n\n#[contractimpl]\nimpl TokenForge {\n    pub fn initialize(env: Env, admin: Address, initial_supply: i128) {\n        let mut balances: Map<Address, i128> = Map::new(&env);\n        balances.set(admin.clone(), initial_supply);\n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n        env.storage().instance().set(&symbol_short!(\"admin\"), &admin);\n    }\n    \n    pub fn transfer(env: Env, from: Address, to: Address, amount: i128) -> bool {\n        let mut balances: Map<Address, i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let from_balance = balances.get(from.clone()).unwrap_or(0);\n        if from_balance < amount {\n            return false;\n        }\n        \n        balances.set(from.clone(), from_balance - amount);\n        let to_balance = balances.get(to.clone()).unwrap_or(0);\n        balances.set(to.clone(), to_balance + amount);\n        \n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n        true\n    }\n}\n```",
+    "learningGoal": "トークン転送ロジックを含む実用的なトークンコントラクトを実装する",
+    "hints": [
+      "転送を実行する前に、送信者に十分な残高があることを常に確認してください",
+      "トークンの総供給量と各アカウントのバランスを正確に追跡することが重要です",
+      "転送が成功または失敗したことを明確に示す戻り値やイベントが重要です"
+    ]
+  },
+  "time-lock": {
+    "title": "時間の鍵",
+    "story": "🌌 **時を味方にする**\n\n魔法の修行も中盤に差し掛かりました。老賢者は深い思慮の中から語りかけます。「世界には、時を味方にする者がいる。特定の時間が来るまで、ある力を封印し、その時が来たときだけそれを解放する。これが時間ロックの魔法だ」\n\nあなたは時計を手にしました。この時計の針が特定の時刻に達するまで、あなたが開けたい扉は閉ざされたままです。\n\n## Your Mission\n特定の時間に達するまでアクセスを制限するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- Soroban環境における時間の概念（レッジャーシーケンス）\n- 時間ベースのアクセス制御ロジック\n- タイムロック機構の実装方法\n\n## Key Concepts\nブロックチェーンの時間は、レッジャーシーケンス番号で表現されます。\n\n```rust\n#[contractimpl]\npub struct TimeLock;\n\n#[contractimpl]\nimpl TimeLock {\n    pub fn lock(env: Env, unlock_time: u64) {\n        env.storage().instance().set(&symbol_short!(\"unlock_time\"), &unlock_time);\n    }\n    \n    pub fn unlock(env: Env) -> bool {\n        let unlock_time: u64 = env.storage().instance()\n            .get(&symbol_short!(\"unlock_time\"))\n            .unwrap_or(0);\n        \n        if env.ledger().sequence() >= unlock_time {\n            return true;\n        }\n        false\n    }\n}\n```",
+    "learningGoal": "時間ベースのアクセス制御を実装し、特定の時刻までアクセスを制限する",
+    "hints": [
+      "`env.ledger().sequence()`を使用することで、現在のブロックチェーン時刻を取得できます",
+      "タイムロックは、資金のリリースやアクションの遅延実行に有用です",
+      "解除時間を保存する際は、必ずそれをストレージに永続化してください"
+    ]
+  },
+  "multi-party-pact": {
+    "title": "多者協約",
+    "story": "🌌 **複数の意思を一つに統める**\n\nあなたの冒険が進むにつれ、老賢者は最後の秘訣を明かし始めました。「複雑な魔法になると、一人の力では足りない。複数の魔法師が合意して初めて、強大な力が発動するのだ」\n\nあなたの前には、三人の魔法師が立ちました。彼らはある協約に署名する必要があります。三人全員が合意するまで、その協約の力は発動しません。\n\n## Your Mission\nマルチシグ（複数署名）機能を実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- 複数の署名者による確認メカニズム\n- トランザクション署名の検証\n- マルチシグ承認ロジック\n\n## Key Concepts\nマルチシグは、セキュリティと信頼を最大化するための強力なパターンです。\n\n```rust\n#[contractimpl]\npub struct MultiPartyPact;\n\n#[contractimpl]\nimpl MultiPartyPact {\n    pub fn add_signer(env: Env, signer: Address) {\n        let mut signers: Vec<Address> = env.storage().instance()\n            .get(&symbol_short!(\"signers\"))\n            .unwrap_or_else(|| Vec::new(&env));\n        signers.push_back(signer);\n        env.storage().instance().set(&symbol_short!(\"signers\"), &signers);\n    }\n    \n    pub fn check_approval(env: Env, signatures: Vec<Address>) -> bool {\n        let signers: Vec<Address> = env.storage().instance()\n            .get(&symbol_short!(\"signers\"))\n            .unwrap_or_else(|| Vec::new(&env));\n        \n        for signer in signers.iter() {\n            let mut found = false;\n            for sig in signatures.iter() {\n                if sig == signer {\n                    found = true;\n                    break;\n                }\n            }\n            if !found {\n                return false;\n            }\n        }\n        true\n    }\n}\n```",
+    "learningGoal": "複数の署名者からの承認を必要とするマルチシグコントラクトを実装する",
+    "hints": [
+      "すべての要求される署名者がトランザクションに署名したことを確認する必要があります",
+      "Vecを使用して、複数の署名者のリストを管理することができます",
+      "セキュリティのため、すべての署名者が合意するまでアクションは実行されません"
+    ]
+  },
+  "vault-manager": {
+    "title": "金庫番",
+    "story": "🌌 **複雑な財宝の管理**\n\n第四章へ進むことになったあなた。新しい領域で新しい試練が待っていました。「財宝を保管する金庫は、単なる入れ物ではない。財宝の出入りを記録し、誰が何を取り出したかを追跡しなければならん」\n\nあなたは大きな金庫の前に立たされました。この金庫では、複数のアイテムが保管され、その状態を完全に管理する必要があります。\n\n## Your Mission\n複雑な金庫管理システムを実装するスマートコントラクトを作成してください。複数のアセットの預金、引き出し、残高管理を行います。\n\n## What You'll Learn\n- 複数のアセット型の同時管理\n- 複雑な状態遷移のロジック\n- ストレージ構造の最適化\n\n## Key Concepts\n金庫管理は、複数のユーザーと複数のアセットの関係を同時に追跡する必要があります。\n\n```rust\n#[contractimpl]\npub struct VaultManager;\n\n#[contractimpl]\nimpl VaultManager {\n    pub fn deposit(env: Env, user: Address, asset: Symbol, amount: i128) {\n        let key = (user.clone(), asset);\n        let mut balances: Map<(Address, Symbol), i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let current = balances.get(key.clone()).unwrap_or(0);\n        balances.set(key, current + amount);\n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n    }\n    \n    pub fn withdraw(env: Env, user: Address, asset: Symbol, amount: i128) -> bool {\n        let key = (user.clone(), asset);\n        let mut balances: Map<(Address, Symbol), i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let current = balances.get(key.clone()).unwrap_or(0);\n        if current < amount {\n            return false;\n        }\n        balances.set(key, current - amount);\n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n        true\n    }\n}\n```",
+    "learningGoal": "複数のユーザーと複数のアセットを含む複雑な金庫システムを実装する",
+    "hints": [
+      "複合キー（タプル）を使うことで、ユーザーとアセットの両方を一つのマップキーとして使用できます",
+      "各操作の前に、必要な条件（十分な残高など）が満たされていることを確認してください",
+      "状態管理は、一貫性と正確さを保つために重要です"
+    ]
+  },
+  "event-emitter": {
+    "title": "事象の放射",
+    "story": "🌌 **外の世界への知らせ**\n\nあなたの修行が深まるにつれ、老賢者は新たな視点をもたらしました。「コントラクトの力は、それ自体の中だけでなく、外の世界にも知らせることが重要だ。火を焚くとき、その光は周囲に広がり、多くの者がそれを見ることができる」\n\nあなたは重要な出来事が起きるたびに、その情報を世界中に広く知らせる必要があることに気付きました。\n\n## Your Mission\nコントラクト内で重要なイベントを発行するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- Sorobanイベントの発行と構造\n- イベントトピックの定義\n- オフチェーンでのイベント監視の基礎\n\n## Key Concepts\nイベントは、ブロックチェーン上で起きたことの透明な記録となります。\n\n```rust\n#[contractimpl]\npub struct EventEmitter;\n\n#[contractimpl]\nimpl EventEmitter {\n    pub fn emit_transfer(env: Env, from: Address, to: Address, amount: i128) {\n        env.events().publish(\n            (symbol_short!(\"transfer\"),),\n            (from, to, amount),\n        );\n    }\n    \n    pub fn emit_approval(env: Env, spender: Address, amount: i128) {\n        env.events().publish(\n            (symbol_short!(\"approval\"),),\n            (spender, amount),\n        );\n    }\n}\n```",
+    "learningGoal": "スマートコントラクト内で重要なイベントを発行し、外部システムに通知する",
+    "hints": [
+      "`env.events().publish()`を使用することで、重要な出来事を記録できます",
+      "イベントトピックは、複数の値のタプルで構成されます",
+      "イベントはブロックチェーン上に永遠に記録され、外部でも監視できます"
+    ]
+  },
+  "approval-manager": {
+    "title": "許可管理者",
+    "story": "🌌 **委譲された力**\n\nコントラクト魔法が進むにつれ、あなたは新しい概念に直面しました。「すべての力を自分で使う必要はない。他の者に、特定の量まで力を使う権利を与えることができるのだ。これが『許可』の魔法である」\n\nあなたは、自分の財宝の一部を他の者に使わせる権利を与える必要がありました。しかし、その権利には制限があります。彼らが使える量は、あなたが許可した量までです。\n\n## Your Mission\nアローアンス（許可）パターンを実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- アローアンスと承認パターンの実装\n- 委譲された権限の管理\n- transferFrom機能の実装\n\n## Key Concepts\nアローアンスパターンにより、ユーザーは他のアドレスに限定的な権限を委譲できます。\n\n```rust\n#[contractimpl]\npub struct ApprovalManager;\n\n#[contractimpl]\nimpl ApprovalManager {\n    pub fn approve(env: Env, owner: Address, spender: Address, amount: i128) {\n        let key = (owner, spender);\n        let mut allowances: Map<(Address, Address), i128> = env.storage().instance()\n            .get(&symbol_short!(\"allowances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        allowances.set(key, amount);\n        env.storage().instance().set(&symbol_short!(\"allowances\"), &allowances);\n    }\n    \n    pub fn transfer_from(env: Env, owner: Address, spender: Address, to: Address, amount: i128) -> bool {\n        let allowance_key = (owner.clone(), spender.clone());\n        let mut allowances: Map<(Address, Address), i128> = env.storage().instance()\n            .get(&symbol_short!(\"allowances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let current_allowance = allowances.get(allowance_key.clone()).unwrap_or(0);\n        if current_allowance < amount {\n            return false;\n        }\n        \n        allowances.set(allowance_key, current_allowance - amount);\n        env.storage().instance().set(&symbol_short!(\"allowances\"), &allowances);\n        true\n    }\n}\n```",
+    "learningGoal": "アローアンスパターンを実装し、ユーザーが他のアドレスに限定的な権限を委譲できるようにする",
+    "hints": [
+      "アローアンスは、オーナーと支出者のペアをキーとして管理されます",
+      "transferFromを使用する前に、アローアンスの量を確認する必要があります",
+      "アローアンスの使用後は、残りの額を正確に更新することが重要です"
+    ]
+  },
+  "crowdfund": {
+    "title": "群衆からの資金",
+    "story": "🌌 **多くの者の力を集める**\n\n第五章に入ったあなた。今度の試練は、一人の力ではなく、多くの者の心と資金を集める魔法です。「大きな夢を実現するには、一人では足りない。多くの人々が共に力を合わせ、目標に向かって資金を集めるのだ」\n\nあなたの前には、多くの支援者たちが立っていました。彼らは一定の目標額が集まるまで、資金を提供し続ける必要があります。もし目標が達成されれば、プロジェクトは始まります。失敗すれば、すべての資金は返金されます。\n\n## Your Mission\nクラウドファンディングキャンペーンの基本的なロジックを実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- キャンペーン状態管理\n- 目標額と期限の追跡\n- 資金の集約と返金ロジック\n\n## Key Concepts\nクラウドファンディングは、条件付き資金集約の最良の例です。\n\n```rust\n#[contractimpl]\npub struct Crowdfund;\n\n#[contractimpl]\nimpl Crowdfund {\n    pub fn initialize(env: Env, goal: i128, deadline: u64) {\n        env.storage().instance().set(&symbol_short!(\"goal\"), &goal);\n        env.storage().instance().set(&symbol_short!(\"deadline\"), &deadline);\n        env.storage().instance().set(&symbol_short!(\"raised\"), &0i128);\n    }\n    \n    pub fn contribute(env: Env, contributor: Address, amount: i128) -> bool {\n        let raised: i128 = env.storage().instance()\n            .get(&symbol_short!(\"raised\"))\n            .unwrap_or(0);\n        \n        env.storage().instance().set(&symbol_short!(\"raised\"), &(raised + amount));\n        \n        let mut contributions: Map<Address, i128> = env.storage().instance()\n            .get(&symbol_short!(\"contributions\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let current = contributions.get(contributor.clone()).unwrap_or(0);\n        contributions.set(contributor, current + amount);\n        env.storage().instance().set(&symbol_short!(\"contributions\"), &contributions);\n        \n        true\n    }\n    \n    pub fn check_goal_reached(env: Env) -> bool {\n        let goal: i128 = env.storage().instance().get(&symbol_short!(\"goal\")).unwrap_or(0);\n        let raised: i128 = env.storage().instance().get(&symbol_short!(\"raised\")).unwrap_or(0);\n        raised >= goal\n    }\n}\n```",
+    "learningGoal": "クラウドファンディングキャンペーンの基本的なロジックを実装し、資金集約と目標達成を管理する",
+    "hints": [
+      "複数の支援者からの寄付を追跡するには、Mapを使用してください",
+      "キャンペーンの成功または失敗を判定するためのロジックが重要です",
+      "期限と目標額の両方を確認してから、返金または資金の解放を行ってください"
+    ]
+  },
+  "escrow-agent": {
+    "title": "エスクローの使者",
+    "story": "🌌 **信頼の中間者になる**\n\nあなたの冒険が進み、より複雑な信頼のシステムに直面しました。「取引では、一方が相手を信頼できないことがある。そこで中間者が必要になる。この中間者が『エスクロー』だ。双方が合意するまで、資金は中間者に保管される」\n\nあなたはエスクロー契約の使者となり、買い手と売り手の間で資金を安全に保管する責任を負いました。両者が満足するまで、その資金は動きません。\n\n## Your Mission\nエスクロー機能を実装するスマートコントラクトを作成してください。資金の保管、承認、解放を管理します。\n\n## What You'll Learn\n- エスクロー契約の基本的なロジック\n- 条件付き資金解放\n- マルチパーティの信頼メカニズム\n\n## Key Concepts\nエスクロー契約は、双方が信頼できる中立的な第三者として機能します。\n\n```rust\n#[contractimpl]\npub struct EscrowAgent;\n\n#[contractimpl]\nimpl EscrowAgent {\n    pub fn create_escrow(env: Env, buyer: Address, seller: Address, amount: i128) {\n        let escrow_id = env.storage().instance()\n            .get::<_, u64>(&symbol_short!(\"next_id\"))\n            .unwrap_or(1);\n        \n        let mut escrows: Map<u64, (Address, Address, i128, bool, bool)> = env.storage().instance()\n            .get(&symbol_short!(\"escrows\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        escrows.set(escrow_id, (buyer, seller, amount, false, false));\n        env.storage().instance().set(&symbol_short!(\"escrows\"), &escrows);\n        env.storage().instance().set(&symbol_short!(\"next_id\"), &(escrow_id + 1));\n    }\n    \n    pub fn approve_escrow(env: Env, escrow_id: u64, approver: Address) -> bool {\n        let mut escrows: Map<u64, (Address, Address, i128, bool, bool)> = env.storage().instance()\n            .get(&symbol_short!(\"escrows\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        if let Some((buyer, seller, amount, buyer_approved, seller_approved)) = escrows.get(escrow_id) {\n            let new_buyer_approved = if approver == buyer { true } else { buyer_approved };\n            let new_seller_approved = if approver == seller { true } else { seller_approved };\n            \n            escrows.set(escrow_id, (buyer, seller, amount, new_buyer_approved, new_seller_approved));\n            env.storage().instance().set(&symbol_short!(\"escrows\"), &escrows);\n            return true;\n        }\n        false\n    }\n}\n```",
+    "learningGoal": "エスクロー契約ロジックを実装し、買い手と売り手の間で資金を安全に管理する",
+    "hints": [
+      "エスクロー契約では、両者の承認を待つことが重要です",
+      "資金は、両者が合意するまで動いてはいけません",
+      "各エスクロー契約には、独自のIDと状態が必要です"
+    ]
+  },
+  "subscription": {
+    "title": "継続の契約",
+    "story": "🌌 **繰り返される約束**\n\nあなたの知識が深まるにつれ、老賢者は継続的なシステムについて語りました。「多くのサービスは、一度だけではなく、繰り返し提供される。毎月、毎年、定期的に。これが『サブスクリプション』の力だ」\n\nあなたは多くの加入者を抱えるサービスの管理者となりました。各加入者は定期的に料金を支払い、定期的にサービスを受け取る必要があります。\n\n## Your Mission\nサブスクリプション・支払いシステムを実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- 定期的な支払いロジック\n- 加入者管理と状態追跡\n- 更新周期の管理\n\n## Key Concepts\nサブスクリプションシステムは、時間と状態の両方を追跡します。\n\n```rust\n#[contractimpl]\npub struct Subscription;\n\n#[contractimpl]\nimpl Subscription {\n    pub fn subscribe(env: Env, subscriber: Address, plan_price: i128) {\n        let current_ledger = env.ledger().sequence();\n        let renewal_time = current_ledger + 100; // 100 ledger sequences later\n        \n        let mut subscriptions: Map<Address, (i128, u64, bool)> = env.storage().instance()\n            .get(&symbol_short!(\"subscriptions\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        subscriptions.set(subscriber, (plan_price, renewal_time, true));\n        env.storage().instance().set(&symbol_short!(\"subscriptions\"), &subscriptions);\n    }\n    \n    pub fn renew_subscription(env: Env, subscriber: Address) -> bool {\n        let mut subscriptions: Map<Address, (i128, u64, bool)> = env.storage().instance()\n            .get(&symbol_short!(\"subscriptions\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        if let Some((price, last_renewal, active)) = subscriptions.get(subscriber.clone()) {\n            let current_time = env.ledger().sequence();\n            if current_time >= last_renewal {\n                subscriptions.set(subscriber, (price, current_time + 100, active));\n                env.storage().instance().set(&symbol_short!(\"subscriptions\"), &subscriptions);\n                return true;\n            }\n        }\n        false\n    }\n}\n```",
+    "learningGoal": "サブスクリプション・支払いシステムを実装し、定期的な更新と支払いを管理する",
+    "hints": [
+      "各サブスクリプションの更新時刻を追跡することが重要です",
+      "現在のレッジャーシーケンスと次の更新時刻を比較してください",
+      "サブスクリプションの状態（アクティブ、非アクティブ）を管理する必要があります"
+    ]
+  },
+  "flash-loan": {
+    "title": "閃光の融資",
+    "story": "🌌 **一瞬の力を借りる**\n\n第六章の奥深くで、あなたは高度な魔法に出会いました。「この魔法は危険だが、非常に強力だ。一瞬だけ、莫大な力を借り、そしてそれを返すのだ。すべては一つのトランザクション内で完結する」\n\nあなたは巨大な力を借りることができますが、その力を返さなければなりません。返さなければ、すべてが無効になります。\n\n## Your Mission\nフラッシュローン機能を実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- フラッシュローンの基本的なメカニズム\n- 単一トランザクション内でのプール管理\n- デフォルト検出と自動ロールバック\n\n## Key Concepts\nフラッシュローンは、DeFiの革新的なコンセプトです。\n\n```rust\n#[contractimpl]\npub struct FlashLoan;\n\n#[contractimpl]\nimpl FlashLoan {\n    pub fn initialize_pool(env: Env, amount: i128) {\n        env.storage().instance().set(&symbol_short!(\"pool\"), &amount);\n        env.storage().instance().set(&symbol_short!(\"locked\"), &false);\n    }\n    \n    pub fn flash_loan(env: Env, borrower: Address, amount: i128) -> bool {\n        let pool: i128 = env.storage().instance().get(&symbol_short!(\"pool\")).unwrap_or(0);\n        let locked: bool = env.storage().instance().get(&symbol_short!(\"locked\")).unwrap_or(false);\n        \n        if locked || amount > pool {\n            return false;\n        }\n        \n        env.storage().instance().set(&symbol_short!(\"locked\"), &true);\n        env.storage().instance().set(&symbol_short!(\"pool\"), &(pool - amount));\n        \n        // Borrower uses the funds here\n        // The borrower must return the amount\n        \n        env.storage().instance().set(&symbol_short!(\"locked\"), &false);\n        true\n    }\n    \n    pub fn repay_flash_loan(env: Env, amount: i128) {\n        let pool: i128 = env.storage().instance().get(&symbol_short!(\"pool\")).unwrap_or(0);\n        env.storage().instance().set(&symbol_short!(\"pool\"), &(pool + amount));\n    }\n}\n```",
+    "learningGoal": "フラッシュローン機能を実装し、一瞬だけ大額の資金を借り、同一トランザクション内で返却する",
+    "hints": [
+      "フラッシュローンはロック機構を使用して、再入攻撃を防ぎます",
+      "借用人は、トランザクション内に資金を返す必要があります",
+      "プール内の利用可能な資金を確認してから、融資を承認してください"
+    ]
+  },
+  "permissions-rbac": {
+    "title": "許可と役割",
+    "story": "🌌 **階級制度を統治する**\n\nあなたの権力が増すにつれ、複雑な組織を管理する必要が生じました。「大きな組織では、すべての者が同じ権限を持つわけではない。何人かは管理者であり、何人かは通常の メンバーである。この差を『役割』という」\n\nあなたはさまざまな役割と権限を持つ組織を管理する必要がありました。各役割には、異なる権限が与えられます。\n\n## Your Mission\nロールベースアクセスコントロール（RBAC）を実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- ロール定義と割り当て\n- 権限ベースのアクセス制御\n- 複数のロール管理\n\n## Key Concepts\nRBACは、複雑な組織構造を管理するための強力なパターンです。\n\n```rust\n#[contractimpl]\npub struct PermissionsRBAC;\n\n#[contractimpl]\nimpl PermissionsRBAC {\n    pub fn assign_role(env: Env, user: Address, role: Symbol) {\n        let mut roles: Map<Address, Symbol> = env.storage().instance()\n            .get(&symbol_short!(\"roles\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        roles.set(user, role);\n        env.storage().instance().set(&symbol_short!(\"roles\"), &roles);\n    }\n    \n    pub fn has_permission(env: Env, user: Address, required_role: Symbol) -> bool {\n        let roles: Map<Address, Symbol> = env.storage().instance()\n            .get(&symbol_short!(\"roles\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        if let Some(user_role) = roles.get(user) {\n            return user_role == required_role || user_role == symbol_short!(\"admin\");\n        }\n        false\n    }\n}\n```",
+    "learningGoal": "ロールベースアクセスコントロールを実装し、ユーザーの役割に基づいて権限を管理する",
+    "hints": [
+      "各ユーザーに一つまたは複数のロールを割り当てることができます",
+      "管理者ロールは、すべての権限を持つべきです",
+      "権限チェックは、ユーザーのロールに基づいて行われます"
+    ]
+  },
+  "oracle-feed": {
+    "title": "託宣の情報源",
+    "story": "🌌 **外の世界の知識を取り込む**\n\nブロックチェーンの世界は完全に閉じられています。しかし、外の世界の情報を必要とすることがあります。「『オラクル』は、外の世界の情報をもたらす使者だ。価格、天気、スポーツの結果、何でもだ」\n\nあなたはオラクルの情報源からデータを受け取り、それを基に重要な決定を下す必要がありました。\n\n## Your Mission\nオラクル統合を実装するスマートコントラクトを作成してください。外部データソースからデータを受け取り、それを保存します。\n\n## What You'll Learn\n- オラクルパターンの実装\n- 外部データの検証と保存\n- オラクル更新ロジック\n\n## Key Concepts\nオラクルは、ブロックチェーンと外の世界の橋渡しです。\n\n```rust\n#[contractimpl]\npub struct OracleFeed;\n\n#[contractimpl]\nimpl OracleFeed {\n    pub fn set_price(env: Env, asset: Symbol, price: i128) {\n        env.storage().instance().set(&asset, &price);\n        env.events().publish(\n            (symbol_short!(\"price_update\"),),\n            (asset, price),\n        );\n    }\n    \n    pub fn get_price(env: Env, asset: Symbol) -> i128 {\n        env.storage().instance().get(&asset).unwrap_or(0)\n    }\n    \n    pub fn get_multiple_prices(env: Env, assets: Vec<Symbol>) -> Vec<i128> {\n        let mut prices = Vec::new(&env);\n        for asset in assets.iter() {\n            let price = env.storage().instance().get(&asset).unwrap_or(0);\n            prices.push_back(price);\n        }\n        prices\n    }\n}\n```",
+    "learningGoal": "オラクル統合を実装し、外部データソースの情報をスマートコントラクト内で使用する",
+    "hints": [
+      "オラクルデータは定期的に更新される必要があります",
+      "データの信頼性を確保するため、複数のオラクルを使用することが推奨されます",
+      "価格データなどのオラクル情報は、時間経過により変わる可能性があります"
+    ]
+  },
+  "governor-simple": {
+    "title": "統治者の投票",
+    "story": "🌌 **集団の意思を決定する**\n\nあなたの影響力は一つの組織全体を支配するほどに成長しました。「大きな決定は、一人では下せない。多くの者が参加し、投票によって決めるべきだ。これが『ガバナンス』だ」\n\nあなたは投票メカニズムを設計する必要がありました。提案が立てられ、多くの者が投票し、その結果に基づいて決定が下されます。\n\n## Your Mission\n簡単なガバナンス投票メカニズムを実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- ガバナンス投票ロジック\n- 提案管理と投票追跡\n- 投票結果の集計\n\n## Key Concepts\nガバナンスは、分散型組織の心臓です。\n\n```rust\n#[contractimpl]\npub struct GovernorSimple;\n\n#[contractimpl]\nimpl GovernorSimple {\n    pub fn create_proposal(env: Env, proposer: Address, description: String) -> u64 {\n        let proposal_id = env.storage().instance()\n            .get::<_, u64>(&symbol_short!(\"next_proposal_id\"))\n            .unwrap_or(1);\n        \n        let mut proposals: Map<u64, (String, i128, i128, u64)> = env.storage().instance()\n            .get(&symbol_short!(\"proposals\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        proposals.set(proposal_id, (description, 0, 0, env.ledger().sequence()));\n        env.storage().instance().set(&symbol_short!(\"proposals\"), &proposals);\n        env.storage().instance().set(&symbol_short!(\"next_proposal_id\"), &(proposal_id + 1));\n        \n        proposal_id\n    }\n    \n    pub fn vote(env: Env, proposal_id: u64, voter: Address, support: bool) -> bool {\n        let mut proposals: Map<u64, (String, i128, i128, u64)> = env.storage().instance()\n            .get(&symbol_short!(\"proposals\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        if let Some((desc, yes_votes, no_votes, created_at)) = proposals.get(proposal_id) {\n            let (new_yes, new_no) = if support {\n                (yes_votes + 1, no_votes)\n            } else {\n                (yes_votes, no_votes + 1)\n            };\n            proposals.set(proposal_id, (desc, new_yes, new_no, created_at));\n            env.storage().instance().set(&symbol_short!(\"proposals\"), &proposals);\n            return true;\n        }\n        false\n    }\n}\n```",
+    "learningGoal": "簡単なガバナンス投票メカニズムを実装し、提案に対する投票を追跡する",
+    "hints": [
+      "各提案には、賛成票と反対票を個別に追跡する必要があります",
+      "提案ごとにユニークなIDを割り当てることが重要です",
+      "投票の期限と結果を集計するロジックが必要です"
+    ]
+  },
+  "reentrancy-guard": {
+    "title": "再入防衛",
+    "story": "🌌 **悪意ある循環を防ぐ**\n\nあなたの知識も深まり、危険な攻撃について学ぶことになりました。「ある者が、悪意を持ってあなたのコントラクトを何度も呼び出し、意図しない結果を生じさせることがある。これが『再入攻撃』だ。これを防ぐ必要がある」\n\nあなたは、同じ関数が何度も同時に呼び出されることを防ぐ必要がありました。\n\n## Your Mission\n再入攻撃から守るためのガード機構を実装するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- 再入攻撃のメカニズムと危険性\n- チェック・エフェクト・インタラクション（CEI）パターン\n- ロックメカニズムの実装\n\n## Key Concepts\n再入ガードは、重要なセキュリティパターンです。\n\n```rust\n#[contractimpl]\npub struct ReentrancyGuard;\n\n#[contractimpl]\nimpl ReentrancyGuard {\n    const LOCKED: u32 = 1;\n    const UNLOCKED: u32 = 0;\n    \n    pub fn withdraw(env: Env, amount: i128) -> bool {\n        let locked: u32 = env.storage().instance()\n            .get(&symbol_short!(\"locked\"))\n            .unwrap_or(0);\n        \n        if locked == Self::LOCKED {\n            return false;\n        }\n        \n        env.storage().instance().set(&symbol_short!(\"locked\"), &Self::LOCKED);\n        \n        // Perform the withdrawal\n        let balance: i128 = env.storage().instance()\n            .get(&symbol_short!(\"balance\"))\n            .unwrap_or(0);\n        \n        if balance >= amount {\n            env.storage().instance().set(&symbol_short!(\"balance\"), &(balance - amount));\n        }\n        \n        env.storage().instance().set(&symbol_short!(\"locked\"), &Self::UNLOCKED);\n        true\n    }\n}\n```",
+    "learningGoal": "再入攻撃を防ぐためのガード機構を実装し、関数の再入を制御する",
+    "hints": [
+      "ロック機構を使用して、関数の実行中に別の呼び出しを防ぐことができます",
+      "関数の最後にロックを解放することが重要です",
+      "チェック・エフェクト・インタラクションパターンに従うことで、セキュリティを向上させることができます"
+    ]
+  },
+  "access-control-fix": {
+    "title": "アクセス制御の修復",
+    "story": "🌌 **セキュリティの穴をふさぐ**\n\nあなたの最後の試練が来ました。「セキュリティは、常に改善が必要だ。多くのコントラクトには、わかりやすい穴がある。これらを見つけ、修復することが、真の魔法師の証だ」\n\nあなたの前には、多くの脆弱なコントラクトが置かれています。不正なアクセス、権限の確認不足、状態管理の不備。これらをすべて修復する必要があります。\n\n## Your Mission\nアクセス制御の脆弱性を特定して修正するスマートコントラクトを作成してください。\n\n## What You'll Learn\n- 一般的なアクセス制御の脆弱性の特定\n- 修復方法とベストプラクティス\n- セキュア設計パターン\n\n## Key Concepts\nアクセス制御は、スマートコントラクトセキュリティの最も重要な要素です。\n\n```rust\n#[contractimpl]\npub struct AccessControlFix;\n\n#[contractimpl]\nimpl AccessControlFix {\n    pub fn protected_withdraw(env: Env, user: Address, amount: i128) -> bool {\n        // Verify the caller is the user\n        let caller = env.invoker();\n        if caller != user {\n            return false;\n        }\n        \n        // Check balance\n        let mut balances: Map<Address, i128> = env.storage().instance()\n            .get(&symbol_short!(\"balances\"))\n            .unwrap_or_else(|| Map::new(&env));\n        \n        let balance = balances.get(user.clone()).unwrap_or(0);\n        if balance < amount {\n            return false;\n        }\n        \n        // Update state before external interactions (CEI pattern)\n        balances.set(user.clone(), balance - amount);\n        env.storage().instance().set(&symbol_short!(\"balances\"), &balances);\n        \n        // Emit event\n        env.events().publish(\n            (symbol_short!(\"withdraw\"),),\n            (user, amount),\n        );\n        \n        true\n    }\n}\n```",
+    "learningGoal": "アクセス制御の脆弱性を特定し、セキュアなパターンを使用して修正する",
+    "hints": [
+      "呼び出し元を確認することで、不正なアクセスを防ぐことができます",
+      "チェック・エフェクト・インタラクションパターンに従うことで、再入攻撃を防ぎます",
+      "すべての重要なアクションはイベントとして記録し、監査可能にしてください"
+    ]
+  }
+}

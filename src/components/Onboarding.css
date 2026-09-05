@@ -82,3 +82,24 @@
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-overlay {
+    animation: none;
+    opacity: 1;
+  }
+
+  .onboarding-card {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .onboarding-dot {
+    transition: none;
+  }
+
+  .onboarding-dot.active {
+    transform: none;
+  }
+}

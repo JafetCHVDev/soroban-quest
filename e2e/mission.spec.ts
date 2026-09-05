@@ -19,6 +19,7 @@ test.describe('Mission Flow', () => {
 
   test('mission page displays all sections', async ({ page }) => {
     await page.goto('/#/mission/hello-soroban');
+    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/#\/mission\/hello-soroban/);
     
     const runTestsBtn = page.locator('button:has-text("Run Tests")');
@@ -26,17 +27,31 @@ test.describe('Mission Flow', () => {
   });
 
   test('completed mission progress persists in localStorage', async ({ page }) => {
-    await page.goto('/');
+    await clearLocalStorageBeforePageLoad(page);
+    await page.goto('/#/journal');
+    await page.waitForLoadState('networkidle');
+
     await page.evaluate(() => {
-      const progress = {
-        completedMissions: ['hello-soroban'],
-        xp: 100,
-        level: 1,
-        badges: [],
-        streak: 0,
-        lastLogin: null
+      const profileSlot = {
+        id: 'player-1',
+        profile: { name: 'Stellar Guardian', avatar: '🛡️' },
+        progress: {
+          completedMissions: ['hello-soroban'],
+          xp: 100,
+          level: 1,
+          badges: [],
+          streak: 0,
+          lastLogin: null,
+          gold: 0,
+          purchasedItems: [],
+          firstTryMissions: [],
+          missionAttempts: {},
+        },
       };
-      localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
+      localStorage.setItem('soroban_quest_profiles', JSON.stringify([profileSlot]));
+      localStorage.setItem('soroban_quest_active_profile', 'player-1');
+      localStorage.removeItem('soroban_quest_progress');
+      localStorage.removeItem('soroban_quest_profile');
     });
 
     await page.reload();
@@ -46,16 +61,28 @@ test.describe('Mission Flow', () => {
 
   test('mission completion state is reflected in mission map', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     await page.evaluate(() => {
-      const progress = {
-        completedMissions: ['hello-soroban'],
-        xp: 100,
-        level: 1,
-        badges: [],
-        streak: 0,
-        lastLogin: null
+      const profileSlot = {
+        id: 'player-1',
+        profile: { name: 'Stellar Guardian', avatar: '🛡️' },
+        progress: {
+          completedMissions: ['hello-soroban'],
+          xp: 100,
+          level: 1,
+          badges: [],
+          streak: 0,
+          lastLogin: null,
+          gold: 0,
+          purchasedItems: [],
+          firstTryMissions: [],
+          missionAttempts: {},
+        },
       };
-      localStorage.setItem('soroban_quest_progress', JSON.stringify(progress));
+      localStorage.setItem('soroban_quest_profiles', JSON.stringify([profileSlot]));
+      localStorage.setItem('soroban_quest_active_profile', 'player-1');
+      localStorage.removeItem('soroban_quest_progress');
+      localStorage.removeItem('soroban_quest_profile');
     });
 
     await page.goto('/#/missions');

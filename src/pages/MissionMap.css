@@ -137,6 +137,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .mission-progress-meter-fill {
+    transition: none;
+  }
+}
+
 @media (max-width: 420px) {
   .mission-map-page {
     padding: var(--space-xl) var(--space-md);

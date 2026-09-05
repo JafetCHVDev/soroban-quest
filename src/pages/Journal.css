@@ -258,6 +258,28 @@
   color: var(--text-muted);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .summary-stat {
+    transition: none;
+  }
+
+  .summary-stat:hover {
+    transform: none;
+  }
+
+  .filter-chip {
+    transition: none;
+  }
+
+  .event-content {
+    transition: none;
+  }
+
+  .event-content:hover {
+    transform: none;
+  }
+}
+
 @media (max-width: 600px) {
   .journal-title {
     font-size: 2rem;

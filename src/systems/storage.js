@@ -1,4 +1,4 @@
-import { getDefaultState } from "./gameEngine";
+import { getDefaultState, getLevelFromXP } from "./gameEngine";
 export { getDefaultState };
 
 /* =========================
@@ -55,7 +55,17 @@ function readLegacyProgress() {
   try {
     const progressData = localStorage.getItem(PROGRESS_KEY);
     if (!progressData) return null;
-    return { ...getDefaultState(), ...JSON.parse(progressData) };
+    const parsed = JSON.parse(progressData);
+    
+    // Migration: purchasedItems -> inventory
+    if (!parsed.inventory) {
+      parsed.inventory = {
+        owned: parsed.purchasedItems || [],
+        equipped: [],
+      };
+    }
+    
+    return { ...getDefaultState(), ...parsed };
   } catch {
     return null;
   }
@@ -321,6 +331,157 @@ export function resetProfile() {
 }
 
 /* =========================
+   SMART MERGE
+========================= */
+// Numeric fields where the higher value wins (progress only ever grows).
+const MERGE_MAX_FIELDS = ["xp", "gold", "level", "streak"];
+// Set-like fields that should be unioned (order preserved, duplicates removed).
+const MERGE_UNION_FIELDS = [
+  "completedMissions",
+  "badges",
+  "firstTryMissions",
+  "purchasedItems",
+  "skillPoints",
+];
+// Boolean flags: treated as "sticky" — true if either side is true.
+const MERGE_OR_FIELDS = ["xpBoostActive", "streakFreezeUsed"];
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+// Derive a stable identity for de-duplication. Objects are keyed by their
+// natural id/timestamp so append-only logs merge-and-dedupe correctly.
+function mergeKeyOf(item) {
+  if (item !== null && typeof item === "object") {
+    return item.id ?? item.timestamp ?? JSON.stringify(item);
+  }
+  return item;
+}
+
+function unionArray(local, imported) {
+  const a = Array.isArray(local) ? local : [];
+  const b = Array.isArray(imported) ? imported : [];
+  const seen = new Set();
+  const result = [];
+  for (const item of [...a, ...b]) {
+    const key = mergeKeyOf(item);
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(item);
+    }
+  }
+  return result;
+}
+
+function maxNumber(a, b) {
+  const x = typeof a === "number" && Number.isFinite(a) ? a : 0;
+  const y = typeof b === "number" && Number.isFinite(b) ? b : 0;
+  return Math.max(x, y);
+}
+
+// Per-mission attempt counts: keep the higher count for each mission id.
+function mergeAttempts(local, imported) {
+  const a = isPlainObject(local) ? local : {};
+  const b = isPlainObject(imported) ? imported : {};
+  const result = { ...a };
+  for (const [key, value] of Object.entries(b)) {
+    result[key] = maxNumber(result[key], value);
+  }
+  return result;
+}
+
+function latestDate(a, b) {
+  const ta = a ? Date.parse(a) : NaN;
+  const tb = b ? Date.parse(b) : NaN;
+  if (Number.isNaN(ta)) return b ?? null;
+  if (Number.isNaN(tb)) return a ?? null;
+  return tb > ta ? b : a;
+}
+
+/**
+ * Pure smart-merge of two progress states. `local` is the current on-device
+ * progress, `imported` is the progress from a backup file. Neither argument is
+ * mutated. Each field uses an explicit strategy: numeric fields take the max,
+ * set-like fields union, boolean flags OR, per-mission attempts take the max,
+ * and dates take the most recent — so no earned progress is ever lost.
+ */
+export function mergeProgress(local, imported) {
+  const base = getDefaultState();
+  const a = { ...base, ...cleanProgress(local || {}) };
+  const b = { ...base, ...cleanProgress(imported || {}) };
+
+  const merged = { ...a };
+
+  for (const field of MERGE_MAX_FIELDS) {
+    merged[field] = maxNumber(a[field], b[field]);
+  }
+  // Keep level consistent with the merged XP total.
+  merged.level = Math.max(merged.level, getLevelFromXP(merged.xp));
+
+  for (const field of MERGE_UNION_FIELDS) {
+    merged[field] = unionArray(a[field], b[field]);
+  }
+
+  for (const field of MERGE_OR_FIELDS) {
+    merged[field] = Boolean(a[field]) || Boolean(b[field]);
+  }
+
+  merged.missionAttempts = mergeAttempts(a.missionAttempts, b.missionAttempts);
+  merged.lastLogin = latestDate(a.lastLogin, b.lastLogin);
+  merged.currentMission = a.currentMission ?? b.currentMission ?? null;
+
+  // Handle any extra fields not part of the known default shape (e.g.
+  // journal/activity logs), so future additions still merge sensibly instead
+  // of being dropped or silently taken from only one side.
+  const handled = new Set([
+    ...MERGE_MAX_FIELDS,
+    ...MERGE_UNION_FIELDS,
+    ...MERGE_OR_FIELDS,
+    "missionAttempts",
+    "lastLogin",
+    "currentMission",
+  ]);
+  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+    if (handled.has(key)) continue;
+    if (Array.isArray(a[key]) || Array.isArray(b[key])) {
+      merged[key] = unionArray(a[key], b[key]);
+    } else if (typeof a[key] === "number" || typeof b[key] === "number") {
+      merged[key] = maxNumber(a[key], b[key]);
+    } else {
+      merged[key] = a[key] ?? b[key];
+    }
+  }
+
+  return merged;
+}
+
+/**
+ * Build a human-readable diff of what a merge would change, for the import
+ * preview UI. Returns before/after values (and count deltas for set-like
+ * fields) so the player sees the combined result before committing.
+ */
+export function summarizeMerge(local, imported) {
+  const before = { ...getDefaultState(), ...cleanProgress(local || {}) };
+  const after = mergeProgress(local, imported);
+
+  const countField = (field) => {
+    const b = Array.isArray(before[field]) ? before[field].length : 0;
+    const aft = Array.isArray(after[field]) ? after[field].length : 0;
+    return { before: b, after: aft, added: aft - b };
+  };
+
+  return {
+    xp: { before: before.xp, after: after.xp },
+    gold: { before: before.gold, after: after.gold },
+    level: { before: before.level, after: after.level },
+    completedMissions: countField("completedMissions"),
+    badges: countField("badges"),
+    skillPoints: countField("skillPoints"),
+  };
+}
+
+/* =========================
    EXPORT / IMPORT
 ========================= */
 export async function exportProgress() {
@@ -339,9 +500,15 @@ export async function exportProgress() {
   URL.revokeObjectURL(url);
 }
 
-export async function importProgress(data) {
+export async function importProgress(data, options = {}) {
+  const { mode = "overwrite" } = options;
+
   if (data.state) {
-    saveProgress({ ...getDefaultState(), ...data.state });
+    if (mode === "merge") {
+      saveProgress(mergeProgress(loadProgress(), data.state));
+    } else {
+      saveProgress({ ...getDefaultState(), ...data.state });
+    }
   }
 
   if (data.profile) {

@@ -1,10 +1,10 @@
+/** @vitest-environment jsdom */
 import React from "react";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ErrorBoundary, EditorErrorBoundary, MissionErrorBoundary } from "../ErrorBoundary";
+import { ErrorBoundary, EditorErrorBoundary, MissionErrorBoundary } from "../../components/ErrorBoundary";
 
 // Mock translation hook since ErrorBoundary uses useTranslation
-vi.impersonatingModule?.();
 vi.mock("../../i18n/useTranslation", () => ({
   useTranslation: () => ({
     t: (key) => {

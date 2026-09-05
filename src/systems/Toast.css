@@ -79,3 +79,20 @@
     transform: scaleX(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .toast-exiting {
+    animation: none;
+    opacity: 0;
+  }
+
+  .toast-progress {
+    animation: none;
+  }
+}

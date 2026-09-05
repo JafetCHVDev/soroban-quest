@@ -31,6 +31,9 @@ jobs:
             echo "No lint script found, skipping linting check."
           fi
 
+      - name: Validate mission data
+        run: npm run mission:validate
+
       - name: Run build
         run: npm run build
 

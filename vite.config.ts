@@ -1,0 +1,100 @@
+import { defineConfig } from 'vite';
+import { env } from 'node:process';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
+import type { Plugin } from 'vite';
+
+const analyzer: Plugin | null = env.ANALYZE === 'true'
+  ? visualizer({
+      filename: 'dist/bundle-stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      open: false,
+    })
+  : null;
+
+export default defineConfig({
+  plugins: [
+    react(),
+    analyzer,
+    VitePWA({
+      registerType: 'prompt',
+      includeAssets: ['docs/logo.svg'],
+      manifest: false,
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'gstatic-fonts-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
+      },
+    }),
+  ].filter(Boolean),
+  base: './',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules/react-markdown') ||
+              id.includes('node_modules/remark-') ||
+              id.includes('node_modules/rehype-') ||
+              id.includes('node_modules/unified') ||
+              id.includes('node_modules/mdast') ||
+              id.includes('node_modules/hast') ||
+              id.includes('node_modules/unist-') ||
+              id.includes('node_modules/property-information') ||
+              id.includes('node_modules/space-separated-tokens') ||
+              id.includes('node_modules/comma-separated-tokens') ||
+              id.includes('node_modules/trim-lines') ||
+              id.includes('node_modules/lowlight') ||
+              id.includes('node_modules/html-url-attributes') ||
+              id.includes('node_modules/html-void-elements') ||
+              id.includes('node_modules/decode-named-character-reference') ||
+              id.includes('node_modules/character-entities')) {
+            return 'vendor-markdown';
+          }
+
+          if (id.includes('node_modules/react-router-dom') ||
+              id.includes('node_modules/@remix-run/router') ||
+              id.includes('node_modules/react-router')) {
+            return 'vendor-router';
+          }
+
+          if (id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/scheduler')) {
+            return 'vendor-react';
+          }
+
+          if (id.includes('node_modules/workbox-window')) {
+            return 'vendor-pwa';
+          }
+
+          return undefined;
+        },
+      },
+    },
+  },
+  test: {
+    exclude: ['e2e/**', 'node_modules/**'],
+  },
+});

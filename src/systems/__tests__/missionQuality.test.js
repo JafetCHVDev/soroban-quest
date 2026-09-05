@@ -85,6 +85,7 @@ function isBalanced(code) {
 function groupByChapter(missions) {
     const map = new Map();
     for (const m of missions) {
+        if (m.standalone) continue;
         if (!map.has(m.chapter)) map.set(m.chapter, []);
         map.get(m.chapter).push(m);
     }
@@ -115,8 +116,12 @@ const ALL_CHECK_TYPES = [
 // Category 1: Mission Template Validity
 // ===========================================================================
 describe('Mission Template Validity', () => {
-    it('should have exactly 19 missions loaded', () => {
-        expect(missions).toHaveLength(19);
+    it('should have exactly 19 campaign missions and 3 standalone missions (22 total)', () => {
+        const campaignMissions = missions.filter((m) => !m.standalone);
+        const standaloneMissions = missions.filter((m) => m.standalone);
+        expect(campaignMissions).toHaveLength(19);
+        expect(standaloneMissions.length).toBeGreaterThanOrEqual(2);
+        expect(missions).toHaveLength(22);
     });
 
     missions.forEach((mission) => {
@@ -718,7 +723,12 @@ describe('i18n Completeness', () => {
             it('mission-level fields (id, chapter, order, difficulty, xpReward) should be present', () => {
                 expect(typeof mission.id).toBe('string');
                 expect(mission.id.trim().length).toBeGreaterThan(0);
-                expect(typeof mission.chapter).toBe('number');
+                if (mission.standalone) {
+                    expect(mission.chapter === undefined || mission.chapter === null || typeof mission.chapter === 'number').toBe(true);
+                    expect(mission.standalone).toBe(true);
+                } else {
+                    expect(typeof mission.chapter).toBe('number');
+                }
                 expect(typeof mission.order).toBe('number');
                 expect(typeof mission.xpReward).toBe('number');
                 expect(mission.xpReward).toBeGreaterThan(0);
@@ -741,6 +751,25 @@ describe('i18n Completeness', () => {
         const sorted = [...missions].sort((a, b) => a.order - b.order);
         sorted.forEach((m, idx) => {
             expect(m.order).toBe(idx + 1);
+        });
+    });
+
+    it('standalone missions should have standalone:true and no chapter gating', () => {
+        const standalone = missions.filter((m) => m.standalone);
+        expect(standalone.length).toBeGreaterThanOrEqual(2);
+        standalone.forEach((m) => {
+            expect(m.standalone).toBe(true);
+            // standalone missions may omit chapter or have null
+            expect(m.chapter === undefined || m.chapter === null || typeof m.chapter === 'number').toBe(true);
+        });
+    });
+
+    it('standalone missions should be excluded from chapter grouping', () => {
+        const byChapter = groupByChapter(missions);
+        const allGroupedIds = [...byChapter.values()].flat().map((m) => m.id);
+        const standalone = missions.filter((m) => m.standalone);
+        standalone.forEach((m) => {
+            expect(allGroupedIds).not.toContain(m.id);
         });
     });
 

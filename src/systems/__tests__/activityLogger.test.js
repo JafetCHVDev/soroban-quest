@@ -14,20 +14,51 @@ describe("activityLogger", () => {
 
   beforeEach(() => {
     storage = {};
+    const mockWindow = {
+      dispatchEvent: vi.fn(),
+    };
+    vi.stubGlobal("window", mockWindow);
+    vi.stubGlobal(
+      "CustomEvent",
+      class CustomEvent {
+        constructor(type, eventInitDict) {
+          this.type = type;
+          this.detail = eventInitDict?.detail;
+        }
+      }
+    );
+
     vi.stubGlobal("localStorage", {
-      getItem: (key) => storage[key] || null,
-      setItem: (key, value) => {
+      getItem: vi.fn((key) => storage[key] || null),
+      setItem: vi.fn((key, value) => {
         storage[key] = value;
-      },
-      removeItem: (key) => {
+      }),
+      removeItem: vi.fn((key) => {
         delete storage[key];
-      },
+      }),
     });
-    dispatchSpy = vi.spyOn(window, "dispatchEvent").mockImplementation(() => {});
+
+    vi.stubGlobal("window", {
+      dispatchEvent: vi.fn(),
+    });
+
+    vi.stubGlobal(
+      "CustomEvent",
+      class CustomEvent {
+        constructor(type, options = {}) {
+          this.type = type;
+          this.detail = options.detail;
+        }
+      }
+    );
+
+    dispatchSpy = window.dispatchEvent;
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe("ACTIVITY_TYPES", () => {
@@ -48,16 +79,26 @@ describe("activityLogger", () => {
   });
 
   describe("logActivity", () => {
-    it("creates a new log entry with the given type, data, and message", () => {
+    it("creates and persists a new entry with the expected schema", () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2026-01-02T03:04:05.000Z"));
+      vi.spyOn(Math, "random").mockReturnValue(0.123456789);
+
       logActivity("MISSION_STARTED", { missionId: "m1" }, "Started mission");
 
       const log = getActivityLog();
       expect(log).toHaveLength(1);
-      expect(log[0].type).toBe("MISSION_STARTED");
-      expect(log[0].data).toEqual({ missionId: "m1" });
-      expect(log[0].message).toBe("Started mission");
-      expect(log[0].id).toBeDefined();
-      expect(log[0].timestamp).toBeDefined();
+      expect(log[0]).toMatchObject({
+        id: expect.any(String),
+        timestamp: "2026-01-02T03:04:05.000Z",
+        type: "MISSION_STARTED",
+        data: { missionId: "m1" },
+        message: "Started mission",
+      });
+      expect(new Date(log[0].timestamp).toISOString()).toBe(log[0].timestamp);
+      expect(localStorage.setItem).toHaveBeenCalledWith(LOG_KEY, JSON.stringify(log));
+
+      vi.useRealTimers();
     });
 
     it("prepends new entries (newest first)", () => {
@@ -78,6 +119,8 @@ describe("activityLogger", () => {
       const log = getActivityLog();
       expect(log).toHaveLength(200);
       expect(log[0].message).toBe("entry 209");
+      expect(log.at(-1).message).toBe("entry 10");
+      expect(log.some((entry) => entry.message === "entry 9")).toBe(false);
     });
 
     it("dispatches an activity_logged custom event with the new entry", () => {
@@ -127,6 +170,15 @@ describe("activityLogger", () => {
 
       expect(getActivityLog()).toEqual([]);
     });
+
+    it.each([JSON.stringify(null), JSON.stringify({ type: "STREAK" }), JSON.stringify("entry")])(
+      "returns an empty array for invalid stored log data: %s",
+      (invalidLog) => {
+        storage[LOG_KEY] = invalidLog;
+
+        expect(getActivityLog()).toEqual([]);
+      }
+    );
   });
 
   describe("clearLog", () => {

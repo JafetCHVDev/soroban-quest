@@ -358,6 +358,32 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+
+  .concept-node {
+    transition: none;
+  }
+
+  .concept-node:hover {
+    transform: none;
+  }
+
+  .modal-close {
+    transition: none;
+  }
+
+  .start-mission-btn {
+    transition: none;
+  }
+
+  .start-mission-btn:hover {
+    transform: none;
+  }
+}
+
 @media (max-width: 480px) {
   .concept-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
