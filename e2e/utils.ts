@@ -3,15 +3,18 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, type Page } from '@playwright/test';
 
-const fixtureDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'fixtures');
+const fixtureDirectory = path.resolve(path.dirname(fileURLtoPath(import.meta.url)), '..', 'fixtures');
 
-export async function clearLocalStorageBeforePageLoad(page: Page) {
+export async function clearLocalStorageBeforePageLoad(page: Page, options: { onboardingDone?: boolean } = {}) {
+  const { onboardingDone = true } = options;
   await page.goto('/');
   await page.waitForLoadState('load');
-  await page.evaluate(() => {
+  await page.evaluate((onboardingDone) => {
     localStorage.clear();
-    localStorage.setItem('sorobanQuest_onboarding_done', '1');
-  });
+    if (onboardingDone) {
+      localStorage.setItem('sorobanQuest_onboarding_done', '1');
+    }
+  }, onboardingDone);
 }
 
 export async function setAppTheme(page: Page, theme: 'dark' | 'light' = 'dark') {
@@ -40,7 +43,7 @@ export async function seedVisualRegressionState(page: Page, fixtureName: string)
 
 export async function maskDynamicElements(page: Page) {
   await page.addStyleTag({
-    content: `
+    content: `p
       .confetti-container, .confetti-piece {
         visibility: hidden !important;
       }
@@ -66,7 +69,12 @@ export async function waitForMonaco(page: Page) {
 export async function fillMonacoEditor(page: Page, content: string) {
   await waitForMonaco(page);
   const editorHost = page.locator('.monaco-editor').first();
-  await editorHost.click({ position: { x: 40, y: 40 }, force: true });
+  await editorHost.click({ position: { x: 200, y: 100 }, force: true });
+
+  // Wait a moment for focus
+  await page.waitTimeout(500);
+
+  // Select all and type new content
   await page.keyboard.press('Control+A');
   await page.keyboard.insertText(content);
 }
@@ -99,8 +107,7 @@ export async function waitForTestResults(page: Page) {
 }
 
 /**
- * Check XP display value in the UI
- */
+ * Check XPdisplay value in the UI */
 export async function checkXPDisplay(page: Page, expectedXP: number) {
   // Look for XP display in common locations (Navbar, stats, modal)
   const xpElements = page.locator('text=/XP|xp.*\\d+/, [class*="xp"], [class*="XP"], [data-testid*="xp"]');
