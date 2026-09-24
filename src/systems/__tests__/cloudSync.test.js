@@ -90,14 +90,14 @@ describe('cloudSync', () => {
   });
 
   it('does not throw synchronously when the scheduled async sync fails', async () => {
-    const failure = Promise.reject(new Error('cloud unavailable'));
-    failure.catch(() => {});
-    const sync = vi.spyOn(cloudSyncService, 'syncLocalToCloud').mockReturnValue(failure);
+    const sync = vi
+      .spyOn(cloudSyncService, 'syncLocalToCloud')
+      .mockRejectedValue(new Error('cloud unavailable'));
 
     expect(() => scheduleCloudSync()).not.toThrow();
     await vi.advanceTimersByTimeAsync(800);
 
     expect(sync).toHaveBeenCalledTimes(1);
-    await expect(failure).rejects.toThrow('cloud unavailable');
+    await expect(sync.mock.results[0].value).rejects.toThrow('cloud unavailable');
   });
 });
