@@ -1,7 +1,7 @@
 import { type Mission } from '../types/game';
 
 /**
- * Returns the day of the year (0-365) based on the provided date.
+ * Returns the day of the year (1-365 or 1-366 in leap years) based on the provided date.
  */
 function getDayOfYear(date: Date): number {
   const start = new Date(date.getFullYear(), 0, 0);

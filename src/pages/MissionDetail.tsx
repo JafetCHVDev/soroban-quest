@@ -9,7 +9,7 @@ import { getMissionById, getNextMission, getAllMissions } from "../systems/missi
 import { runTests } from "../systems/testRunner";
 import type { TestResult } from "../systems/testRunner";
 import { loadProgress, saveProgress } from "../systems/storage";
-import { completeMission, recordAttempt } from "../systems/gameEngine";
+import { completeMission, recordAttempt, getLevelFromXP } from "../systems/gameEngine";
 import { getDailyChallengeMission, isDailyChallengeCompleted, getTodayDateString } from "../systems/dailyChallenge";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import { playSound, SOUND_TYPES } from "../systems/soundManager";
@@ -250,44 +250,54 @@ export default function MissionDetail() {
     addResult({ phase: "summary", message: result.summary });
 
     if (result.allPassed) {
-      if (showToast) showToast(t("missionDetail.toasts.validated"), "success");
-      await delay(500);
-      state = loadProgress();
-      
-      // Daily Challenge Bonus
-      const today = getTodayDateString();
-      const dailyChallengeMission = getDailyChallengeMission(getAllMissions(language));
-      const isDaily = missionId === dailyChallengeMission.id;
-      const isAlreadyCompletedToday = isDailyChallengeCompleted(state.dailyChallengeCompletedDates || [], new Date());
-      
-      let bonusXp = 0;
-      let newCompletedDates = state.dailyChallengeCompletedDates || [];
+    if (showToast) showToast(t("missionDetail.toasts.validated"), "success");
+    await delay(500);
 
-      if (isDaily && !isAlreadyCompletedToday) {
-        bonusXp = 25;
-        newCompletedDates = [...newCompletedDates, today];
-      }
+    // Perform mission completion
+    let state = loadProgress();
+    const completedState = missionId ? completeMission(state, missionId, mission.xpReward) : state;
 
-      const newState = missionId ? completeMission(state, missionId, mission.xpReward + bonusXp) : state;
-      newState.dailyChallengeCompletedDates = newCompletedDates;
+    // Re-load state immediately before awarding bonus to reduce race window
+    const currentState = loadProgress();
 
-      if (!newState.alreadyCompleted) {
-        saveProgress(newState);
-        setVictoryData({
-          xp: mission.xpReward + bonusXp,
-          leveledUp: newState.leveledUp,
-          newLevel: newState.level,
-          newBadges: newState.newBadges || [],
-        });
-        setShowVictory(true);
-      } else {
-        addResult({
-          phase: "info",
-          message: t("missionDetail.terminal.alreadyCompleted"),
-        });
-      }
+    // Daily Challenge Bonus
+    const today = getTodayDateString();
+    const dailyChallengeMission = getDailyChallengeMission(getAllMissions(language));
+    const isDaily = missionId === dailyChallengeMission.id;
+    const isAlreadyCompletedToday = isDailyChallengeCompleted(currentState.dailyChallengeCompletedDates || [], new Date());
+
+    let bonusXp = 0;
+    let newCompletedDates = currentState.dailyChallengeCompletedDates || [];
+
+    if (isDaily && !isAlreadyCompletedToday) {
+      bonusXp = 25;
+      newCompletedDates = [...newCompletedDates, today];
+    }
+
+    const newState = completedState;
+    if (bonusXp > 0) {
+      newState.xp += bonusXp;
+      newState.level = getLevelFromXP(newState.xp);
+      newState.leveledUp = newState.level > state.level;
+    }
+    newState.dailyChallengeCompletedDates = newCompletedDates;
+
+    if (!newState.alreadyCompleted) {
+      saveProgress(newState);
+      setVictoryData({
+        xp: mission.xpReward + bonusXp,
+        leveledUp: newState.leveledUp,
+        newLevel: newState.level,
+        newBadges: newState.newBadges || [],
+      });
+      setShowVictory(true);
     } else {
-
+      addResult({
+        phase: "info",
+        message: t("missionDetail.terminal.alreadyCompleted"),
+      });
+    }
+    } else {
       playSound(SOUND_TYPES.ERROR);
 
       if (showToast) showToast(t("missionDetail.toasts.validationFailed"), "error");
