@@ -15,7 +15,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { validateCode } from '../codeValidator.js';
+import { validateCode } from '../codeValidator';
 
 // ---------------------------------------------------------------------------
 // Mock the Vite-specific ?raw markdown import that missions.js uses.

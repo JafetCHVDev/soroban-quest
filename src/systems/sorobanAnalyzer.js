@@ -19,7 +19,7 @@
    honest, deterministic, and testable in Node.
    ========================================== */
 
-import { validateCode } from './codeValidator.js';
+import { validateCode } from './codeValidator';
 
 /** Diagnostic severities (string form; wasmCompiler maps these to Monaco). */
 export const DiagnosticSeverity = {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { runTests } from "../testRunner.js";
-import * as codeValidator from "../codeValidator.js";
+import * as codeValidator from "../codeValidator";
 
 describe("testRunner system", () => {
   beforeEach(() => {
