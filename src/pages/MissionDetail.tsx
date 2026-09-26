@@ -5,11 +5,12 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Editor from "../components/LazyMonacoEditor";
 import ReactMarkdown from "react-markdown";
-import { getMissionById, getNextMission } from "../systems/missionLoader";
+import { getMissionById, getNextMission, getAllMissions } from "../systems/missionLoader";
 import { runTests } from "../systems/testRunner";
 import type { TestResult } from "../systems/testRunner";
 import { loadProgress, saveProgress } from "../systems/storage";
 import { completeMission, recordAttempt } from "../systems/gameEngine";
+import { getDailyChallengeMission, isDailyChallengeCompleted, getTodayDateString } from "../systems/dailyChallenge";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import { playSound, SOUND_TYPES } from "../systems/soundManager";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
@@ -252,12 +253,28 @@ export default function MissionDetail() {
       if (showToast) showToast(t("missionDetail.toasts.validated"), "success");
       await delay(500);
       state = loadProgress();
-      const newState = missionId ? completeMission(state, missionId, mission.xpReward) : state;
+      
+      // Daily Challenge Bonus
+      const today = getTodayDateString();
+      const dailyChallengeMission = getDailyChallengeMission(getAllMissions(language));
+      const isDaily = missionId === dailyChallengeMission.id;
+      const isAlreadyCompletedToday = isDailyChallengeCompleted(state.dailyChallengeCompletedDates || [], new Date());
+      
+      let bonusXp = 0;
+      let newCompletedDates = state.dailyChallengeCompletedDates || [];
+
+      if (isDaily && !isAlreadyCompletedToday) {
+        bonusXp = 25;
+        newCompletedDates = [...newCompletedDates, today];
+      }
+
+      const newState = missionId ? completeMission(state, missionId, mission.xpReward + bonusXp) : state;
+      newState.dailyChallengeCompletedDates = newCompletedDates;
 
       if (!newState.alreadyCompleted) {
         saveProgress(newState);
         setVictoryData({
-          xp: mission.xpReward,
+          xp: mission.xpReward + bonusXp,
           leveledUp: newState.leveledUp,
           newLevel: newState.level,
           newBadges: newState.newBadges || [],

@@ -114,6 +114,11 @@
       "currentLevel": "Nivel {{level}} — {{rank}}",
       "nextMission": "Siguiente Misión",
       "continueFrom": "Continuar desde {{title}}",
+      "dailyChallenge": "Reto diario",
+      "dailyChallengeDescription": "¡Completa la misión destacada de hoy para obtener una bonificación de 25 XP!",
+      "dailyChallengeCompleted": "¡Completado hoy!",
+      "dailyChallengeLink": "Empezar misión",
+
       "recentActivity": "Actividad Reciente",
       "viewAll": "Ver Todo",
       "quickStats": "Estadísticas Rápidas",

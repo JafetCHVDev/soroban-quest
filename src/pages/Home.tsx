@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { loadProgress } from '../systems/storage';
 import { useTranslation } from '../i18n/useTranslation';
 import { getAllMissions } from '../systems/missionLoader';
+import { getDailyChallengeMission, isDailyChallengeCompleted, getTodayDateString } from '../systems/dailyChallenge';
+import { useGameState } from '../systems/GameStateContext';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import HomeSkeleton from '../components/HomeSkeleton';
 import Onboarding, { shouldShowOnboarding } from '../components/Onboarding';
@@ -22,7 +24,8 @@ import type { Mission } from '../types/game';
 export default function Home(): ReactElement {
     useDocumentTitle('Home');
     const navigate = useNavigate();
-    const state = loadProgress();
+    const { progress, updateProgress } = useGameState();
+    const state = progress;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { t, language } = useTranslation();
     const missions = getAllMissions(language);
@@ -121,6 +124,11 @@ export default function Home(): ReactElement {
     const totalMissions = missions.length;
     const badgesCount = state.badges.length;
     const goldBalance = state.gold || 0;
+    
+    // Daily Challenge
+    const dailyChallengeMission = useMemo(() => getDailyChallengeMission(missions), [missions]);
+    const isCompleted = useMemo(() => isDailyChallengeCompleted(state.dailyChallengeCompletedDates || []), [state.dailyChallengeCompletedDates]);
+
     // eslint-disable-next-line react-hooks/preserve-manual-memoization
     const nextMission: Mission | undefined = useMemo(() => {
         return missions.find((m) => !state.completedMissions.includes(m.id));
@@ -234,6 +242,19 @@ export default function Home(): ReactElement {
                             )}
                             <button className="btn btn-ghost btn-sm" onClick={() => navigate('/journal')}>
                                 {t('home.stats.viewAll')}
+                            </button>
+                        </div>
+
+                        <div className="dashboard-card dashboard-daily">
+                            <h3>{t('home.stats.dailyChallenge')}</h3>
+                            <p className="dashboard-daily-title">{dailyChallengeMission.title}</p>
+                            <p className="dashboard-daily-desc">{t('home.stats.dailyChallengeDescription')}</p>
+                            <button 
+                                className="btn btn-primary btn-sm" 
+                                disabled={isCompleted}
+                                onClick={() => navigate(`/mission/${dailyChallengeMission.id}`)}
+                            >
+                                {isCompleted ? t('home.stats.dailyChallengeCompleted') : t('home.stats.dailyChallengeLink')}
                             </button>
                         </div>
 
