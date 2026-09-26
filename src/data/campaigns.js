@@ -77,6 +77,21 @@ Complétez ces contrats fondamentaux pour débloquer le **Chapitre 2 : Chambre d
 
 **0/2 ミッション** • **レベル1 必須**`,
       },
+      'pt-BR': {
+        title: 'Capítulo 1: O Despertar',
+        description: 'Domine seus primeiros contratos Soroban. Forje seu caminho como Guardião Estelar.',
+        lore: `# 🌌 Capítulo 1: O Despertar
+
+Você está diante das portas da **Cidadela Estelar**, em órbita na borda do espaço conhecido. Os antigos **Guardiões de Soroban** perceberam sua chegada.
+
+*"Mais um buscador,"* sussurra o Guardião Ancião. *"A blockchain chama aqueles que têm o código para responder."*
+
+## Seu Destino Aguarda
+
+Complete estes contratos fundamentais para desbloquear o **Capítulo 2: Cofre da Memória**.
+
+**0/2 missões** • **Nível 1 necessário**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #8b5cf6 50%, #f59e0b 100%)',
     chapterNumber: 1,
@@ -147,9 +162,22 @@ Maîtrisez la gestion de l'état pour accéder au **Chapitre 3 : Forge de Jetons
 
 **0/2 ミッション** • **レベル3 必須**`,
       },
+      'pt-BR': {
+        title: 'Capítulo 2: Cofre da Memória',
+        description: 'Desbloqueie o armazenamento persistente e o controle de acesso. A memória define o verdadeiro poder.',
+        lore: `# 🔐 Capítulo 2: Cofre da Memória
+
+A **Torre de Sinais** desvanece atrás de você. Você desce para o **Cofre da Memória**, onde a sabedoria ancestral persiste através dos éons.
+
+*"Um contrato sem memória é um pensamento fugaz,"* murmura o Guardião do Cofre. *"Para perdurar, você deve armazenar e proteger."*
+
+## O Segundo Teste
+
+Domine o gerenciamento de estado para acessar o **Capítulo 3: Forja de Tokens**.
+
+**0/2 missões** • **Nível 3 necessário**`,
+      },
     },
-    heroImage: 'linear-gradient(135deg, #8b5cf6 0%, #f59e0b 50%, #ef4444 100%)',
-    chapterNumber: 2,
     missionIds: ['counter-vault', 'guardian-ledger'],
     requiredLevel: 3,
     color: 'purple'
@@ -216,6 +244,21 @@ Complétez la Forge de Jetons pour obtenir le statut de **Gardien Légendaire**.
 トークン鍛造所を完了して**伝説のガーディアン**ステータスを獲得。
 
 **0/3 ミッション** • **レベル5 必須**`,
+      },
+      'pt-BR': {
+        title: 'Capítulo 3: Forja de Tokens',
+        description: 'Cunhe tokens, domine bloqueios temporais, governe com multi-assinatura. Torne-se o Guardião Mestre.',
+        lore: `# ⚒️ Capítulo 3: Forja de Tokens
+
+O **Portal do Tempo** vibra com poder. Você entra na **Forja de Tokens** — o coração da economia Stellar.
+
+*"A verdadeira maestria cria valor que perdura,"* declara o Mestre Forjador. *"Tokens, tempo, confiança — forje todos eles."*
+
+## Desafio Final
+
+Complete a Forja de Tokens para ganhar o status de **Guardião Lendário**.
+
+**0/3 missões** • **Nível 5 necessário**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #06d6a0 100%)',
@@ -287,6 +330,21 @@ Construisez des contrats axés sur les données pour débloquer le **Chapitre 5 
 
 **0/3 ミッション** • **レベル7 必須**`,
       },
+      'pt-BR': {
+        title: 'Capítulo 4: Fortaleza de Dados',
+        description: 'Domine o gerenciamento de estado complexo com Maps, eventos e aprovações delegadas.',
+        lore: `# 🏦 Capítulo 4: Fortaleza de Dados
+
+Além do Salão dos Pactos, você descobre a **Fortaleza de Dados** — um vasto repositório onde o estado sofisticado é construído.
+
+*"Dados são o alicerce de todos os grandes contratos,"* declara o Arquiteto. *"Aprenda a gerenciar estado multiusuário, emitir eventos e delegar autoridade."*
+
+## O Quarto Teste
+
+Construa contratos orientados a dados para desbloquear o **Capítulo 5: Protocolos Avançados**.
+
+**0/3 missões** • **Nível 7 necessário**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 50%, #073b4c 100%)',
     chapterNumber: 4,
@@ -356,6 +414,21 @@ Maîtrisez les modèles de protocoles avancés pour atteindre le **Chapitre 6 : 
 先進的なプロトコルパターンをマスターして**チャプター6: 生産システム**に到達。
 
 **0/3 ミッション** • **レベル9 必須**`,
+      },
+      'pt-BR': {
+        title: 'Capítulo 5: Protocolos Avançados',
+        description: 'Construa protocolos DeFi do mundo real — financiamento coletivo, custódia e assinaturas.',
+        lore: `# 🔄 Capítulo 5: Protocolos Avançados
+
+A **Arena do Crowdforge** vibra com energia. Você entra no reino dos protocolos DeFi do mundo real.
+
+*"Estes são os contratos que alimentam a nova economia,"* diz o Pioneiro de Protocolos. *"Financiamento coletivo, custódia, assinaturas — construa todos eles."*
+
+## O Quinto Teste
+
+Domine padrões de protocolos avançados para alcançar o **Capítulo 6: Sistemas de Produção**.
+
+**0/3 missões** • **Nível 9 necessário**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef476f 0%, #ffd166 50%, #06d6a0 100%)',
@@ -427,6 +500,21 @@ Complétez tous les Systèmes de Production pour gagner le titre d'**Architecte 
 
 **0/4 ミッション** • **レベル12 必須**`,
       },
+      'pt-BR': {
+        title: 'Capítulo 6: Sistemas de Produção',
+        description: 'Implante contratos de nível produção — empréstimos flash, RBAC, oráculos e governança.',
+        lore: `# ⚡ Capítulo 6: Sistemas de Produção
+
+O **Cofre do Relâmpago** crepita de poder. Você atingiu o pináculo do desenvolvimento Soroban.
+
+*"Você está entre os melhores engenheiros de contratos do ecossistema Stellar,"* proclama o Grande Ancião. *"Empréstimos flash, segurança baseada em papéis, oráculos de preços, governança on-chain — domine os sistemas que definem DeFi."*
+
+## Desafio Final
+
+Complete todos os Sistemas de Produção para ganhar o título de **Arquiteto Estelar**.
+
+**0/4 missões** • **Nível 12 necessário**`,
+      },
     },
     heroImage: 'linear-gradient(135deg, #118ab2 0%, #073b4c 50%, #06d6a0 100%)',
     chapterNumber: 6,
@@ -496,6 +584,21 @@ Corrigez les vulnérabilités de sécurité pour compléter le défi Sécurité 
 セキュリティ脆弱性を修正してセキュリティ & CTF試練を完了。
 
 **0/2 ミッション** • **レベル14 必須**`,
+      },
+      'pt-BR': {
+        title: 'Capítulo 7: Segurança & CTF',
+        description: 'Caçe vulnerabilidades e corrija falhas de segurança em contratos comprometidos.',
+        lore: `# 🛡️ Capítulo 7: Segurança & CTF
+
+A **Forja das Vulnerabilidades** repousa nas profundezas da Cidadela. Aqui, contratos quebrados são consertados.
+
+*"Um guardião deve conhecer as falhas antes que o inimigo as explore,"* avisa o Sábio de Segurança. *"Reentrada, controle de acesso, overflow — enfrente todos eles."*
+
+## O Gauntlet de Segurança
+
+Corrija vulnerabilidades de segurança para completar o gauntlet de Segurança & CTF.
+
+**0/2 missões** • **Nível 14 necessário**`,
       },
     },
     heroImage: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #7f1d1d 100%)',

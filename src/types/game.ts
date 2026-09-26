@@ -6,7 +6,7 @@
 /**
  * Language support for the application
  */
-export type Language = 'en' | 'es' | 'fr' | 'ja';
+export type Language = 'en' | 'es' | 'fr' | 'zh-CN' | 'pt-BR';
 
 /**
  * Mission difficulty levels
