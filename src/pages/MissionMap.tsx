@@ -630,6 +630,7 @@ export default function MissionMap() {
                     }}
                     role="button"
                     tabIndex={m.unlocked ? 0 : -1}
+                    data-mission-id={m.id}
                     aria-label={`Mission card ${m.order}: ${m.title}. ${m.standalone ? 'Standalone' : `Chapter ${m.chapter}`}. Reward: ${m.xpReward} XP. Difficulty: ${m.difficulty}.${m.completed ? ' Status: Completed.' : !m.unlocked ? ' Status: Locked.' : ' Status: Available.'}`}
                   >
               <div className="mission-card-header">
