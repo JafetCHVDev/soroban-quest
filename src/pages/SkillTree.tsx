@@ -43,6 +43,8 @@ export default function SkillTree() {
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [hoveredConcept, setHoveredConcept] = useState(null);
   const modalRef = useRef(null);
+  const modalTriggerRef = useRef(null);
+  const modalWasOpenRef = useRef(false);
 
   useEffect(() => {
     const stop = measureRender('SkillTree');
@@ -62,7 +64,16 @@ export default function SkillTree() {
 
   // Focus trap + Escape for the concept detail modal
   useEffect(() => {
-    if (!selectedConcept || !modalRef.current) return;
+    if (!selectedConcept || !modalRef.current) {
+      if (!selectedConcept && modalWasOpenRef.current) {
+        modalWasOpenRef.current = false;
+        if (modalTriggerRef.current?.isConnected) modalTriggerRef.current.focus();
+        modalTriggerRef.current = null;
+      }
+      return;
+    }
+
+    modalWasOpenRef.current = true;
     const modal = modalRef.current;
     const focusableSelectors =
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -105,15 +116,23 @@ export default function SkillTree() {
     };
   };
 
-  const handleConceptClick = (concept) => {
+  const handleConceptClick = (concept, trigger) => {
+    modalTriggerRef.current = trigger;
     const { mission } = getConceptStatus(concept);
     setSelectedConcept({ concept, mission });
   };
+
+  const closeConceptModal = () => setSelectedConcept(null);
 
   const renderConceptNode = (concept) => {
     const { status, mission } = getConceptStatus(concept);
     const isHovered = hoveredConcept === concept;
     const isSelected = selectedConcept?.concept === concept;
+    const completion = mission
+      ? completedMissions.includes(mission.id)
+        ? t('skillTree.modal.completed')
+        : t('skillTree.modal.notCompleted')
+      : t('skillTree.modal.notCovered');
 
     const nodeClass = `concept-node ${status} ${isHovered ? 'hovered' : ''} ${isSelected ? 'selected' : ''}`;
 
@@ -123,13 +142,13 @@ export default function SkillTree() {
         className={nodeClass}
         role="button"
         tabIndex={0}
-        aria-pressed={isSelected}
-        aria-label={`${concept} — ${status === 'unlocked' ? t('common.unlocked') : t('common.locked')}`}
-        onClick={() => handleConceptClick(concept)}
+        aria-haspopup="dialog"
+        aria-label={`${concept}, ${status === 'unlocked' ? t('common.unlocked') : t('common.locked')}, ${completion}`}
+        onClick={(e) => handleConceptClick(concept, e.currentTarget)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            handleConceptClick(concept);
+            handleConceptClick(concept, e.currentTarget);
           }
         }}
         onMouseEnter={() => setHoveredConcept(concept)}
@@ -222,7 +241,7 @@ export default function SkillTree() {
       </div>
 
       {selectedConcept && (
-        <div className="concept-detail-modal" onClick={() => setSelectedConcept(null)} role="presentation">
+        <div className="concept-detail-modal" onClick={closeConceptModal} role="presentation">
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -233,7 +252,7 @@ export default function SkillTree() {
           >
             <button
               className="modal-close"
-              onClick={() => setSelectedConcept(null)}
+              onClick={closeConceptModal}
               aria-label={t('common.close')}
             >
               ×
