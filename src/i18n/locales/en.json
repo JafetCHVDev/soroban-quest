@@ -113,7 +113,7 @@
       "badgesUnlocked": "{{count}} Badges",
       "currentLevel": "Level {{level}} — {{rank}}",
       "nextMission": "Next Mission",
-      "continueFrom": "Continue {title}",
+      "continueFrom": "Continue from {{title}}",
       "dailyChallenge": "Daily Challenge",
       "dailyChallengeDescription": "Complete today's featured mission for a 25 XP bonus!",
       "dailyChallengeCompleted": "Completed today!",
