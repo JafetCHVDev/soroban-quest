@@ -1,7 +1,8 @@
 {
   "languages": {
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Français"
   },
   "common": {
     "selectLanguage": "Select language",

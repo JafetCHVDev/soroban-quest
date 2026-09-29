@@ -11,7 +11,7 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "loading": "Cargando…",
+    "loading": "Cargando …",
     "all": "Todas",
     "level": "Nivel",
     "xp": "XP",
@@ -101,10 +101,10 @@
     },
     "subtitle": "Embárcate en una épica aventura para aprender la plataforma de contratos inteligentes de Stellar. Escribe código real de Soroban en tu navegador, resuelve desafíos y mejora tus habilidades en blockchain — sin instalación.",
     "cta": {
-      "continueQuest": "⚔️ Continuar misión",
-      "viewProgress": "📊 Ver progreso",
+      "continueQuest": "⚡️ Continuar misión",
+      "viewProgress": "📊y Ver progreso",
       "beginJourney": "🚀 Comienza tu aventura",
-      "viewMissionMap": "🗺️ Ver mapa de misiones"
+      "viewMissionMap": "🗵️ Ver mapa de misiones"
     },
     "stats": {
       "missionsCompleted": "{{count}}/{{total}} Misiones",
@@ -125,7 +125,7 @@
       "streak": "Racha diaria"
     },
     "howItWorks": {
-      "title": "Cómo funciona",
+      "title": "Como funciona",
       "subtitle": "Tu camino desde cero hasta dominar Soroban, todo desde el navegador."
     },
     "features": {
@@ -184,7 +184,7 @@
   },
   "notFound": {
     "title": "Esta misión no existe",
-    "body": "Parece que te has perdido en el espacio profundo",
+    "body": "Parece que te has nerdido en el espacio profundo",
     "back": "Volver a la base"
   },
   "errorBoundary": {
@@ -205,7 +205,7 @@
     }
   },
   "profile": {
-    "edit": "✏️ Editar perfil",
+    "edit": "✌️ Editar perfil",
     "viewJournal": "📖 Ver diario",
     "aria": {
       "selectAvatar": "Seleccionar avatar {{avatar}}",
@@ -231,11 +231,11 @@
       "badges": "Insignias"
     },
     "sections": {
-      "badges": "🏅 Insignias",
+      "badges": "🏅  Insignias",
       "completedMissions": "✅ Misiones completadas",
       "data": "⚙️ Datos"
     },
-    "noMissions": "Aún no has completado ninguna misión.",
+    "noMissions": "Aun no has completado ninguna misión.",
     "xpBar": {
       "current": "{{current}} / {{needed}} XP",
       "total": "Total: {{xp}} XP"
@@ -274,7 +274,7 @@
     "title": "Ranking",
     "subtitle": "Compara XP, nivel, misiones e insignias entre tus perfiles locales.",
     "manageProfiles": "Gestionar perfiles",
-    "championAria": "Campeón local actual",
+    "championAria": "Campéón local actual",
     "championSummary": "Nivel {{level}} • {{xp}} XP • {{missions}} misiones completadas",
     "tableTitle": "Clasificación local",
     "profileCount": "{{count}} perfiles",
@@ -344,377 +344,21 @@
       "levelUp": "¡Alcanzaste el Nivel {{level}}!",
       "hintUsed": "Usaste la pista {{index}}",
       "export": "Progreso de la aventura exportado",
-      "import": "Progreso de la aventura importado desde archivo",
-      "streakOne": "Racha diaria: ¡1 día!",
-      "streakMany": "Racha diaria: ¡{{count}} días!"
-    },
-    "details": {
-      "targetXp": "XP objetivo alcanzado: {{xp}}",
-      "earnedXp": "Ganaste {{xp}} XP"
-    },
-    "eventLabels": {
-      "mission": "Misión",
-      "badge": "Insignia",
-      "levelUp": "Subida de nivel",
-      "hint": "Pista",
-      "system": "Sistema",
-      "streak": "Racha"
+      "imported": "Progreso de la aventura importado desde archivo",
+      "reset": "Progreso de la aventura restablecido",
+      "dailyChallenge": "Reto diario completado"
     }
   },
-  "campaigns": {
-    "title": "Campañas",
-    "subtitle": "Capítulos épicos con historia | Nivel {{level}} | {{completed}}/{{total}} misiones totales",
-    "chapter": "Capítulo {{number}}",
-    "missionCount": "{{completed}}/{{total}} misiones",
-    "lockedAt": "🔒 Alcanza el nivel {{level}} para desbloquear",
-    "chapterComplete": "✓ ¡Capítulo completado!",
-    "back": "← Volver a campañas",
-    "completeOf": "{{completed}}/{{total}} completadas",
-    "statusLabel": "Estado:",
-    "lore": {
-      "iconLabel": "Pergamino de historia del capítulo",
-      "modalTitle": "Introducción del capítulo",
-      "beginChapter": "Comenzar capítulo {{number}}"
+  "missions": {
+    "cross-contract-calls": {
+      "title": "Llamadas entre Contratos",
+      "story": "El Archivo de Soroban guarda el conocimiento en módulos desplegados. Un contrato puede invocar a OTRO contrato ya desplegado, pero el hecho de que tú lo llames no te da su autorización. Cada contrato defende sus propias funciones con require_auth(). Escribe un contrator que invoca a OracleFeed y demuestra que la autorización del callee es independiente.",
+      "learningGoal": "Aprender a realizar llamadas entre contratos en Soroban y por qué la autorización del contrato invocado debe ser explícita.",
+      "hints": [
+        "Usa el cliente generado o Env::invoke_contract para llamar al contrato desplegado.",
+        "El contrato invocado debe llamar a require_auth() en el administrador o en quien corresponda.",
+        "La autorización no se hereda automáticamente al llamar a otro contrato."
+      ]
     }
-  },
-  "certificate": {
-    "button": "🏅 Obtener certificado",
-    "downloading": "Generando…",
-    "buttonAriaLabel": "Descargar certificado de finalización para {{title}}",
-    "ofCompletion": "Certificado de finalización",
-    "thisCertifies": "Esto certifica que",
-    "hasCompleted": "ha completado exitosamente",
-    "missions": "{{count}} misiones completadas",
-    "completedOn": "Completado el {{date}}"
-  },
-  "missionMap": {
-    "title": "Mapa de misiones",
-    "subtitle": "{{completed}} de {{total}} misiones completadas",
-    "searchPlaceholder": "Buscar misiones…",
-    "difficulty": {
-      "all": "Todas",
-      "beginner": "Principiante",
-      "intermediate": "Intermedia",
-      "advanced": "Avanzada"
-    },
-    "chapters": {
-      "all": "Todos los capítulos",
-      "n": "Capítulo {{number}}",
-      "standalone": "Independiente"
-    },
-    "card": {
-      "chapterMission": "Capítulo {{chapter}} • Misión {{mission}}",
-      "standaloneMission": "Independiente • Misión {{mission}}",
-      "xp": "⚡ {{xp}} XP",
-      "completed": "✓ Completada",
-      "locked": "🔒 Bloqueada",
-      "difficultyLabel": "Dificultad:",
-      "stateLabel": "Estado:"
-    },
-    "allCompleted": {
-      "title": "¡Todas las misiones completadas!",
-      "body": "¡Felicitaciones, {{rank}}! Dominaste todos los {{xp}} XP de desafíos de Soroban."
-    },
-    "noResults": "No hay misiones que coincidan con tus filtros.",
-    "aria": {
-      "missionPath": "Gráfico del camino de misiones",
-      "missionTimeline": "Línea de tiempo de misiones",
-      "missionItem": "Misión {{order}}: {{title}}",
-      "missionItemCompleted": "Misión {{order}}: {{title}}, completada",
-      "missionItemUnlocked": "Misión {{order}}: {{title}}, desbloqueada",
-      "missionItemLocked": "Misión {{order}}: {{title}}, bloqueada"
-    }
-  },
-  "missionDetail": {
-    "tabs": {
-      "story": "Historia",
-      "editor": "Editor",
-      "tests": "Pruebas",
-      "replay": "📹 Repetición",
-      "ariaLabel": "Pestañas de sección de misión"
-    },
-    "difficultyLabel": "Dificultad:",
-    "notFound": {
-      "title": "Misión no encontrada",
-      "body": "La misión \"{{id}}\" no existe.",
-      "back": "← Volver al mapa de misiones"
-    },
-    "editor": {
-      "reset": "↺ Reiniciar",
-      "hint": "💡 Pista",
-      "goldHint": "🪙 Pista ({{cost}} oro)",
-      "goldHintTitle": "Gasta {{cost}} de oro para revelar la siguiente pista al instante",
-      "goldHintInsufficient": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
-      "goldHintUnlocked": "🪙 Pista (desbloqueada)",
-      "solution": "👁️ Solución",
-      "run": "▶ Ejecutar pruebas",
-      "running": "Ejecutando…",
-      "compile": "⚙️ Compilar y ejecutar",
-      "compiling": "Compilando…",
-      "themeLabel": "Tema del editor"
-    },
-    "terminal": {
-      "title": "Salida de pruebas",
-      "placeholder": "Haz clic en \"Ejecutar pruebas\" para validar tu código…",
-      "runningChecks": "🔍 Ejecutando verificaciones…",
-      "alreadyCompleted": "🏅 Ya completada — no se otorgó XP adicional.",
-      "compiling": "⚙️ Compilando contrato…",
-      "compileOk": "✅ Compilación exitosa en {{ms}}ms",
-      "compileFailed": "❌ La compilación falló ({{errors}} error(es))",
-      "compileFallback": "ℹ️ Usando el analizador del navegador (toolchain WASM real no cargado).",
-      "compileEngineWasm": "🦀 Compilado con el toolchain WASM de Soroban.",
-      "compileError": "❌ Error del compilador: {{message}}"
-    },
-    "status": {
-      "checking": "Verificando…",
-      "passing": "{{passed}}/{{total}} verificaciones pasando",
-      "allPassing": "{{passed}}/{{total}} verificaciones pasando ✓",
-      "note": "verificaciones en vivo · suite completa al ejecutar pruebas"
-    },
-    "securityNotes": {
-      "title": "Notas de seguridad",
-      "advisory": "Solo asesoramiento. Estas notas no impiden completar la misión.",
-      "count": "{{count}}",
-      "line": "Línea {{line}}",
-      "rules": {
-        "missingAuth": {
-          "title": "Falta autorización antes de cambiar el estado",
-          "body": "{{functionName}} escribe en el almacenamiento sin require_auth() primero."
-        },
-        "uncheckedArithmetic": {
-          "title": "Aritmética sin control en montos de token",
-          "body": "{{functionName}} usa aritmética wrapping o de multiplicación en montos de token sin una llamada checked."
-        },
-        "reentrancy": {
-          "title": "Llamada externa antes de escribir estado",
-          "body": "{{functionName}} hace una llamada externa antes de escribir almacenamiento. Actualiza el estado primero."
-        },
-        "storageUnwrap": {
-          "title": "Lectura de almacenamiento usa unwrap",
-          "body": "{{functionName}} hace unwrap de un get de almacenamiento sobre una clave del usuario. Un valor ausente provocará pánico."
-        }
-      }
-    },
-    "toasts": {
-      "validated": "¡Parámetros de la misión validados!",
-      "validationFailed": "Validación fallida. Revisa la terminal.",
-      "hintUnlocked": "Pista {{index}} desbloqueada",
-      "hintGoldUnlocked": "Pista {{index}} desbloqueada por {{cost}} de oro",
-      "hintInsufficientGold": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
-      "codeReset": "Código restablecido a la plantilla",
-      "solutionLoaded": "Solución cargada en el editor"
-    },
-    "hint": {
-      "label": "💡 Pista {{index}}:"
-    },
-    "victory": {
-      "title": "¡Misión completada!",
-      "youCompleted": "Has completado",
-      "xpGained": "+{{xp}} XP",
-      "levelUp": "🎉 ¡Subiste de nivel! Ahora eres Nivel {{level}} — {{rank}}",
-      "badgeEarnedOne": "🏅 ¡Nueva insignia obtenida!",
-      "badgeEarnedMany": "🏅 ¡Nuevas insignias obtenidas!",
-      "next": "Siguiente misión →",
-      "map": "Mapa de misiones",
-      "iconLabel": "Icono de trofeo — misión completada"
-    },
-    "replay": {
-      "header": "📹 Mira tu solución",
-      "body": "Revisa paso a paso tu proceso de resolución.",
-      "start": "▶️ Iniciar repetición"
-    },
-    "okashi": {
-      "button": "🚀 Probar en Okashi — Compilar e implementar",
-      "help": "Abre okashi.dev en una pestaña nueva. Tu código se copia al portapapeles — pégalo allí para compilarlo con el compilador real de Soroban e implementarlo en Testnet."
-    }
-  },
-  "skillTree": {
-    "title": "Árbol de habilidades de Soroban",
-    "subtitle": "Sigue tu dominio de los conceptos de contratos inteligentes de Soroban",
-    "overall": "{{unlocked}}/{{total}} conceptos dominados",
-    "categoryProgress": "{{unlocked}}/{{total}}",
-    "categories": {
-      "Core": {
-        "title": "Conceptos básicos",
-        "description": "Componentes fundamentales de Soroban"
-      },
-      "Storage": {
-        "title": "Almacenamiento y estado",
-        "description": "Gestión de datos persistentes"
-      },
-      "Types": {
-        "title": "Tipos de datos",
-        "description": "Trabajando con diferentes tipos de datos"
-      },
-      "Auth": {
-        "title": "Autorización",
-        "description": "Control de acceso y seguridad"
-      },
-      "Events": {
-        "title": "Eventos",
-        "description": "Emisión y manejo de eventos de contratos"
-      },
-      "Protocols": {
-        "title": "Protocolos",
-        "description": "Patrones de protocolos DeFi del mundo real"
-      },
-      "DeFi": {
-        "title": "DeFi",
-        "description": "Primitivas de finanzas descentralizadas"
-      }
-    },
-    "tooltip": {
-      "chapter": "Capítulo {{chapter}}"
-    },
-    "modal": {
-      "taughtIn": "Enseñado en: {{title}}",
-      "chapterLabel": "Capítulo:",
-      "difficultyLabel": "Dificultad:",
-      "xpLabel": "Recompensa XP:",
-      "learningGoal": "Objetivo de aprendizaje:",
-      "completed": "✅ Completada",
-      "notCompleted": "🔒 Aún no completada",
-      "startMission": "Iniciar misión",
-      "notCovered": "Este concepto aún no está cubierto en las misiones disponibles."
-    }
-  },
-  "ranks": {
-    "0": "Iniciado",
-    "1": "Aprendiz",
-    "2": "Escriba",
-    "3": "Programador",
-    "4": "Arquitecto",
-    "5": "Centinela",
-    "6": "Guardián",
-    "7": "Maestro Guardián",
-    "8": "Anciano",
-    "9": "Luminaria",
-    "10": "Soberano Estelar"
-  },
-  "difficulty": {
-    "beginner": "principiante",
-    "intermediate": "intermedia",
-    "advanced": "avanzada"
-  },
-  "badges": {
-    "first_contract": {
-      "name": "Primer Contrato",
-      "description": "Completa tu primera misión"
-    },
-    "triple_threat": {
-      "name": "Triple Amenaza",
-      "description": "Completa 3 misiones"
-    },
-    "five_star": {
-      "name": "Cinco Estrellas",
-      "description": "Completa 5 misiones"
-    },
-    "completionist": {
-      "name": "Completista",
-      "description": "Completa todas las misiones"
-    },
-    "level_3": {
-      "name": "Estrella Naciente",
-      "description": "Alcanza el nivel 3"
-    },
-    "level_5": {
-      "name": "Guardián Estelar",
-      "description": "Alcanza el nivel 5"
-    },
-    "xp_1000": {
-      "name": "Acumulador de XP",
-      "description": "Gana 1000 XP"
-    },
-    "speed_demon": {
-      "name": "Demonio Veloz",
-      "description": "Completa una misión en el primer intento"
-    },
-    "chapter_1": {
-      "name": "Despertar",
-      "description": "Completa todas las misiones del Capítulo 1"
-    },
-    "chapter_2": {
-      "name": "Guardián de la Memoria",
-      "description": "Completa todas las misiones del Capítulo 2"
-    },
-    "chapter_3": {
-      "name": "Maestro Forjador",
-      "description": "Completa todas las misiones del Capítulo 3"
-    },
-    "chapter_4": {
-      "name": "Arquitecto de Datos",
-      "description": "Completa todas las misiones del Capítulo 4"
-    },
-    "chapter_5": {
-      "name": "Pionero de Protocolos",
-      "description": "Completa todas las misiones del Capítulo 5"
-    },
-    "chapter_6": {
-      "name": "Maestro de Producción",
-      "description": "Completa todas las misiones del Capítulo 6"
-    },
-    "chapter_7": {
-      "name": "Centinela de Seguridad",
-      "description": "Completa todas las misiones del Capítulo 7"
-    }
-  },
-  "shop": {
-    "title": "Tienda",
-    "subtitle": "Gasta tu XP en avatares, mejoras e insignias",
-    "ariaCategories": "Filtros de categorías de la tienda",
-    "categories": {
-      "all": "Todas",
-      "avatars": "Avatares",
-      "boosts": "Mejoras",
-      "badges": "Insignias"
-    },
-    "items": {
-      "avatarPack1": "Paquete de Avatares 1",
-      "avatarPack1Desc": "Desbloquea 5 nuevas opciones de avatar",
-      "avatarPack2": "Paquete de Avatares 2",
-      "avatarPack2Desc": "Desbloquea 5 opciones exclusivas de avatar",
-      "xpBoost": "Mejora de XP",
-      "xpBoostDesc": "Duplica tu XP en la próxima misión",
-      "streakFreeze": "Protección de Racha",
-      "streakFreezeDesc": "Protege tu racha por un día perdido",
-      "hintToken": "Token de Pista",
-      "hintTokenDesc": "Revela una pista sin penalización de XP",
-      "premiumBadge": "Insignia Premium",
-      "premiumBadgeDesc": "Insignia premium exclusiva para tu perfil"
-    },
-    "buy": "Comprar",
-    "purchased": "Comprado",
-    "alreadyPurchased": "Ya posees este artículo",
-    "insufficientFunds": "No tienes suficiente Oro para comprar este artículo",
-    "purchaseSuccess": "¡{{item}} comprado exitosamente!",
-    "empty": "No hay artículos en esta categoría",
-    "ariaPurchase": "Comprar {{item}} por {{price}} Oro",
-    "ariaPurchased": "{{item}} - Ya comprado"
-  },
-  "onboarding": {
-    "step1": {
-      "title": "¡Bienvenido a Soroban Quest!",
-      "body": "Embárcate en un viaje gamificado para dominar el desarrollo de contratos inteligentes Soroban. Completa misiones, gana XP y Oro, y desbloquea logros."
-    },
-    "step2": {
-      "title": "Tu Centro de Progreso",
-      "body": "La barra de navegación muestra tu nivel, XP, saldo de Oro y perfil. Úsala para navegar entre Misiones, Campañas, Perfil, Diario y más."
-    },
-    "step3": {
-      "title": "Mapa de Misiones y Búsquedas",
-      "body": "El Mapa de Misiones muestra todas las búsquedas organizadas por capítulo. Cada misión presenta un desafío de codificación Soroban con historia, pistas y validación automatizada."
-    },
-    "step4": {
-      "title": "Editor de Código y Validación",
-      "body": "Escribe código Rust Soroban en el editor Monaco integrado. Ejecuta pruebas para verificar tu solución. ¡No necesitas servidor de compilación!"
-    },
-    "step5": {
-      "title": "Progresión RPG",
-      "body": "Gana XP y Oro por cada misión completada. Sube de nivel para desbloquear nuevos rangos, capítulos e insignias. Gasta Oro en la Tienda para artículos cosméticos y mejoras."
-    },
-    "dismiss": "¡Entendido!",
-    "next": "Siguiente",
-    "prev": "Atrás",
-    "skip": "Saltar tutorial"
   }
 }
