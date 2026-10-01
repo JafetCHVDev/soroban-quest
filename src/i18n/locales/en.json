@@ -426,6 +426,22 @@
       "missionItemLocked": "Mission {{order}}: {{title}}, locked"
     }
   },
+  "recommendation": {
+    "title": "Recommended for You",
+    "badge": "Recommended",
+    "startMission": "Start Mission",
+    "difficulty": "Difficulty:",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recommended because you found \"{{missionTitle}}\" challenging — practice to reinforce your skills.",
+      "struggledChapter": "Reinforce fundamentals in Chapter {{chapter}} after several attempts.",
+      "fastLearner": "Based on your swift performance, try this {{difficulty}} challenge!",
+      "unexploredChapter": "Ready for something new? Explore Chapter {{chapter}}.",
+      "nextCampaign": "Continue your journey with the next mission in your campaign.",
+      "gettingStarted": "Begin your Soroban journey with this foundational quest.",
+      "allCompleted": "You've conquered every mission! Revisit \"{{missionTitle}}\" to sharpen your mastery."
+    }
+  },
   "missionDetail": {
     "tabs": {
       "story": "Story",

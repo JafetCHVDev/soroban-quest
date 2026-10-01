@@ -420,6 +420,22 @@
       "missionItemLocked": "任务 {{order}}：{{title}}，已锁定"
     }
   },
+  "recommendation": {
+    "title": "为你推荐",
+    "badge": "推荐",
+    "startMission": "开始任务",
+    "difficulty": "难度：",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "推荐因为你发现 \"{{missionTitle}}\" 具有挑战性 — 通过练习巩固技能。",
+      "struggledChapter": "在多次尝试后巩固第 {{chapter}} 章的基础知识。",
+      "fastLearner": "基于你出色的进展，来挑战这个 {{difficulty}} 任务吧！",
+      "unexploredChapter": "准备好探索新内容了吗？探索第 {{chapter}} 章。",
+      "nextCampaign": "继续进行战役中的下一个任务。",
+      "gettingStarted": "从基础任务开启你的 Soroban 之旅。",
+      "allCompleted": "你已完成所有任务！重温 \"{{missionTitle}}\" 以提升熟练度。"
+    }
+  },
   "missionDetail": {
     "tabs": {
       "story": "故事",

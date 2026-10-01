@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
+import { getRecommendedMission } from '../systems/recommendationEngine';
 import { useTranslation } from '../i18n/useTranslation';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './MissionMap.css';
@@ -75,6 +76,15 @@ export default function MissionMap() {
       return matchesSearch && matchesDifficulty && matchesChapter;
     });
   }, [missionStates, searchTerm, selectedDifficulty, selectedChapter]);
+
+  const recommendation = useMemo(() => {
+    return getRecommendedMission(state, missions);
+  }, [state, missions]);
+
+  const recommendedMission = useMemo(() => {
+    if (!recommendation?.missionId) return null;
+    return missions.find((m) => m.id === recommendation.missionId) || recommendation.mission;
+  }, [recommendation, missions]);
 
   useEffect(() => {
     if (!missionGridRef.current || typeof ResizeObserver === 'undefined') return undefined;
@@ -510,6 +520,45 @@ export default function MissionMap() {
           </button>
         ))}
       </div>
+
+      {/* Recommended Mission Card */}
+      {recommendedMission && (
+        <div
+          className="mission-recommendation-card"
+          data-testid="mission-recommendation-card"
+          role="region"
+          aria-label={t('recommendation.title')}
+        >
+          <div className="recommendation-header">
+            <span className="recommendation-badge">
+              ✨ {t('recommendation.badge')}
+            </span>
+            <span className="recommendation-reason">
+              {t(recommendation.reasonKey, recommendation.reasonParams)}
+            </span>
+          </div>
+          <div className="recommendation-content">
+            <div className="recommendation-info">
+              <h3 className="recommendation-title">{recommendedMission.title}</h3>
+              <p className="recommendation-goal">{recommendedMission.learningGoal}</p>
+            </div>
+            <div className="recommendation-meta">
+              <span className={`badge badge-${recommendedMission.difficulty}`}>
+                {t(`difficulty.${recommendedMission.difficulty}`)}
+              </span>
+              <span className="recommendation-xp">⚡ {recommendedMission.xpReward} XP</span>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm recommendation-btn"
+                onClick={() => handleMissionClick(recommendedMission)}
+                onMouseEnter={() => handleMissionHover(recommendedMission)}
+              >
+                {t('recommendation.startMission')} →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mission Cards Grid */}
       <div className="mission-map-filters">

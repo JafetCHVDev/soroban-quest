@@ -365,6 +365,22 @@
       "missionItemLocked": "Mission {{order}} : {{title}}, verrouillée"
     }
   },
+  "recommendation": {
+    "title": "Recommandé pour vous",
+    "badge": "Recommandé",
+    "startMission": "Commencer la mission",
+    "difficulty": "Difficulté :",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recommandé car « {{missionTitle}} » était difficile — pratiquez pour renforcer vos compétences.",
+      "struggledChapter": "Renforcez les fondamentaux du Chapitre {{chapter}} après plusieurs tentatives.",
+      "fastLearner": "Compte tenu de votre progression rapide, tentez ce défi {{difficulty}} !",
+      "unexploredChapter": "Prêt pour de la nouveauté ? Explorez le Chapitre {{chapter}}.",
+      "nextCampaign": "Poursuivez votre aventure avec la prochaine mission de la campagne.",
+      "gettingStarted": "Débutez votre aventure Soroban avec cette quête fondamentale.",
+      "allCompleted": "Vous avez terminé toutes les missions ! Rejouez « {{missionTitle}} » pour parfaire votre maîtrise."
+    }
+  },
   "missionDetail": {
     "tabs": {
       "story": "Histoire",
