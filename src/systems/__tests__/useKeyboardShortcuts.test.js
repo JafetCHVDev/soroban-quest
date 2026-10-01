@@ -1,9 +1,16 @@
 // @vitest-environment jsdom
 
-import { act, fireEvent, renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useKeyboardShortcuts } from '../useKeyboardShortcuts.js';
+
+function setPlatform(platform) {
+  Object.defineProperty(window.navigator, 'platform', {
+    configurable: true,
+    value: platform,
+  });
+}
 
 describe('useKeyboardShortcuts', () => {
   let onAction;
@@ -12,11 +19,12 @@ describe('useKeyboardShortcuts', () => {
   beforeEach(() => {
     onAction = vi.fn();
     setIsOpen = vi.fn((value) => (typeof value === 'function' ? value(false) : value));
-    Object.defineProperty(window.navigator, 'platform', {
-      configurable: true,
-      value: 'Win32',
-    });
+    setPlatform('Win32');
     document.body.innerHTML = '';
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('fires the matching callback for each registered shortcut', () => {
@@ -114,6 +122,59 @@ describe('useKeyboardShortcuts', () => {
 
     expect(onAction).not.toHaveBeenCalled();
     expect(setIsOpen).not.toHaveBeenCalled();
+  });
+
+  it('uses Cmd (metaKey) instead of Ctrl as the modifier on Mac', () => {
+    setPlatform('MacIntel');
+
+    renderHook(() =>
+      useKeyboardShortcuts({
+        isOpen: false,
+        setIsOpen,
+        onAction,
+      })
+    );
+
+    act(() => {
+      fireEvent.keyDown(window, { key: '1', metaKey: true });
+    });
+    expect(onAction).toHaveBeenCalledWith('home');
+
+    onAction.mockClear();
+
+    // Ctrl alone must not act as the modifier on Mac.
+    act(() => {
+      fireEvent.keyDown(window, { key: '1', ctrlKey: true });
+    });
+    expect(onAction).not.toHaveBeenCalled();
+
+    act(() => {
+      fireEvent.keyDown(window, { key: 'k', metaKey: true });
+    });
+    expect(setIsOpen).toHaveBeenCalledTimes(1);
+  });
+
+  it('closes the modal on Escape while it is open', () => {
+    renderHook(() =>
+      useKeyboardShortcuts({
+        isOpen: true,
+        setIsOpen,
+        onAction,
+      })
+    );
+
+    act(() => {
+      fireEvent.keyDown(window, { key: 'Escape' });
+    });
+
+    expect(setIsOpen).toHaveBeenCalledWith(false);
+
+    // Navigation shortcuts stay disabled while the modal is open.
+    onAction.mockClear();
+    act(() => {
+      fireEvent.keyDown(window, { key: '1', ctrlKey: true });
+    });
+    expect(onAction).not.toHaveBeenCalled();
   });
 
   it('removes the keydown listener when the hook unmounts', () => {
