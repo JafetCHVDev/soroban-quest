@@ -371,6 +371,16 @@
       "beginChapter": "チャプター {{number}} を開始"
     }
   },
+  "certificate": {
+    "button": "🏅 修了証を取得",
+    "downloading": "生成中…",
+    "buttonAriaLabel": "{{title}}の修了証をダウンロード",
+    "ofCompletion": "修了証書",
+    "thisCertifies": "以下を証明します",
+    "hasCompleted": "が正常に修了したことを証します",
+    "missions": "{{count}} ミッション完了",
+    "completedOn": "修了日: {{date}}"
+  },
   "missionMap": {
     "title": "ミッションマップ",
     "subtitle": "{{completed}} / {{total}} ミッション完了",
@@ -405,6 +415,22 @@
       "missionItemCompleted": "ミッション {{order}}: {{title}}, 完了",
       "missionItemUnlocked": "ミッション {{order}}: {{title}}, ロック解除",
       "missionItemLocked": "ミッション {{order}}: {{title}}, ロック"
+    }
+  },
+  "recommendation": {
+    "title": "あなたへのおすすめ",
+    "badge": "おすすめ",
+    "startMission": "ミッションを開始",
+    "difficulty": "難易度:",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "「{{missionTitle}}」が難しかったため、スキルを強化するための練習をおすすめします。",
+      "struggledChapter": "何度も挑戦した第{{chapter}}章の基本を復習しましょう。",
+      "fastLearner": "素晴らしい進行スピードです！この{{difficulty}}チャレンジに挑戦してみましょう！",
+      "unexploredChapter": "新しい内容に挑戦してみませんか？第{{chapter}}章を探索しましょう。",
+      "nextCampaign": "キャンペーンの次のミッションに進みましょう。",
+      "gettingStarted": "基本のクエストからSorobanの旅を始めましょう。",
+      "allCompleted": "すべてのミッションをクリアしました！「{{missionTitle}}」をもう一度プレイして腕を磨きましょう。"
     }
   },
   "missionDetail": {

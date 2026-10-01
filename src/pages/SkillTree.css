@@ -137,6 +137,12 @@
   box-shadow: 0 8px 25px rgba(6, 214, 160, 0.3);
 }
 
+.concept-node:focus-visible {
+  outline: 3px solid #f8fafc;
+  outline-offset: 3px;
+  z-index: 1;
+}
+
 .concept-node.unlocked {
   background: linear-gradient(135deg, rgba(6, 214, 160, 0.2), rgba(139, 92, 246, 0.2));
   border-color: #06d6a0;

@@ -144,6 +144,7 @@ export interface GameState {
     equipped: string[];
   };
   goldUnlockedHints?: Record<string, number[]>;
+  dailyChallengeCompletedDates?: string[];
 }
 
 /**

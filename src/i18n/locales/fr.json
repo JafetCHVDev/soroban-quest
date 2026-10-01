@@ -98,6 +98,10 @@
       "currentLevel": "Niveau {{level}} — {{rank}}",
       "nextMission": "Mission suivante",
       "continueFrom": "Continuer depuis {{title}}",
+      "dailyChallenge": "Défi du jour",
+      "dailyChallengeDescription": "Terminez la mission du jour pour obtenir un bonus de 25 XP !",
+      "dailyChallengeCompleted": "Terminé aujourd'hui !",
+      "dailyChallengeLink": "Commencer la mission",
       "recentActivity": "Activité récente",
       "viewAll": "Tout voir",
       "quickStats": "Statistiques rapides",
@@ -315,6 +319,16 @@
       "beginChapter": "Commencer le chapitre {{number}}"
     }
   },
+  "certificate": {
+    "button": "🏅 Obtenir le certificat",
+    "downloading": "Génération en cours…",
+    "buttonAriaLabel": "Télécharger le certificat d'achèvement pour {{title}}",
+    "ofCompletion": "Certificat d'achèvement",
+    "thisCertifies": "Ceci certifie que",
+    "hasCompleted": "a terminé avec succès",
+    "missions": "{{count}} missions terminées",
+    "completedOn": "Terminé le {{date}}"
+  },
   "missionMap": {
     "title": "Carte des missions",
     "subtitle": "{{completed}} missions sur {{total}} terminées",
@@ -349,6 +363,22 @@
       "missionItemCompleted": "Mission {{order}} : {{title}}, terminée",
       "missionItemUnlocked": "Mission {{order}} : {{title}}, déverrouillée",
       "missionItemLocked": "Mission {{order}} : {{title}}, verrouillée"
+    }
+  },
+  "recommendation": {
+    "title": "Recommandé pour vous",
+    "badge": "Recommandé",
+    "startMission": "Commencer la mission",
+    "difficulty": "Difficulté :",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recommandé car « {{missionTitle}} » était difficile — pratiquez pour renforcer vos compétences.",
+      "struggledChapter": "Renforcez les fondamentaux du Chapitre {{chapter}} après plusieurs tentatives.",
+      "fastLearner": "Compte tenu de votre progression rapide, tentez ce défi {{difficulty}} !",
+      "unexploredChapter": "Prêt pour de la nouveauté ? Explorez le Chapitre {{chapter}}.",
+      "nextCampaign": "Poursuivez votre aventure avec la prochaine mission de la campagne.",
+      "gettingStarted": "Débutez votre aventure Soroban avec cette quête fondamentale.",
+      "allCompleted": "Vous avez terminé toutes les missions ! Rejouez « {{missionTitle}} » pour parfaire votre maîtrise."
     }
   },
   "missionDetail": {

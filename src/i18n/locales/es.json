@@ -11,7 +11,7 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "loading": "Cargando…",
+    "loading": "Cargando …",
     "all": "Todas",
     "level": "Nivel",
     "xp": "XP",
@@ -101,10 +101,10 @@
     },
     "subtitle": "Embárcate en una épica aventura para aprender la plataforma de contratos inteligentes de Stellar. Escribe código real de Soroban en tu navegador, resuelve desafíos y mejora tus habilidades en blockchain — sin instalación.",
     "cta": {
-      "continueQuest": "⚔️ Continuar misión",
-      "viewProgress": "📊 Ver progreso",
+      "continueQuest": "⚡️ Continuar misión",
+      "viewProgress": "📊y Ver progreso",
       "beginJourney": "🚀 Comienza tu aventura",
-      "viewMissionMap": "🗺️ Ver mapa de misiones"
+      "viewMissionMap": "🗵️ Ver mapa de misiones"
     },
     "stats": {
       "missionsCompleted": "{{count}}/{{total}} Misiones",
@@ -114,13 +114,18 @@
       "currentLevel": "Nivel {{level}} — {{rank}}",
       "nextMission": "Siguiente Misión",
       "continueFrom": "Continuar desde {{title}}",
+      "dailyChallenge": "Reto diario",
+      "dailyChallengeDescription": "¡Completa la misión destacada de hoy para obtener una bonificación de 25 XP!",
+      "dailyChallengeCompleted": "¡Completado hoy!",
+      "dailyChallengeLink": "Empezar misión",
+
       "recentActivity": "Actividad Reciente",
       "viewAll": "Ver Todo",
       "quickStats": "Estadísticas Rápidas",
       "streak": "Racha diaria"
     },
     "howItWorks": {
-      "title": "Cómo funciona",
+      "title": "Como funciona",
       "subtitle": "Tu camino desde cero hasta dominar Soroban, todo desde el navegador."
     },
     "features": {
@@ -179,7 +184,7 @@
   },
   "notFound": {
     "title": "Esta misión no existe",
-    "body": "Parece que te has perdido en el espacio profundo",
+    "body": "Parece que te has nerdido en el espacio profundo",
     "back": "Volver a la base"
   },
   "errorBoundary": {
@@ -200,7 +205,7 @@
     }
   },
   "profile": {
-    "edit": "✏️ Editar perfil",
+    "edit": "✌️ Editar perfil",
     "viewJournal": "📖 Ver diario",
     "aria": {
       "selectAvatar": "Seleccionar avatar {{avatar}}",
@@ -226,11 +231,11 @@
       "badges": "Insignias"
     },
     "sections": {
-      "badges": "🏅 Insignias",
+      "badges": "🏅  Insignias",
       "completedMissions": "✅ Misiones completadas",
       "data": "⚙️ Datos"
     },
-    "noMissions": "Aún no has completado ninguna misión.",
+    "noMissions": "Aun no has completado ninguna misión.",
     "xpBar": {
       "current": "{{current}} / {{needed}} XP",
       "total": "Total: {{xp}} XP"
@@ -255,6 +260,12 @@
       "log": {
         "exported": "Progreso de la aventura exportado",
         "imported": "Progreso de la aventura importado desde archivo"
+      },
+      "toast": {
+        "exported": "¡Progreso exportado correctamente!",
+        "imported": "¡Progreso importado correctamente!",
+        "importFailed": "No se pudo importar el archivo. Verifica el formato.",
+        "resetDone": "🗑️ Progreso restablecido."
       }
     }
   },
@@ -263,7 +274,7 @@
     "title": "Ranking",
     "subtitle": "Compara XP, nivel, misiones e insignias entre tus perfiles locales.",
     "manageProfiles": "Gestionar perfiles",
-    "championAria": "Campeón local actual",
+    "championAria": "Campéón local actual",
     "championSummary": "Nivel {{level}} • {{xp}} XP • {{missions}} misiones completadas",
     "tableTitle": "Clasificación local",
     "profileCount": "{{count}} perfiles",
@@ -333,37 +344,21 @@
       "levelUp": "¡Alcanzaste el Nivel {{level}}!",
       "hintUsed": "Usaste la pista {{index}}",
       "export": "Progreso de la aventura exportado",
-      "import": "Progreso de la aventura importado desde archivo",
-      "streakOne": "Racha diaria: ¡1 día!",
-      "streakMany": "Racha diaria: ¡{{count}} días!"
-    },
-    "details": {
-      "targetXp": "XP objetivo alcanzado: {{xp}}",
-      "earnedXp": "Ganaste {{xp}} XP"
-    },
-    "eventLabels": {
-      "mission": "Misión",
-      "badge": "Insignia",
-      "levelUp": "Subida de nivel",
-      "hint": "Pista",
-      "system": "Sistema",
-      "streak": "Racha"
+      "imported": "Progreso de la aventura importado desde archivo",
+      "reset": "Progreso de la aventura restablecido",
+      "dailyChallenge": "Reto diario completado"
     }
   },
-  "campaigns": {
-    "title": "Campañas",
-    "subtitle": "Capítulos épicos con historia | Nivel {{level}} | {{completed}}/{{total}} misiones totales",
-    "chapter": "Capítulo {{number}}",
-    "missionCount": "{{completed}}/{{total}} misiones",
-    "lockedAt": "🔒 Alcanza el nivel {{level}} para desbloquear",
-    "chapterComplete": "✓ ¡Capítulo completado!",
-    "back": "← Volver a campañas",
-    "completeOf": "{{completed}}/{{total}} completadas",
-    "statusLabel": "Estado:",
-    "lore": {
-      "iconLabel": "Pergamino de historia del capítulo",
-      "modalTitle": "Introducción del capítulo",
-      "beginChapter": "Comenzar capítulo {{number}}"
+  "missions": {
+    "cross-contract-calls": {
+      "title": "Llamadas entre Contratos",
+      "story": "El Archivo de Soroban guarda el conocimiento en módulos desplegados. Un contrato puede invocar a OTRO contrato ya desplegado, pero el hecho de que tú lo llames no te da su autorización. Cada contrato defende sus propias funciones con require_auth(). Escribe un contrator que invoca a OracleFeed y demuestra que la autorización del callee es independiente.",
+      "learningGoal": "Aprender a realizar llamadas entre contratos en Soroban y por qué la autorización del contrato invocado debe ser explícita.",
+      "hints": [
+        "Usa el cliente generado o Env::invoke_contract para llamar al contrato desplegado.",
+        "El contrato invocado debe llamar a require_auth() en el administrador o en quien corresponda.",
+        "La autorización no se hereda automáticamente al llamar a otro contrato."
+      ]
     }
   },
   "missionMap": {
@@ -402,6 +397,22 @@
       "missionItemCompleted": "Misión {{order}}: {{title}}, completada",
       "missionItemUnlocked": "Misión {{order}}: {{title}}, desbloqueada",
       "missionItemLocked": "Misión {{order}}: {{title}}, bloqueada"
+    }
+  },
+  "recommendation": {
+    "title": "Recomendado para ti",
+    "badge": "Recomendado",
+    "startMission": "Comenzar misión",
+    "difficulty": "Dificultad:",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recomendado porque \"{{missionTitle}}\" fue un desafío — practica para reforzar tus habilidades.",
+      "struggledChapter": "Refuerza los conceptos básicos del Capítulo {{chapter}} tras varios intentos.",
+      "fastLearner": "¡Avanzas muy rápido! Atrévete con este desafío {{difficulty}}.",
+      "unexploredChapter": "¿Listo para algo nuevo? Explora el Capítulo {{chapter}}.",
+      "nextCampaign": "Continúa tu aventura con la siguiente misión de tu campaña.",
+      "gettingStarted": "Comienza tu aventura en Soroban con esta misión introductoria.",
+      "allCompleted": "¡Has superado todas las misiones! Vuelve a jugar \"{{missionTitle}}\" para perfeccionar tu dominio."
     }
   },
   "missionDetail": {

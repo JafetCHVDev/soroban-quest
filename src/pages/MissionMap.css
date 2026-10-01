@@ -156,3 +156,97 @@
     font-size: 1.25rem;
   }
 }
+
+/* ------------------------ Mission Recommendation Card ------------------------ */
+.mission-recommendation-card {
+  background: linear-gradient(135deg, rgba(6, 214, 160, 0.08) 0%, rgba(139, 92, 246, 0.12) 100%);
+  border: 1px solid rgba(6, 214, 160, 0.3);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.mission-recommendation-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+}
+
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.recommendation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(6, 214, 160, 0.2);
+  color: var(--cyan);
+  border: 1px solid rgba(6, 214, 160, 0.4);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.recommendation-reason {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.recommendation-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.recommendation-info {
+  flex: 1;
+  min-width: 240px;
+}
+
+.recommendation-title {
+  margin: 0 0 var(--space-xs);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.recommendation-goal {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.recommendation-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.recommendation-xp {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.recommendation-btn {
+  font-size: 0.85rem;
+  padding: var(--space-xs) var(--space-md);
+}
+

@@ -23,7 +23,7 @@
    default bundle small while leaving Option A/B from the issue open.
    ========================================== */
 
-import { analyze, DiagnosticSeverity } from './sorobanAnalyzer.js';
+import { analyze, DiagnosticSeverity } from './sorobanAnalyzer';
 
 export const DEFAULT_TIMEOUT_MS = 10_000;
 export const COMPILE_MARKER_OWNER = 'soroban-quest-compile';

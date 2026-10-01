@@ -15,7 +15,7 @@
    analyzer so the feature degrades gracefully instead of blocking.
    ========================================== */
 
-import { analyze } from './sorobanAnalyzer.js';
+import { analyze } from './sorobanAnalyzer';
 
 // Cache of a loaded real-WASM compiler, if one ever gets wired in.
 let wasmModule = null;
