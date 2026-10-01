@@ -17,6 +17,7 @@ import en from './locales/en.json';
 import es from './locales/es.json';
 import fr from './locales/fr.json';
 import zhCN from './locales/zh-CN.json';
+import ptBR from './locales/pt-BR.json';
 import { setActiveLanguage } from './languageBridge';
 import './i18n.css';
 
@@ -25,8 +26,9 @@ const LOCALES: Record<string, Record<string, unknown>> = {
   es,
   fr,
   'zh-CN': zhCN,
+  'pt-BR': ptBR,
 };
-const SUPPORTED = ['en', 'es', 'fr', 'zh-CN'] as const;
+const SUPPORTED = ['en', 'es', 'fr', 'zh-CN', 'pt-BR'] as const;
 const STORAGE_KEY = 'soroban_quest_lang';
 const DEFAULT_LANG: (typeof SUPPORTED)[number] = 'en';
 

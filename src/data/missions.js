@@ -148,6 +148,42 @@ Symbol               // 効率的な文字列型
                     '完全な戻り文: \`vec![&env, symbol_short!("Hello"), to]\`',
                 ],
             },
+            'pt-BR': {
+                title: 'O Primeiro Contrato',
+                story: `# 🌌 O Despertar
+
+Você se encontra diante dos portões da **Cidadela Estelar**, uma fortaleza reluzente em órbita na borda do espaço conhecido. Os Guardiões do Soroban perceberam sua chegada.
+
+*"Mais um buscador,"* sussurra o Guardião Ancião. *"Para provar seu valor, você deve forjar seu primeiro contrato inteligente."*
+
+## Sua Missão
+
+Crie seu primeiro contrato inteligente Soroban — um contrato simples com uma função \`hello\` que recebe um nome e retorna uma saudação.
+
+## O Que Você Aprenderá
+
+- Os atributos \`#[contract]\` e \`#[contractimpl]\`
+- O tipo \`Env\` — sua porta de entrada para a blockchain
+- O tipo \`Symbol\` para valores de string
+- Como retornar um \`Vec<Symbol>\`
+
+## Conceitos-Chave
+
+\`\`\`rust
+#[contract]          // Marca sua struct como um contrato
+#[contractimpl]      // Contém os métodos do contrato
+Env                  // O ambiente de execução
+Symbol               // Um tipo de string pequeno e eficiente
+\`\`\`
+
+Conclua o template de código para passar todas as verificações. Os Guardiões aguardam seu primeiro contrato! ⚔️`,
+                learningGoal: 'Crie seu primeiro contrato inteligente Soroban com uma função hello',
+                hints: [
+                    'Comece com `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
+                    'Use a macro `vec![]` com `&env` como primeiro argumento',
+                    'A linha de retorno completa: `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
@@ -332,6 +368,41 @@ u32                 // 符号なし32ビット整数
                     'greet関数の署名: \`pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>\`',
                     'count_charsの場合: \`pub fn count_chars(env: Env, text: String) -> u32\`',
                     '\`text.len()\`を使用して文字列の長さを取得する',
+                ],
+            },
+            'pt-BR': {
+                title: 'Protocolo de Saudações',
+                story: `# 📡 A Torre de Sinais
+
+A primeira porta está aberta. Você avança para a **Torre de Sinais**, onde as mensagens se propagam pela rede Stellar.
+
+*"A comunicação é poder,"* diz o Guardião da Torre. *"Seu contrato deve aprender a gerenciar dados — aceitar entradas e retornar respostas estruturadas."*
+
+## Sua Missão
+
+Construa um contrato com várias funções:
+- \`greet\` — recebe um nome e retorna uma saudação personalizada
+- \`count_chars\` — recebe uma string e retorna seu comprimento como u32
+
+## O Que Você Aprenderá
+
+- Várias funções em um único contrato
+- Trabalhando com o tipo \`String\` no Soroban
+- Retornando tipos diferentes de funções
+- A macro \`symbol_short!\`
+
+## Conceitos-Chave
+
+\`\`\`rust
+String              // Tipo de string completo no Soroban
+symbol_short!()     // Cria um Symbol a partir de um literal curto
+u32                 // Inteiro sem sinal de 32 bits
+\`\`\``,
+                learningGoal: 'Construa um contrato multifunção com diferentes tipos de retorno',
+                hints: [
+                    'A assinatura da função greet: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
+                    'Para count_chars: `pub fn count_chars(env: Env, text: String) -> u32`',
+                    'Use `text.len()` para obter o comprimento da string',
                 ],
             },
         },
@@ -526,6 +597,41 @@ env.storage().instance().get(&key)          // 読み取り（Optionを返す）
                     '\`env.storage().instance().get(&COUNTER)\`を使用してカウントを読み取る',
                     '値が存在しない場合のデフォルトとして\`.unwrap_or(0)\`を使用する',
                     '\`env.storage().instance().set(&COUNTER, &new_count)\`を使用して新しいカウントを保存する',
+                ],
+            },
+            'pt-BR': {
+                title: 'O Cofre Contador',
+                story: `# 🔐 O Cofre da Memória
+
+Você desce ao **Cofre da Memória**, onde os antigos guardaram a sabedoria que persiste através do tempo.
+
+*"Um contrato sem memória é como um ser consciente sem alma,"* murmura o Guardião do Cofre. *"Aprenda a armazenar e recuperar — a lembrar."*
+
+## Sua Missão
+
+Crie um contrato contador que persiste seu valor:
+- \`increment\` — incrementa o contador em 1
+- \`get_count\` — retorna a contagem atual
+
+## O Que Você Aprenderá
+
+- **Armazenamento persistente** com \`env.storage().instance()\`
+- Leitura e escrita de estado
+- O padrão de chave \`Symbol\` para armazenamento
+- Valores padrão com \`.unwrap_or()\`
+
+## Conceitos-Chave
+
+\`\`\`rust
+env.storage().instance().set(&key, &value)  // Escrever
+env.storage().instance().get(&key)          // Ler (retorna Option)
+.unwrap_or(default)                         // Padrão se None
+\`\`\``,
+                learningGoal: 'Use armazenamento persistente para criar um contrato contador com estado',
+                hints: [
+                    'Use `env.storage().instance().get(&COUNTER)` para ler a contagem',
+                    'Use `.unwrap_or(0)` para retornar 0 por padrão quando nenhum valor existir',
+                    'Use `env.storage().instance().set(&COUNTER, &new_count)` para salvar a nova contagem',
                 ],
             },
         },
@@ -732,6 +838,42 @@ Map<Address, Symbol>        // キー・値マッピング
                     'init関数はadminを保存する: \`env.storage().instance().set(&ADMIN, &admin)\`',
                     'registerで、保存する前に\`who.require_auth()\`を呼び出す',
                     '保存: \`env.storage().instance().set(&who, &name)\`',
+                ],
+            },
+            'pt-BR': {
+                title: 'Registro do Guardião',
+                story: `# 📋 O Registro do Guardião
+
+A Câmara do Conselho brilha com luz ancestral. Diante de você jaz o **Registro do Guardião** — um cadastro de todos que provaram seu valor.
+
+*"Para proteger o reino, você deve controlar quem pode agir,"* declara o Líder do Conselho. *"Aprenda a arte do controle de acesso."*
+
+## Sua Missão
+
+Construa um contrato de registro com controle de acesso:
+- \`register\` — registra um novo guardião (armazena seu nome)
+- \`get_guardian\` — recupera o nome de um guardião pelo endereço
+- Um endereço \`admin\` definido na inicialização
+
+## O Que Você Aprenderá
+
+- O tipo \`Address\` para identidades de usuário
+- \`require_auth()\` para controle de acesso
+- Trabalhando com o tipo \`Map\` para pares chave-valor
+- Padrões de inicialização de contratos
+
+## Conceitos-Chave
+
+\`\`\`rust
+Address                     // Representa uma conta/identidade
+address.require_auth()      // Garante que o chamador está autorizado
+Map<Address, Symbol>        // Mapeamento chave-valor
+\`\`\``,
+                learningGoal: 'Implemente controle de acesso com Address e require_auth',
+                hints: [
+                    'A função init armazena o admin: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'Em register, chame `who.require_auth()` antes de armazenar',
+                    'Armazene com: `env.storage().instance().set(&who, &name)`',
                 ],
             },
         },
@@ -955,6 +1097,44 @@ let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
                     'transferの場合: 送信者からrequire_auth、両方の残高を読み取り、両方を更新',
                 ],
             },
+            'pt-BR': {
+                title: 'A Forja de Tokens',
+                story: `# ⚒️ A Forja de Tokens
+
+No coração da Cidadela fica a **Forja de Tokens**, onde os ativos digitais são cunhados a partir de lógica pura.
+
+*"A moeda é o sangue de qualquer economia,"* diz o Mestre Forjador. *"Você criará um token que pode ser transferido entre contas."*
+
+## Sua Missão
+
+Crie um contrato de token simples:
+- \`mint\` — cria tokens para um endereço (somente admin)
+- \`balance\` — retorna o saldo de um endereço
+- \`transfer\` — move tokens de um endereço para outro
+
+## O Que Você Aprenderá
+
+- Gerenciamento de saldo de tokens
+- Lógica de transferência com autorização
+- Funções restritas ao admin
+- Aritmética inteira para saldos
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Padrão de verificação de admin
+admin.require_auth();
+
+// Gerenciamento de saldo
+let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
+\`\`\``,
+                learningGoal: 'Construa um token básico com funções mint, balance e transfer',
+                hints: [
+                    'Para mint: obtenha o admin do armazenamento, chame admin.require_auth(), depois atualize o saldo',
+                    'Para balance: `env.storage().persistent().get(&account).unwrap_or(0)`',
+                    'Para transfer: require_auth do remetente, leia ambos os saldos, atualize ambos',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1175,6 +1355,41 @@ panic!("message")        // エラーで中止
                     '現在のレッジャー番号を取得するために\`env.ledger().sequence()\`を使用する',
                     '比較: \`if current_seq < unlock_at { panic!("Still locked"); }\`',
                     'ロック解除後ストレージをクリア: \`env.storage().instance().remove(&key)\`',
+                ],
+            },
+            'pt-BR': {
+                title: 'O Bloqueio Temporal',
+                story: `# ⏳ A Porta do Tempo
+
+A **Porta do Tempo** está diante de você, seus mecanismos marcando o ritmo do ledger.
+
+*"O tempo é uma arma,"* diz o Guardião do Tempo. *"Aprenda a bloquear e desbloquear com base na passagem dos blocos."*
+
+## Sua Missão
+
+Crie um cofre com bloqueio temporal:
+- \`lock\` — bloqueia tokens até um número de sequência de ledger especificado
+- \`unlock\` — libera os tokens se o período de bloqueio passou
+- \`get_lock_info\` — retorna quando o bloqueio expira
+
+## O Que Você Aprenderá
+
+- Sequência / timestamp do ledger para lógica baseada em tempo
+- Execução condicional baseada no estado da blockchain
+- \`env.ledger().sequence()\` para o bloco atual
+- Padrões de panic para tratamento de erros
+
+## Conceitos-Chave
+
+\`\`\`rust
+env.ledger().sequence()  // Número de sequência do ledger atual
+panic!("message")        // Abortar com erro
+\`\`\``,
+                learningGoal: 'Implemente lógica condicional baseada em tempo usando a sequência do ledger',
+                hints: [
+                    'Use `env.ledger().sequence()` para obter o número do ledger atual',
+                    'Compare: `if current_seq < unlock_at { panic!("Still locked"); }`',
+                    'Limpe o armazenamento após desbloquear: `env.storage().instance().remove(&key)`',
                 ],
             },
         },
@@ -1422,6 +1637,46 @@ env.storage().instance().set(&signer_key, &true);
                     'create_pactで: 説明、必要な数、初期署名カウント0を保存',
                     'sign_pactで: 現在のカウントを読み取り、1を加算し、戻す',
                     'is_completeで: signed >= requiredを比較',
+                ],
+            },
+            'pt-BR': {
+                title: 'Pacto Multipartidário',
+                story: `# 🤝 O Salão dos Pactos
+
+Você chegou ao **Salão dos Pactos**, o desafio final antes de ganhar seu lugar entre os Guardiões.
+
+*"O verdadeiro poder dos contratos inteligentes,"* declara o Grande Ancião, *"é que eles permitem confiança entre desconhecidos."*
+
+## Sua Missão
+
+Crie um contrato de acordo com múltiplas assinaturas:
+- \`create_pact\` — cria um acordo que requer N assinaturas
+- \`sign_pact\` — permite que uma parte assine o acordo
+- \`is_complete\` — verifica se todas as assinaturas necessárias foram coletadas
+- \`get_signers\` — retorna quem assinou
+
+## O Que Você Aprenderá
+
+- Estruturas de dados complexas em contratos
+- Autorização multipartidária
+- Contagem e rastreamento com armazenamento
+- Construindo padrões de governança do mundo real
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Rastrear contagem de signatários
+let count: u32 = env.storage().instance()
+    .get(&SIGNER_COUNT).unwrap_or(0);
+
+// Armazenar com chaves dinâmicas
+env.storage().instance().set(&signer_key, &true);
+\`\`\``,
+                learningGoal: 'Construa um contrato de pacto com múltiplas assinaturas e gerenciamento de estado complexo',
+                hints: [
+                    'Em create_pact: armazene a descrição, o número necessário e uma contagem inicial de assinaturas de 0',
+                    'Em sign_pact: leia a contagem atual, incremente em 1, armazene de volta',
+                    'Em is_complete: compare signed >= required',
                 ],
             },
         },
@@ -1700,6 +1955,52 @@ env.storage().instance().set(&BALANCES, &balances);
                     'depositの場合: 現在の残高を取得、金額を追加、戻す',
                 ],
             },
+            'pt-BR': {
+                title: 'Gerenciador de Cofre',
+                story: `# 🏦 A Fortaleza de Dados
+
+Além do Salão dos Pactos fica a **Fortaleza de Dados**, onde inúmeros saldos de usuários são armazenados e protegidos.
+
+*"Um único saldo é trivial,"* diz o Arquiteto do Cofre. *"Gerenciar muitos — essa é a arte da arquitetura de armazenamento."*
+
+## Sua Missão
+
+Construa um contrato de cofre que gerencia múltiplos saldos de usuários:
+- \`deposit\` — adiciona fundos ao saldo de um usuário (usuário deve autenticar)
+- \`withdraw\` — subtrai fundos do saldo de um usuário (usuário deve autenticar)
+- \`get_balance\` — retorna o saldo atual de um usuário
+
+## O Que Você Aprenderá
+
+- \`Map<Address, i128>\` para estado multiusuário
+- \`Env::require_auth()\` para autorização por usuário
+- Armazenamento persistente com chaves complexas
+- Padrões aritméticos seguros
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Map para múltiplos saldos
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// Autenticação por usuário
+user.require_auth();
+
+// Atualizar e persistir
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Construa um cofre multiusuário com padrão de armazenamento Map',
+                hints: [
+                    'Use Map<Address, i128> para armazenar os saldos dos usuários',
+                    'Chame user.require_auth() antes de modificar o saldo de um usuário',
+                    'Leia o Map do armazenamento com .unwrap_or(Map::new(&env))',
+                    'Para deposit: obtenha o saldo atual, adicione o valor, salve de volta',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
@@ -1964,6 +2265,50 @@ keys.push_back(key);
                     'keys.push_back(key)で新しいキーを追加',
                 ],
             },
+            'pt-BR': {
+                title: 'Emissor de Eventos',
+                story: `# 📡 O Farol de Sinais
+
+No alto da Fortaleza de Dados fica o **Farol de Sinais**, transmitindo eventos pela rede Stellar.
+
+*"Contratos que falam são contratos que são compreendidos,"* diz o Guardião do Farol. *"Os eventos permitem que o mundo saiba o que aconteceu."*
+
+## Sua Missão
+
+Crie um contrato que armazena dados chave-valor e emite eventos para cada mudança de estado:
+- \`set_value\` — armazena um valor e emite um evento com a chave e o valor
+- \`get_value\` — recupera um valor armazenado por chave
+- \`get_all_keys\` — retorna todas as chaves armazenadas
+
+## O Que Você Aprenderá
+
+- \`env.events().publish()\` para emitir eventos
+- \`Vec<Symbol>\` para rastreamento dinâmico de chaves
+- Arquitetura de contratos orientada a eventos
+- Padrões publish-subscribe no Stellar
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Emitir um evento
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Rastrear chaves em um Vec
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'Implemente emissão de eventos em um contrato de armazenamento chave-valor',
+                hints: [
+                    'Use env.events().publish() com um tópico Symbol e os dados do evento',
+                    'Use Vec<Symbol> para rastrear todas as chaves armazenadas',
+                    'Adicione novas chaves com keys.push_back(key)',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
@@ -2204,6 +2549,46 @@ env.storage().instance().get(&(owner, spender))
                     'タプル(Address, Address)を複合ストレージキーとして使用',
                     'approveで: (owner, spender)ペアの指定を保存',
                     'transfer_fromで: spenderからrequire_auth、指定を確認、減少、残高更新',
+                ],
+            },
+            'pt-BR': {
+                title: 'Gerenciador de Aprovações',
+                story: `# ✋ A Câmara da Delegação
+
+Dentro da Fortaleza de Dados fica a **Câmara da Delegação**, onde a confiança é formalizada por meio de autorizações.
+
+*"Você nem sempre pode agir por conta própria,"* explica o Mestre da Delegação. *"Às vezes você deve empoderar outros para agir em seu nome."*
+
+## Sua Missão
+
+Construa um contrato que permite que usuários aprovem outros para gastar em seu nome:
+- \`approve\` — o proprietário autoriza um gastador para um determinado valor
+- \`transfer_from\` — o gastador transfere do proprietário para um destinatário
+- \`allowance\` — verifica quanto um gastador está autorizado a gastar
+
+## O Que Você Aprenderá
+
+- Padrões de chave-valor aninhados (proprietário -> gastador -> autorização)
+- Autorização delegada
+- Chaves de armazenamento de endereço duplo
+- Padrão de decremento de autorização
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Chave de armazenamento composta para autorizações
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// Ler autorização aninhada
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Implemente um sistema de autorização e transferência delegada',
+                hints: [
+                    'Use uma tupla (Address, Address) como chave de armazenamento composta',
+                    'Em approve: armazene a autorização para o par (owner, spender)',
+                    'Em transfer_from: require_auth do spender, verifique autorização, decremente, atualize saldos',
                 ],
             },
         },
@@ -2462,6 +2847,52 @@ if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
                     'initで: 目標金額と期限レッジャーシーケンスを保存',
                     'contributeで: 期限が過ぎていないことを確認、金額を総計に追加',
                     'check_goalで: 集めた総額を目標と比較',
+                ],
+            },
+            'pt-BR': {
+                title: 'Campanha de Crowdfunding',
+                story: `# 🎯 A Arena do Crowdforge
+
+Você entra na **Arena do Crowdforge**, onde o poder coletivo dá vida às ideias.
+
+*"Sozinho você é forte,"* anuncia o Leiloeiro. *"Juntos, vocês podem mover estrelas. Construa uma campanha que o povo pode financiar."*
+
+## Sua Missão
+
+Crie um contrato de crowdfunding:
+- \`init\` — define o objetivo de financiamento e o prazo (sequência do ledger)
+- \`contribute\` — adiciona fundos de um contribuinte
+- \`check_goal\` — retorna true se as contribuições totais >= objetivo
+- \`get_total_raised\` — retorna o total de fundos arrecadados
+
+## O Que Você Aprenderá
+
+- Sequência do ledger para prazos baseados em tempo
+- Acumulação de fundos tipo escrow
+- Rastreamento de objetivos com verificações condicionais
+- Gerenciamento de estado com múltiplos contribuintes
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Rastrear total arrecadado
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// Verificar prazo
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: 'Construa um contrato de crowdfunding com rastreamento de objetivo e prazo',
+                hints: [
+                    'Em init: armazene o valor objetivo e a sequência do ledger do prazo',
+                    'Em contribute: verifique se o prazo não passou, adicione o valor ao total',
+                    'Em check_goal: compare o total arrecadado com o objetivo',
                 ],
             },
         },
@@ -2729,6 +3160,50 @@ arbiter.require_auth();
                     'refundで: 仲介者からrequire_auth、買い手に払い戻す',
                 ],
             },
+            'pt-BR': {
+                title: 'Agente de Escrow',
+                story: `# 🤲 A Troca de Confiança
+
+No fundo da Arena do Crowdforge fica a **Troca de Confiança**, onde transações entre desconhecidos são mediadas.
+
+*"A confiança é a moeda mais rara,"* diz o Mediador de Escrow. *"Construa um sistema que retém valor até que as condições sejam cumpridas."*
+
+## Sua Missão
+
+Crie um contrato de escrow com comprador, vendedor e árbitro:
+- \`init\` — configura o escrow com os endereços do comprador, vendedor e árbitro
+- \`deposit\` — o comprador deposita fundos no escrow
+- \`release\` — o árbitro libera os fundos para o vendedor
+- \`refund\` — o árbitro reembolsa o comprador
+
+## O Que Você Aprenderá
+
+- Inicialização de contratos multipartidários
+- Padrões de autorização com três atores
+- Máquina de estados para o ciclo de vida do escrow
+- Padrões de resolução de disputas
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Init multipartidário
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// Funções somente para o árbitro
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: 'Implemente um contrato de escrow multipartidário com resolução de disputas',
+                hints: [
+                    'Em init: armazene os endereços do comprador, vendedor e árbitro',
+                    'Em deposit: require_auth do comprador e armazene o valor',
+                    'Em release: require_auth do árbitro, transfira para o vendedor',
+                    'Em refund: require_auth do árbitro, reembolse o comprador',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -2991,6 +3466,48 @@ if env.ledger().sequence() >= next_billing {
                     'subscribeで: プランを保存、next_billingをsequence + intervalに設定',
                     'collectで: sequence >= next_billingを確認、その場合は徴収して更新',
                     'cancelで: ストレージからサブスクリプションデータをクリア',
+                ],
+            },
+            'pt-BR': {
+                title: 'Gerenciador de Assinaturas',
+                story: `# 🔄 O Motor Recorrente
+
+No coração do distrito de Protocolos Avançados pulsa o **Motor Recorrente**, alimentando acordos periódicos automatizados.
+
+*"Os contratos mais poderosos são os que funcionam sem atenção constante,"* diz o Responsável pelo Motor. *"Construa uma assinatura que cobra pagamentos recorrentes."*
+
+## Sua Missão
+
+Crie um contrato de gerenciamento de assinaturas:
+- \`subscribe\` — o usuário assina um plano (armazena plano, próxima cobrança)
+- \`collect\` — cobra a taxa de assinatura se a cobrança estiver vencida
+- \`cancel\` — cancela a assinatura
+- \`get_subscription\` — retorna informações de assinatura de um usuário
+
+## O Que Você Aprenderá
+
+- Lógica de cobrança recorrente com sequência do ledger
+- Gerenciamento de estado de assinaturas
+- Padrões de cancelamento e reembolso
+- Cálculos de intervalo de tempo
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Rastrear período de assinatura
+let interval: u32 = 1000; // cobrança a cada ~1000 ledgers
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// Verificar se a cobrança está vencida
+if env.ledger().sequence() >= next_billing {
+    // cobrar pagamento
+}
+\`\`\``,
+                learningGoal: 'Construa um contrato de assinatura recorrente com cobrança periódica',
+                hints: [
+                    'Em subscribe: armazene o plano, defina next_billing como sequence + intervalo',
+                    'Em collect: verifique se sequence >= next_billing, se sim cobre e atualize next_billing',
+                    'Em cancel: limpe os dados de assinatura do armazenamento',
                 ],
             },
         },
@@ -3263,6 +3780,48 @@ env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
                     'repayで: ローンが存在することを確認、手数料付き資金をプールに返す、ローンをクリア',
                 ],
             },
+            'pt-BR': {
+                title: 'Pool de Empréstimos Flash',
+                story: `# ⚡ O Cofre do Relâmpago
+
+Na camada mais profunda da Cidadela fica o **Cofre do Relâmpago**, onde o capital se move à velocidade da luz.
+
+*"Empréstimos flash são o teste definitivo de design de contratos,"* diz o Arconte do Relâmpago. *"Empreste, use e reembolse em uma única transação."*
+
+## Sua Missão
+
+Construa um pool de empréstimos flash simplificado:
+- \`init\` — define o saldo do pool
+- \`flash_loan\` — empresta do pool (deve ser reembolsado dentro da chamada)
+- \`get_pool_balance\` — retorna o saldo atual do pool
+- \`repay\` — reembolsa o valor emprestado mais uma pequena taxa
+
+## O Que Você Aprenderá
+
+- Mecânica de empréstimos flash (simplificada para validação)
+- Gerenciamento de saldo do pool
+- Rastreamento do ciclo de vida do empréstimo
+- Padrões de taxa no reembolso
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Rastrear empréstimo ativo
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// Reembolsar com taxa
+let fee = amount / 100; // taxa de 1%
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: 'Construa um contrato de pool de empréstimos flash simplificado',
+                hints: [
+                    'Em init: armazene o saldo inicial do pool',
+                    'Em flash_loan: verifique se o pool tem saldo suficiente, deduza do pool, registre o empréstimo',
+                    'Em repay: verifique se o empréstimo existe, adicione fundos mais taxa ao pool, limpe o registro',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
@@ -3523,6 +4082,49 @@ env.storage().instance()
                     'has_roleで: ロールキーが存在してtrueであることを確認',
                 ],
             },
+            'pt-BR': {
+                title: 'Permissões RBAC',
+                story: `# 🛡️ O Salão dos Papéis
+
+Além do Cofre do Relâmpago fica o **Salão dos Papéis**, onde o acesso é governado por permissões estruturadas.
+
+*"Nem todos os que vagam têm acesso a todas as portas,"* declara o Mestre dos Papéis. *"Construa um sistema onde os papéis definem o que cada um pode fazer."*
+
+## Sua Missão
+
+Crie um contrato de controle de acesso baseado em papéis:
+- \`grant_role\` — o admin concede um papel a um usuário
+- \`revoke_role\` — o admin revoga um papel de um usuário
+- \`has_role\` — verifica se um usuário tem um papel específico
+- \`get_admin\` — retorna o admin do contrato
+
+## O Que Você Aprenderá
+
+- Padrões de controle de acesso baseado em papéis (RBAC)
+- Funções privilegiadas somente para admin
+- Chaves compostas para associação de papéis
+- Arquitetura de permissões flexível
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Conceder um papel
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// Verificar associação de papel
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'Implemente um contrato de controle de acesso baseado em papéis',
+                hints: [
+                    'Em init: armazene o endereço do admin',
+                    'Em grant_role: require_auth do admin, armazene a associação de papel para o usuário',
+                    'Em revoke_role: require_auth do admin, remova a associação de papel',
+                    'Em has_role: verifique se a chave do papel existe e é true',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3768,6 +4370,48 @@ pub fn update_price(env: Env, asset: Symbol, price: i128) {
                     'get_priceで：資産の価格をルックアップして返す',
                     'get_last_updatedで：資産用に保存されたシーケンスを返す',
                     'get_all_assetsで：event-emitterと同様のVec<Symbol>トラッカーを使用',
+                ],
+            },
+            'pt-BR': {
+                title: 'Feed do Oráculo',
+                story: `# 📊 A Agulha do Oráculo
+
+No pico do distrito de Sistemas de Produção fica a **Agulha do Oráculo**, onde dados off-chain entram na blockchain.
+
+*"Contratos inteligentes são cegos sem dados,"* diz o Sábio do Oráculo. *"Construa uma ponte entre os mundos on-chain e off-chain."*
+
+## Sua Missão
+
+Crie um contrato de oráculo de preços:
+- \`update_price\` — o admin atualiza o preço de um par de ativos
+- \`get_price\` — retorna o preço atual de um par de ativos
+- \`get_last_updated\` — retorna quando o preço foi atualizado pela última vez
+- \`get_all_assets\` — retorna todos os pares de ativos rastreados
+
+## O Que Você Aprenderá
+
+- Padrões de feed de dados de oráculo
+- Funções de atualização somente para admin
+- Rastreamento de timestamp/sequência
+- Gerenciamento de pares de ativos com Vec<Symbol>
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Armazenar preço com metadados
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: 'Construa um oráculo de preços on-chain com atualizações do admin',
+                hints: [
+                    'Em update_price: require_auth do admin, armazene o preço e a sequência',
+                    'Em get_price: procure e retorne o preço do ativo',
+                    'Em get_last_updated: retorne a sequência armazenada para o ativo',
+                    'Em get_all_assets: use um rastreador Vec<Symbol> semelhante ao event-emitter',
                 ],
             },
         },
@@ -4044,6 +4688,49 @@ let no_votes: u32 = /* valueがfalseの投票を数える */
                     'create_proposalで：説明、期限、はい/いいえのカウントを保存',
                     'voteで：提案がアクティブかどうかを確認し、投票者の選択を記録し、合計を更新',
                     'executeで：提案が可決されたことを確認し（はい>いいえ）、実行済みとしてマーク',
+                ],
+            },
+            'pt-BR': {
+                title: 'Governador Simples',
+                story: `# 🏛️ O Salão da Governança
+
+A câmara final aguarda — o **Salão da Governança**, onde o destino de todo o reino é decidido pela vontade coletiva.
+
+*"Os melhores contratos inteligentes capacitam comunidades a se governar,"* proclama o Grande Ancião. *"Construa um sistema onde propostas se tornam lei por meio de votação."*
+
+## Sua Missão
+
+Crie um contrato de governança com propostas e votação:
+- \`create_proposal\` — cria uma proposta com descrição e período de votação
+- \`vote\` — emite um voto (sim/não) em uma proposta ativa
+- \`execute\` — executa uma proposta se aprovada
+- \`get_proposal\` — retorna os detalhes da proposta
+
+## O Que Você Aprenderá
+
+- Mecanismos de governança on-chain
+- Ciclo de vida da proposta (criar → votar → executar)
+- Contagem de votos com Map<Address, bool>
+- Lógica de quórum e limiar de aprovação
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Rastrear votos por proposta
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// Contar aprovação
+let yes_votes: u32 = /* contar votos onde value é true */
+let no_votes: u32 = /* contar votos onde value é false */
+\`\`\``,
+                learningGoal: 'Construa um sistema completo de governança on-chain com propostas e votação',
+                hints: [
+                    'Em create_proposal: armazene a descrição, o prazo, as contagens de sim/não',
+                    'Em vote: verifique se a proposta está ativa, registre a escolha do votante, atualize os totais',
+                    'Em execute: verifique se a proposta foi aprovada (sim > não), marque como executada',
                 ],
             },
         },
@@ -4357,6 +5044,53 @@ env.storage().instance().set(&MUTEX, &false);
                     'ミューテックスを残高更新前にtrueに、その後falseに設定',
                 ],
             },
+            'pt-BR': {
+                title: 'Proteção Contra Reentância',
+                story: `# 🛡️ A Forja de Vulnerabilidades
+
+No fundo da Cidadela fica a **Forja de Vulnerabilidades**, onde contratos quebrados são restaurados.
+
+*"A vulnerabilidade mais perigosa em contratos inteligentes,"* avisa o Sábio de Segurança, *"é a reentância. Um contrato que chama código externo enquanto mantém estado pode ser explorado."*
+
+## Sua Missão
+
+O contrato de cofre abaixo é vulnerável à reentância — ele atualiza seu saldo APÓS enviar fundos. Seu trabalho é corrigi-lo usando um padrão de **guarda mutex**: uma flag booleana que previne a reentância.
+
+O código vulnerável tem:
+- \`withdraw\` que envia fundos ANTES de atualizar o estado (o bug)
+- Sem proteção contra reentância
+
+Corrija-o:
+1. Adicionando uma chave de armazenamento booleana \`MUTEX\` inicializada como \`false\`
+2. No início de \`withdraw\`, defina-a como \`true\`
+3. No final de \`withdraw\`, defina-a de volta como \`false\`
+4. Verifique o mutex na entrada e entre em pânico se já estiver bloqueado
+
+## O Que Você Aprenderá
+
+- Identificação da vulnerabilidade de reentância
+- Padrão mutex/guarda para prevenção
+- Padrão check-effects-interaction
+- Mentalidade de desenvolvimento focada em segurança
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Padrão de guarda mutex
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... operações vulneráveis ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'Corrija uma vulnerabilidade de reentância usando o padrão de guarda mutex',
+                hints: [
+                    'Adicione uma constante MUTEX: `const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'No início de withdraw, verifique se mutex é true e entre em pânico se sim',
+                    'Defina mutex como true antes da atualização do saldo, false depois',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -4625,6 +5359,51 @@ env.storage().instance().set(&FEE, &new_fee);
                     'init関数は大丈夫です — 既に管理者を正しく保存しています',
                 ],
             },
+            'pt-BR': {
+                title: 'Correção de Controle de Acesso',
+                story: `# 🔓 A Violação de Permissões
+
+A **Violação de Permissões** é um campo de treinamento onde a lógica de autorização quebrada é reparada.
+
+*"A segunda vulnerabilidade mais comum,"* explica o Sábio de Segurança, *"é o controle de acesso ausente. Funções que deveriam ser restritas a admins podem ser chamadas por qualquer um."*
+
+## Sua Missão
+
+O contrato abaixo tem um endereço \`admin\` armazenado mas NUNCA usa \`require_auth()\` em funções privilegiadas. Seu trabalho é adicionar controle de acesso adequado.
+
+O código vulnerável tem:
+- Uma constante \`ADMIN\` definida mas nunca verificada
+- Funções \`set_fee\` e \`pause\` chamáveis por qualquer pessoa
+- Nenhuma chamada \`require_auth()\` em nenhum lugar
+
+Corrija-o:
+1. Adicionando verificações \`require_auth()\` em \`set_fee\` e \`pause\`
+2. Lendo o endereço admin do armazenamento antes de verificar a autenticação
+
+## O Que Você Aprenderá
+
+- Identificação de vulnerabilidade de controle de acesso
+- Colocação correta de \`require_auth()\`
+- Padrões de funções somente para admin
+- Princípios de defesa em profundidade
+
+## Conceitos-Chave
+
+\`\`\`rust
+// Controle de acesso correto
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// Agora execute a operação privilegiada
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'Corrija o controle de acesso ausente adicionando verificações require_auth()',
+                hints: [
+                    'Em set_fee: leia ADMIN do armazenamento, chame admin.require_auth()',
+                    'Em pause: leia ADMIN do armazenamento, chame admin.require_auth()',
+                    'A função init está correta — ela já armazena o admin corretamente',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -4836,6 +5615,41 @@ env.storage().instance().get(&VALUE).unwrap_or(0)
                     'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
                 ],
             },
+            'pt-BR': {
+                title: 'Dojo de Armazenamento',
+                story: `# 🥋 Dojo de Armazenamento
+
+Bem-vindo ao **Dojo de Armazenamento** — uma sala de treinamento tranquila fora do caminho de campanha.
+
+*"Antes de dominar protocolos complexos, pratique o básico até virar reflexo,"* diz o Mestre do Dojo.
+
+## Sua Missão
+
+Construa um contrato mínimo que pode salvar e recuperar um único valor:
+
+- \`set_value\` — armazena um \`u32\` sob uma chave fixa
+- \`get_value\` — recupera o valor armazenado (padrão \`0\` se vazio)
+
+## O Que Você Aprenderá
+
+- \`env.storage().instance().set(&key, &value)\` — escrever
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — ler com padrão
+- A macro \`symbol_short!\` para chaves de armazenamento
+
+## Conceitos-Chave
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Pratique armazenamento instance básico: definir e obter um valor u32',
+                hints: [
+                    'Defina `const VALUE: Symbol = symbol_short!("VALUE");` no topo',
+                    'Em set_value: `env.storage().instance().set(&VALUE, &value)`',
+                    'Em get_value: `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -5000,6 +5814,42 @@ env.storage().instance().set(&DONE, &true);
                     "Stocke admin dans init : `env.storage().instance().set(&ADMIN, &admin)`",
                     "Dans protected_action : vérifie avec `user.require_auth()`",
                     "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
+                ],
+            },
+            'pt-BR': {
+                title: 'Exercício de Guarda de Autorização',
+                story: `# 🛡️ Exercício de Guarda de Autorização
+
+Entre no **Posto de Guarda** — um exercício isolado de autorização.
+
+*"Toda mudança de estado deve provar quem a solicitou,"* avisa o Capitão da Guarda.
+
+## Sua Missão
+
+Construa um contrato que protege uma ação privilegiada com \`require_auth\`:
+
+- \`init\` — armazena um endereço admin
+- \`protected_action\` — requer auth do chamador, define a flag \`DONE\` como \`true\`
+- \`is_done\` — retorna se a flag está definida
+
+## O Que Você Aprenderá
+
+- O tipo \`Address\` para identidades
+- Guarda \`address.require_auth()\`
+- Armazenar e verificar uma flag booleana
+
+## Conceitos-Chave
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: 'Pratique o controle require_auth para uma mudança de estado protegida',
+                hints: [
+                    'Armazene admin em init: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'Em protected_action: verifique com `user.require_auth()`',
+                    'Defina a flag: `env.storage().instance().set(&DONE, &true)`',
                 ],
             },
         },
@@ -5177,6 +6027,41 @@ vals.len()
                     'Utilise `vec![&env, 1u32, 2u32, 3u32]` pour construire la séquence',
                     'Signature pour get_length : `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
                     'Renvoie la longueur avec `vals.len()`',
+                ],
+            },
+            'pt-BR': {
+                title: 'Laboratório de Vetores',
+                story: `# 🧪 Laboratório de Vetores
+
+Entre no **Laboratório de Vetores** — uma oficina prática para a coleção mais flexível do Soroban.
+
+*"Vetores contêm o múltiplo, ordenam o múltiplo, retornam o múltiplo,"* diz o Técnico de Laboratório.
+
+## Sua Missão
+
+Crie um contrato que constrói e inspeciona Vetores:
+
+- \`make_sequence\` — retorna um \`Vec<u32>\` contendo \`[1, 2, 3]\`
+- \`get_length\` — recebe um \`Vec<u32>\` e retorna seu comprimento como \`u32\`
+
+## O Que Você Aprenderá
+
+- O tipo \`Vec\` e a macro \`vec![&env, ...]\`
+- \`Vec::len()\` para comprimento
+- Passando Vetores entre funções
+
+## Conceitos-Chave
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Pratique criar e inspecionar coleções Vec<u32>',
+                hints: [
+                    'Use `vec![&env, 1u32, 2u32, 3u32]` para construir a sequência',
+                    'Assinatura para get_length: `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Retorne o comprimento com `vals.len()`',
                 ],
             },
         },
