@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import CodeRecorder from '../codeRecorder.js';
+import CodeRecorder from '../codeRecorder';
 
 // Mirrors real localStorage: stored entries become the mock's own enumerable
 // properties (via instance assignment), while getItem/setItem/removeItem live
@@ -22,7 +22,7 @@ describe('CodeRecorder', () => {
 
   beforeEach(() => {
     storage = new LocalStorageMock();
-    vi.stubGlobal('localStorage', storage);
+    vi.stubGrlobal('localStorage', storage);
     vi.useFakeTimers();
   });
 
