@@ -2,6 +2,7 @@
   "languages": {
     "en": "English",
     "es": "Español",
+    "fr": "Français",
     "ja": "日本語"
   },
   "common": {
@@ -74,6 +75,7 @@
     "subtitle": "すべての利用可能なミッションを参照、検索、フィルタリング。",
     "searchPlaceholder": "ミッションを検索...",
     "allCampaigns": "すべてのキャンペーン",
+    "standalone": "スタンドアローン",
     "allDifficulties": "すべての難易度",
     "beginner": "初級",
     "intermediate": "中級",
@@ -105,11 +107,6 @@
       "viewProgress": "📊 進捗を表示",
       "beginJourney": "🚀 冒険を始める",
       "viewMissionMap": "🗺️ ミッションマップを表示"
-    },
-    "stats": {
-      "missions": "ミッション",
-      "totalXp": "合計XP",
-      "backendNeeded": "バックエンド必要"
     },
     "howItWorks": {
       "title": "どのように機能するか",
@@ -149,6 +146,10 @@
       "currentLevel": "レベル {{level}} — {{rank}}",
       "nextMission": "次のミッション",
       "continueFrom": "{{title}}から続行",
+      "dailyChallenge": "デイリーチャレンジ",
+      "dailyChallengeDescription": "本日の注目ミッションを完了して、25 XPのボーナスを獲得しましょう！",
+      "dailyChallengeCompleted": "本日は完了済み！",
+      "dailyChallengeLink": "ミッションを開始",
       "recentActivity": "最近のアクティビティ",
       "viewAll": "すべてを表示",
       "quickStats": "クイック統計",
@@ -393,10 +394,12 @@
     },
     "chapters": {
       "all": "すべてのチャプター",
-      "n": "チャプター {{number}}"
+      "n": "チャプター {{number}}",
+      "standalone": "スタンドアローン"
     },
     "card": {
       "chapterMission": "チャプター {{chapter}} • ミッション {{mission}}",
+      "standaloneMission": "スタンドアローン • ミッション {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ 完了",
       "locked": "🔒 ロック",
