@@ -27,24 +27,24 @@ export function useOkashi(): UseOkashiReturn {
     try {
       await navigator.clipboard.writeText(code);
       // Step 2: Open Okashi in new tab
-      window.open(
-        "https://okashi.dev",
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open({
+        url: "https://okashi.dev",
+        target: "_blank",
+        features: "noopener,noreferrer",
+      });
       // Step 3: Show success message
       setToast({
         state: TOAST_STATES.SUCCESS,
         message:
-          "✅ Code copied! Paste it in Okashi (Ctrl+V) to compile & deploy to Testnet 🚀",
+          "➥ Code copied! Paste it in Okashi (Ctrl+V) to compile & deploy to Testnet 🚀",
       });
     } catch {
       // Clipboard failed — still open Okashi
-      window.open(
-        "https://okashi.dev",
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open({
+        url: "https://okashi.dev",
+        target: "_blank",
+        features: "noopener,noreferrer",
+      });
       setToast({
         state: TOAST_STATES.ERROR,
         message:
