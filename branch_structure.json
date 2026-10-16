@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "feat/issue-372-i18n-complete-missing-spanish-es-translation",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "feat/issue-372-i18n-complete-missing-spanish-es-translation": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "feat/issue-372-i18n-complete-missing-spanish-es-translation",
+    "origin"
+  ]
+}
