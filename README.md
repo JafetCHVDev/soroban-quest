@@ -330,7 +330,7 @@ soroban-quest/
 │   │   ├── ToastContext.jsx        # Toast notification system
 │   │   ├── Toast.css               # Toast notification styles
 │   │   ├── useokashi.js            # Okashi.dev bridge hook
-│   │   └── useDocumentTitle.js     # Dynamic document title hook
+│   │   └── useDocumentTitle.ts     # Dynamic document title hook
 │   ├── data/
 │   │   ├── missions.js             # 19 mission definitions (i18n)
 │   │   ├── missions/               # Per-mission markdown assets
