@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { authService, getAuthService } from '../authService.js';
+import { authService, getAuthService } from '../authService';
 import { getCloudSyncStatus, cloudSyncService } from '../cloudSync.js';
 
 const AUTH_STORAGE_KEY = 'soroban_quest_auth_user';
