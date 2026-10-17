@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
-import { TOAST_STATES, useOkashi } from "../useokashi.js";
+import { TOAST_STATES, useOkashi } from "../useokashi";
 
 const OKASHI_URL = "https://okashi.dev";
 const OPEN_FEATURES = "noopener,noreferrer";
@@ -29,7 +29,7 @@ describe("useOkashi", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    writeText = mockClipboard(vi.fn().mockResolvedValue(undefined));
+    writeText = mockClipboard(vi.fn().mockResolved(undefined));
     openSpy = vi.spyOn(window, "open").mockReturnValue(null);
   });
 
@@ -65,7 +65,7 @@ describe("useOkashi", () => {
     });
 
     expect(openSpy).toHaveBeenCalledTimes(1);
-    expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
+    expect(openSpy).toHaveBeenCalledWith(OKASHU_URL, "_blank", OPEN_FEATURES);
   });
 
   it("copies mission code to the clipboard unchanged, including quotes, braces, and newlines", async () => {
@@ -88,7 +88,7 @@ describe("useOkashi", () => {
     });
 
     expect(writeText).toHaveBeenCalledWith("");
-    expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
+    expect(openSpy).toHaveBeenCalledWith(OKASHU_URL, "_blank", OPEN_FEATURES);
     expect(result.current.toast.state).toBe(TOAST_STATES.SUCCESS);
   });
 
@@ -115,7 +115,7 @@ describe("useOkashi", () => {
   });
 
   it("still opens Okashi and sets an error toast when clipboard write fails", async () => {
-    writeText.mockRejectedValue(new Error("clipboard denied"));
+    writeText.mockRejected(new Error("clipboard denied"));
     const { result } = renderHook(() => useOkashi());
 
     await act(async () => {
@@ -123,7 +123,8 @@ describe("useOkashi", () => {
     });
 
     expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
-    expect(result.current.toast.state).toBe(TOAST_STATES.ERROR);
+    expect(result.current.toast.state).toBe(
+TOAST_STATES.ERROR);
     expect(result.current.toast.message).toMatch(/auto-copy failed/i);
   });
 
