@@ -24,8 +24,36 @@
     "unlocked": "Déverrouillée",
     "skipToContent": "Passer au contenu principal"
   },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "subtitle": "Maîtrisez Soroban Quest grâce aux raccourcis clavier",
+    "sections": {
+      "navigation": "Navigation",
+      "editor": "Éditeur de code",
+      "general": "Général"
+    },
+    "nav": {
+      "home": "Aller à l'accueil",
+      "campaigns": "Aller aux campagnes",
+      "missions": "Aller aux missions",
+      "profile": "Aller au profil",
+      "journal": "Aller au journal"
+    },
+    "editor": {
+      "runTests": "Exécuter le code / les tests",
+      "resetTemplate": "Réinitialiser le modèle",
+      "showSolution": "Afficher la solution",
+      "toggleHints": "Afficher ou masquer les indices",
+      "toggleTheme": "Changer le thème de l'éditeur"
+    },
+    "general": {
+      "openModal": "Ouvrir la fenêtre des raccourcis",
+      "closeModal": "Fermer n'importe quelle fenêtre"
+    }
+  },
   "navbar": {
     "home": "Accueil",
+    "quests": "Quêtes",
     "campaigns": "Campagnes",
     "missions": "Missions",
     "profile": "Profil",
@@ -40,6 +68,30 @@
     "openMenu": "Ouvrir le menu de navigation",
     "closeMenu": "Fermer le menu de navigation",
     "replayTutorial": "Revoir le tutoriel"
+  },
+  "quests": {
+    "title": "Catalogue des quêtes",
+    "subtitle": "Parcourez, recherchez et filtrez toutes les missions disponibles.",
+    "searchPlaceholder": "Rechercher des missions...",
+    "allCampaigns": "Toutes les campagnes",
+    "standalone": "Indépendantes",
+    "allDifficulties": "Toutes les difficultés",
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé",
+    "allStatus": "Tous les statuts",
+    "completed": "Terminées",
+    "incomplete": "Non terminées",
+    "done": "Terminée",
+    "noResults": "Aucune mission ne correspond à vos critères."
+  },
+  "theoryQuest": {
+    "submit": "Soumettre la réponse",
+    "correct": "Correct !",
+    "incorrect": "Pas tout à fait.",
+    "correctToast": "La réponse est correcte !",
+    "incorrectToast": "Réessayez — relisez l'explication.",
+    "completed": "Cette quête théorique est déjà terminée."
   },
   "home": {
     "badge": "✨ Aucune configuration • Aucun portefeuille requis • Open source",
@@ -157,6 +209,11 @@
   "profile": {
     "edit": "✏️ Modifier le profil",
     "viewJournal": "📖 Voir le journal",
+    "aria": {
+      "selectAvatar": "Sélectionner l'avatar {{avatar}}",
+      "completedListing": "Liste des missions terminées",
+      "completedEntry": "{{title}}, {{xp}} XP gagnés"
+    },
     "editPanel": {
       "title": "Modifier le profil",
       "nameLabel": "Nom de l'aventurier",
@@ -309,6 +366,7 @@
     "chapterComplete": "✓ Chapitre terminé !",
     "back": "← Retour aux campagnes",
     "completeOf": "{{completed}}/{{total}} terminées",
+    "statusLabel": "Statut :",
     "lore": {
       "iconLabel": "Parchemin de l'histoire du chapitre",
       "modalTitle": "Introduction du chapitre",
@@ -335,7 +393,9 @@
       "standaloneMission": "Autonome • Mission {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Terminée",
-      "locked": "🔒 Verrouillée"
+      "locked": "🔒 Verrouillée",
+      "difficultyLabel": "Difficulté :",
+      "stateLabel": "État :"
     },
     "allCompleted": {
       "title": "Toutes les missions terminées !",
@@ -356,8 +416,10 @@
       "story": "Histoire",
       "editor": "Éditeur",
       "tests": "Tests",
-      "replay": "📹 Rejouer"
+      "replay": "📹 Rejouer",
+      "ariaLabel": "Onglets des sections de la mission"
     },
+    "difficultyLabel": "Difficulté :",
     "notFound": {
       "title": "Mission introuvable",
       "body": "La mission « {{id}} » n'existe pas.",
@@ -373,13 +435,21 @@
       "solution": "👁️ Solution",
       "run": "▶ Lancer les tests",
       "running": "Exécution…",
+      "compile": "⚙️ Compiler et exécuter",
+      "compiling": "Compilation…",
       "themeLabel": "Thème de l'éditeur"
     },
     "terminal": {
       "title": "Sortie des tests",
       "placeholder": "Cliquez sur « Lancer les tests » pour valider votre code…",
       "runningChecks": "🔍 Exécution des vérifications…",
-      "alreadyCompleted": "🏅 Déjà terminée — aucun XP supplémentaire accordé."
+      "alreadyCompleted": "🏅 Déjà terminée — aucun XP supplémentaire accordé.",
+      "compiling": "⚙️ Compilation du contrat…",
+      "compileOk": "✅ Compilation réussie en {{ms}} ms",
+      "compileFailed": "❌ Échec de la compilation ({{errors}} erreur(s))",
+      "compileFallback": "ℹ️ Utilisation de l'analyseur intégré au navigateur (la chaîne d'outils WASM n'est pas chargée).",
+      "compileEngineWasm": "🦀 Compilation effectuée avec la chaîne d'outils Soroban WASM.",
+      "compileError": "❌ Erreur du compilateur : {{message}}"
     },
     "status": {
       "checking": "Vérification…",
@@ -431,7 +501,8 @@
       "badgeEarnedOne": "🏅 Nouveau badge obtenu !",
       "badgeEarnedMany": "🏅 Nouveaux badges obtenus !",
       "next": "Mission suivante →",
-      "map": "Carte des missions"
+      "map": "Carte des missions",
+      "iconLabel": "Icône de trophée — mission terminée"
     },
     "replay": {
       "header": "📹 Revoyez votre solution",
