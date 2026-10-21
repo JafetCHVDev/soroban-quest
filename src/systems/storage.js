@@ -1,4 +1,4 @@
-import { getDefaultState, getLevelFromXP } from "./gameEngine";
+import { BADGES, getDefaultState, getLevelFromXP, xpForLevel } from "./gameEngine";
 export { getDefaultState };
 
 /* =========================
@@ -208,9 +208,145 @@ async function decompressData(blob) {
 /* =========================
    VALIDATION
 ========================= */
-export function validateImportData(data) {
+// Upper bounds for imported progress. The level cap sits far above what the
+// mission catalog can award, and the XP cap is the most XP a player can hold
+// while still at that level on the curve in gameEngine.
+export const MAX_IMPORT_LEVEL = 100;
+export const MAX_IMPORT_XP = xpForLevel(MAX_IMPORT_LEVEL + 1) - 1;
+export const MAX_IMPORT_ARRAY_LENGTH = 1000;
+const MAX_IMPORT_STREAK = 3650;
+const MAX_PROFILE_FIELD_LENGTH = 100;
+const MAX_LISTED_UNKNOWN_IDS = 5;
+
+function checkNumber(errors, path, value, { min, max, integer = false }) {
+  const valid = integer
+    ? Number.isInteger(value) && value >= min && value <= max
+    : typeof value === "number" && Number.isFinite(value) && value >= min && value <= max;
+  if (!valid) {
+    errors.push(
+      integer
+        ? `${path} must be an integer between ${min} and ${max}`
+        : `${path} must be a finite number between ${min} and ${max}`
+    );
+  }
+  return valid;
+}
+
+function checkArray(errors, path, value) {
+  if (!Array.isArray(value)) {
+    errors.push(`${path} must be an array`);
+    return false;
+  }
+  if (value.length > MAX_IMPORT_ARRAY_LENGTH) {
+    errors.push(`${path} must not contain more than ${MAX_IMPORT_ARRAY_LENGTH} entries`);
+    return false;
+  }
+  return true;
+}
+
+function checkKnownIds(errors, path, ids, knownIds, label) {
+  if (ids.some((id) => typeof id !== "string")) {
+    errors.push(`${path} must contain only strings`);
+    return;
+  }
+  if (new Set(ids).size !== ids.length) {
+    errors.push(`${path} must not contain duplicate entries`);
+  }
+  if (!knownIds) return;
+
+  const unknown = ids.filter((id) => !knownIds.has(id));
+  if (unknown.length === 0) return;
+  const listed = unknown.slice(0, MAX_LISTED_UNKNOWN_IDS).join(", ");
+  const extra = unknown.length - MAX_LISTED_UNKNOWN_IDS;
+  errors.push(
+    `${path} contains unknown ${label} id(s): ${listed}${extra > 0 ? ` (and ${extra} more)` : ""}`
+  );
+}
+
+function checkPlainObject(errors, path, value) {
+  if (!isPlainObject(value)) {
+    errors.push(`${path} must be an object`);
+    return false;
+  }
+  if (Object.keys(value).length > MAX_IMPORT_ARRAY_LENGTH) {
+    errors.push(`${path} must not contain more than ${MAX_IMPORT_ARRAY_LENGTH} entries`);
+    return false;
+  }
+  return true;
+}
+
+function validateImportState(state, errors, missionIds, badgeIds) {
+  const xpValid = checkNumber(errors, "state.xp", state.xp, { min: 0, max: MAX_IMPORT_XP });
+  const levelValid = checkNumber(errors, "state.level", state.level, {
+    min: 1,
+    max: MAX_IMPORT_LEVEL,
+    integer: true,
+  });
+  if (xpValid && levelValid) {
+    const earnedLevel = getLevelFromXP(state.xp);
+    if (state.level > earnedLevel) {
+      errors.push(
+        `state.level (${state.level}) is higher than the level earned by state.xp (${earnedLevel})`
+      );
+    }
+  }
+  if (state.gold !== undefined) {
+    checkNumber(errors, "state.gold", state.gold, { min: 0, max: MAX_IMPORT_XP });
+  }
+  if (state.streak !== undefined) {
+    checkNumber(errors, "state.streak", state.streak, {
+      min: 0,
+      max: MAX_IMPORT_STREAK,
+      integer: true,
+    });
+  }
+
+  if (checkArray(errors, "state.completedMissions", state.completedMissions)) {
+    checkKnownIds(
+      errors,
+      "state.completedMissions",
+      state.completedMissions,
+      missionIds,
+      "mission"
+    );
+  }
+  if (
+    state.firstTryMissions !== undefined &&
+    checkArray(errors, "state.firstTryMissions", state.firstTryMissions)
+  ) {
+    checkKnownIds(errors, "state.firstTryMissions", state.firstTryMissions, missionIds, "mission");
+  }
+  if (checkArray(errors, "state.badges", state.badges)) {
+    checkKnownIds(errors, "state.badges", state.badges, badgeIds, "badge");
+  }
+
+  // skillPoints is not part of the default state, so exports may omit it.
+  for (const field of ["skillPoints", "purchasedItems", "dailyChallengeCompletedDates"]) {
+    if (state[field] !== undefined) checkArray(errors, `state.${field}`, state[field]);
+  }
+  const { inventory } = state;
+  if (inventory !== undefined && checkPlainObject(errors, "state.inventory", inventory)) {
+    for (const field of ["owned", "equipped"]) {
+      if (inventory[field] !== undefined) {
+        checkArray(errors, `state.inventory.${field}`, inventory[field]);
+      }
+    }
+  }
+  for (const field of ["missionAttempts", "goldUnlockedHints"]) {
+    if (state[field] !== undefined) checkPlainObject(errors, `state.${field}`, state[field]);
+  }
+}
+
+/**
+ * Validate a parsed import file before it is written to persisted state.
+ * `options.missionIds` (missions and theory quests) enables the completed
+ * mission id check; `options.badgeIds` defaults to the badges in gameEngine.
+ */
+export function validateImportData(data, options = {}) {
   const errors = [];
-  
+  const missionIds = options.missionIds ? new Set(options.missionIds) : null;
+  const badgeIds = new Set(options.badgeIds ?? BADGES.map((badge) => badge.id));
+
   if (!data) {
     errors.push("Data is empty or null");
     return { isValid: false, errors };
@@ -221,29 +357,21 @@ export function validateImportData(data) {
   }
   
   if (data.state) {
-    if (!Array.isArray(data.state.completedMissions)) {
-      errors.push("state.completedMissions must be an array");
-    }
-    if (!Array.isArray(data.state.badges)) {
-      errors.push("state.badges must be an array");
-    }
-    if (typeof data.state.xp !== "number") {
-      errors.push("state.xp must be a number");
-    }
-    if (typeof data.state.level !== "number") {
-      errors.push("state.level must be a number");
-    }
-    if (!Array.isArray(data.state.skillPoints)) {
-      errors.push("state.skillPoints must be an array");
+    if (isPlainObject(data.state)) {
+      validateImportState(data.state, errors, missionIds, badgeIds);
+    } else {
+      errors.push("state must be an object");
     }
   }
   
   if (data.profile) {
-    if (typeof data.profile.name !== "string") {
-      errors.push("profile.name must be a string");
-    }
-    if (typeof data.profile.avatar !== "string") {
-      errors.push("profile.avatar must be a string");
+    for (const field of ["name", "avatar"]) {
+      const value = data.profile[field];
+      if (typeof value !== "string" || value.length > MAX_PROFILE_FIELD_LENGTH) {
+        errors.push(
+          `profile.${field} must be a string of at most ${MAX_PROFILE_FIELD_LENGTH} characters`
+        );
+      }
     }
   }
   
@@ -251,6 +379,13 @@ export function validateImportData(data) {
     isValid: errors.length === 0,
     errors
   };
+}
+
+// The mission catalog is loaded lazily so it stays out of the app shell
+// bundle; only the import flow needs it.
+async function loadKnownMissionIds() {
+  const { getAllMissions, getAllTheoryQuests } = await import("./missionLoader");
+  return [...getAllMissions(), ...getAllTheoryQuests()].map((item) => item.id);
 }
 
 /* =========================
@@ -532,7 +667,7 @@ export async function readAndValidateFile(file) {
       data = JSON.parse(text);
     }
     
-    const validation = validateImportData(data);
+    const validation = validateImportData(data, { missionIds: await loadKnownMissionIds() });
     
     return {
       success: validation.isValid,
