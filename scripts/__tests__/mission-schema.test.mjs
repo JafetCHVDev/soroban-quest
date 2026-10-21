@@ -71,6 +71,13 @@ describe('validateCampaign', () => {
     ]);
   });
 
+  it('rejects a mission listed twice in the same campaign', () => {
+    const campaign = makeCampaign({ missionIds: ['hello-soroban', 'hello-soroban'] });
+    expect(validateCampaign(campaign, 'campaigns[0]', MISSION_IDS)).toEqual([
+      "campaigns[0].missionIds: duplicate mission 'hello-soroban'",
+    ]);
+  });
+
   it('requires an i18n object', () => {
     expect(
       validateCampaign(withoutField(makeCampaign(), 'i18n'), 'campaigns[0]', MISSION_IDS),

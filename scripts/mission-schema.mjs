@@ -204,11 +204,15 @@ export function validateCampaign(campaign, path = 'campaign', missionIds) {
       campaign.missionIds.some((id) => !isNonEmptyString(id))
     ) {
       addError(errors, `${path}.missionIds`, 'must be a non-empty array of mission ids');
-    } else if (missionIds) {
+    } else {
+      const seen = new Set();
       for (const missionId of campaign.missionIds) {
-        if (!missionIds.has(missionId)) {
+        if (seen.has(missionId)) {
+          addError(errors, `${path}.missionIds`, `duplicate mission '${missionId}'`);
+        } else if (missionIds && !missionIds.has(missionId)) {
           addError(errors, `${path}.missionIds`, `unknown mission '${missionId}'`);
         }
+        seen.add(missionId);
       }
     }
   }
