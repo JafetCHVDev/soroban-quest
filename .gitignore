@@ -5,12 +5,9 @@ node_modules/
 dist/
 
 # Environment variables
-.env
-.env.local
 .env.*.local
 
 # Editor / IDE
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -51,3 +48,4 @@ japanese_i18n_updates.json
 soroban-quest-japanese-translations.json
 src/i18n/locales/ja.json
 src/i18n/__tests__/japanese-localization.test.js
+config.bat
