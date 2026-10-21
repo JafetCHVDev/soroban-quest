@@ -165,6 +165,61 @@ describe("useMissionCompileRunner", () => {
     });
   });
 
+  it("ignores a second run while tests are already running", async () => {
+    const { result } = render(mission.template);
+
+    act(() => {
+      void result.current.handleRunTests();
+    });
+    act(() => {
+      void result.current.handleRunTests();
+      void result.current.handleCompileAndRun();
+    });
+    await settle();
+
+    const starts = result.current.testResults.filter(
+      (r) => r.message === "missionDetail.terminal.runningChecks",
+    );
+    expect(starts).toHaveLength(1);
+    expect(compiler.compileAndRun).not.toHaveBeenCalled();
+  });
+
+  it("reports the fallback engine and failed compiles", async () => {
+    compiler.compileAndRun.mockResolvedValue({
+      engine: "fallback",
+      ok: false,
+      stdout: "",
+      stderr: "error[E0425]: cannot find value",
+      diagnostics: [],
+      errorCount: 1,
+    });
+    const { result, options } = render(mission.template);
+
+    act(() => {
+      void result.current.handleCompileAndRun();
+    });
+    await settle();
+
+    expect(result.current.testResults).toEqual([
+      { phase: "info", message: "missionDetail.terminal.compiling" },
+      { phase: "info", message: "missionDetail.terminal.compileFallback" },
+      { phase: "output", passed: false, message: "error[E0425]: cannot find value" },
+      { phase: "summary", passed: false, message: 'missionDetail.terminal.compileFailed {"errors":1}' },
+    ]);
+    expect(options.showToast).toHaveBeenCalledWith("missionDetail.toasts.validationFailed", "error");
+  });
+
+  it("keeps clearTestResults stable across renders", async () => {
+    // MissionDetail's load effect depends on this identity.
+    const { result } = render(mission.template);
+    const first = result.current.clearTestResults;
+    act(() => {
+      void result.current.handleRunTests();
+    });
+    await settle();
+    expect(result.current.clearTestResults).toBe(first);
+  });
+
   it("clears the terminal on demand", async () => {
     const { result } = render(mission.template);
     act(() => {

@@ -15,7 +15,11 @@ export type SetEditorMarkers = (_owner: string, _markers: EditorMarker[]) => voi
 export interface UseMonacoMarkersReturn {
   editorRef: MutableRefObject<IStandaloneCodeEditor | null>;
   monacoRef: MutableRefObject<Monaco | null>;
-  /** Replaces the markers for `owner`; pass an empty array to clear them. */
+  /**
+   * Replaces the markers for `owner`; pass an empty array to clear them.
+   * Referentially stable: hooks that set up the validator and compiler key
+   * their effects on it, so a new identity would tear them down.
+   */
   setMarkers: SetEditorMarkers;
 }
 

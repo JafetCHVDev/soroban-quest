@@ -75,6 +75,32 @@ describe("useLiveValidation", () => {
     expect(setMarkers).not.toHaveBeenCalled();
   });
 
+  it("validates once the mission finishes loading", () => {
+    const { result, rerender } = render(mission.solution, true);
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(result.current.liveTotalCount).toBe(0);
+
+    rerender({ code: mission.solution, loading: false });
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(result.current.liveTotalCount).toBeGreaterThan(0);
+  });
+
+  it("keeps resetLiveValidation stable across renders", () => {
+    // MissionDetail's load effect depends on this identity.
+    const { result } = render(mission.solution);
+    const first = result.current.resetLiveValidation;
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(result.current.liveTotalCount).toBeGreaterThan(0);
+    expect(result.current.resetLiveValidation).toBe(first);
+  });
+
   it("resets the counts and security notes", () => {
     const { result } = render(INSECURE_CODE);
     act(() => {

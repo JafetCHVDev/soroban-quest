@@ -50,6 +50,16 @@ describe('useVictoryModal', () => {
     expect(document.activeElement).toBe(last);
   });
 
+  it('keeps openVictory and closeVictory stable across renders', () => {
+    // MissionDetail's load effect and the compile runner depend on these identities.
+    const { result, rerender } = renderHook(() => useVictoryModal());
+    const { openVictory, closeVictory } = result.current;
+    act(() => result.current.openVictory(victory));
+    rerender();
+    expect(result.current.openVictory).toBe(openVictory);
+    expect(result.current.closeVictory).toBe(closeVictory);
+  });
+
   it('closes on Escape', () => {
     const { result } = renderHook(() => useVictoryModal());
     const modal = mountModal(result);
