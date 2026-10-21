@@ -13,6 +13,7 @@ import { getWasmCompiler, WasmCompiler, COMPILE_MARKER_OWNER } from "./wasmCompi
 import { completeMissionWithDailyBonus } from "./missionCompletion";
 import type { SetEditorMarkers } from "./useMonacoMarkers";
 import type { ToastContextValue } from "./ToastContext";
+import type { VictoryData } from "./useVictoryModal";
 
 /** One line in the mission terminal. */
 export interface TerminalLine {
@@ -20,13 +21,6 @@ export interface TerminalLine {
   message: string;
   passed?: boolean;
   label?: string;
-}
-
-export interface VictoryData {
-  xp: number;
-  leveledUp: boolean;
-  newLevel: number;
-  newBadges: string[];
 }
 
 export interface RunnableMission {

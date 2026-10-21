@@ -5,7 +5,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { MutableRefObject } from "react";
-import type { VictoryData } from "./useMissionCompileRunner";
+
+export interface VictoryData {
+  xp: number;
+  leveledUp: boolean;
+  newLevel: number;
+  newBadges: string[];
+}
 
 export interface UseVictoryModalReturn {
   showVictory: boolean;

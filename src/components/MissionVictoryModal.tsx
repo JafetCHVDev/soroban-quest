@@ -4,7 +4,7 @@ import type { LanguageContextValue } from "../i18n";
 import Confetti from "./Confetti";
 import { TOAST_STATES } from "../systems/useokashi";
 import type { Toast as OkashiToast } from "../systems/useokashi";
-import type { VictoryData } from "../systems/useMissionCompileRunner";
+import type { VictoryData } from "../systems/useVictoryModal";
 
 const MAX_RANK_INDEX = 10;
 
