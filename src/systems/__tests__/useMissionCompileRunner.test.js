@@ -22,7 +22,9 @@ vi.mock("../soundManager", () => ({
 }));
 
 import { useMissionCompileRunner } from "../useMissionCompileRunner";
-import { getMissionById } from "../missionLoader";
+import { getAllMissions, getMissionById } from "../missionLoader";
+import { getDailyChallengeMission } from "../dailyChallenge";
+import { DAILY_CHALLENGE_BONUS_XP } from "../missionCompletion";
 import { loadProgress, saveProgress } from "../storage";
 import { getDefaultState } from "../gameEngine";
 
@@ -91,7 +93,10 @@ describe("useMissionCompileRunner", () => {
     expect(loadProgress().completedMissions).toContain(mission.id);
     expect(loadProgress().missionAttempts[mission.id]).toBe(1);
     expect(options.onVictory).toHaveBeenCalledTimes(1);
-    expect(options.onVictory.mock.calls[0][0].xp).toBeGreaterThanOrEqual(mission.xpReward);
+    const isDaily = getDailyChallengeMission(getAllMissions("en")).id === mission.id;
+    const expectedXp = mission.xpReward + (isDaily ? DAILY_CHALLENGE_BONUS_XP : 0);
+    expect(options.onVictory.mock.calls[0][0].xp).toBe(expectedXp);
+    expect(loadProgress().xp).toBe(expectedXp);
   });
 
   it("reports a failing run without completing the mission", async () => {
