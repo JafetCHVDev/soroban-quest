@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
 vi.mock("../soundManager", () => ({
   playSound: vi.fn(),
@@ -31,6 +31,10 @@ describe("completeMissionWithDailyBonus", () => {
       },
     });
     seedProgress();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("awards the mission XP without a bonus for a regular mission", () => {
@@ -78,6 +82,17 @@ describe("completeMissionWithDailyBonus", () => {
 
     expect(newState.alreadyCompleted).toBe(true);
     expect(newState.xp).toBe(300);
+  });
+
+  it("awards no daily bonus when the daily challenge mission was already completed", () => {
+    seedProgress({ completedMissions: [dailyMission.id], xp: 300 });
+
+    const { newState, bonusXp } = completeMissionWithDailyBonus(dailyMission.id, 100, "en");
+
+    expect(newState.alreadyCompleted).toBe(true);
+    expect(bonusXp).toBe(0);
+    expect(newState.xp).toBe(300);
+    expect(newState.dailyChallengeCompletedDates ?? []).toEqual([]);
   });
 
   it("does not persist anything itself", () => {

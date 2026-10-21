@@ -30,7 +30,8 @@ export interface MissionCompletionResult {
 /**
  * Applies a mission completion to the saved progress and, when the mission is
  * today's daily challenge and the bonus has not been claimed yet, adds the
- * daily bonus XP. The caller decides whether to persist the returned state.
+ * daily bonus XP. A repeat completion comes back flagged `alreadyCompleted`
+ * with no bonus. The caller decides whether to persist the returned state.
  */
 export function completeMissionWithDailyBonus(
   missionId: string | undefined,
@@ -38,7 +39,11 @@ export function completeMissionWithDailyBonus(
   language: string,
 ): MissionCompletionResult {
   const state = loadProgress();
-  const completedState = missionId ? completeMission(state, missionId, xpReward) : state;
+  const completedState: CompletedMissionState = missionId
+    ? completeMission(state, missionId, xpReward)
+    : state;
+  // A repeat completion awards nothing, so there is no daily bonus to add.
+  if (completedState.alreadyCompleted) return { newState: completedState, bonusXp: 0 };
 
   // Re-load state immediately before awarding bonus to reduce race window
   const currentState = loadProgress();
@@ -59,7 +64,7 @@ export function completeMissionWithDailyBonus(
     newCompletedDates = [...newCompletedDates, today];
   }
 
-  const newState: CompletedMissionState = completedState;
+  const newState = completedState;
   if (bonusXp > 0) {
     newState.xp += bonusXp;
     newState.level = getLevelFromXP(newState.xp);
