@@ -387,6 +387,31 @@ describe("storage", () => {
       ]);
     });
 
+    it("requires both inventory lists when an inventory is present", () => {
+      const result = validate(validState({ inventory: { owned: ["xp-boost"] } }));
+      expect(result.errors).toEqual(["state.inventory.equipped must be an array"]);
+    });
+
+    it("rejects equipped items that are not owned", () => {
+      const result = validate(validState({ inventory: { owned: [], equipped: ["xp-boost"] } }));
+      expect(result.errors).toEqual([
+        "state.inventory.equipped contains item(s) not in state.inventory.owned: xp-boost",
+      ]);
+    });
+
+    it("rejects a null state even when the profile is valid", () => {
+      const result = validateImportData(
+        { state: null, profile: { name: "Ada", avatar: "🛡️" } },
+        { missionIds },
+      );
+      expect(result.errors).toEqual(["state must be an object"]);
+    });
+
+    it("rejects a null profile even when the state is valid", () => {
+      const result = validateImportData({ state: validState(), profile: null }, { missionIds });
+      expect(result.errors).toEqual(["profile must be an object"]);
+    });
+
     it("rejects unknown mission ids", () => {
       const completedMissions = ["hello-soroban", "not-a-mission"];
       const result = validate(validState({ completedMissions }));

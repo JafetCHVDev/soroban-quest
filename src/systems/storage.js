@@ -324,11 +324,21 @@ function validateImportState(state, errors, missionIds, badgeIds) {
   for (const field of ["skillPoints", "purchasedItems", "dailyChallengeCompletedDates"]) {
     if (state[field] !== undefined) checkArray(errors, `state.${field}`, state[field]);
   }
+  // The shop and Profile page read both inventory lists unguarded, and only
+  // owned items may be equipped (an equipped xp-boost doubles XP awards).
   const { inventory } = state;
   if (inventory !== undefined && checkPlainObject(errors, "state.inventory", inventory)) {
-    for (const field of ["owned", "equipped"]) {
-      if (inventory[field] !== undefined) {
-        checkArray(errors, `state.inventory.${field}`, inventory[field]);
+    const ownedValid = checkArray(errors, "state.inventory.owned", inventory.owned);
+    const equippedValid = checkArray(errors, "state.inventory.equipped", inventory.equipped);
+    if (ownedValid && equippedValid) {
+      const owned = new Set(inventory.owned);
+      const unowned = inventory.equipped.filter((item) => !owned.has(item));
+      if (unowned.length > 0) {
+        errors.push(
+          `state.inventory.equipped contains item(s) not in state.inventory.owned: ${unowned
+            .slice(0, MAX_LISTED_UNKNOWN_IDS)
+            .join(", ")}`
+        );
       }
     }
   }
@@ -356,7 +366,9 @@ export function validateImportData(data, options = {}) {
     errors.push("File must contain either state or profile data");
   }
   
-  if (data.state) {
+  // Check presence rather than truthiness so `state: null` is reported
+  // instead of silently importing only the profile.
+  if (data.state !== undefined) {
     if (isPlainObject(data.state)) {
       validateImportState(data.state, errors, missionIds, badgeIds);
     } else {
@@ -364,7 +376,9 @@ export function validateImportData(data, options = {}) {
     }
   }
   
-  if (data.profile) {
+  if (data.profile !== undefined && !isPlainObject(data.profile)) {
+    errors.push("profile must be an object");
+  } else if (data.profile !== undefined) {
     for (const field of ["name", "avatar"]) {
       const value = data.profile[field];
       if (typeof value !== "string" || value.length > MAX_PROFILE_FIELD_LENGTH) {
