@@ -104,8 +104,8 @@ export function filterJournalEntries(
 }
 
 export function buildJournalRows(entries: ActivityEntry[], t: (key: string, vars?: Record<string, unknown>) => string, language: string): Array<{ type: string; id: string; date?: string; entry?: ActivityEntry }> {
-  const rows = [];
-  let currentDate = null;
+  const rows: Array<{ type: string; id: string; date?: string; entry?: ActivityEntry }> = [];
+  let currentDate: string | null = null;
 
   for (const entry of entries) {
     const date = new Date(entry.timestamp);

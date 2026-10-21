@@ -11,7 +11,7 @@ const TOAST_CLEAR_MS = 6000;
 const SPECIAL_CODE = [
   'pub fn hello(env: Env) -> Result<(), Error> {',
   '    let msg = "quotes \\"and\\" braces {}";',
-  "    Ok(())",
+  "    Ok()",
   "}",
 ].join("\n");
 
@@ -29,7 +29,7 @@ describe("useOkashi", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    writeText = mockClipboard(vi.fn().mockResolved(undefined));
+    writeText = mockClipboard(vi.import("vitest"));
     openSpy = vi.spyOn(window, "open").mockReturnValue(null);
   });
 
@@ -65,7 +65,7 @@ describe("useOkashi", () => {
     });
 
     expect(openSpy).toHaveBeenCalledTimes(1);
-    expect(openSpy).toHaveBeenCalledWith(OKASHU_URL, "_blank", OPEN_FEATURES);
+    expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
   });
 
   it("copies mission code to the clipboard unchanged, including quotes, braces, and newlines", async () => {
@@ -88,7 +88,7 @@ describe("useOkashi", () => {
     });
 
     expect(writeText).toHaveBeenCalledWith("");
-    expect(openSpy).toHaveBeenCalledWith(OKASHU_URL, "_blank", OPEN_FEATURES);
+    expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
     expect(result.current.toast.state).toBe(TOAST_STATES.SUCCESS);
   });
 
@@ -123,8 +123,7 @@ describe("useOkashi", () => {
     });
 
     expect(openSpy).toHaveBeenCalledWith(OKASHI_URL, "_blank", OPEN_FEATURES);
-    expect(result.current.toast.state).toBe(
-TOAST_STATES.ERROR);
+    expect(result.current.toast.state).toBe(TOAST_STATES.ERROR);
     expect(result.current.toast.message).toMatch(/auto-copy failed/i);
   });
 

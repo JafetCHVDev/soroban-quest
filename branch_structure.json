@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "fix/issue-359-refactor-finish-the-typescript-migration",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "fix/issue-359-refactor-finish-the-typescript-migration": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "fix/issue-359-refactor-finish-the-typescript-migration",
+    "origin"
+  ]
+}
