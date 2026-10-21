@@ -2,7 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCampaigns, loadLocales, loadMissions } from './mission-data.mjs';
-import { validateMission, validateMissionCollection, validateMissionLocaleKeys } from './mission-schema.mjs';
+import {
+  validateCampaignCollection,
+  validateMission,
+  validateMissionCollection,
+  validateMissionLocaleKeys,
+} from './mission-schema.mjs';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const missions = loadMissions();
@@ -10,17 +15,7 @@ const result = validateMissionCollection(missions);
 const missionIds = result.ids;
 result.errors.push(...validateMissionLocaleKeys(missions, loadLocales()));
 
-for (const [index, campaign] of loadCampaigns().entries()) {
-  if (!Array.isArray(campaign.missionIds)) {
-    result.errors.push(`campaigns[${index}].missionIds: must be an array`);
-    continue;
-  }
-  for (const missionId of campaign.missionIds) {
-    if (!missionIds.has(missionId)) {
-      result.errors.push(`campaigns[${index}].missionIds: unknown mission '${missionId}'`);
-    }
-  }
-}
+result.errors.push(...validateCampaignCollection(loadCampaigns(), missionIds));
 
 const authoredDirectory = path.join(root, 'src/data/missions/authored');
 if (fs.existsSync(authoredDirectory)) {
