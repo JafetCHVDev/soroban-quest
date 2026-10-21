@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import Editor from "../components/LazyMonacoEditor";
-import ReactMarkdown from "react-markdown";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
 import { loadProgress } from "../systems/storage";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
@@ -12,7 +11,6 @@ import SecurityNotes from "../components/SecurityNotes";
 import { useToast } from "../systems/ToastContext";
 import { MissionErrorBoundary } from "../components/ErrorBoundary";
 import CodeReplayPlayer from "../components/CodeReplayPlayer";
-import CodeRecorder from "../systems/codeRecorder";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { measureRender } from "../systems/performanceMonitor";
@@ -22,6 +20,11 @@ import { useLiveValidation } from "../systems/useLiveValidation";
 import { useMissionCompileRunner } from "../systems/useMissionCompileRunner";
 import { useVictoryModal } from "../systems/useVictoryModal";
 import { useMissionShortcuts } from "../systems/useMissionShortcuts";
+import { useMissionReplay } from "../systems/useMissionReplay";
+import MissionShortcutLegend from "../components/MissionShortcutLegend";
+import MissionTabs from "../components/MissionTabs";
+import MissionStoryPanel from "../components/MissionStoryPanel";
+import MissionReplayPanel from "../components/MissionReplayPanel";
 import MissionEditorToolbar from "../components/MissionEditorToolbar";
 import LiveStatusBar from "../components/LiveStatusBar";
 import MissionTerminal from "../components/MissionTerminal";
@@ -49,8 +52,6 @@ export default function MissionDetail() {
   const [loading, setLoading] = useState(true);
   const [code, setCode] = useState("");
   const [hintIndex, setHintIndex] = useState(-1);
-  const [showReplay, setShowReplay] = useState(false);
-  const [replayData, setReplayData] = useState<unknown>(null);
   const [activeTab, setActiveTab] = useState("story");
 
   const { editorRef, monacoRef, setMarkers } = useMonacoMarkers();
@@ -86,10 +87,11 @@ export default function MissionDetail() {
   });
 
   const { openInOkashi, toast } = useOkashi();
+  const { hasReplay, showReplay, replayData, handleWatchReplay, handleCloseReplay } =
+    useMissionReplay(missionId);
 
   const progressState = loadProgress();
   const isCompleted = missionId && progressState.completedMissions.includes(missionId);
-  const hasReplay = missionId && CodeRecorder.hasRecording(missionId);
 
   const nextMissionItem = useMemo(
     () => missionId ? getNextMission(missionId, language) : null,
@@ -174,20 +176,6 @@ export default function MissionDetail() {
     }
   };
 
-  const handleWatchReplay = (): void => {
-    if (!missionId) return;
-    const recording = CodeRecorder.loadRecording(missionId);
-    if (recording) {
-      setReplayData(recording);
-      setShowReplay(true);
-    }
-  };
-
-  const handleCloseReplay = (): void => {
-    setShowReplay(false);
-    setReplayData(null);
-  };
-
   if (loading) return <MissionDetailSkeleton />;
 
   if (!mission) {
@@ -224,92 +212,22 @@ export default function MissionDetail() {
   return (
     <MissionErrorBoundary>
       {/* Shortcut Indicator Legend Bar */}
-      <div className="shortcut-legend-bar" style={{ display: 'flex', gap: '1rem', padding: '0.5rem 1rem', background: 'var(--bg-tertiary)', fontSize: '0.75rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <span>Hotkeys: <kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>Ctrl+Enter</kbd> Run Tests</span>
-        {previousMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>P</kbd> Prev Mission</span>}
-        {nextMissionItem && <span><kbd style={{ background: '#334155', padding: '1px 5px', borderRadius: '3px', color: '#fff' }}>N</kbd> Next Mission</span>}
-      </div>
+      <MissionShortcutLegend
+        hasPreviousMission={Boolean(previousMissionItem)}
+        hasNextMission={Boolean(nextMissionItem)}
+      />
 
       {/* Tabs */}
-      <div className="mobile-tabs" role="tablist" aria-label={t("missionDetail.tabs.ariaLabel")}>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "story"}
-          className={`tab-btn ${activeTab === "story" ? "active" : ""}`}
-          onClick={(): void => setActiveTab("story")}
-        >
-          {t("missionDetail.tabs.story")}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "editor"}
-          className={`tab-btn ${activeTab === "editor" ? "active" : ""}`}
-          onClick={(): void => setActiveTab("editor")}
-        >
-          {t("missionDetail.tabs.editor")}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "tests"}
-          className={`tab-btn ${activeTab === "tests" ? "active" : ""}`}
-          onClick={(): void => setActiveTab("tests")}
-        >
-          {t("missionDetail.tabs.tests")}
-        </button>
-        {(isCompleted || showVictory) && hasReplay && (
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "replay"}
-            className={`tab-btn ${activeTab === "replay" ? "active" : ""}`}
-            onClick={(): void => setActiveTab("replay")}
-          >
-            📹 {t("missionDetail.tabs.replay")}
-          </button>
-        )}
-      </div>
+      <MissionTabs
+        t={t}
+        activeTab={activeTab}
+        showReplayTab={Boolean((isCompleted || showVictory) && hasReplay)}
+        onTabChange={setActiveTab}
+      />
 
       <div id="main-content" className={`mission-detail active-tab-${activeTab}`}>
         {/* ---------------- Story Panel ---------------- */}
-        <div
-          className="mission-story"
-          role="region"
-          aria-label="Mission briefing and story description"
-        >
-          <div style={{ marginBottom: "var(--space-md)" }}>
-            <span className={`badge badge-${mission.difficulty}`}>
-              <span className="sr-only">{t("missionDetail.difficultyLabel")} </span>
-              {t(`difficulty.${mission.difficulty}`)}
-            </span>
-            <span className="mission-card-xp" style={{ marginLeft: "0.5rem" }}>
-              {t("missionMap.card.xp", { xp: mission.xpReward })}
-            </span>
-          </div>
-          <ReactMarkdown>{mission.story}</ReactMarkdown>
-
-          {hintIndex >= 0 && (
-            <div
-              role="alert"
-              style={{
-                marginTop: "var(--space-lg)",
-                padding: "var(--space-md)",
-                background: "var(--gold-dim)",
-                border: "1px solid rgba(245, 158, 11, 0.2)",
-                borderRadius: "var(--radius-md)",
-              }}
-            >
-              <strong style={{ color: "var(--gold)" }}>
-                {t("missionDetail.hint.label", { index: hintIndex + 1 })}
-              </strong>
-              <p style={{ color: "var(--text-secondary)", marginTop: "4px", fontSize: "0.85rem" }}>
-                {mission.hints[hintIndex]}
-              </p>
-            </div>
-          )}
-        </div>
+        <MissionStoryPanel t={t} mission={mission} hintIndex={hintIndex} />
 
         {/* ---------------- Editor Panel ---------------- */}
         <div
@@ -369,32 +287,7 @@ export default function MissionDetail() {
 
         {/* ---------------- Replay Panel ---------------- */}
         {(isCompleted || showVictory) && hasReplay && (
-          <div
-            className="mission-replay-panel"
-            style={{
-              padding: '2rem',
-              textAlign: 'center',
-              background: 'var(--bg-secondary)',
-              borderTop: '1px solid var(--border-subtle)'
-            }}
-            role="region"
-            aria-label="Problem solving archive replay tools"
-          >
-            <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>
-              📹 {t("missionDetail.replay.header")}
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-              {t("missionDetail.replay.body")}
-            </p>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleWatchReplay}
-              style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}
-            >
-              ▶️ {t("missionDetail.replay.start")}
-            </button>
-          </div>
+          <MissionReplayPanel t={t} onWatchReplay={handleWatchReplay} />
         )}
       </div>
 
@@ -404,7 +297,7 @@ export default function MissionDetail() {
           t={t}
           missionTitle={mission.title}
           victoryData={victoryData}
-          hasReplay={Boolean(hasReplay)}
+          hasReplay={hasReplay}
           modalRef={victoryModalRef}
           okashiToast={toast}
           onClose={closeVictory}
