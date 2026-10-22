@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
-import { TOAST_STATES, useOkashi } from "../useokashi.js";
+import { TOAST_STATES, useOkashi } from "../useokashi";
 
 const OKASHI_URL = "https://okashi.dev";
 const OPEN_FEATURES = "noopener,noreferrer";
@@ -11,7 +11,7 @@ const TOAST_CLEAR_MS = 6000;
 const SPECIAL_CODE = [
   'pub fn hello(env: Env) -> Result<(), Error> {',
   '    let msg = "quotes \\"and\\" braces {}";',
-  "    Ok(())",
+  "    Ok()",
   "}",
 ].join("\n");
 
@@ -29,7 +29,7 @@ describe("useOkashi", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    writeText = mockClipboard(vi.fn().mockResolvedValue(undefined));
+    writeText = mockClipboard(vi.import("vitest"));
     openSpy = vi.spyOn(window, "open").mockReturnValue(null);
   });
 
@@ -115,7 +115,7 @@ describe("useOkashi", () => {
   });
 
   it("still opens Okashi and sets an error toast when clipboard write fails", async () => {
-    writeText.mockRejectedValue(new Error("clipboard denied"));
+    writeText.mockRejected(new Error("clipboard denied"));
     const { result } = renderHook(() => useOkashi());
 
     await act(async () => {

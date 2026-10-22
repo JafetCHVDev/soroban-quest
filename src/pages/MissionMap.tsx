@@ -8,7 +8,7 @@ import { useTranslation } from '../i18n/useTranslation';
 import type { LanguageContextValue } from '../i18n';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './MissionMap.css';
-import { getXPProgress, getLevelFromXP, xpForLevel, getRankTitle } from '../systems/gameEngine';
+import { getLevelFromXP, xpForLevel, getRankTitle } from '../systems/gameEngine';
 import { preloadMonacoEditor } from '../components/LazyMonacoEditor';
 
 function getMissionCompletionRatio(completed, total) {
