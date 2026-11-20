@@ -262,7 +262,7 @@ The `dist/` folder contains a fully static site — deploy it anywhere (Vercel, 
 ```
 soroban-quest/
 ├── index.html                      # Entry point
-├── vite.config.js                  # Vite + PWA config
+├── vite.config.ts                  # Vite + PWA config
 ├── package.json
 ├── playwright.config.js            # E2E test config
 ├── public/
