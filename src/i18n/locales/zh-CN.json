@@ -457,6 +457,10 @@
       "goldHintTitle": "花费 {{cost}} 金币立即揭示下一条提示",
       "goldHintInsufficient": "金币不足 — 需要 {{cost}} 才能解锁此提示",
       "goldHintUnlocked": "🪙 提示 (已解锁)",
+      "useToken": "💡 使用令牌（{{count}}）",
+      "useTokenTitle": "消耗一个提示令牌以揭示下一条提示",
+      "useTokenEmpty": "提示令牌已用完 — 请在商店购买",
+      "useTokenUnlocked": "💡 提示 (已解锁)",
       "solution": "👁️ 解答",
       "run": "▶ 运行测试",
       "running": "运行中…",
@@ -512,6 +516,8 @@
       "hintUnlocked": "提示 {{index}} 已解锁",
       "hintGoldUnlocked": "提示 {{index}} 已用 {{cost}} 金币解锁",
       "hintInsufficientGold": "金币不足 — 需要 {{cost}} 才能解锁此提示",
+      "hintTokenUnlocked": "已使用提示令牌解锁提示 {{index}}",
+      "hintTokenMissing": "提示令牌已用完 — 请在商店购买",
       "codeReset": "代码已重置为模板",
       "solutionLoaded": "解答已加载到编辑器"
     },
@@ -606,7 +612,9 @@
     "purchaseSuccess": "成功购买 {{item}}！",
     "empty": "此分类中没有找到物品",
     "ariaPurchase": "花费 {{price}} 金币购买 {{item}}",
-    "ariaPurchased": "{{item}} - 已购买"
+    "ariaPurchased": "{{item}} - 已购买",
+    "hintTokensLabel": "提示令牌",
+    "hintTokensCount": "提示令牌：{{count}}"
   },
   "onboarding": {
     "step1": { "title": "欢迎来到 Soroban Quest！", "body": "踏上游戏化学习之旅，掌握 Soroban 智能合约开发。完成任务、赚取 XP 和金币，并解锁成就。" },

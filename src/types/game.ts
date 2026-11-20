@@ -142,6 +142,8 @@ export interface GameState {
   inventory?: {
     owned: string[];
     equipped: string[];
+    /** Consumable Hint Token count (absent on saves from before the migration). */
+    hintTokens?: number;
   };
   goldUnlockedHints?: Record<string, number[]>;
   dailyChallengeCompletedDates?: string[];

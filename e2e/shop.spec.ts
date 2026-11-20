@@ -115,9 +115,9 @@ test.describe('Shop Page', () => {
   });
 
   // -------------------------------------------------------------------------
-  // 3. Successful purchase — gold deducted, item marked owned
+  // 3. Consumable purchase — gold deducted, hint token count increases
   // -------------------------------------------------------------------------
-  test('buying an affordable item deducts the correct amount and marks it as owned', async ({ page }) => {
+  test('buying a Hint Token deducts gold and increases the token count', async ({ page }) => {
     // 200 gold — enough for Hint Token (150 g) but nothing more expensive
     await gotoShopWithState(page, { gold: 200 });
 
@@ -138,33 +138,35 @@ test.describe('Shop Page', () => {
     // Gold deducted: 200 − 150 = 50
     await expect(page.locator('.balance-amount')).toHaveText('50');
 
-    // Item now shows "Purchased" and the button is disabled
-    await expect(buyBtn).toHaveText('Purchased');
-    await expect(buyBtn).toBeDisabled();
-    await expect(hintTokenCard).toHaveClass(/purchased/);
+    // The token is consumable: it stacks instead of becoming permanently owned.
+    await expect(buyBtn).toHaveText('Buy');
+    await expect(buyBtn).not.toBeDisabled();
+    await expect(hintTokenCard).not.toHaveClass(/purchased/);
+    await expect(hintTokenCard.locator('.shop-item-owned-count')).toHaveText('Hint Tokens: 1');
   });
 
   // -------------------------------------------------------------------------
-  // 4. Persistence — owned items survive a page reload
+  // 4. Persistence — stacked hint tokens survive a page reload
   // -------------------------------------------------------------------------
-  test('purchased items remain owned after a page reload', async ({ page }) => {
-    // Pre-seed hint-token as already purchased
-    await gotoShopWithState(page, { gold: 500, purchasedItems: ['hint-token'] });
+  test('stacked hint tokens survive a page reload', async ({ page }) => {
+    await gotoShopWithState(page, { gold: 500 });
 
     const hintTokenCard = page.locator('.shop-item', { hasText: 'Hint Token' });
     const btn = hintTokenCard.locator('.shop-item-btn');
 
-    await expect(btn).toHaveText('Purchased');
-    await expect(btn).toBeDisabled();
-    await expect(hintTokenCard).toHaveClass(/purchased/);
+    await btn.click();
+    await btn.click();
+
+    // 500 − 2 × 150 = 200 gold and two stacked tokens
+    await expect(page.locator('.balance-amount')).toHaveText('200');
+    await expect(hintTokenCard.locator('.shop-item-owned-count')).toHaveText('Hint Tokens: 2');
 
     // Reload and verify the state is still there
     await page.reload();
     await page.locator('.shop-grid').waitFor({ state: 'visible' });
 
-    await expect(hintTokenCard).toHaveClass(/purchased/);
-    await expect(btn).toHaveText('Purchased');
-    await expect(btn).toBeDisabled();
+    await expect(hintTokenCard.locator('.shop-item-owned-count')).toHaveText('Hint Tokens: 2');
+    await expect(btn).toHaveText('Buy');
   });
 
   // -------------------------------------------------------------------------
