@@ -35,7 +35,14 @@
   margin-top: 0.25rem;
 }
 
-/* --- Balance Widget --- */
+/* --- Balance Widgets --- */
+.shop-balances {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .shop-balance {
   display: flex;
   align-items: center;
@@ -54,6 +61,17 @@
   font-size: 1.2rem;
   font-weight: 800;
   color: var(--gold, #c9a84c);
+}
+
+.balance-tokens {
+  font-size: 0.95rem;
+  color: var(--cyan, #22d3ee);
+}
+
+.shop-item-owned-count {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--cyan, #22d3ee);
 }
 
 /* --- Category Navigation Bar --- */

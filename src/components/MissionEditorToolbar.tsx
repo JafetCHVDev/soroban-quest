@@ -17,8 +17,18 @@ interface MissionEditorToolbarProps {
   isRunning: boolean;
   isCompiling: boolean;
   hintDisabled: boolean;
+  /** Gold cost of instantly revealing the next hint. */
+  goldHintCost: number;
+  /** Current gold balance, used to disable the gold hint action. */
+  goldBalance: number;
+  /** Hint Tokens the player can spend instead of gold. */
+  hintTokens: number;
+  /** True when the next hint was already paid for, so it is free to reveal. */
+  nextHintAlreadyUnlocked: boolean;
   onReset: () => void;
   onHint: () => void;
+  onGoldHint: () => void;
+  onUseHintToken: () => void;
   onShowSolution: () => void;
   onCompileAndRun: () => void;
   onRunTests: () => void;
@@ -34,12 +44,31 @@ export default function MissionEditorToolbar({
   isRunning,
   isCompiling,
   hintDisabled,
+  goldHintCost,
+  goldBalance,
+  hintTokens,
+  nextHintAlreadyUnlocked,
   onReset,
   onHint,
+  onGoldHint,
+  onUseHintToken,
   onShowSolution,
   onCompileAndRun,
   onRunTests,
 }: MissionEditorToolbarProps): React.ReactElement {
+  const goldHintDisabled =
+    hintDisabled || (!nextHintAlreadyUnlocked && goldBalance < goldHintCost);
+  const tokenHintDisabled =
+    hintDisabled || (hintTokens < 1 && !nextHintAlreadyUnlocked);
+  const tokenHintLabel = nextHintAlreadyUnlocked
+    ? t("missionDetail.editor.useTokenUnlocked")
+    : t("missionDetail.editor.useToken", { count: hintTokens });
+  const tokenHintTitle = nextHintAlreadyUnlocked
+    ? t("missionDetail.editor.useTokenUnlocked")
+    : hintTokens < 1
+      ? t("missionDetail.editor.useTokenEmpty")
+      : t("missionDetail.editor.useTokenTitle");
+
   return (
     <div className="mission-editor-toolbar">
       <div className="mission-editor-toolbar-left">
@@ -93,6 +122,34 @@ export default function MissionEditorToolbar({
           aria-label="Unlock contextual hint description asset"
         >
           {t("missionDetail.editor.hint")}
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={onGoldHint}
+          disabled={goldHintDisabled}
+          title={
+            nextHintAlreadyUnlocked
+              ? t("missionDetail.editor.goldHintUnlocked")
+              : goldBalance < goldHintCost
+                ? t("missionDetail.editor.goldHintInsufficient", { cost: goldHintCost })
+                : t("missionDetail.editor.goldHintTitle", { cost: goldHintCost })
+          }
+          aria-label="Spend gold to instantly reveal the next hint"
+        >
+          {nextHintAlreadyUnlocked
+            ? t("missionDetail.editor.goldHintUnlocked")
+            : t("missionDetail.editor.goldHint", { cost: goldHintCost })}
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={onUseHintToken}
+          disabled={tokenHintDisabled}
+          title={tokenHintTitle}
+          aria-label={tokenHintTitle}
+        >
+          {tokenHintLabel}
         </button>
         <button
           type="button"
