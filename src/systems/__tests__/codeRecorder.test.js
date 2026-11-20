@@ -19,14 +19,20 @@ class LocalStorageMock {
 
 describe('CodeRecorder', () => {
   let storage;
+  let errorSpy;
+  let warnSpy;
 
   beforeEach(() => {
     storage = new LocalStorageMock();
     vi.stubGlobal('localStorage', storage);
     vi.useFakeTimers();
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
     vi.useRealTimers();
     vi.unstubAllGlobals();
   });
@@ -184,6 +190,7 @@ describe('CodeRecorder', () => {
 
       expect(() => recorder.stopRecording()).not.toThrow();
       expect(storage['soroban_quest_replays_mission-1']).toBeUndefined();
+      expect(errorSpy).toHaveBeenCalled();
 
       localStorage.setItem = originalSetItem;
     });
@@ -206,12 +213,9 @@ describe('CodeRecorder', () => {
 
     it('returns null and warns when stored data is corrupted', () => {
       storage['soroban_quest_replays_mission-1'] = 'not json';
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       expect(CodeRecorder.loadRecording('mission-1')).toBeNull();
       expect(warnSpy).toHaveBeenCalled();
-
-      warnSpy.mockRestore();
     });
   });
 
