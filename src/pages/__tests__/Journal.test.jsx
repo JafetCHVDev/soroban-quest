@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildJournalRows, filterJournalEntries } from "../Journal.jsx";
+import { buildJournalRows, filterJournalEntries } from "../Journal.tsx";
 
 const t = (key, vars = {}) => {
   const messages = {
@@ -14,13 +14,13 @@ const t = (key, vars = {}) => {
 const entries = [
   {
     id: "newer",
-    timestamp: "2026-06-25T06:00:00.000Z",
+    timestamp: new Date(2026, 5, 25, 10, 0, 0).toISOString(),
     type: "MISSION_STARTED",
     data: { title: "Counter Vault" },
   },
   {
     id: "older",
-    timestamp: "2025-06-25T06:00:00.000Z",
+    timestamp: new Date(2025, 5, 25, 10, 0, 0).toISOString(),
     type: "BADGE_EARNED",
     data: { badgeName: "First Contract" },
   },
@@ -39,7 +39,7 @@ describe("Journal helpers", () => {
 
   it("filters entries by date range", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-25T12:00:00.000Z"));
+    vi.setSystemTime(new Date(2026, 5, 25, 12, 0, 0));
 
     const filtered = filterJournalEntries(entries, { dateFilter: "TODAY" }, t);
 
@@ -49,7 +49,7 @@ describe("Journal helpers", () => {
 
   it("builds date rows using full year comparisons", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-25T12:00:00.000Z"));
+    vi.setSystemTime(new Date(2026, 5, 25, 12, 0, 0));
 
     const rows = buildJournalRows(entries, t, "en");
 

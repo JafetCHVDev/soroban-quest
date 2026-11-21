@@ -26,7 +26,7 @@ const storage = {
 vi.mock('../authService', () => ({ authService }));
 vi.mock('../storage', () => storage);
 
-const { cloudSyncService, scheduleCloudSync } = await import('../cloudSync.js');
+const { cloudSyncService, scheduleCloudSync } = await import('../cloudSync');
 
 describe('cloudSync', () => {
   beforeEach(() => {

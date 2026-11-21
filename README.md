@@ -330,7 +330,7 @@ soroban-quest/
 │   │   ├── ToastContext.jsx        # Toast notification system
 │   │   ├── Toast.css               # Toast notification styles
 │   │   ├── useokashi.js            # Okashi.dev bridge hook
-│   │   └── useDocumentTitle.js     # Dynamic document title hook
+│   │   └── useDocumentTitle.ts     # Dynamic document title hook
 │   ├── data/
 │   │   ├── missions.js             # 19 mission definitions (i18n)
 │   │   ├── missions/               # Per-mission markdown assets
@@ -480,6 +480,7 @@ Add campaign definitions in `src/data/campaigns.js`:
     en: { title: '...', description: '...', lore: '...' },
     es: { title: '...', description: '...', lore: '...' },
   },
+  heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 100%)',
   chapterNumber: 4,
   missionIds: ['mission-8', 'mission-9'],
   requiredLevel: 7,

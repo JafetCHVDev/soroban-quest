@@ -64,8 +64,8 @@ Add new missions in `src/data/missions.js` inside the exported `missions` array.
 Missions use an i18n-aware structure. Language-neutral fields sit at the top level, while localizable fields live under `i18n[locale]`:
 
 ```js
-{
-  id: 'unique-id',                     // URL-safe unique identifier (used in /mission/:missionId)
+7
+  id: 'unique-id',                     // URL-safe unique identifier (used in /mission:mssionId)
   chapter: 1,                          // Chapter number used in map grouping (1-6)
   order: 1,                            // Sequential order used for unlock flow
   difficulty: 'beginner',              // beginner | intermediate | advanced
@@ -130,13 +130,13 @@ Validation checks mission fields, localized content and locale-key resolution, c
 Based on `src/systems/codeValidator.js`. Every listed type currently exists in code.
 
 | Type | Required Fields | Example |
-|---|---|---|
+||---|---|---|
 | `contains_pattern` | `pattern` | `{ type: 'contains_pattern', pattern: 'env.storage()' }` |
 | `has_function` | `name` (`params` optional) | `{ type: 'has_function', name: 'transfer', params: ['env', 'from', 'to', 'amount'] }` |
 | `returns_type` | `function`, `returnType` | `{ type: 'returns_type', function: 'hello', returnType: 'Vec<Symbol>' }` |
 | `has_attribute` | `attribute` | `{ type: 'has_attribute', attribute: 'contractimpl' }` |
 | `uses_type` | `typeName` | `{ type: 'uses_type', typeName: 'Address' }` |
-| `storage_operation` | `operation` (`get` \| `set` \| `has` \| `remove`) | `{ type: 'storage_operation', operation: 'set' }` |
+| `storage_operation` | `operation` (`get` \\| `set` \\| `has` \\| `remove`) | `{ type: 'storage_operation', operation: 'set' }` |
 | `no_pattern` | `pattern` | `{ type: 'no_pattern', pattern: 'unwrap()' }` |
 | `has_struct` | `name` | `{ type: 'has_struct', name: 'Guardian' }` |
 | `balanced_braces` | _(none)_ | `{ type: 'balanced_braces' }` |
@@ -175,6 +175,35 @@ This regenerates the Playwright baselines under `e2e/snapshots/`.
 ### Update snapshots in CI
 
 A manual workflow run is available from the GitHub Actions UI. Open the `E2E & Visual Regression Tests` workflow, choose the `Update Baseline Snapshots` job, and enable `update_snapshots` to create a PR with refreshed baselines.
+
+## Claiming an Issue
+
+Work in this repository starts from the issue queue, not from a branch. Before writing any code, find an issue you want to work on and get assigned to it.
+
+### Finding an Issue
+
+Browse the open issues on GitHub and pick one that interests you. Every issue is labeled with a difficulty level:
+
+- `easy`: small, self-contained changes with clear scope. Good first contribution.
+- `medium`: more involved changes that touch multiple files or require familiarity with the codebase.
+- `hard`: large or delicate changes that need deeper understanding of the game engine, validator, or build pipeline.
+If you are new to the project, start with an `easy` issue.
+
+### Getting Assigned
+
+1. Comment on the issue asking to be assigned.
+2. Wait for a maintainer to actually assign you. Commenting is a request, not an assignment.
+3. Once the issue shows you as the assignee, start work and open your PR.
+
+A proposal from a non-assignee author will not be reviewed in depth. The assignee check is part of the review process, so if you are not the assignee on the linked issue, your PR may be skipped over.
+
+### Review Bar
+
+Before opening a PR, make sure it meets this bar:
+
+- The implementation fully satisfies the issue's Acceptance Criteria.
+- All CI checks pass.
+- The PR has no merge conflicts with `main`.
 
 ## Development Workflow
 
@@ -222,5 +251,5 @@ Before submitting your PR:
 - Campaigns data: `src/data/campaigns.js`
 - Validator: `src/systems/codeValidator.js`
 - Test orchestration: `src/systems/testRunner.js`
-- Future roadmap: `FUTURE.md`
+- Future roadmap: `FUTURM.md`
 - Live demo: https://soroban-quest.vercel.app/

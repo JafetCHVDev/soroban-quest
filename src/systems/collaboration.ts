@@ -33,7 +33,7 @@ function createId(prefix = "collab"): string {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function normalizeRoomId(roomId: string): string {
+function normalizeRoomId(roomId?: string | null): string {
   return String(roomId || "")
     .trim()
     .replace(/[^a-zA-Z0-9_-]/g, "-")
@@ -90,31 +90,46 @@ export function readCollaborationRoom(
   return normalizeRoomId(new URL(location.href).searchParams.get("collab"));
 }
 
-interface CollaborationManagerOptions {
+export interface AwarenessInstance {
+  setLocalState?: (_state: unknown) => void;
+  setLocalStateField?: (_key: string, _value: unknown) => void;
+  getStates?: () => Map<string | number, { user?: User }> | { values: () => Iterable<{ user?: User }> };
+  on?: (_event: string, _handler: () => void) => void;
+}
+
+export interface ProviderInstance {
+  awareness?: AwarenessInstance;
+  on?: (_event: string, _handler: (_data: { status?: string }) => void) => void;
+  connect?: () => void;
+  disconnect?: () => void;
+  destroy?: () => void;
+}
+
+export interface CollaborationManagerOptions {
   roomId?: string;
   missionId?: string;
   user?: Partial<User>;
   initialCode?: string;
-  providerFactory?: (roomName: string, doc: Y.Doc, options: Record<string, unknown>) => unknown;
-  awarenessFactory?: () => unknown;
+  providerFactory?: (_roomName: string, _doc: Y.Doc, _options: Record<string, unknown>) => ProviderInstance;
+  awarenessFactory?: () => AwarenessInstance;
   signaling?: string[];
 }
 
-type ListenerType = "code" | "status" | "peers" | "conflict";
-type Listener = (payload: unknown) => void;
+export type ListenerType = "code" | "status" | "peers" | "conflict";
+export type Listener = (_payload: unknown) => void;
 
 export class CollaborationManager {
   roomId: string;
   missionId: string;
   user: User;
   signaling: string[];
-  providerFactory?: (roomName: string, doc: Y.Doc, options: Record<string, unknown>) => unknown;
-  awarenessFactory?: () => unknown;
+  providerFactory?: (_roomName: string, _doc: Y.Doc, _options: Record<string, unknown>) => ProviderInstance;
+  awarenessFactory?: () => AwarenessInstance;
   doc: Y.Doc;
   code: Y.Text;
   meta: Y.Map<unknown>;
-  provider: unknown;
-  awareness: unknown;
+  provider: ProviderInstance | null;
+  awareness: AwarenessInstance | null;
   connected: boolean;
   destroyed: boolean;
   lastSyncedCode: string;
@@ -166,14 +181,13 @@ export class CollaborationManager {
     if (this.provider) return this;
 
     const roomName = `soroban-quest:${this.missionId}:${this.roomId}`;
-    this.provider = this.providerFactory
+    this.provider = (this.providerFactory
       ? this.providerFactory(roomName, this.doc, { signaling: this.signaling })
-      : new WebrtcProvider(roomName, this.doc, { signaling: this.signaling });
-    this.awareness = this.provider.awareness || this.awarenessFactory?.();
+      : new WebrtcProvider(roomName, this.doc, { signaling: this.signaling })) as unknown as ProviderInstance;
+    this.awareness = (this.provider?.awareness || this.awarenessFactory?.()) as unknown as AwarenessInstance;
 
-    this.provider.on?.("status", (event: unknown) => {
-      const eventObj = event as { status?: string };
-      this.connected = eventObj?.status === "connected";
+    this.provider.on?.("status", (event: { status?: string }) => {
+      this.connected = event?.status === "connected";
       this.emit("status", this.getStatus());
     });
 
@@ -259,9 +273,11 @@ export class CollaborationManager {
 
   getPeers(): User[] {
     if (!this.awareness?.getStates) return [];
-    return Array.from(this.awareness.getStates().values() as Iterable<{ user?: User }>)
-      .map((state) => state.user)
-      .filter(Boolean);
+    const states = this.awareness.getStates();
+    const values = states && typeof states.values === "function" ? Array.from(states.values()) : [];
+    return values
+      .map((state) => state?.user)
+      .filter((user): user is User => Boolean(user));
   }
 
   on(type: ListenerType, listener: Listener): () => void {
@@ -275,7 +291,7 @@ export class CollaborationManager {
 }
 
 export function createCollaborationManager(
-  options: CollaborationManagerOptions
+  options?: CollaborationManagerOptions
 ): CollaborationManager {
   return new CollaborationManager(options);
 }

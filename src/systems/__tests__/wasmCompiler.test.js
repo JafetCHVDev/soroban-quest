@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { analyze, DiagnosticSeverity, AnalyzerEngine } from '../sorobanAnalyzer.js';
+import { analyze, DiagnosticSeverity, AnalyzerEngine } from '../sorobanAnalyzer';
 import { WasmCompiler } from '../wasmCompiler.js';
 
 const GOOD = `#![no_std]

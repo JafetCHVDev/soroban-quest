@@ -47,6 +47,9 @@ export async function maskDynamicElements(page: Page) {
       .toast, [role="status"] {
         display: none !important;
       }
+      .mission-recommendation-card {
+        display: none !important;
+      }
     `,
   });
 }

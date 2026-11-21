@@ -4,7 +4,7 @@ import {
   logActivity,
   getActivityLog,
   clearLog,
-} from "../activityLogger.js";
+} from "../activityLogger";
 
 const LOG_KEY = "soroban_quest_activity_log";
 
@@ -127,9 +127,9 @@ describe("activityLogger", () => {
       logActivity("BADGE_EARNED", { badge: "Explorer" }, "Badge earned");
 
       expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      const event = dispatchSpy.mock.calls[0][0];
+      const event = dispatchSpy.mockCalls[0][0];
       expect(event.type).toBe("activity_logged");
-      expect(event.detail.type).toBe("BADGE_EARNED");
+      expect(event.detail.type).toBe("BADGE_EARneD");
       expect(event.detail.data).toEqual({ badge: "Explorer" });
     });
 

@@ -9,7 +9,8 @@ import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { missions, localizeMissions } from "../data/missions";
 import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns";
-import { loadProgress } from "../systems/storage";
+import { loadProgress, loadProfile } from "../systems/storage";
+import { downloadCampaignCertificate } from "../components/CampaignCertificate.jsx";
 import { isMissionUnlocked } from "../systems/missionLoader";
 import { getLevelFromXP } from "../systems/gameEngine";
 import { useTranslation } from "../i18n/useTranslation";
@@ -25,6 +26,7 @@ export default function Campaigns() {
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [, _setFirstVisit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [certificateLoading, setCertificateLoading] = useState<string | null>(null);
 
   const localizedCampaigns = useMemo(
     () => localizeCampaigns(campaigns, language),
@@ -108,6 +110,39 @@ export default function Campaigns() {
     }
     setSelectedCampaignId(campaign.id);
   };
+
+  const handleGetCertificate = async (campaign: typeof localizedCampaigns[number], e: React.MouseEvent | React.KeyboardEvent): Promise<void> => {
+    e.stopPropagation();
+    if (certificateLoading) return;
+
+    setCertificateLoading(campaign.id);
+    try {
+      const profile = loadProfile();
+      const localeMap: Record<string, string> = {
+        es: "es-ES",
+        fr: "fr-FR",
+        ja: "ja-JP",
+        "zh-CN": "zh-CN",
+        zh: "zh-CN",
+      };
+      const locale = localeMap[language] || "en-US";
+      const dateLabel = new Date().toLocaleDateString(
+        locale,
+        { year: "numeric", month: "long", day: "numeric" },
+      );
+      await downloadCampaignCertificate({
+        campaignId: campaign.id,
+        campaignTitle: campaign.title,
+        playerName: profile.name,
+        missionCount: campaign.missionIds.length,
+        dateLabel,
+        t,
+      });
+    } finally {
+      setCertificateLoading(null);
+    }
+  };
+
 
   const currentLevel = getLevelFromXP(progress.xp || 0);
 
@@ -237,11 +272,29 @@ export default function Campaigns() {
                 )}
 
                 {completed && (
-                  <div className="campaign-status completed">
-
-                    <span className="sr-only">{t("campaigns.statusLabel")} </span>
-                    {t("campaigns.chapterComplete")}
-
+                  <div className="campaign-completed-row">
+                    <div className="campaign-status completed">
+                      <span className="sr-only">{t("campaigns.statusLabel")} </span>
+                      {t("campaigns.chapterComplete")}
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-certificate"
+                      data-testid={`get-certificate-${campaign.id}`}
+                      aria-label={t("certificate.buttonAriaLabel", { title: campaign.title })}
+                      onClick={(e) => handleGetCertificate(campaign, e)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleGetCertificate(campaign, e);
+                        }
+                      }}
+                      disabled={certificateLoading === campaign.id}
+                    >
+                      {certificateLoading === campaign.id
+                        ? t("certificate.downloading")
+                        : t("certificate.button")}
+                    </button>
                   </div>
                 )}
               </div>

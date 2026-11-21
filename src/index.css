@@ -1354,9 +1354,29 @@ a:focus:not(:focus-visible),
 }
 
 .mission-map-grid {
+  position: relative;
+  width: 100%;
+}
+
+.mission-map-grid-empty {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.mission-map-grid-viewport {
+  height: min(70vh, 720px);
+  min-height: 420px;
+  overflow-y: auto;
+  contain: strict;
+}
+
+.mission-map-grid-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 100%;
   gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
 .mission-map-filters {
@@ -2008,7 +2028,7 @@ a:focus:not(:focus-visible),
   }
 
   .mission-map-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2168,8 +2188,19 @@ a:focus:not(:focus-visible),
   }
 
   .mission-map-grid {
-    grid-template-columns: 1fr;
     gap: var(--space-md);
+  }
+
+  .mission-map-grid-viewport {
+    height: auto;
+    min-height: 0;
+    overflow-y: visible;
+    contain: none;
+  }
+
+  .mission-map-grid-row {
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
   }
 
   .mission-card {

@@ -94,6 +94,20 @@ describe("testRunner system", () => {
       expect(result.allPassed).toBe(false);
     });
 
+    it("ignores function declarations inside comments", async () => {
+      const codeWithCommentedFn = `
+        // fn commented_out() {}
+        use soroban_sdk::Env;
+      `;
+      const result = await runTests(codeWithCommentedFn, { checks: [] });
+
+      expect(result.results[1]).toMatchObject({
+        phase: "structure",
+        passed: false,
+        message: "✗ No function definitions found",
+      });
+    });
+
     it("fails structural check when no Soroban markers are present", async () => {
       const codeNoSoroban = `
         pub fn regular_rust_fn() {

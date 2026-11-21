@@ -1,7 +1,8 @@
 {
   "languages": {
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Français"
   },
   "common": {
     "selectLanguage": "Select language",
@@ -114,6 +115,11 @@
       "currentLevel": "Level {{level}} — {{rank}}",
       "nextMission": "Next Mission",
       "continueFrom": "Continue from {{title}}",
+      "dailyChallenge": "Daily Challenge",
+      "dailyChallengeDescription": "Complete today's featured mission for a 25 XP bonus!",
+      "dailyChallengeCompleted": "Completed today!",
+      "dailyChallengeLink": "Start Mission",
+
       "recentActivity": "Recent Activity",
       "viewAll": "View All",
       "quickStats": "Quick Stats",
@@ -255,6 +261,12 @@
       "log": {
         "exported": "Exported adventure progress",
         "imported": "Imported adventure progress from file"
+      },
+      "toast": {
+        "exported": "Progress exported successfully!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import file. Check the format.",
+        "resetDone": "🗑️ Progress reset."
       }
     }
   },
@@ -366,6 +378,16 @@
       "beginChapter": "Begin Chapter {{number}}"
     }
   },
+  "certificate": {
+    "button": "🏅 Get Certificate",
+    "downloading": "Generating…",
+    "buttonAriaLabel": "Download completion certificate for {{title}}",
+    "ofCompletion": "Certificate of Completion",
+    "thisCertifies": "This certifies that",
+    "hasCompleted": "has successfully completed",
+    "missions": "{{count}} Missions Completed",
+    "completedOn": "Completed on {{date}}"
+  },
   "missionMap": {
     "title": "Mission Map",
     "subtitle": "{{completed}} of {{total}} missions completed",
@@ -402,6 +424,22 @@
       "missionItemCompleted": "Mission {{order}}: {{title}}, completed",
       "missionItemUnlocked": "Mission {{order}}: {{title}}, unlocked",
       "missionItemLocked": "Mission {{order}}: {{title}}, locked"
+    }
+  },
+  "recommendation": {
+    "title": "Recommended for You",
+    "badge": "Recommended",
+    "startMission": "Start Mission",
+    "difficulty": "Difficulty:",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recommended because you found \"{{missionTitle}}\" challenging — practice to reinforce your skills.",
+      "struggledChapter": "Reinforce fundamentals in Chapter {{chapter}} after several attempts.",
+      "fastLearner": "Based on your swift performance, try this {{difficulty}} challenge!",
+      "unexploredChapter": "Ready for something new? Explore Chapter {{chapter}}.",
+      "nextCampaign": "Continue your journey with the next mission in your campaign.",
+      "gettingStarted": "Begin your Soroban journey with this foundational quest.",
+      "allCompleted": "You've conquered every mission! Revisit \"{{missionTitle}}\" to sharpen your mastery."
     }
   },
   "missionDetail": {

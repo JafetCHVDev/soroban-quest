@@ -142,6 +142,49 @@ describe("CollaborationManager", () => {
     expect(manager.getCode()).toBe("base-remote");
     expect(onConflict).toHaveBeenCalledWith(expect.objectContaining({ conflict: true }));
   });
+
+  it("simulates a two-client collaborative session syncing edits and awareness", () => {
+    const provider1 = createProviderMock();
+    const provider2 = createProviderMock();
+
+    const client1 = new CollaborationManager({
+      roomId: "two-peer-room",
+      missionId: "basics",
+      initialCode: "pub fn start() {}",
+      user: { id: "user-1", name: "Alice", color: "#06d6a0" },
+      providerFactory: () => provider1,
+    });
+
+    const client2 = new CollaborationManager({
+      roomId: "two-peer-room",
+      missionId: "basics",
+      initialCode: "pub fn start() {}",
+      user: { id: "user-2", name: "Bob", color: "#8b5cf6" },
+      providerFactory: () => provider2,
+    });
+
+    client1.connect();
+    client2.connect();
+
+    // Mutual peer awareness discovery
+    provider1.addPeer({ id: "user-2", name: "Bob", color: "#8b5cf6" });
+    provider2.addPeer({ id: "user-1", name: "Alice", color: "#06d6a0" });
+
+    expect(client1.getPeers()).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: "Bob" })])
+    );
+    expect(client2.getPeers()).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: "Alice" })])
+    );
+
+    // Client 1 edits code and syncs to Client 2
+    client1.setCode("pub fn start() { let x = 42; }");
+    const syncResult = client2.mergeCode(client1.getCode());
+
+    expect(syncResult.changed).toBe(true);
+    expect(syncResult.conflict).toBe(false);
+    expect(client2.getCode()).toBe("pub fn start() { let x = 42; }");
+  });
 });
 
 describe("collaboration invite helpers", () => {

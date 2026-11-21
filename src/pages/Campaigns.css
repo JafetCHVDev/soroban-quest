@@ -138,6 +138,44 @@
   border-radius: var(--radius-md);
 }
 
+/* Completed row — status badge + certificate button side-by-side */
+.campaign-completed-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.campaign-completed-row .campaign-status.completed {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-certificate {
+  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--transition-base), transform var(--transition-base);
+  white-space: nowrap;
+}
+
+.btn-certificate:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btn-certificate:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* Detail Overlay */
 .campaign-detail-overlay {
   position: fixed;

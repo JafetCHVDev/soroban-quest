@@ -2,7 +2,7 @@
 
 import { cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import useDocumentTitle from '../useDocumentTitle.js';
+import useDocumentTitle from '../useDocumentTitle.ts';
 
 describe('useDocumentTitle', () => {
   let originalTitle;
