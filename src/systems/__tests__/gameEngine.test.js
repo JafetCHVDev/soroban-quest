@@ -25,7 +25,6 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
-  BADGES,
   HINT_GOLD_COST,
   isHintGoldUnlocked,
   spendGoldForHint,

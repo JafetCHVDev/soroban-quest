@@ -15,6 +15,26 @@ export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
 }
 
+/**
+ * Language-neutral summary of the mission catalog, used by systems that
+ * only need ids/counts (e.g. achievement conditions) instead of
+ * hard-coding the number of missions or chapter membership.
+ */
+export function getMissionCatalog() {
+    const chapters = {};
+    for (const mission of missions) {
+        if (mission.standalone) continue;
+        const ch = mission.chapter || 1;
+        if (!chapters[ch]) chapters[ch] = [];
+        chapters[ch].push(mission.id);
+    }
+    return {
+        missionIds: missions.map((m) => m.id),
+        totalMissions: missions.length,
+        chapters,
+    };
+}
+
 export function getAllTheoryQuests(lang = getActiveLanguage()) {
     return theoryQuests.map((q) => localizeTheoryQuest(q, lang));
 }

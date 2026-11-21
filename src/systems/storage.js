@@ -1,4 +1,8 @@
 import { getDefaultState, getLevelFromXP } from "./gameEngine";
+import {
+  normalizeAchievementIds,
+  LEGACY_ACHIEVEMENT_STORAGE_KEYS,
+} from "./achievements";
 export { getDefaultState };
 
 /* =========================
@@ -19,11 +23,79 @@ function createDefaultProfileSlot(index = 0, overrides = {}) {
       name: index === 0 ? defaultProfile.name : `Player ${index + 1}`,
       ...(overrides.profile || {}),
     },
-    progress: {
+    progress: withNormalizedAchievements({
       ...getDefaultState(),
       ...(overrides.progress || {}),
-    },
+    }),
   };
+}
+
+// Achievement unlocks live only in `progress.badges`. Normalize every state
+// that passes through a profile slot so ids from the retired achievement
+// system (and duplicates) are collapsed to the unified ids.
+function withNormalizedAchievements(progress) {
+  return { ...progress, badges: normalizeAchievementIds(progress.badges) };
+}
+
+function readLegacyAchievementUnlocks() {
+  const [key] = LEGACY_ACHIEVEMENT_STORAGE_KEYS;
+  const raw = localStorage.getItem(key);
+  if (raw === null || raw === undefined) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return normalizeAchievementIds(parsed?.unlocked);
+  } catch {
+    return [];
+  }
+}
+
+function clearLegacyAchievementStore() {
+  for (const key of LEGACY_ACHIEVEMENT_STORAGE_KEYS) {
+    localStorage.removeItem(key);
+  }
+}
+
+/**
+ * One-time migration from the retired achievementEngine, which stored its
+ * unlocks under a separate (profile-agnostic) localStorage key. Unlocks are
+ * merged into the active profile's `badges` and the old keys are removed.
+ * Returns true when a legacy store was found and migrated.
+ */
+export function migrateLegacyAchievements() {
+  let legacyUnlocks;
+  try {
+    legacyUnlocks = readLegacyAchievementUnlocks();
+  } catch {
+    return false;
+  }
+  if (legacyUnlocks === null) return false;
+
+  try {
+    if (legacyUnlocks.length > 0) {
+      const activeProfileId = getActiveProfileId();
+      const profiles = loadProfiles();
+      const updated = profiles.map((slot) =>
+        slot.id === activeProfileId
+          ? {
+              ...slot,
+              progress: {
+                ...slot.progress,
+                badges: normalizeAchievementIds([
+                  ...(slot.progress?.badges || []),
+                  ...legacyUnlocks,
+                ]),
+              },
+            }
+          : slot
+      );
+      saveProfiles(updated);
+    }
+    clearLegacyAchievementStore();
+    return true;
+  } catch (e) {
+    console.error("Failed to migrate legacy achievements:", e);
+    return false;
+  }
 }
 
 function sanitizeProfileSlot(slot, index) {
@@ -65,7 +137,7 @@ function readLegacyProgress() {
       };
     }
     
-    return { ...getDefaultState(), ...parsed };
+    return withNormalizedAchievements({ ...getDefaultState(), ...parsed });
   } catch {
     return null;
   }
@@ -257,6 +329,7 @@ export function validateImportData(data) {
    PROGRESS
 ========================= */
 export function loadProgress() {
+  migrateLegacyAchievements();
   const activeSlot = getActiveProfileSlot();
   const legacyProgress = readLegacyProgress();
 
@@ -287,6 +360,7 @@ export function saveProgress(state) {
 
 export function resetProgress() {
   localStorage.removeItem(PROGRESS_KEY);
+  clearLegacyAchievementStore();
   const activeProfileId = getActiveProfileId();
   const defaultState = getDefaultState();
   const profiles = loadProfiles().map((slot) =>
@@ -422,6 +496,7 @@ export function mergeProgress(local, imported) {
   for (const field of MERGE_UNION_FIELDS) {
     merged[field] = unionArray(a[field], b[field]);
   }
+  merged.badges = normalizeAchievementIds(merged.badges);
 
   for (const field of MERGE_OR_FIELDS) {
     merged[field] = Boolean(a[field]) || Boolean(b[field]);
@@ -462,7 +537,10 @@ export function mergeProgress(local, imported) {
  * fields) so the player sees the combined result before committing.
  */
 export function summarizeMerge(local, imported) {
-  const before = { ...getDefaultState(), ...cleanProgress(local || {}) };
+  const before = withNormalizedAchievements({
+    ...getDefaultState(),
+    ...cleanProgress(local || {}),
+  });
   const after = mergeProgress(local, imported);
 
   const countField = (field) => {

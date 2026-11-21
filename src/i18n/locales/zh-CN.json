@@ -554,7 +554,14 @@
     "chapter_4": { "name": "数据架构师", "description": "完成第 4 章的所有任务" },
     "chapter_5": { "name": "协议先锋", "description": "完成第 5 章的所有任务" },
     "chapter_6": { "name": "生产大师", "description": "完成第 6 章的所有任务" },
-    "chapter_7": { "name": "安全哨兵", "description": "完成第 7 章的所有任务" }
+    "chapter_7": { "name": "安全哨兵", "description": "完成第 7 章的所有任务" },
+    "journeyman": { "name": "熟练工匠", "description": "完成 10 个任务" },
+    "xp_500": { "name": "XP 收集者", "description": "获得 500 XP" },
+    "xp_2000": { "name": "XP 大亨", "description": "获得 2000 XP" },
+    "perfectionist": { "name": "完美主义者", "description": "首次尝试完成 5 个任务" },
+    "streak_starter": { "name": "连胜起步", "description": "保持 3 天连续登录" },
+    "dedicated": { "name": "坚持不懈", "description": "保持 7 天连续登录" },
+    "committed": { "name": "全心投入", "description": "保持 30 天连续登录" }
   },
   "shop": {
     "title": "商店",
