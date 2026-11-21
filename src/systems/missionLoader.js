@@ -10,6 +10,7 @@
 import { missions, localizeMission } from '../data/missions';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
+import { registerMissionCatalog } from './achievements';
 
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
@@ -34,6 +35,9 @@ export function getMissionCatalog() {
         chapters,
     };
 }
+
+// Give the achievement system the real mission count and chapter lists.
+registerMissionCatalog(getMissionCatalog());
 
 export function getAllTheoryQuests(lang = getActiveLanguage()) {
     return theoryQuests.map((q) => localizeTheoryQuest(q, lang));

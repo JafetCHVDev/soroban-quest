@@ -29,6 +29,9 @@ import {
   isHintGoldUnlocked,
   spendGoldForHint,
 } from "../gameEngine";
+// Registers the real mission catalog with the achievement system, as the app
+// does before any mission can be completed.
+import "../missionLoader";
 
 describe("gameEngine core logic", () => {
   let baseState;

@@ -11,7 +11,19 @@
    its own localStorage key. Ids from that system are mapped through
    `legacyIds` so existing unlocks survive migration.
    ========================================== */
-import { getMissionCatalog, type MissionCatalog } from './missionLoader';
+import type { MissionCatalog } from './missionLoader';
+
+// The mission catalog is registered by missionLoader when it loads, rather
+// than imported here, so the mission data stays in its own lazily loaded
+// chunk instead of the main bundle (this module is used by storage/gameEngine).
+// Achievements are only evaluated when a mission is completed, and every
+// completion path loads missionLoader first.
+const EMPTY_CATALOG: MissionCatalog = { missionIds: [], totalMissions: 0, chapters: {} };
+let registeredCatalog: MissionCatalog = EMPTY_CATALOG;
+
+export function registerMissionCatalog(catalog: MissionCatalog): void {
+  registeredCatalog = catalog;
+}
 
 export type AchievementCategory =
   | 'missions'
@@ -321,7 +333,7 @@ function countCatalogMissions(completed: string[], catalog: MissionCatalog): num
 export function isConditionMet(
   condition: AchievementCondition,
   state: AchievementState,
-  catalog: MissionCatalog = getMissionCatalog(),
+  catalog: MissionCatalog = registeredCatalog,
 ): boolean {
   const completed = state.completedMissions ?? [];
 
@@ -357,7 +369,7 @@ export function isConditionMet(
  */
 export function evaluateAchievements(
   state: AchievementState,
-  catalog: MissionCatalog = getMissionCatalog(),
+  catalog: MissionCatalog = registeredCatalog,
 ): Achievement[] {
   const unlocked = new Set(normalizeAchievementIds(state.badges));
   return ACHIEVEMENTS.filter(
