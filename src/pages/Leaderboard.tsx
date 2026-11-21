@@ -1,21 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useRef } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import "./Leaderboard.css";
 
 import { useGameState } from "../systems/GameStateContext";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from "../systems/useDocumentTitle";
+import {
+  LEADERBOARD_CATEGORIES,
+  DEFAULT_LEADERBOARD_CATEGORY,
+  isLeaderboardCategory,
+  rankProfiles,
+  type LeaderboardCategory,
+} from "../systems/leaderboard";
 
 export default function Leaderboard() {
   useDocumentTitle("Leaderboard");
   const { profiles, activeProfileId, switchProfile } = useGameState();
   const { t } = useTranslation();
 
-  const rankedProfiles = [...profiles].sort((a, b) => {
-    if (b.progress.xp !== a.progress.xp) return b.progress.xp - a.progress.xp;
-    if (b.progress.level !== a.progress.level) return b.progress.level - a.progress.level;
-    return b.progress.completedMissions.length - a.progress.completedMissions.length;
-  });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const byParam = searchParams.get("by");
+  const category: LeaderboardCategory = isLeaderboardCategory(byParam)
+    ? byParam
+    : DEFAULT_LEADERBOARD_CATEGORY;
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const selectCategory = (next: LeaderboardCategory): void => {
+    const params = new URLSearchParams(searchParams);
+    params.set("by", next);
+    setSearchParams(params, { replace: true });
+  };
+
+  const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number): void => {
+    const last = LEADERBOARD_CATEGORIES.length - 1;
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") nextIndex = index === last ? 0 : index + 1;
+    else if (event.key === "ArrowLeft") nextIndex = index === 0 ? last : index - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    selectCategory(LEADERBOARD_CATEGORIES[nextIndex]);
+    tabRefs.current[nextIndex]?.focus();
+  };
+
+  const rankedProfiles = rankProfiles(profiles, category);
 
   const topProfile = rankedProfiles[0];
 
@@ -51,6 +78,33 @@ export default function Leaderboard() {
           </div>
         </section>
       )}
+
+      <div
+        className="leaderboard-tabs"
+        role="tablist"
+        aria-label={t("leaderboard.tabs.ariaLabel")}
+      >
+        {LEADERBOARD_CATEGORIES.map((key, index) => {
+          const isSelected = key === category;
+          return (
+            <button
+              key={key}
+              ref={(el): void => {
+                tabRefs.current[index] = el;
+              }}
+              type="button"
+              role="tab"
+              aria-selected={isSelected}
+              tabIndex={isSelected ? 0 : -1}
+              className={`leaderboard-tab ${isSelected ? "active" : ""}`}
+              onClick={(): void => selectCategory(key)}
+              onKeyDown={(event): void => handleTabKeyDown(event, index)}
+            >
+              {t(`leaderboard.tabs.${key}`)}
+            </button>
+          );
+        })}
+      </div>
 
       <section className="leaderboard-table-card" aria-labelledby="leaderboard-table-heading">
         <div className="leaderboard-table-header">
