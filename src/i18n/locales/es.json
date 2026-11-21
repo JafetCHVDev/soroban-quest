@@ -1,7 +1,8 @@
 {
   "languages": {
     "en": "English",
-    "es": "Español"
+    "es": "Español",
+    "fr": "Francés"
   },
   "common": {
     "selectLanguage": "Seleccionar idioma",
@@ -346,7 +347,22 @@
       "export": "Progreso de la aventura exportado",
       "imported": "Progreso de la aventura importado desde archivo",
       "reset": "Progreso de la aventura restablecido",
-      "dailyChallenge": "Reto diario completado"
+      "dailyChallenge": "Reto diario completado",
+      "import": "Progreso de la aventura importado",
+      "streakOne": "Racha de {{count}} día",
+      "streakMany": "Racha de {{count}} días"
+    },
+    "details": {
+      "targetXp": "XP objetivo: {{xp}}",
+      "earnedXp": "XP ganado: {{xp}}"
+    },
+    "eventLabels": {
+      "mission": "Misión",
+      "badge": "Insignia",
+      "levelUp": "Subida de nivel",
+      "hint": "Pista",
+      "system": "Sistema",
+      "streak": "Racha"
     }
   },
   "missions": {
@@ -398,6 +414,32 @@
       "missionItemUnlocked": "Misión {{order}}: {{title}}, desbloqueada",
       "missionItemLocked": "Misión {{order}}: {{title}}, bloqueada"
     }
+  },
+  "campaigns": {
+    "title": "Campañas",
+    "subtitle": "Sigue la historia a través de capítulos de misiones conectadas.",
+    "chapter": "Capítulo {{number}}",
+    "missionCount": "{{count}} misiones",
+    "lockedAt": "Se desbloquea al completar el Capítulo {{chapter}}",
+    "chapterComplete": "¡Capítulo completado!",
+    "back": "Volver a las campañas",
+    "completeOf": "{{completed}} de {{total}} completadas",
+    "statusLabel": "Estado de la campaña",
+    "lore": {
+      "iconLabel": "Icono de historia",
+      "modalTitle": "Historia del capítulo",
+      "beginChapter": "Comenzar capítulo"
+    }
+  },
+  "certificate": {
+    "button": "Obtener certificado",
+    "downloading": "Descargando…",
+    "buttonAriaLabel": "Descargar certificado de finalización",
+    "ofCompletion": "Certificado de finalización",
+    "thisCertifies": "Este documento certifica que",
+    "hasCompleted": "ha completado",
+    "missions": "{{count}} misiones",
+    "completedOn": "Completado el {{date}}"
   },
   "recommendation": {
     "title": "Recomendado para ti",

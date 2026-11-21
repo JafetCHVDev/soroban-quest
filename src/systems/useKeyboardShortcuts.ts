@@ -32,7 +32,7 @@ export function useKeyboardShortcuts({
         (modifier && event.key.toLowerCase() === "k")
       ) {
         event.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen(!isOpen);
         return;
       }
 

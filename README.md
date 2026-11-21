@@ -480,6 +480,7 @@ Add campaign definitions in `src/data/campaigns.js`:
     en: { title: '...', description: '...', lore: '...' },
     es: { title: '...', description: '...', lore: '...' },
   },
+  heroImage: 'linear-gradient(135deg, #06d6a0 0%, #118ab2 100%)',
   chapterNumber: 4,
   missionIds: ['mission-8', 'mission-9'],
   requiredLevel: 7,

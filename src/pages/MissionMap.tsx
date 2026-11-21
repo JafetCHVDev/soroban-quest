@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { loadProgress } from '../systems/storage';
 import { getAllMissions, isMissionUnlocked } from '../systems/missionLoader';
 import { getRecommendedMission } from '../systems/recommendationEngine';
 import { useTranslation } from '../i18n/useTranslation';
+import type { LanguageContextValue } from '../i18n';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './MissionMap.css';
 import { getXPProgress, getLevelFromXP, xpForLevel, getRankTitle } from '../systems/gameEngine';
@@ -32,6 +33,204 @@ function formatCurrentLevelProgressPercent(progressState) {
   return Math.min(Math.max(((xp - currentLevelXP) / denom) * 100, 0), 100);
 }
 
+interface PathMission {
+  id: string;
+  title: string;
+  order: number;
+  xpReward: number;
+  completed: boolean;
+  unlocked: boolean;
+}
+
+interface MissionPathNodeProps {
+  mission: PathMission;
+  cx: number;
+  cy: number;
+  hasNext: boolean;
+  nextCx?: number;
+  nextCy?: number;
+  t: LanguageContextValue['t'];
+  onSelect: (_mission: PathMission) => void;
+  onPreview: (_mission: PathMission) => void;
+}
+
+interface DesktopMissionPathProps {
+  layout: {
+    width: number;
+    height: number;
+    points: { mission: PathMission; cx: number; cy: number; index: number }[];
+  };
+  t: LanguageContextValue['t'];
+  onSelect: (_mission: PathMission) => void;
+  onPreview: (_mission: PathMission) => void;
+}
+
+// Each node depends only on its own mission and coordinates, so memoizing it
+// lets unrelated page updates (grid scroll, search typing) skip the SVG.
+const MissionPathNode = memo(function MissionPathNode({
+  mission,
+  cx,
+  cy,
+  hasNext,
+  nextCx,
+  nextCy,
+  t,
+  onSelect,
+  onPreview,
+}: MissionPathNodeProps) {
+  const nodeColor = mission.completed ? '#22c55e' : mission.unlocked ? '#06d6a0' : '#374151';
+  const glowFilter = mission.completed
+    ? 'url(#glowGreen)'
+    : mission.unlocked
+      ? 'url(#glowCyan)'
+      : '';
+  const shortTitle = mission.title.length > 20 ? `${mission.title.slice(0, 19)}…` : mission.title;
+
+  return (
+    <g>
+      {hasNext && (
+        <line
+          x1={cx}
+          y1={cy}
+          x2={nextCx}
+          y2={nextCy}
+          stroke={mission.completed ? '#22c55e' : '#1f2937'}
+          strokeWidth="2"
+          strokeDasharray={mission.completed ? '' : '6 4'}
+          className={mission.completed ? 'path-line completed' : 'path-line'}
+        />
+      )}
+      <g
+        className="path-node"
+        onClick={() => onSelect(mission)}
+        onMouseEnter={() => onPreview(mission)}
+        onKeyDown={(event) => {
+          if (mission.unlocked && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            onSelect(mission);
+          }
+        }}
+        role={mission.unlocked ? 'button' : undefined}
+        tabIndex={mission.unlocked ? 0 : -1}
+        aria-label={t('missionMap.aria.missionItem', {
+          order: mission.order,
+          title: mission.title,
+        })}
+        style={{ cursor: mission.unlocked ? 'pointer' : 'not-allowed' }}
+      >
+        <circle className="path-node-hit-area" cx={cx} cy={cy} r="28" fill="transparent" />
+        <circle
+          className="path-node-circle"
+          cx={cx}
+          cy={cy}
+          r="24"
+          fill={
+            mission.completed
+              ? 'rgba(34,197,94,0.15)'
+              : mission.unlocked
+                ? 'rgba(6,214,160,0.1)'
+                : 'rgba(31,41,55,0.5)'
+          }
+          stroke={nodeColor}
+          strokeWidth="2"
+          filter={glowFilter}
+        />
+        <text
+          x={cx}
+          y={cy + 4}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill={mission.completed ? '#22c55e' : mission.unlocked ? '#06d6a0' : '#6b7280'}
+          fontSize="14"
+          fontWeight="bold"
+          aria-hidden="true"
+        >
+          {mission.completed ? '✓' : mission.unlocked ? mission.order : '🔒'}
+        </text>
+        <text
+          x={cx}
+          y={cy + 44}
+          textAnchor="middle"
+          fontSize="11"
+          fill={mission.unlocked ? '#cbd5e1' : '#475569'}
+          fontWeight="500"
+          fontFamily="Inter, sans-serif"
+          aria-hidden="true"
+        >
+          {shortTitle}
+        </text>
+        <text
+          x={cx}
+          y={cy + 56}
+          textAnchor="middle"
+          fill={mission.completed ? '#22c55e' : '#f59e0b'}
+          fontSize="9"
+          fontWeight="600"
+          fontFamily="Orbitron, sans-serif"
+          aria-hidden="true"
+        >
+          {mission.completed ? 'COMPLETED' : `${mission.xpReward} XP`}
+        </text>
+      </g>
+    </g>
+  );
+});
+
+const DesktopMissionPath = memo(function DesktopMissionPath({
+  layout,
+  t,
+  onSelect,
+  onPreview,
+}: DesktopMissionPathProps) {
+  return (
+    <svg
+      viewBox={`0 0 ${layout.width} ${layout.height}`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={t('missionMap.aria.missionPath')}
+    >
+      {layout.points.map(({ mission, cx, cy, index }) => {
+        const next = layout.points[index + 1];
+        return (
+          <MissionPathNode
+            key={mission.id}
+            mission={mission}
+            cx={cx}
+            cy={cy}
+            hasNext={Boolean(next)}
+            nextCx={next?.cx}
+            nextCy={next?.cy}
+            t={t}
+            onSelect={onSelect}
+            onPreview={onPreview}
+          />
+        );
+      })}
+      <defs>
+        <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+          <feFlood floodColor="var(--cyan)" floodOpacity="0.4" />
+          <feComposite in2="blur" operator="in" />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter id="glowGreen" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+          <feFlood floodColor="var(--green)" floodOpacity="0.4" />
+          <feComposite in2="blur" operator="in" />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+  );
+});
+
 export default function MissionMap() {
   useDocumentTitle('Mission Map');
   const navigate = useNavigate();
@@ -50,13 +249,18 @@ export default function MissionMap() {
 
   const hasStandalone = useMemo(() => missions.some((m) => m.standalone), [missions]);
 
+  // loadProgress() returns a new object on every render. Keying the derived
+  // mission states on the completed ids keeps them, and the path layout built
+  // from them, referentially stable until progress actually changes.
+  const completedMissionsKey = state.completedMissions.join('\n');
   const missionStates = useMemo(() => {
+    const completedMissions = completedMissionsKey ? completedMissionsKey.split('\n') : [];
     return missions.map((m) => ({
       ...m,
-      completed: state.completedMissions.includes(m.id),
-      unlocked: isMissionUnlocked(m.id, state.completedMissions),
+      completed: completedMissions.includes(m.id),
+      unlocked: isMissionUnlocked(m.id, completedMissions),
     }));
-  }, [missions, state.completedMissions]);
+  }, [missions, completedMissionsKey]);
 
   const missionGridRef = useRef(null);
   const [missionGridColumns, setMissionGridColumns] = useState(1);
@@ -119,17 +323,20 @@ export default function MissionMap() {
     measureElement: (element) => element.getBoundingClientRect().height,
   });
 
-  const handleMissionClick = (mission) => {
-    if (mission.unlocked) {
-      navigate(`/mission/${mission.id}`);
-    }
-  };
+  const handleMissionClick = useCallback(
+    (mission) => {
+      if (mission.unlocked) {
+        navigate(`/mission/${mission.id}`);
+      }
+    },
+    [navigate],
+  );
 
-  const handleMissionHover = (mission) => {
+  const handleMissionHover = useCallback((mission) => {
     if (mission.unlocked) {
       preloadMonacoEditor();
     }
-  };
+  }, []);
 
   const ariaLabelFor = (m) => {
     if (m.completed)
@@ -339,144 +546,12 @@ export default function MissionMap() {
 
       {/* SVG Learning Path */}
       <div className="learning-path learning-path-desktop" ref={learningPathRef}>
-        <svg
-          viewBox={`0 0 ${desktopPathLayout.width} ${desktopPathLayout.height}`}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          role="img"
-          aria-label={t('missionMap.aria.missionPath')}
-        >
-          {desktopPathLayout.points.map(({ mission, cx, cy, index }) => {
-            const next = desktopPathLayout.points[index + 1];
-            const nodeColor = mission.completed
-              ? '#22c55e'
-              : mission.unlocked
-                ? '#06d6a0'
-                : '#374151';
-            const glowFilter = mission.completed
-              ? 'url(#glowGreen)'
-              : mission.unlocked
-                ? 'url(#glowCyan)'
-                : '';
-            const shortTitle =
-              mission.title.length > 20 ? `${mission.title.slice(0, 19)}…` : mission.title;
-
-            return (
-              <g key={mission.id}>
-                {next && (
-                  <line
-                    x1={cx}
-                    y1={cy}
-                    x2={next.cx}
-                    y2={next.cy}
-                    stroke={mission.completed ? '#22c55e' : '#1f2937'}
-                    strokeWidth="2"
-                    strokeDasharray={mission.completed ? '' : '6 4'}
-                    className={mission.completed ? 'path-line completed' : 'path-line'}
-                  />
-                )}
-                <g
-                  className="path-node"
-                  onClick={() => handleMissionClick(mission)}
-                  onMouseEnter={() => handleMissionHover(mission)}
-                  onKeyDown={(event) => {
-                    if (mission.unlocked && (event.key === 'Enter' || event.key === ' ')) {
-                      event.preventDefault();
-                      handleMissionClick(mission);
-                    }
-                  }}
-                  role={mission.unlocked ? 'button' : undefined}
-                  tabIndex={mission.unlocked ? 0 : -1}
-                  aria-label={t('missionMap.aria.missionItem', {
-                    order: mission.order,
-                    title: mission.title,
-                  })}
-                  style={{ cursor: mission.unlocked ? 'pointer' : 'not-allowed' }}
-                >
-                  <circle
-                    className="path-node-hit-area"
-                    cx={cx}
-                    cy={cy}
-                    r="28"
-                    fill="transparent"
-                  />
-                  <circle
-                    className="path-node-circle"
-                    cx={cx}
-                    cy={cy}
-                    r="24"
-                    fill={
-                      mission.completed
-                        ? 'rgba(34,197,94,0.15)'
-                        : mission.unlocked
-                          ? 'rgba(6,214,160,0.1)'
-                          : 'rgba(31,41,55,0.5)'
-                    }
-                    stroke={nodeColor}
-                    strokeWidth="2"
-                    filter={glowFilter}
-                  />
-                  <text
-                    x={cx}
-                    y={cy + 4}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={mission.completed ? '#22c55e' : mission.unlocked ? '#06d6a0' : '#6b7280'}
-                    fontSize="14"
-                    fontWeight="bold"
-                    aria-hidden="true"
-                  >
-                    {mission.completed ? '✓' : mission.unlocked ? mission.order : '🔒'}
-                  </text>
-                  <text
-                    x={cx}
-                    y={cy + 44}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fill={mission.unlocked ? '#cbd5e1' : '#475569'}
-                    fontWeight="500"
-                    fontFamily="Inter, sans-serif"
-                    aria-hidden="true"
-                  >
-                    {shortTitle}
-                  </text>
-                  <text
-                    x={cx}
-                    y={cy + 56}
-                    textAnchor="middle"
-                    fill={mission.completed ? '#22c55e' : '#f59e0b'}
-                    fontSize="9"
-                    fontWeight="600"
-                    fontFamily="Orbitron, sans-serif"
-                    aria-hidden="true"
-                  >
-                    {mission.completed ? 'COMPLETED' : `${mission.xpReward} XP`}
-                  </text>
-                </g>
-              </g>
-            );
-          })}
-          <defs>
-            <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-              <feFlood floodColor="var(--cyan)" floodOpacity="0.4" />
-              <feComposite in2="blur" operator="in" />
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <filter id="glowGreen" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-              <feFlood floodColor="var(--green)" floodOpacity="0.4" />
-              <feComposite in2="blur" operator="in" />
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
+        <DesktopMissionPath
+          layout={desktopPathLayout}
+          t={t}
+          onSelect={handleMissionClick}
+          onPreview={handleMissionHover}
+        />
       </div>
 
       <div className="learning-path-mobile" aria-label={t('missionMap.aria.missionTimeline')}>
