@@ -73,8 +73,15 @@ export function migrateLegacyAchievements() {
 
   try {
     if (legacyUnlocks.length > 0) {
-      const activeProfileId = getActiveProfileId();
+      // Same fallback loadProgress uses when the stored active id is stale.
+      const activeProfileId = getActiveProfileSlot().id;
+      // Read the latest profiles immediately before writing so the
+      // synchronous read-modify-write uses the current state.
       const profiles = loadProfiles();
+      if (!profiles.some((slot) => slot.id === activeProfileId)) {
+        // Nowhere to put the unlocks: keep the legacy store for a later retry.
+        return false;
+      }
       const updated = profiles.map((slot) =>
         slot.id === activeProfileId
           ? {

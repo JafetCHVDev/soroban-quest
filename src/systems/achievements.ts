@@ -312,6 +312,12 @@ export function normalizeAchievementIds(ids: unknown): string[] {
   return result;
 }
 
+/** Distinct completed ids that are real catalog missions (not theory quests). */
+function countCatalogMissions(completed: string[], catalog: MissionCatalog): number {
+  const missionIds = new Set(catalog.missionIds);
+  return new Set(completed.filter((id) => missionIds.has(id))).size;
+}
+
 export function isConditionMet(
   condition: AchievementCondition,
   state: AchievementState,
@@ -327,7 +333,7 @@ export function isConditionMet(
           catalog.missionIds.every((id) => completed.includes(id))
         );
       }
-      return completed.length >= condition.value;
+      return countCatalogMissions(completed, catalog) >= condition.value;
     case 'chapter_completed': {
       const ids = catalog.chapters[condition.chapter] ?? [];
       return ids.length > 0 && ids.every((id) => completed.includes(id));
@@ -337,7 +343,7 @@ export function isConditionMet(
     case 'total_xp':
       return (state.xp ?? 0) >= condition.value;
     case 'first_try_missions':
-      return (state.firstTryMissions ?? []).length >= condition.value;
+      return new Set(state.firstTryMissions ?? []).size >= condition.value;
     case 'streak':
       return (state.streak ?? 0) >= condition.value;
     default:

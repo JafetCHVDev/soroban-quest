@@ -351,6 +351,16 @@ describe("storage", () => {
       expect(profiles.find((p) => p.id === second.id).progress.badges).toEqual(["dedicated"]);
     });
 
+    it("falls back to the first profile when the stored active id is stale", () => {
+      loadProfiles();
+      setActiveProfileId("missing-profile");
+      storage[LEGACY_KEY] = JSON.stringify({ unlocked: ["dedicated"] });
+
+      expect(migrateLegacyAchievements()).toBe(true);
+      expect(loadProfiles()[0].progress.badges).toEqual(["dedicated"]);
+      expect(storage[LEGACY_KEY]).toBeUndefined();
+    });
+
     it("removes a corrupt legacy store without touching progress", () => {
       save({ ...getDefaultState(), badges: ["first_contract"] });
       storage[LEGACY_KEY] = "{not json";

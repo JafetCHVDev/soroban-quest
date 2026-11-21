@@ -48,6 +48,7 @@ describe("achievements (unified model)", () => {
         expect(["bronze", "silver", "gold"]).toContain(a.tier);
         expect(a.nameKey).toBe(`badges.${a.id}.name`);
         expect(a.descriptionKey).toBe(`badges.${a.id}.description`);
+        expect(a.reward).not.toBeNull();
         expect(typeof a.reward).toBe("object");
       }
     });
@@ -60,9 +61,9 @@ describe("achievements (unified model)", () => {
       ["zh-CN", zhCN],
     ])("has %s translations for every achievement", (_lang, locale) => {
       for (const a of ACHIEVEMENTS) {
-        expect(locale.badges?.[a.id]?.name, `${a.id}.name`).toEqual(expect.any(String));
+        expect(locale.badges?.[a.id]?.name, `${a.id}.name`).toEqual(expect.stringMatching(/\S/));
         expect(locale.badges?.[a.id]?.description, `${a.id}.description`).toEqual(
-          expect.any(String),
+          expect.stringMatching(/\S/),
         );
       }
     });
@@ -141,6 +142,21 @@ describe("achievements (unified model)", () => {
       ).toBe(false);
     });
 
+    it("counts only distinct catalog missions toward mission thresholds", () => {
+      const cond = { type: "missions_completed", value: 2 };
+      // Theory quests / unknown ids do not count.
+      expect(isConditionMet(cond, { completedMissions: ["m1", "quest-x"] }, catalog)).toBe(false);
+      // Duplicates do not count twice.
+      expect(isConditionMet(cond, { completedMissions: ["m1", "m1"] }, catalog)).toBe(false);
+      expect(isConditionMet(cond, { completedMissions: ["m1", "m2"] }, catalog)).toBe(true);
+    });
+
+    it("counts distinct first-try missions", () => {
+      const cond = { type: "first_try_missions", value: 2 };
+      expect(isConditionMet(cond, { firstTryMissions: ["m1", "m1"] }, catalog)).toBe(false);
+      expect(isConditionMet(cond, { firstTryMissions: ["m1", "m2"] }, catalog)).toBe(true);
+    });
+
     it("evaluates numeric thresholds", () => {
       expect(isConditionMet({ type: "level", value: 3 }, { level: 3 }, catalog)).toBe(true);
       expect(isConditionMet({ type: "total_xp", value: 500 }, { xp: 499 }, catalog)).toBe(false);
@@ -154,13 +170,17 @@ describe("achievements (unified model)", () => {
 
   describe("evaluateAchievements", () => {
     it("returns only newly satisfied achievements", () => {
-      const state = { ...getDefaultState(), completedMissions: ["a"], badges: [] };
+      const state = { ...getDefaultState(), completedMissions: ["hello-soroban"], badges: [] };
       expect(ids(evaluateAchievements(state))).toEqual(["first_contract"]);
       expect(evaluateAchievements({ ...state, badges: ["first_contract"] })).toEqual([]);
     });
 
     it("treats a legacy id as already unlocked", () => {
-      const state = { ...getDefaultState(), completedMissions: ["a"], badges: ["first_steps"] };
+      const state = {
+        ...getDefaultState(),
+        completedMissions: ["hello-soroban"],
+        badges: ["first_steps"],
+      };
       expect(evaluateAchievements(state)).toEqual([]);
     });
 
