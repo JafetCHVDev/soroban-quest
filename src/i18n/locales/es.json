@@ -281,6 +281,14 @@
     "profileCount": "{{count}} perfiles",
     "active": "Activo",
     "switch": "Cambiar",
+    "tabs": {
+      "ariaLabel": "Categoría de clasificación",
+      "xp": "XP",
+      "missions": "Misiones completadas",
+      "streak": "Racha actual",
+      "badges": "Insignias obtenidas",
+      "gold": "Oro"
+    },
     "columns": {
       "rank": "Puesto",
       "player": "Jugador",

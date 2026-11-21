@@ -275,6 +275,14 @@
     "profileCount": "{{count}} プロフィール",
     "active": "アクティブ",
     "switch": "切り替え",
+    "tabs": {
+      "ariaLabel": "ランキングのカテゴリー",
+      "xp": "XP",
+      "missions": "完了したミッション",
+      "streak": "現在の連続記録",
+      "badges": "獲得したバッジ",
+      "gold": "ゴールド"
+    },
     "columns": {
       "rank": "順位",
       "player": "プレイヤー",

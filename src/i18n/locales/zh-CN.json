@@ -275,6 +275,14 @@
     "profileCount": "{{count}} 个资料",
     "active": "当前",
     "switch": "切换",
+    "tabs": {
+      "ariaLabel": "排名类别",
+      "xp": "XP",
+      "missions": "已完成任务",
+      "streak": "当前连续天数",
+      "badges": "已获得徽章",
+      "gold": "金币"
+    },
     "columns": {
       "rank": "排名",
       "player": "玩家",
