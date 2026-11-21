@@ -5,6 +5,7 @@ import "./Leaderboard.css";
 import { useGameState } from "../systems/GameStateContext";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from "../systems/useDocumentTitle";
+import PremiumBadge from "../components/PremiumBadge";
 
 export default function Leaderboard() {
   useDocumentTitle("Leaderboard");
@@ -87,6 +88,7 @@ export default function Leaderboard() {
                           {slot.profile.avatar}
                         </span>
                         <span>{slot.profile.name}</span>
+                        <PremiumBadge t={t} inventory={slot.progress.inventory} />
                       </div>
                     </td>
                     <td>{slot.progress.xp}</td>
