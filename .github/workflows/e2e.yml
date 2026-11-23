@@ -27,7 +27,7 @@ jobs:
   # ── Functional E2E tests ─────────────────────────────────────────────────
   e2e:
     name: Functional E2E (Chromium)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -56,7 +56,7 @@ jobs:
   # ── Visual regression tests ──────────────────────────────────────────────
   visual-regression:
     name: Visual Regression (Chromium)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -99,7 +99,7 @@ jobs:
   update-snapshots:
     name: Update Baseline Snapshots
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_snapshots == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       pull-requests: write
