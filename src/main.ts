@@ -4,24 +4,30 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { LanguageProvider } from './i18n';
 import './index.css';
+import type { UseRegisterSWResult } from 'virtual:pwa-register/react';
 
 // Import PWA registration hook - dynamically imported as it may not be available
-let useRegisterSW: (() => unknown) | null = null;
+let useRegisterSW: (() => UseRegisterSWResult) | null = null;
 let UpdatePrompt: (() => ReactElement | null) | null = null;
 
 // Try to load PWA registration
-import('virtual:pwa-register/react').then((pwaModule: Record<string, unknown>) => {
-  useRegisterSW = pwaModule.useRegisterSW as (() => unknown) | undefined || null;
+import('virtual:pwa-register/react').then((pwaModule) => {
+  useRegisterSW = pwaModule.useRegisterSW;
   
   /**
    * UpdatePrompt component
    * Displays a notification when a new version of the PWA is available
    */
   function UpdatePrompt(): ReactElement | null {
+    const emptyRegistration: UseRegisterSWResult = {
+      needRefresh: [false, () => {}],
+      offlineReady: [false, () => {}],
+      updateServiceWorker: async () => {},
+    };
     const {
       needRefresh: [needRefresh, setNeedRefresh],
       updateServiceWorker,
-    } = useRegisterSW?.() || { needRefresh: [false, () => {}], updateServiceWorker: () => {} };
+    } = useRegisterSW?.() || emptyRegistration;
 
     if (!needRefresh) return null;
 

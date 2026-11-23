@@ -10,11 +10,12 @@ import './Quests.css';
 
 interface QuestItem {
   id: string;
-  type: string;
+  type: 'mission' | 'theory';
   campaign?: string | number;
   chapter?: number;
   difficulty?: string;
   completed?: boolean;
+  standalone?: boolean;
   xpReward?: number;
   title: string;
   description: string;
@@ -25,18 +26,30 @@ export default function Quests(): ReactElement {
   const { t, language } = useTranslation();
   const { progress } = useGameState();
 
-  const allMissions: QuestItem[] = [...(missions || []), ...(theoryQuests || [])].map((item: Mission | TheoryQuest) => ({
-    id: item.id,
-    type: item.type || 'mission',
-    campaign: 'campaign' in item ? item.campaign : undefined,
-    chapter: item.chapter,
-    difficulty: item.difficulty,
-    completed: 'completed' in item ? item.completed : undefined,
-    xpReward: item.xpReward,
-    title: item.i18n?.[language]?.title || item.i18n?.en?.title || (item as unknown as Record<string, unknown>).title || item.id,
-    description: item.i18n?.[language]?.story || item.i18n?.en?.story || (item as unknown as Record<string, unknown>).story || '',
-    path: item.type === 'theory' ? `/theory/${item.id}` : `/mission/${item.id}`,
-  }));
+  const allMissions: QuestItem[] = [...(missions || []), ...(theoryQuests || [])].map(
+    (item: Mission | TheoryQuest) => {
+      const currentLocale = item.i18n?.[language];
+      const englishLocale = item.i18n?.en;
+      const fallbackTitle =
+        'title' in item && typeof item.title === 'string' ? item.title : item.id;
+      const fallbackStory =
+        'story' in item && typeof item.story === 'string' ? item.story : '';
+
+      return {
+        id: item.id,
+        type: item.type || 'mission',
+        campaign: 'campaign' in item ? item.campaign : undefined,
+        chapter: item.chapter,
+        difficulty: item.difficulty,
+        completed: 'completed' in item ? item.completed : undefined,
+        standalone: 'standalone' in item ? item.standalone : undefined,
+        xpReward: item.xpReward,
+        title: currentLocale?.title || englishLocale?.title || fallbackTitle,
+        description: currentLocale?.story || englishLocale?.story || fallbackStory,
+        path: item.type === 'theory' ? `/theory/${item.id}` : `/mission/${item.id}`,
+      };
+    },
+  );
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCampaign, setSelectedCampaign] = useState<string>('all');

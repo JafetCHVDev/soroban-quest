@@ -18,14 +18,12 @@ import {
   getActiveProfileId,
   setActiveProfileId,
   MAX_PROFILES,
-  type ProfileSlot,
-  type Profile,
 } from './storage';
 import { authService } from './authService';
 import { cloudSyncService, scheduleCloudSync } from './cloudSync';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import { useTranslation } from '../i18n/useTranslation';
-import { type GameState } from '../types/game';
+import { type GameState, type Profile, type ProfileSlot } from '../types/game';
 
 /**
  * Game state context value type

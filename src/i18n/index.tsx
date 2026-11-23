@@ -24,9 +24,14 @@ import {
   DEFAULT_LANG,
   type SupportedLang,
 } from './languageBridge';
+import type { LanguageOption } from '../types/i18n';
 import './i18n.css';
 
-const LOCALES: Record<string, Record<string, unknown>> = {
+interface LocaleMessages extends Record<string, unknown> {
+  languages?: Record<string, string>;
+}
+
+const LOCALES: Record<SupportedLang, LocaleMessages> = {
   en,
   es,
   fr,
@@ -39,16 +44,15 @@ const STORAGE_KEY = 'soroban_quest_lang';
 /**
  * Language option type
  */
-export interface LanguageOption {
-  code: SupportedLang;
-  name: string;
-}
-
 /**
  * Language context value type
  */
 export interface LanguageContextValue {
-  t: (_key: string, _vars?: Record<string, unknown>) => string;
+  t: (
+    _key: string,
+    _varsOrFallback?: Record<string, unknown> | string,
+    _fallbackVars?: Record<string, unknown>,
+  ) => string;
   language: SupportedLang;
   setLanguage: (_lang: SupportedLang) => void;
   languages: LanguageOption[];
@@ -185,7 +189,11 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
 
   // t('a.b.c', { name: 'World' })
   const t = useCallback(
-    (key: string, vars?: Record<string, unknown>): string => {
+    (
+      key: string,
+      varsOrFallback?: Record<string, unknown> | string,
+      fallbackVars?: Record<string, unknown>,
+    ): string => {
       if (!key) return '';
       const dict = LOCALES[language] || LOCALES[DEFAULT_LANG];
       const fallback = LOCALES[DEFAULT_LANG];
@@ -193,13 +201,17 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
       let value = resolveKey(dict, key);
       if (value == null) value = resolveKey(fallback, key);
       if (value == null) {
+        if (typeof varsOrFallback === 'string') return varsOrFallback;
         if (import.meta?.env?.DEV) {
           // Surface missing keys in development without crashing
           console.warn(`[i18n] Missing translation key: "${key}"`);
         }
         return key;
       }
-      return interpolate(value as string | undefined, vars);
+      return interpolate(
+        value as string | undefined,
+        typeof varsOrFallback === 'string' ? fallbackVars : varsOrFallback,
+      );
     },
     [language],
   );
