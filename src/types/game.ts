@@ -65,7 +65,7 @@ export interface Mission {
   solution: string;
   checks: Check[];
   conceptsIntroduced: string[];
-  i18n: Partial<Record<Language, MissionLocale>>;
+  i18n?: Partial<Record<Language, MissionLocale>>;
   campaign?: string | number;
   completed?: boolean;
   standalone?: boolean;

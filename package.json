@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "analyze": "ANALYZE=true vite build",
+    "analyze": "node scripts/analyze.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

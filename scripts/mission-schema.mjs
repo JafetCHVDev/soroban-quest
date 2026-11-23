@@ -265,23 +265,3 @@ export function validateCampaignCollection(campaigns, missionIds) {
 
   return errors;
 }
-
-export function validateMissionLocaleKeys(missions, locales) {
-  const errors = [];
-  for (const [index, mission] of missions.entries()) {
-    for (const locale of LOCALES) {
-      const fields = mission?.i18n?.[locale];
-      for (const field of ['title', 'story', 'learningGoal', 'hints']) {
-        const value = fields?.[field];
-        if (typeof value !== 'string' || !value.startsWith('missions.')) continue;
-        const resolved = value.split('.').reduce((current, part) => current?.[part], locales?.[locale]);
-        if (resolved === undefined) {
-          errors.push(`missions[${index}].i18n.${locale}.${field}: missing locale key '${value}'`);
-        } else if (field === 'hints' && (!Array.isArray(resolved) || resolved.length === 0)) {
-          errors.push(`missions[${index}].i18n.${locale}.${field}: locale key '${value}' must resolve to a non-empty array`);
-        }
-      }
-    }
-  }
-  return errors;
-}

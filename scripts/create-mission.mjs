@@ -36,10 +36,6 @@ try {
     order,
     difficulty,
     xpReward,
-    i18n: {
-      en: { title: `missions.${id}.title`, story: `missions.${id}.story`, learningGoal: `missions.${id}.learningGoal`, hints: `missions.${id}.hints` },
-      es: { title: `missions.${id}.title`, story: `missions.${id}.story`, learningGoal: `missions.${id}.learningGoal`, hints: `missions.${id}.hints` },
-    },
     template: '// Starter Soroban code goes here',
     solution: '// Reference Soroban solution goes here',
     checks: [{ type: 'balanced_braces', message: 'Keep braces balanced' }],
@@ -53,15 +49,16 @@ try {
   await fs.writeFile(outputPath, `${JSON.stringify(mission, null, 2)}\n`);
   await fs.writeFile(markdownPath, `---\nid: ${id}\nchapter: ${chapter}\norder: ${order}\ndifficulty: ${difficulty}\nxp: ${xpReward}\nskills:\n  - add-concept\ntitle: ${title}\nlearningGoal: Describe the learning outcome.\nhints:\n  - Add the first hint.\n---\n\n# Mission story\n\nWrite the English story here.\n`);
   for (const locale of ['en', 'es']) {
-    const localePath = path.join(root, `src/i18n/locales/${locale}.json`);
-    const dictionary = JSON.parse(await fs.readFile(localePath, 'utf8'));
-    dictionary.missions ??= {};
-    dictionary.missions[id] = localeContent[locale];
-    await fs.writeFile(localePath, `${JSON.stringify(dictionary, null, 2)}\n`);
+    const localeDirectory = path.join(directory, 'i18n', locale);
+    await fs.mkdir(localeDirectory, { recursive: true });
+    await fs.writeFile(
+      path.join(localeDirectory, `${id}.json`),
+      `${JSON.stringify(localeContent[locale], null, 2)}\n`,
+    );
   }
   console.log(`Created ${path.relative(root, outputPath)}`);
   console.log(`Created ${path.relative(root, markdownPath)}`);
-  console.log('Edit the JSON i18n.en and i18n.es blocks, then run npm run mission:validate.');
+  console.log('Edit the locale JSON files in src/data/missions/authored/i18n, then run npm run mission:validate.');
 } finally {
   rl.close();
 }
