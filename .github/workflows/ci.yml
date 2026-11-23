@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check for duplicate .js/.ts files
+        run: npm run check:duplicates
+
       - name: Run lint
         run: |
           if npm run | grep -q "lint"; then

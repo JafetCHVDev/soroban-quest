@@ -23,18 +23,17 @@ export interface AchievementCondition {
 }
 
 /**
- * Achievement condition metadata
+ * Achievement definition
  */
-export interface AchievementMeta {
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
   category: string;
-  conditionMeta: AchievementCondition;
+  condition: AchievementCondition;
   reward: AchievementReward;
 }
-
-/**
- * Extended badge with achievement metadata
- */
-export interface Achievement extends Badge, AchievementMeta {}
 
 export const ACHIEVEMENTS: readonly Achievement[] = [
   {
@@ -43,14 +42,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete your first mission',
     icon: '👣',
     category: 'missions',
-    conditionMeta: {
+    condition: {
       type: 'missions_completed',
       value: 1,
     },
     reward: {
       xp: 50,
     },
-    condition: (state) => state.completedMissions.length >= 1,
   },
   {
     id: 'apprentice',
@@ -58,14 +56,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete 5 missions',
     icon: '🎓',
     category: 'missions',
-    conditionMeta: {
+    condition: {
       type: 'missions_completed',
       value: 5,
     },
     reward: {
       xp: 200,
     },
-    condition: (state) => state.completedMissions.length >= 5,
   },
   {
     id: 'journeyman',
@@ -73,14 +70,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete 10 missions',
     icon: '⚒️',
     category: 'missions',
-    conditionMeta: {
+    condition: {
       type: 'missions_completed',
       value: 10,
     },
     reward: {
       xp: 500,
     },
-    condition: (state) => state.completedMissions.length >= 10,
   },
   {
     id: 'master',
@@ -88,14 +84,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete all available missions',
     icon: '🏆',
     category: 'missions',
-    conditionMeta: {
+    condition: {
       type: 'missions_completed',
       value: 'all',
     },
     reward: {
       xp: 1000,
     },
-    condition: (state) => state.completedMissions.length >= 19,
   },
   {
     id: 'xp_collector',
@@ -103,14 +98,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Earn 500 total XP',
     icon: '💎',
     category: 'xp',
-    conditionMeta: {
+    condition: {
       type: 'total_xp',
       value: 500,
     },
     reward: {
       xp: 100,
     },
-    condition: (state) => state.xp >= 500,
   },
   {
     id: 'xp_hoarder',
@@ -118,14 +112,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Earn 2000 total XP',
     icon: '👑',
     category: 'xp',
-    conditionMeta: {
+    condition: {
       type: 'total_xp',
       value: 2000,
     },
     reward: {
       xp: 500,
     },
-    condition: (state) => state.xp >= 2000,
   },
   {
     id: 'level_up',
@@ -133,14 +126,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Reach level 3',
     icon: '📈',
     category: 'level',
-    conditionMeta: {
+    condition: {
       type: 'level',
       value: 3,
     },
     reward: {
       xp: 150,
     },
-    condition: (state) => state.level >= 3,
   },
   {
     id: 'high_roller',
@@ -148,14 +140,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Reach level 5',
     icon: '🎰',
     category: 'level',
-    conditionMeta: {
+    condition: {
       type: 'level',
       value: 5,
     },
     reward: {
       xp: 300,
     },
-    condition: (state) => state.level >= 5,
   },
   {
     id: 'speed_demon',
@@ -163,14 +154,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete 3 missions on first try',
     icon: '⚡',
     category: 'skill',
-    conditionMeta: {
+    condition: {
       type: 'first_try_missions',
       value: 3,
     },
     reward: {
       xp: 250,
     },
-    condition: (state) => (state.firstTryMissions?.length ?? 0) >= 3,
   },
   {
     id: 'perfectionist',
@@ -178,14 +168,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Complete 5 missions on first try',
     icon: '💯',
     category: 'skill',
-    conditionMeta: {
+    condition: {
       type: 'first_try_missions',
       value: 5,
     },
     reward: {
       xp: 400,
     },
-    condition: (state) => (state.firstTryMissions?.length ?? 0) >= 5,
   },
   {
     id: 'streak_starter',
@@ -193,14 +182,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Maintain a 3-day login streak',
     icon: '🔥',
     category: 'streak',
-    conditionMeta: {
+    condition: {
       type: 'streak',
       value: 3,
     },
     reward: {
       xp: 100,
     },
-    condition: (state) => state.streak >= 3,
   },
   {
     id: 'dedicated',
@@ -208,14 +196,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Maintain a 7-day login streak',
     icon: '💪',
     category: 'streak',
-    conditionMeta: {
+    condition: {
       type: 'streak',
       value: 7,
     },
     reward: {
       xp: 300,
     },
-    condition: (state) => state.streak >= 7,
   },
   {
     id: 'committed',
@@ -223,14 +210,13 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Maintain a 30-day login streak',
     icon: '🌟',
     category: 'streak',
-    conditionMeta: {
+    condition: {
       type: 'streak',
       value: 30,
     },
     reward: {
       xp: 1000,
     },
-    condition: (state) => state.streak >= 30,
   },
 ];
 
