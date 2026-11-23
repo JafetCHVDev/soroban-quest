@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useRef, useEffect } from "react";
 import type { ReactElement } from "react";
-import type { IStandaloneCodeEditor, Monaco } from "monaco-editor";
+import type { editor as MonacoEditorTypes } from "monaco-editor";
+import type { EditorProps, Monaco, OnMount } from "@monaco-editor/react";
 import EditorPlaceholder from "./EditorPlaceholder";
 import { measureEditorLoad } from "../systems/performanceMonitor";
 
@@ -10,11 +11,7 @@ const MonacoEditor = lazy(() => import("@monaco-editor/react"));
  * LazyMonacoEditor component props
  * Accepts all props that @monaco-editor/react accepts
  */
-interface LazyMonacoEditorProps {
-  /** Callback when editor is mounted */
-  onMount?: (_editor: IStandaloneCodeEditor, _monaco: Monaco) => void;
-  [key: string]: unknown;
-}
+type LazyMonacoEditorProps = EditorProps;
 
 /**
  * LazyMonacoEditor component
@@ -32,12 +29,12 @@ export default function LazyMonacoEditor(props: LazyMonacoEditorProps): ReactEle
     }
   }, []);
 
-  const handleMount = (editor: IStandaloneCodeEditor, monaco: Monaco): void => {
+  const handleMount: OnMount = (editor, monaco): void => {
     stopEditorLoad.current?.();
     stopEditorLoad.current = null;
     if (typeof window !== 'undefined') {
       const globalWindow = window as Window & {
-        __MONACO_EDITOR__?: IStandaloneCodeEditor;
+        __MONACO_EDITOR__?: MonacoEditorTypes.IStandaloneCodeEditor;
         monaco?: Monaco;
       };
       globalWindow.__MONACO_EDITOR__ = editor;

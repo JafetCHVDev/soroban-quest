@@ -11,6 +11,7 @@ import { missions, localizeMission } from '../data/missions';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 
+/** @param {import('../types/game').Language} [lang] @returns {import('../types/game').LocalizedMission[]} */
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
 }

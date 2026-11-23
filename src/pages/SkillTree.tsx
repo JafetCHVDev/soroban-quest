@@ -8,6 +8,7 @@ import { useTranslation } from '../i18n/useTranslation';
 import './SkillTree.css';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { measureRender } from '../systems/performanceMonitor';
+import type { LocalizedMission } from '../types/game';
 
 // Concept identifiers are kept untranslated — they're code-level tokens
 // (e.g. `contract`, `Env`, `require_auth`) that appear verbatim in Rust.
@@ -36,14 +37,19 @@ const conceptCategories = {
   }
 };
 
+interface SelectedConcept {
+  concept: string;
+  mission: LocalizedMission | null;
+}
+
 export default function SkillTree() {
   const { t, language } = useTranslation();
   useDocumentTitle('Skill Tree');
-  const [completedMissions, setCompletedMissions] = useState([]);
-  const [selectedConcept, setSelectedConcept] = useState(null);
-  const [hoveredConcept, setHoveredConcept] = useState(null);
-  const modalRef = useRef(null);
-  const modalTriggerRef = useRef(null);
+  const [completedMissions, setCompletedMissions] = useState<string[]>([]);
+  const [selectedConcept, setSelectedConcept] = useState<SelectedConcept | null>(null);
+  const [hoveredConcept, setHoveredConcept] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modalTriggerRef = useRef<HTMLElement | null>(null);
   const modalWasOpenRef = useRef(false);
 
   useEffect(() => {
@@ -51,7 +57,7 @@ export default function SkillTree() {
     stop();
   });
 
-  const localizedMissions = useMemo(
+  const localizedMissions = useMemo<LocalizedMission[]>(
     () => localizeMissions(missions, language),
     [language],
   );
@@ -77,12 +83,13 @@ export default function SkillTree() {
     const modal = modalRef.current;
     const focusableSelectors =
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-    const getFocusable = () => Array.from(modal.querySelectorAll(focusableSelectors));
+    const getFocusable = (): HTMLElement[] =>
+      Array.from(modal.querySelectorAll<HTMLElement>(focusableSelectors));
 
     const focusable = getFocusable();
     if (focusable.length) focusable[0].focus();
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         setSelectedConcept(null);
@@ -102,8 +109,10 @@ export default function SkillTree() {
     return () => modal.removeEventListener('keydown', handleKeyDown);
   }, [selectedConcept]);
 
-  const getConceptStatus = (concept) => {
-    const teachingMission = localizedMissions.find(mission =>
+  const getConceptStatus = (
+    concept: string,
+  ): { status: 'locked' | 'unlocked'; mission: LocalizedMission | null } => {
+    const teachingMission = localizedMissions.find((mission) =>
       mission.conceptsIntroduced?.includes(concept)
     );
 
@@ -116,7 +125,7 @@ export default function SkillTree() {
     };
   };
 
-  const handleConceptClick = (concept, trigger) => {
+  const handleConceptClick = (concept: string, trigger: HTMLElement): void => {
     modalTriggerRef.current = trigger;
     const { mission } = getConceptStatus(concept);
     setSelectedConcept({ concept, mission });
@@ -124,7 +133,7 @@ export default function SkillTree() {
 
   const closeConceptModal = () => setSelectedConcept(null);
 
-  const renderConceptNode = (concept) => {
+  const renderConceptNode = (concept: string) => {
     const { status, mission } = getConceptStatus(concept);
     const isHovered = hoveredConcept === concept;
     const isSelected = selectedConcept?.concept === concept;
@@ -172,9 +181,12 @@ export default function SkillTree() {
     );
   };
 
-  const renderCategory = (categoryKey, categoryData) => {
+  const renderCategory = (
+    categoryKey: string,
+    categoryData: { concepts: string[] },
+  ) => {
     const concepts = categoryData.concepts;
-    const unlockedCount = concepts.filter(concept =>
+    const unlockedCount = concepts.filter((concept) =>
       getConceptStatus(concept).status === 'unlocked'
     ).length;
     const progressPct = (unlockedCount / concepts.length) * 100;
@@ -204,7 +216,7 @@ export default function SkillTree() {
           {t(`skillTree.categories.${categoryKey}.description`)}
         </p>
         <div className="concept-grid">
-          {concepts.map(concept => renderConceptNode(concept))}
+          {concepts.map((concept) => renderConceptNode(concept))}
         </div>
       </div>
     );

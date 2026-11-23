@@ -7,7 +7,16 @@ import { logActivity, ACTIVITY_TYPES } from '../systems/activityLogger';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './Shop.css';
 
-const SHOP_ITEMS = [
+interface ShopItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  icon: string;
+  category: 'avatars' | 'boosts' | 'badges';
+}
+
+const SHOP_ITEMS: ShopItem[] = [
   {
     id: 'avatar-pack-1',
     name: 'avatarPack1',
@@ -77,7 +86,7 @@ export default function Shop() {
     ? SHOP_ITEMS
     : SHOP_ITEMS.filter(item => item.category === selectedCategory);
 
-  const handlePurchase = (item) => {
+  const handlePurchase = (item: ShopItem) => {
     if (ownedItems.includes(item.id)) {
       showToast(t('shop.alreadyPurchased'), 'error');
       return;
