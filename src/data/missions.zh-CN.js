@@ -1,7 +1,8 @@
 /* ==========================================
    Simplified Chinese (zh-CN) mission content
 
-   Kept in its own module (and its own build chunk, see vite.config.js)
+   Kept in its own module (and its own build chunk, see manualChunks in
+   vite.config.ts)
    so the shared missions chunk stays within the CI bundle budget.
    Merged into each mission's i18n['zh-CN'] in missions.js.
    Code blocks, Rust identifiers and Soroban SDK names are intentionally
