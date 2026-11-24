@@ -290,6 +290,8 @@
       "level": "レベル",
       "missions": "ミッション",
       "badges": "バッジ",
+      "streak": "連続記録",
+      "gold": "ゴールド",
       "status": "ステータス"
     }
   },

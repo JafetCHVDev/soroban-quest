@@ -296,6 +296,8 @@
       "level": "Nivel",
       "missions": "Misiones",
       "badges": "Insignias",
+      "streak": "Racha",
+      "gold": "Oro",
       "status": "Estado"
     }
   },

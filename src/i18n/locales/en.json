@@ -296,6 +296,8 @@
       "level": "Level",
       "missions": "Missions",
       "badges": "Badges",
+      "streak": "Streak",
+      "gold": "Gold",
       "status": "Status"
     }
   },

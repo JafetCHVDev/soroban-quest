@@ -12,6 +12,7 @@ import {
   rankProfiles,
   type LeaderboardCategory,
 } from "../systems/leaderboard";
+import PremiumBadge from "../components/PremiumBadge";
 
 export default function Leaderboard() {
   useDocumentTitle("Leaderboard");
@@ -126,6 +127,8 @@ export default function Leaderboard() {
                 <th scope="col">{t("leaderboard.columns.level")}</th>
                 <th scope="col">{t("leaderboard.columns.missions")}</th>
                 <th scope="col">{t("leaderboard.columns.badges")}</th>
+                <th scope="col">{t("leaderboard.columns.streak")}</th>
+                <th scope="col">{t("leaderboard.columns.gold")}</th>
                 <th scope="col">{t("leaderboard.columns.status")}</th>
               </tr>
             </thead>
@@ -141,12 +144,15 @@ export default function Leaderboard() {
                           {slot.profile.avatar}
                         </span>
                         <span>{slot.profile.name}</span>
+                        <PremiumBadge t={t} inventory={slot.progress.inventory} />
                       </div>
                     </td>
                     <td>{slot.progress.xp}</td>
                     <td>{slot.progress.level}</td>
                     <td>{slot.progress.completedMissions.length}</td>
                     <td>{slot.progress.badges.length}</td>
+                    <td>{slot.progress.streak ?? 0}</td>
+                    <td>{slot.progress.gold ?? 0}</td>
                     <td>
                       {isActive ? (
                         <span className="leaderboard-status active">

@@ -295,6 +295,8 @@
       "level": "Niveau",
       "missions": "Missions",
       "badges": "Badges",
+      "streak": "Série",
+      "gold": "Or",
       "status": "Statut"
     }
   },

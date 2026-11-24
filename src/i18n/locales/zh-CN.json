@@ -290,6 +290,8 @@
       "level": "等级",
       "missions": "任务",
       "badges": "徽章",
+      "streak": "连续天数",
+      "gold": "金币",
       "status": "状态"
     }
   },
