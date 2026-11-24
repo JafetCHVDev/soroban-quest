@@ -281,6 +281,14 @@
     "profileCount": "{{count}} perfiles",
     "active": "Activo",
     "switch": "Cambiar",
+    "tabs": {
+      "ariaLabel": "Categoría de clasificación",
+      "xp": "XP",
+      "missions": "Misiones completadas",
+      "streak": "Racha actual",
+      "badges": "Insignias obtenidas",
+      "gold": "Oro"
+    },
     "columns": {
       "rank": "Puesto",
       "player": "Jugador",
@@ -288,6 +296,8 @@
       "level": "Nivel",
       "missions": "Misiones",
       "badges": "Insignias",
+      "streak": "Racha",
+      "gold": "Oro",
       "status": "Estado"
     }
   },
