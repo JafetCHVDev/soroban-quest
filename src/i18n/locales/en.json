@@ -281,6 +281,14 @@
     "profileCount": "{{count}} profiles",
     "active": "Active",
     "switch": "Switch",
+    "tabs": {
+      "ariaLabel": "Ranking category",
+      "xp": "XP",
+      "missions": "Missions completed",
+      "streak": "Current streak",
+      "badges": "Badges earned",
+      "gold": "Gold"
+    },
     "columns": {
       "rank": "Rank",
       "player": "Player",
@@ -288,6 +296,8 @@
       "level": "Level",
       "missions": "Missions",
       "badges": "Badges",
+      "streak": "Streak",
+      "gold": "Gold",
       "status": "Status"
     }
   },

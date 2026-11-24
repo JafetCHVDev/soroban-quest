@@ -77,6 +77,30 @@
   font-size: 2.5rem;
 }
 
+.leaderboard-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.leaderboard-tab {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.leaderboard-tab.active {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
 .leaderboard-table-card {
   overflow: hidden;
 }
