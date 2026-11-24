@@ -139,8 +139,10 @@ test.describe('Shop Page', () => {
     await expect(page.locator('.balance-amount')).toHaveText('50');
 
     // The token is consumable: it stacks instead of becoming permanently owned.
+    // With only 50 gold left it is unaffordable, so the button is disabled for
+    // affordability rather than because the item was "purchased".
     await expect(buyBtn).toHaveText('Buy');
-    await expect(buyBtn).not.toBeDisabled();
+    await expect(buyBtn).toBeDisabled();
     await expect(hintTokenCard).not.toHaveClass(/purchased/);
     await expect(hintTokenCard.locator('.shop-item-owned-count')).toHaveText('Hint Tokens: 1');
   });
