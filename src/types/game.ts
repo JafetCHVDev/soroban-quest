@@ -3,10 +3,12 @@
  * Core game domain types: GameState, missions, campaigns, achievements, profiles
  */
 
+import { SUPPORTED_LANGS } from '../i18n/languageBridge';
+
 /**
- * Language support for the application
+ * Language support for the application (derived from SUPPORTED_LANGS)
  */
-export type Language = 'en' | 'es' | 'fr' | 'ja';
+export type Language = (typeof SUPPORTED_LANGS)[number];
 
 /**
  * Mission difficulty levels
