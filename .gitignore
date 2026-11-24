@@ -45,6 +45,9 @@ playwright-report/
 lint-output.txt
 final-lint.txt
 
+# Local git state snapshots
+branch_structure.json
+
 # Japanese localization work (separate PR #308)
 JAPANESE_TRANSLATIONS_INSTRUCTIONS.md
 japanese_i18n_updates.json
