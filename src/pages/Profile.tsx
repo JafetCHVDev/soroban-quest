@@ -10,7 +10,8 @@ import {
   defaultProfile,
 } from '../systems/storage';
 
-import { getXPProgress, BADGES } from '../systems/gameEngine';
+import { getXPProgress } from '../systems/gameEngine';
+import { ACHIEVEMENTS } from '../systems/achievements';
 import { getAllMissions } from '../systems/missionLoader';
 import { avatars } from '../data/avatars';
 import {
@@ -464,7 +465,7 @@ export default function Profile() {
       <h2 className="profile-section-title">{t('profile.sections.badges')}</h2>
 
       <div className="profile-badges-grid" role="region" aria-label="Badges progression collection">
-        {BADGES.map((badge) => {
+        {ACHIEVEMENTS.map((badge) => {
           const earned = state.badges.includes(badge.id);
 
           return (
@@ -477,8 +478,8 @@ export default function Profile() {
                 {badge.icon}
               </div>
               <div className="profile-badge-info" aria-hidden="true">
-                <h4>{t(`badges.${badge.id}.name`)}</h4>
-                <p>{t(`badges.${badge.id}.description`)}</p>
+                <h4>{t(badge.nameKey)}</h4>
+                <p>{t(badge.descriptionKey)}</p>
               </div>
             </div>
           );

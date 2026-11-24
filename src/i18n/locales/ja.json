@@ -677,6 +677,34 @@
     "chapter_7": {
       "name": "セキュリティセンチネル",
       "description": "チャプター7のすべてのミッションを完了"
+    },
+    "journeyman": {
+      "name": "ジャーニーマン",
+      "description": "10個のミッションを完了"
+    },
+    "xp_500": {
+      "name": "XPコレクター",
+      "description": "500 XPを獲得"
+    },
+    "xp_2000": {
+      "name": "XPマグネイト",
+      "description": "2000 XPを獲得"
+    },
+    "perfectionist": {
+      "name": "パーフェクショニスト",
+      "description": "5個のミッションを一発でクリア"
+    },
+    "streak_starter": {
+      "name": "ストリークスターター",
+      "description": "3日間連続でログイン"
+    },
+    "dedicated": {
+      "name": "献身",
+      "description": "7日間連続でログイン"
+    },
+    "committed": {
+      "name": "不屈",
+      "description": "30日間連続でログイン"
     }
   },
   "shop": {
