@@ -30,6 +30,7 @@ import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from '../i18n/useTranslation';
 import { authService } from '../systems/authService';
 import { cloudSyncService, getCloudSyncStatus } from '../systems/cloudSync';
+import PremiumBadge from '../components/PremiumBadge';
 
 // Total rank entries: 0..10. Anything >= 10 maps to the last rank.
 const MAX_RANK_INDEX = 10;
@@ -339,6 +340,7 @@ export default function Profile() {
           <h1 className="profile-name">
             <span className="sr-only">Adventurer Name: </span>
             {profile.name}
+            <PremiumBadge t={t} inventory={state.inventory} />
           </h1>
 
           <div className="profile-rank">

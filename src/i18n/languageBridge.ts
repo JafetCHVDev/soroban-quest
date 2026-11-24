@@ -10,8 +10,8 @@
 export const SUPPORTED_LANGS = ['en', 'es', 'fr', 'zh-CN', 'ja'] as const;
 export const DEFAULT_LANG = 'en';
 
-type SupportedLang = (typeof SUPPORTED_LANGS)[number];
-type LanguageChangeListener = (_lang: SupportedLang) => void;
+export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
+export type LanguageChangeListener = (_lang: SupportedLang) => void;
 
 let activeLanguage: SupportedLang = DEFAULT_LANG;
 const listeners = new Set<LanguageChangeListener>();

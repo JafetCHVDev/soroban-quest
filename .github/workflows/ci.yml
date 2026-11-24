@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -30,6 +30,9 @@ jobs:
           else
             echo "No lint script found, skipping linting check."
           fi
+
+      - name: Run unit tests
+        run: npm test
 
       - name: Validate mission data
         run: npm run mission:validate
