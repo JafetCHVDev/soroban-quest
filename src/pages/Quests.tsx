@@ -3,18 +3,17 @@ import { Link } from 'react-router-dom';
 import { Search, CheckCircle, Clock, Trophy, Filter } from 'lucide-react';
 import { useTranslation } from '../i18n/useTranslation';
 import { useGameState } from '../systems/GameStateContext';
-import { missions } from '../data/missions';
-import type { Mission } from '../types/game';
-import { theoryQuests, type TheoryQuest } from '../data/theoryQuests';
+import { getAllMissions, getAllTheoryQuests } from '../systems/missionLoader';
 import './Quests.css';
 
 interface QuestItem {
   id: string;
-  type: string;
+  type: 'mission' | 'theory';
   campaign?: string | number;
   chapter?: number;
   difficulty?: string;
   completed?: boolean;
+  standalone?: boolean;
   xpReward?: number;
   title: string;
   description: string;
@@ -25,18 +24,31 @@ export default function Quests(): ReactElement {
   const { t, language } = useTranslation();
   const { progress } = useGameState();
 
-  const allMissions: QuestItem[] = [...(missions || []), ...(theoryQuests || [])].map((item: Mission | TheoryQuest) => ({
-    id: item.id,
-    type: item.type || 'mission',
-    campaign: 'campaign' in item ? item.campaign : undefined,
-    chapter: item.chapter,
-    difficulty: item.difficulty,
-    completed: 'completed' in item ? item.completed : undefined,
-    xpReward: item.xpReward,
-    title: item.i18n?.[language]?.title || item.i18n?.en?.title || (item as unknown as Record<string, unknown>).title || item.id,
-    description: item.i18n?.[language]?.story || item.i18n?.en?.story || (item as unknown as Record<string, unknown>).story || '',
-    path: item.type === 'theory' ? `/theory/${item.id}` : `/mission/${item.id}`,
-  }));
+  const allMissions: QuestItem[] = useMemo(() => [
+    ...getAllMissions(language).map((mission) => ({
+      id: mission.id,
+      type: 'mission' as const,
+      campaign: mission.campaign,
+      chapter: mission.chapter,
+      difficulty: mission.difficulty,
+      completed: mission.completed,
+      standalone: mission.standalone,
+      xpReward: mission.xpReward,
+      title: mission.title,
+      description: mission.story,
+      path: `/mission/${mission.id}`,
+    })),
+    ...getAllTheoryQuests(language).map((quest) => ({
+      id: quest.id,
+      type: 'theory' as const,
+      chapter: quest.chapter,
+      difficulty: quest.difficulty,
+      xpReward: quest.xpReward,
+      title: quest.title,
+      description: quest.story,
+      path: `/theory/${quest.id}`,
+    })),
+  ], [language]);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCampaign, setSelectedCampaign] = useState<string>('all');
@@ -88,7 +100,6 @@ export default function Quests(): ReactElement {
     selectedDifficulty,
     completionStatus,
     progress,
-    language,
   ]);
 
   return (

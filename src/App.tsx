@@ -11,6 +11,7 @@ import { loadProgress, saveProgress } from './systems/storage';
 import { updateStreak } from './systems/gameEngine';
 import { scheduleCloudSync } from './systems/cloudSync';
 import { useKeyboardShortcuts } from './systems/useKeyboardShortcuts';
+import { useTranslation } from './i18n/useTranslation';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
 import './systems/Toast.css';
 
@@ -35,7 +36,37 @@ const NotFound = lazy(() => import('./pages/NotFound'));
  */
 function AppContent(): ReactElement {
   const navigate = useNavigate();
+  const { language } = useTranslation();
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [missionLocaleResult, setMissionLocaleResult] = useState<{
+    language: string;
+    error: boolean;
+  } | null>(null);
+  const needsMissionLocale = ['es', 'fr', 'ja', 'zh-CN'].includes(language);
+  const missionLocaleReady = !needsMissionLocale || missionLocaleResult?.language === language;
+  const missionLocaleError =
+    missionLocaleResult?.language === language && missionLocaleResult.error;
+
+  useEffect(() => {
+    if (!needsMissionLocale) return undefined;
+
+    let cancelled = false;
+    void import('./systems/missionLoader.js')
+      .then(({ loadMissionLocale }) => loadMissionLocale(language))
+      .then(() => {
+        if (!cancelled) setMissionLocaleResult({ language, error: false });
+      })
+      .catch((error: unknown) => {
+        console.error(`Failed to load ${language} mission content`, error);
+        if (!cancelled) {
+          setMissionLocaleResult({ language, error: true });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [language, needsMissionLocale]);
 
   // Global React Router navigation scroll management
   useScrollToTop();
@@ -80,23 +111,34 @@ function AppContent(): ReactElement {
     <div className="app">
       <Navbar onOpenShortcuts={() => setIsShortcutsOpen(true)} />
       <main className="main-content">
-        <Suspense fallback={<LoadingScreen />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/missions" element={<MissionMap />} />
-            <Route path="/quests" element={<Quests />} />
-            <Route path="/campaigns" element={<Campaigns />} />
-            <Route path="/mission/:missionId" element={<MissionDetail />} />
-            <Route path="/theory/:questId" element={<TheoryQuestDetail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/skills" element={<SkillTree />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/achievements" element={<Achievements />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        {!missionLocaleReady ? (
+          <LoadingScreen />
+        ) : (
+          <>
+            {missionLocaleError && (
+              <div role="alert" className="mission-locale-error">
+                Mission translations could not be loaded. Showing English mission content.
+              </div>
+            )}
+            <Suspense fallback={<LoadingScreen />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/missions" element={<MissionMap />} />
+                <Route path="/quests" element={<Quests />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/mission/:missionId" element={<MissionDetail />} />
+                <Route path="/theory/:questId" element={<TheoryQuestDetail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/journal" element={<Journal />} />
+                <Route path="/skills" element={<SkillTree />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/achievements" element={<Achievements />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </>
+        )}
       </main>
       <Footer />
       <KeyboardShortcuts isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />

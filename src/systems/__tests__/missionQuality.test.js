@@ -40,7 +40,23 @@ Complete the code template to pass all checks.`,
 }));
 
 // Import missions after the mock is registered.
-import { missions, localizeMission } from '../../data/missions.js';
+import { missions as missionDefinitions } from '../../data/missions.js';
+import { missionLocale as englishMissionLocale } from '../../data/missions/i18n/en.js';
+import { missionLocale as spanishMissionLocale } from '../../data/missions/i18n/es.js';
+
+const missions = missionDefinitions.map((mission) => ({
+    ...mission,
+    i18n: {
+        en: englishMissionLocale[mission.id],
+        es: spanishMissionLocale[mission.id],
+    },
+}));
+
+function localizeMission(mission, language = 'en') {
+    const { i18n, ...neutral } = mission;
+    const content = i18n?.[language] || i18n?.en || {};
+    return { ...neutral, ...content };
+}
 
 // ---------------------------------------------------------------------------
 // Helper: compute a difficulty score for a mission used in Category 3.
