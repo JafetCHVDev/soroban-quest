@@ -14,17 +14,25 @@ import { getActiveLanguage } from '../i18n/languageBridge';
 import { registerMissionCatalog } from './achievements';
 
 const missionLocalePromises = new Map();
-const englishLocaleCache = new Map([['en', englishMissionLocale]]);
+const localeCache = new Map([['en', englishMissionLocale]]);
 
 export function loadMissionLocale(language) {
     const locale = typeof language === 'string'
         ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
         : 'en';
+    if (localeCache.has(locale)) return Promise.resolve(localeCache.get(locale));
     if (missionLocalePromises.has(locale)) return missionLocalePromises.get(locale);
-
-    const promise = Promise.resolve(locale);
-    missionLocalePromises.set(locale, promise);
-    return promise;
+    if (locale === 'es') {
+        const promise = import('../data/missions/i18n/es.js')
+            .then((module) => {
+                localeCache.set(locale, module.missionLocale);
+                return module.missionLocale;
+            })
+            .finally(() => missionLocalePromises.delete(locale));
+        missionLocalePromises.set(locale, promise);
+        return promise;
+    }
+    return Promise.resolve(locale);
 }
 
 export function localizeMission(mission, language = 'en') {
@@ -32,11 +40,9 @@ export function localizeMission(mission, language = 'en') {
     const locale = typeof language === 'string'
         ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
         : 'en';
-    if (locale === 'en') {
-        const localized = englishLocaleCache.get('en')?.[mission.id] || {};
-        return { ...mission, ...localized };
-    }
-    return localizeCoreMission(mission, locale);
+    const localized = localeCache.get(locale)?.[mission.id] ||
+        localeCache.get('en')?.[mission.id] || {};
+    return { ...localizeCoreMission(mission, 'en'), ...localized };
 }
 
 export function getAllMissions(lang = getActiveLanguage()) {
