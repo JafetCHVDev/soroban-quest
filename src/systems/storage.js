@@ -1,4 +1,4 @@
-import { getDefaultState, getLevelFromXP, xpForLevel } from "./gameEngine";
+import { getDefaultState, getLevelFromXP, HINT_TOKEN_ID, xpForLevel } from "./gameEngine";
 import {
   ACHIEVEMENTS,
   normalizeAchievementIds,
