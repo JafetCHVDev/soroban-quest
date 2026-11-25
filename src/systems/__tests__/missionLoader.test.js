@@ -6,6 +6,7 @@ import {
   getNextMission,
   getPreviousMission,
   isMissionUnlocked,
+  loadMissionLocale,
 } from '../missionLoader.js';
 import { missions } from '../../data/missions.js';
 import {
@@ -75,6 +76,13 @@ describe('missionLoader', () => {
       expect(getActiveLanguage()).toBe('es');
 
       expect(getAllMissions()[0].title).toBe('El Primer Contrato');
+    });
+
+    it('updates mission text after switching locale content', async () => {
+      await loadMissionLocale('es');
+      await loadMissionLocale('zh-CN');
+      expect(getAllMissions('es')[0].title).toBe('El Primer Contrato');
+      expect(getAllMissions('zh-CN')[0].title).toBe('第一份合约');
     });
   });
 

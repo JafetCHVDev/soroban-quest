@@ -7,10 +7,49 @@
    the active language (e.g. a component using useTranslation()).
    ========================================== */
 
-import { missions, localizeMission } from '../data/missions';
+import { missions } from '../data/missions';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 import { registerMissionCatalog } from './achievements';
+import { missionLocale as englishMissionLocale } from '../data/missions/i18n/en';
+
+const localeCache = new Map([['en', englishMissionLocale]]);
+const localePromises = new Map();
+
+export function loadMissionLocale(language) {
+    const locale = typeof language === 'string'
+        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
+        : 'en';
+    if (localeCache.has(locale)) return Promise.resolve(localeCache.get(locale));
+    if (localePromises.has(locale)) return localePromises.get(locale);
+    const loaders = {
+        es: () => import('../data/missions/i18n/es.js'),
+        fr: () => import('../data/missions/i18n/fr.js'),
+        ja: () => import('../data/missions/i18n/ja.js'),
+        'zh-CN': () => import('../data/missions/i18n/zh-CN.js'),
+    };
+    if (!loaders[locale]) return Promise.resolve(locale);
+    const promise = loaders[locale]()
+        .then((module) => {
+            localeCache.set(locale, module.missionLocale);
+            return module.missionLocale;
+        })
+        .finally(() => localePromises.delete(locale));
+    localePromises.set(locale, promise);
+    return promise;
+}
+
+export function localizeMission(mission, language = 'en') {
+    if (!mission) return mission;
+    const locale = typeof language === 'string'
+        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
+        : 'en';
+    const localized = localeCache.get(locale)?.[mission.id]
+        || localeCache.get('en')?.[mission.id]
+        || {};
+    const { i18n: _i18n, ...neutral } = mission;
+    return { ...neutral, ...localized };
+}
 
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));

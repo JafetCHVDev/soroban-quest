@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
-import { createMissionFromMarkdown } from '../src/systems/missionParser.js';
+import { parseMissionMarkdown } from '../src/systems/missionParser.js';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 
@@ -16,35 +16,46 @@ function evaluateDataModule(relativePath, exportName, replacements = []) {
     .replace(/^export\s+(?=const|function|let|var|class)/gm, '')
     .concat(`\n;globalThis.__result = ${exportName};`);
 
-  const context = { console, globalThis: {}, createMissionFromMarkdown };
+  const context = { console, globalThis: {}, parseMissionMarkdown };
   vm.runInNewContext(source, context, { filename });
   return context.globalThis.__result;
 }
 
 export function loadMissions() {
-  const markdown = JSON.stringify(fs.readFileSync(path.join(root, 'src/data/missions/hello-soroban.md'), 'utf8'));
   const authoredDirectory = path.join(root, 'src/data/missions/authored');
   const authoredFiles = (fs.existsSync(authoredDirectory) ? fs.readdirSync(authoredDirectory) : [])
     .filter((name) => name.endsWith('.json'));
   const authoredMissions = authoredFiles.map((name) => JSON.parse(
     fs.readFileSync(path.join(authoredDirectory, name), 'utf8'),
   ));
-  const missionsZhCN = evaluateDataModule('src/data/missions.zh-CN.js', 'missionsZhCN');
-  return evaluateDataModule('src/data/missions.js', 'missions', [
-    [/^import helloSorobanMarkdown from .*?;$/m, `const helloSorobanMarkdown = ${markdown};`],
-    [/^import \{ missionsZhCN \} from .*?;$/m, `const missionsZhCN = ${JSON.stringify(missionsZhCN)};`],
-    [/^import \{ createMissionFromMarkdown \} from .*?;$/m, ''],
-    [/^import enLocale from .*?;$/m, 'const enLocale = {};'],
-    [/^import esLocale from .*?;$/m, 'const esLocale = {};'],
+  const coreMissions = evaluateDataModule('src/data/missions.js', 'missions', [
     [/^const authoredMissions = Object\.values\([\s\S]*?\);/m, `const authoredMissions = ${JSON.stringify(authoredMissions)};`],
   ]);
+  const locales = loadMissionLocales();
+  return coreMissions.map((mission) => ({
+    ...mission,
+    i18n: Object.fromEntries(
+      Object.entries(locales)
+        .filter(([, content]) => content[mission.id])
+        .map(([locale, content]) => [locale, content[mission.id]]),
+    ),
+  }));
 }
 
-export function loadLocales() {
-  return {
-    en: JSON.parse(fs.readFileSync(path.join(root, 'src/i18n/locales/en.json'), 'utf8')),
-    es: JSON.parse(fs.readFileSync(path.join(root, 'src/i18n/locales/es.json'), 'utf8')),
-  };
+export function loadMissionLocales() {
+  const locales = {};
+  for (const locale of ['en', 'es', 'fr', 'ja', 'zh-CN']) {
+    const replacements = [];
+    if (locale === 'en') {
+      const markdown = JSON.stringify(fs.readFileSync(path.join(root, 'src/data/missions/hello-soroban.md'), 'utf8'));
+      replacements.push(
+        [/^import helloSorobanMarkdown from .*?;$/m, `const helloSorobanMarkdown = ${markdown};`],
+        [/^import \{ parseMissionMarkdown \} from .*?;$/m, ''],
+      );
+    }
+    locales[locale] = evaluateDataModule(`src/data/missions/i18n/${locale}.js`, 'missionLocale', replacements);
+  }
+  return locales;
 }
 
 export function loadCampaigns() {

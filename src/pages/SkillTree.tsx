@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { missions, localizeMissions } from '../data/missions';
+import { getAllMissions } from '../systems/missionLoader';
 
 /* eslint-disable react-hooks/set-state-in-effect */
 
@@ -52,7 +52,7 @@ export default function SkillTree() {
   });
 
   const localizedMissions = useMemo(
-    () => localizeMissions(missions, language),
+    () => getAllMissions(language),
     [language],
   );
 

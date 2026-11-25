@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, CheckCircle, Clock, Trophy, Filter } from 'lucide-react';
 import { useTranslation } from '../i18n/useTranslation';
 import { useGameState } from '../systems/GameStateContext';
-import { missions } from '../data/missions';
+import { getAllMissions } from '../systems/missionLoader';
 import type { Mission } from '../types/game';
 import { theoryQuests, type TheoryQuest } from '../data/theoryQuests';
 import './Quests.css';
@@ -25,7 +25,7 @@ export default function Quests(): ReactElement {
   const { t, language } = useTranslation();
   const { progress } = useGameState();
 
-  const allMissions: QuestItem[] = [...(missions || []), ...(theoryQuests || [])].map((item: Mission | TheoryQuest) => ({
+  const allMissions: QuestItem[] = [...(getAllMissions(language) || []), ...(theoryQuests || [])].map((item: Mission | TheoryQuest) => ({
     id: item.id,
     type: item.type || 'mission',
     campaign: 'campaign' in item ? item.campaign : undefined,
