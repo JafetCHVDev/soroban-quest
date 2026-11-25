@@ -467,6 +467,10 @@
       "goldHintTitle": "{{cost}} ゴールドを使って次のヒントをすぐに表示",
       "goldHintInsufficient": "ゴールドが不足しています — このヒントのアンロックには {{cost}} 必要です",
       "goldHintUnlocked": "🪙 ヒント（アンロック済み）",
+      "useToken": "💡 トークン使用（{{count}}）",
+      "useTokenTitle": "ヒントトークンを1枚使って次のヒントを表示します",
+      "useTokenEmpty": "ヒントトークンがありません — ショップで購入してください",
+      "useTokenUnlocked": "💡 ヒント（アンロック済み）",
       "solution": "👁️ 解答",
       "run": "▶ テスト実行",
       "running": "実行中…",
@@ -522,6 +526,8 @@
       "hintUnlocked": "ヒント {{index}} がアンロック",
       "hintGoldUnlocked": "ヒント {{index}} を {{cost}} ゴールドでアンロックしました",
       "hintInsufficientGold": "ゴールドが不足しています — このヒントのアンロックには {{cost}} 必要です",
+      "hintTokenUnlocked": "ヒント {{index}} をヒントトークンでアンロックしました",
+      "hintTokenMissing": "ヒントトークンがありません — ショップで購入してください",
       "codeReset": "コードをテンプレートにリセット",
       "solutionLoaded": "解答をエディターに読み込み"
     },
@@ -738,7 +744,9 @@
     "purchaseSuccess": "{{item}}を正常に購入しました！",
     "empty": "このカテゴリにアイテムが見つかりません",
     "ariaPurchase": "{{item}}を{{price}}ゴールドで購入",
-    "ariaPurchased": "{{item}} - 既に購入済み"
+    "ariaPurchased": "{{item}} - 既に購入済み",
+    "hintTokensLabel": "ヒントトークン",
+    "hintTokensCount": "ヒントトークン：{{count}}"
   },
   "onboarding": {
     "step1": {

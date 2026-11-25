@@ -488,6 +488,10 @@
       "goldHintTitle": "Gasta {{cost}} de oro para revelar la siguiente pista al instante",
       "goldHintInsufficient": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
       "goldHintUnlocked": "🪙 Pista (desbloqueada)",
+      "useToken": "💡 Usar token ({{count}})",
+      "useTokenTitle": "Gasta un token de pista para revelar la siguiente pista",
+      "useTokenEmpty": "No te quedan tokens de pista — compra más en la tienda",
+      "useTokenUnlocked": "💡 Pista (desbloqueada)",
       "solution": "👁️ Solución",
       "run": "▶ Ejecutar pruebas",
       "running": "Ejecutando…",
@@ -543,6 +547,8 @@
       "hintUnlocked": "Pista {{index}} desbloqueada",
       "hintGoldUnlocked": "Pista {{index}} desbloqueada por {{cost}} de oro",
       "hintInsufficientGold": "Oro insuficiente — necesitas {{cost}} para desbloquear esta pista",
+      "hintTokenUnlocked": "Pista {{index}} desbloqueada con un token de pista",
+      "hintTokenMissing": "No te quedan tokens de pista — compra más en la tienda",
       "codeReset": "Código restablecido a la plantilla",
       "solutionLoaded": "Solución cargada en el editor"
     },
@@ -759,7 +765,9 @@
     "purchaseSuccess": "¡{{item}} comprado exitosamente!",
     "empty": "No hay artículos en esta categoría",
     "ariaPurchase": "Comprar {{item}} por {{price}} Oro",
-    "ariaPurchased": "{{item}} - Ya comprado"
+    "ariaPurchased": "{{item}} - Ya comprado",
+    "hintTokensLabel": "Tokens de pista",
+    "hintTokensCount": "Tokens de pista: {{count}}"
   },
   "onboarding": {
     "step1": {

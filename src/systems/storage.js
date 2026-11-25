@@ -1,4 +1,4 @@
-import { getDefaultState, getLevelFromXP, xpForLevel } from "./gameEngine";
+import { getDefaultState, getLevelFromXP, HINT_TOKEN_ID, xpForLevel } from "./gameEngine";
 import {
   ACHIEVEMENTS,
   normalizeAchievementIds,
@@ -15,6 +15,46 @@ const PROFILES_KEY = "soroban_quest_profiles";
 const ACTIVE_PROFILE_KEY = "soroban_quest_active_profile";
 export const MAX_PROFILES = 5;
 
+/**
+ * Normalise the persisted inventory.
+ *
+ * Hint Tokens are consumable, so their quantity is stored as the integer
+ * `inventory.hintTokens` rather than as an owned boolean. Saves written before
+ * that migration only know `hint-token` as a purchased/owned item; those are
+ * converted into a single token so existing players keep what they bought.
+ */
+function migrateInventory(progress) {
+  const source = progress && typeof progress === "object" ? progress : {};
+  const inventory =
+    source.inventory && typeof source.inventory === "object" && !Array.isArray(source.inventory)
+      ? source.inventory
+      : {};
+  const legacyItems = Array.isArray(source.purchasedItems) ? source.purchasedItems : [];
+  const owned = Array.isArray(inventory.owned) ? inventory.owned : legacyItems;
+  const equipped = Array.isArray(inventory.equipped) ? inventory.equipped : [];
+
+  const legacyOwnedToken = owned.includes(HINT_TOKEN_ID) || legacyItems.includes(HINT_TOKEN_ID);
+  const hintTokens =
+    Number.isInteger(inventory.hintTokens) && inventory.hintTokens >= 0
+      ? inventory.hintTokens
+      : legacyOwnedToken
+        ? 1
+        : 0;
+
+  return {
+    ...source,
+    inventory: {
+      ...inventory,
+      owned: owned.filter((id) => id !== HINT_TOKEN_ID),
+      equipped: equipped.filter((id) => id !== HINT_TOKEN_ID),
+      hintTokens,
+    },
+    ...(Array.isArray(source.purchasedItems)
+      ? { purchasedItems: source.purchasedItems.filter((id) => id !== HINT_TOKEN_ID) }
+      : {}),
+  };
+}
+
 function createDefaultProfileSlot(index = 0, overrides = {}) {
   const id = overrides.id || `player-${index + 1}`;
   return {
@@ -24,10 +64,12 @@ function createDefaultProfileSlot(index = 0, overrides = {}) {
       name: index === 0 ? defaultProfile.name : `Player ${index + 1}`,
       ...(overrides.profile || {}),
     },
-    progress: withNormalizedAchievements({
-      ...getDefaultState(),
-      ...(overrides.progress || {}),
-    }),
+    progress: withNormalizedAchievements(
+      migrateInventory({
+        ...getDefaultState(),
+        ...(overrides.progress || {}),
+      })
+    ),
   };
 }
 
@@ -145,7 +187,7 @@ function readLegacyProgress() {
       };
     }
     
-    return withNormalizedAchievements({ ...getDefaultState(), ...parsed });
+    return withNormalizedAchievements(migrateInventory({ ...getDefaultState(), ...parsed }));
   } catch {
     return null;
   }
@@ -178,7 +220,10 @@ function syncActiveProgressFromLegacy(progress) {
   const profiles = loadProfiles();
   const updated = profiles.map((slot) =>
     slot.id === activeProfileId
-      ? { ...slot, progress: { ...getDefaultState(), ...cleanProgress(progress) } }
+      ? {
+          ...slot,
+          progress: migrateInventory({ ...getDefaultState(), ...cleanProgress(progress) }),
+        }
       : slot
   );
   persistProfiles(updated);
@@ -410,6 +455,13 @@ function validateImportState(state, errors, missionIds, badgeIds) {
   if (inventory !== undefined && checkPlainObject(errors, "state.inventory", inventory)) {
     const ownedValid = checkArray(errors, "state.inventory.owned", inventory.owned);
     const equippedValid = checkArray(errors, "state.inventory.equipped", inventory.equipped);
+    if (inventory.hintTokens !== undefined) {
+      checkNumber(errors, "state.inventory.hintTokens", inventory.hintTokens, {
+        min: 0,
+        max: MAX_IMPORT_ARRAY_LENGTH,
+        integer: true,
+      });
+    }
     if (ownedValid && equippedValid) {
       const owned = new Set(inventory.owned);
       const unowned = inventory.equipped.filter((item) => !owned.has(item));
@@ -510,7 +562,10 @@ export function saveProgress(state) {
     const profiles = loadProfiles();
     const updated = profiles.map((slot) =>
       slot.id === activeProfileId
-        ? { ...slot, progress: { ...getDefaultState(), ...cleanProgress(state) } }
+        ? {
+          ...slot,
+          progress: migrateInventory({ ...getDefaultState(), ...cleanProgress(state) }),
+        }
         : slot
     );
     saveProfiles(updated);

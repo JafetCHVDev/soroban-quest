@@ -3,7 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Editor from "../components/LazyMonacoEditor";
 import { getMissionById, getNextMission } from "../systems/missionLoader";
-import { loadProgress } from "../systems/storage";
+import {
+  HINT_GOLD_COST,
+  getHintTokenCount,
+  isHintGoldUnlocked,
+  spendGoldForHint,
+  spendHintTokenForHint,
+} from "../systems/gameEngine";
+import { useGameState } from "../systems/GameStateContext";
 import { logActivity, ACTIVITY_TYPES } from "../systems/activityLogger";
 import MissionDetailSkeleton from "../components/MissionDetailSkeleton";
 import { useOkashi } from "../systems/useokashi";
@@ -47,6 +54,7 @@ export default function MissionDetail() {
 
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
+  const { progress, updateProgress } = useGameState();
 
   // --------------------------- States ---------------------------
   const [loading, setLoading] = useState(true);
@@ -90,8 +98,12 @@ export default function MissionDetail() {
   const { hasReplay, showReplay, replayData, handleWatchReplay, handleCloseReplay } =
     useMissionReplay(missionId);
 
-  const progressState = loadProgress();
-  const isCompleted = missionId && progressState.completedMissions.includes(missionId);
+  const isCompleted = missionId && progress.completedMissions.includes(missionId);
+  const nextHintIndex = hintIndex + 1;
+  const noMoreHints = !mission?.hints || nextHintIndex >= mission.hints.length;
+  const nextHintAlreadyUnlocked = Boolean(
+    missionId && !noMoreHints && isHintGoldUnlocked(progress, missionId, nextHintIndex),
+  );
 
   const nextMissionItem = useMemo(
     () => missionId ? getNextMission(missionId, language) : null,
@@ -156,6 +168,80 @@ export default function MissionDetail() {
         ACTIVITY_TYPES.HINT_USED,
         { missionId, hintIndex: nextIndex, title: mission.title },
         `Used hint ${nextIndex + 1} for ${mission.title}`,
+      );
+    }
+  };
+
+  // Reveal the next hint by spending gold (unless it was already paid for).
+  const handleGoldHint = (): void => {
+    if (!mission?.hints || missionId === undefined || noMoreHints) return;
+
+    if (nextHintAlreadyUnlocked) {
+      setHintIndex(nextHintIndex);
+      if (showToast) {
+        showToast(
+          t("missionDetail.toasts.hintUnlocked", { index: nextHintIndex + 1 }),
+          "info",
+        );
+      }
+      return;
+    }
+
+    const updated = spendGoldForHint(progress, missionId, nextHintIndex, HINT_GOLD_COST);
+    if (updated.insufficientGold) {
+      if (showToast) {
+        showToast(
+          t("missionDetail.toasts.hintInsufficientGold", { cost: HINT_GOLD_COST }),
+          "error",
+        );
+      }
+      return;
+    }
+
+    updateProgress(updated);
+    setHintIndex(nextHintIndex);
+    if (showToast) {
+      showToast(
+        t("missionDetail.toasts.hintGoldUnlocked", {
+          index: nextHintIndex + 1,
+          cost: HINT_GOLD_COST,
+        }),
+        "success",
+      );
+    }
+    logActivity(
+      ACTIVITY_TYPES.HINT_USED,
+      { missionId, hintIndex: nextHintIndex, title: mission.title, gold: HINT_GOLD_COST },
+      `Spent ${HINT_GOLD_COST} gold to unlock hint ${nextHintIndex + 1} for ${mission.title}`,
+    );
+  };
+
+  // Reveal the next hint with a Hint Token instead of gold, consuming one.
+  const handleUseHintToken = (): void => {
+    if (!mission?.hints || missionId === undefined || noMoreHints) return;
+
+    const updated = spendHintTokenForHint(progress, missionId, nextHintIndex);
+    if (updated.insufficientTokens) {
+      if (showToast) showToast(t("missionDetail.toasts.hintTokenMissing"), "error");
+      return;
+    }
+
+    if (!updated.hintAlreadyUnlocked) {
+      updateProgress(updated);
+      logActivity(
+        ACTIVITY_TYPES.HINT_USED,
+        { missionId, hintIndex: nextHintIndex, title: mission.title, hintToken: true },
+        `Used a Hint Token for hint ${nextHintIndex + 1} of ${mission.title}`,
+      );
+    }
+    setHintIndex(nextHintIndex);
+
+    if (showToast) {
+      showToast(
+        updated.hintAlreadyUnlocked
+          ? t("missionDetail.toasts.hintUnlocked", { index: nextHintIndex + 1 })
+          : t("missionDetail.toasts.hintTokenUnlocked", { index: nextHintIndex + 1 }),
+        "success",
       );
     }
   };
@@ -243,9 +329,15 @@ export default function MissionDetail() {
             onFontSizeChange={handleFontSizeChange}
             isRunning={isRunning}
             isCompiling={isCompiling}
-            hintDisabled={!mission.hints || hintIndex >= mission.hints.length - 1}
+            hintDisabled={noMoreHints}
+            goldHintCost={HINT_GOLD_COST}
+            goldBalance={progress.gold || 0}
+            hintTokens={getHintTokenCount(progress)}
+            nextHintAlreadyUnlocked={nextHintAlreadyUnlocked}
             onReset={handleReset}
             onHint={handleHint}
+            onGoldHint={handleGoldHint}
+            onUseHintToken={handleUseHintToken}
             onShowSolution={handleShowSolution}
             onCompileAndRun={handleCompileAndRun}
             onRunTests={handleRunTests}
