@@ -190,7 +190,7 @@ describe('CodeRecorder', () => {
 
       expect(() => recorder.stopRecording()).not.toThrow();
       expect(storage['soroban_quest_replays_mission-1']).toBeUndefined();
-      expect(errorSpy).toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith("Failed to save recording:", expect.any(Error));
 
       localStorage.setItem = originalSetItem;
     });
