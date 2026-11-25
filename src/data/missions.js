@@ -15,7 +15,6 @@ import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
 import { createMissionFromMarkdown } from '../systems/missionParser.js';
 import enLocale from '../i18n/locales/en.json';
 import esLocale from '../i18n/locales/es.json';
-import { missionsZhCN } from './missions.zh-CN.js';
 
 const authoredMissions = Object.values(
     import.meta.glob('./missions/authored/*.json', { eager: true, import: 'default' }),
@@ -36,11 +35,7 @@ export const missions = [
         xpReward: 100,
         ...helloSorobanContent,
         i18n: {
-            ...helloSorobanContent.i18n,
-
-
-
-            'zh-CN': missionsZhCN['hello-soroban'],
+            ...helloSorobanContent.i18n,
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
@@ -86,11 +81,7 @@ impl HelloContract {
         order: 2,
         difficulty: 'beginner',
         xpReward: 150,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['greetings-protocol'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec, String};
@@ -144,11 +135,7 @@ impl GreetingContract {
         order: 3,
         difficulty: 'beginner',
         xpReward: 200,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['counter-vault'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -210,11 +197,7 @@ impl CounterContract {
         order: 4,
         difficulty: 'intermediate',
         xpReward: 250,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['guardian-ledger'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
@@ -283,11 +266,7 @@ impl LedgerContract {
         order: 5,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['token-forge'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -369,11 +348,7 @@ impl TokenContract {
         order: 6,
         difficulty: 'advanced',
         xpReward: 350,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['time-lock'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -460,11 +435,7 @@ impl TimeLockContract {
         order: 7,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['multi-party-pact'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -556,11 +527,7 @@ impl PactContract {
         order: 8,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['vault-manager'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
@@ -648,11 +615,7 @@ impl VaultContract {
         order: 9,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['event-emitter'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
@@ -734,11 +697,7 @@ impl EventContract {
         order: 10,
         difficulty: 'intermediate',
         xpReward: 350,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['approval-manager'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -812,11 +771,7 @@ impl ApprovalContract {
         order: 11,
         difficulty: 'intermediate',
         xpReward: 350,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['crowdfund'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -905,11 +860,7 @@ impl CrowdfundContract {
         order: 12,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['escrow-agent'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1005,11 +956,7 @@ impl EscrowContract {
         order: 13,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['subscription'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1111,11 +1058,7 @@ impl SubscriptionContract {
         order: 14,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['flash-loan'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
@@ -1203,11 +1146,7 @@ impl FlashLoanContract {
         order: 15,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['permissions-rbac'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1286,11 +1225,7 @@ impl RBACContract {
         order: 16,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['oracle-feed'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Vec};
@@ -1394,11 +1329,7 @@ impl OracleContract {
         order: 17,
         difficulty: 'advanced',
         xpReward: 500,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['governor-simple'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
@@ -1521,11 +1452,7 @@ impl GovernorContract {
         order: 18,
         difficulty: 'advanced',
         xpReward: 500,
-        i18n: {
-
-
-
-            'zh-CN': missionsZhCN['reentrancy-guard'],
+        i18n: {
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1630,9 +1557,7 @@ Le contrat ci-dessous stocke une adresse \`admin\` mais n'utilise JAMAIS \`requi
 Le code vulnérable comporte :
 - Une constante \`ADMIN\` définie mais jamais vérifiée
 - Les fonctions \`set_fee\` et \`pause\` appelables par n'importe qui
-- Aucun appel à \`require_auth()\` où que ce soit
-
-            'zh-CN': missionsZhCN['access-control-fix'],
+- Aucun appel à \`require_auth()\` où que ce soit
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1774,8 +1699,7 @@ env.storage().instance().get(&VALUE).unwrap_or(0)
                     'Dans set_value : `env.storage().instance().set(&VALUE, &value)`',
                     'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
                 ],
-            },
-            'zh-CN': missionsZhCN['standalone-storage-dojo'],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -1870,8 +1794,7 @@ env.storage().instance().set(&DONE, &true);
                     "Dans protected_action : vérifie avec `user.require_auth()`",
                     "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
                 ],
-            },
-            'zh-CN': missionsZhCN['standalone-auth-guard'],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1979,8 +1902,7 @@ vals.len()
                     'Signature pour get_length : `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
                     'Renvoie la longueur avec `vals.len()`',
                 ],
-            },
-            'zh-CN': missionsZhCN['standalone-vector-lab'],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
