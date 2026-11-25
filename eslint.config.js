@@ -15,7 +15,6 @@ export default [
       'playwright-report',
       'test-results',
       'vite.config.ts',
-      'vite.config.js',
       'playwright.config.js',
     ],
   },
