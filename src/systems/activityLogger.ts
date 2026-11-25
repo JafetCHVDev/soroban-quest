@@ -74,7 +74,10 @@ export function logActivity(
 export function getActivityLog(): ActivityEntry[] {
   try {
     const data = localStorage.getItem(LOG_KEY);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsed: unknown = JSON.parse(data);
+    return Array.isArray(parsed) ? (parsed as ActivityEntry[]) : [];
   } catch {
     return [];
   }

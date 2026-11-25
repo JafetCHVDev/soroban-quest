@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { loadCampaigns, loadMissions } from '../mission-data.mjs';
 import {
   CAMPAIGN_REQUIRED_FIELDS,
+  TRANSLATION_LOCALES,
+  getTranslationCoverage,
   validateCampaign,
   validateCampaignCollection,
   validateMissionCollection,
@@ -164,5 +166,47 @@ describe('validateCampaignCollection', () => {
   it('passes against the real campaign and mission data', () => {
     const { ids } = validateMissionCollection(loadMissions());
     expect(validateCampaignCollection(loadCampaigns(), ids)).toEqual([]);
+  });
+});
+
+function missionLocale(prefix) {
+  return { title: `${prefix} title`, story: `${prefix} story`, learningGoal: `${prefix} goal`, hints: [`${prefix} hint`] };
+}
+
+describe('getTranslationCoverage', () => {
+  const missions = [
+    { id: 'm1', i18n: { en: missionLocale('en'), 'zh-CN': missionLocale('zh') } },
+    { id: 'm2', i18n: { en: missionLocale('en') } },
+    { id: 'm3', i18n: { en: missionLocale('en'), 'zh-CN': { ...missionLocale('zh'), hints: [] } } },
+  ];
+  const campaigns = [
+    { id: 'c1', i18n: { en: locale('en'), 'zh-CN': locale('zh') } },
+    { id: 'c2', i18n: { en: locale('en'), 'zh-CN': { ...locale('zh'), lore: '' } } },
+  ];
+
+  it('reports coverage for every UI locale by default', () => {
+    expect(Object.keys(getTranslationCoverage([], []))).toEqual(TRANSLATION_LOCALES);
+    expect(TRANSLATION_LOCALES).toContain('zh-CN');
+  });
+
+  it('counts complete entries and lists missing or incomplete ones per locale', () => {
+    const coverage = getTranslationCoverage(missions, campaigns, ['en', 'zh-CN']);
+    expect(coverage.en).toEqual({
+      missions: { translated: 3, total: 3, missing: [] },
+      campaigns: { translated: 2, total: 2, missing: [] },
+    });
+    expect(coverage['zh-CN']).toEqual({
+      missions: { translated: 1, total: 3, missing: ['m2', 'm3'] },
+      campaigns: { translated: 1, total: 2, missing: ['c2'] },
+    });
+  });
+
+  it('reports full zh-CN coverage for the real mission and campaign data', () => {
+    const coverage = getTranslationCoverage(loadMissions(), loadCampaigns());
+    const zh = coverage['zh-CN'];
+    expect(zh.missions.missing).toEqual([]);
+    expect(zh.campaigns.missing).toEqual([]);
+    expect(zh.missions.translated).toBe(zh.missions.total);
+    expect(zh.campaigns.translated).toBe(zh.campaigns.total);
   });
 });

@@ -11,7 +11,7 @@
 
 import { missions as defaultMissions } from '../data/missions';
 import { getActivityLog } from './activityLogger';
-import type { GameState } from './gameEngine';
+import type { GameState } from '../types/game';
 import type { ActivityEntry } from './activityLogger';
 import type { Mission } from '../types/game';
 

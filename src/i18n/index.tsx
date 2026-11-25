@@ -18,35 +18,43 @@ import es from './locales/es.json';
 import fr from './locales/fr.json';
 import zhCN from './locales/zh-CN.json';
 import ja from './locales/ja.json';
-import { setActiveLanguage } from './languageBridge';
+import {
+  setActiveLanguage,
+  SUPPORTED_LANGS,
+  DEFAULT_LANG,
+  type SupportedLang,
+} from './languageBridge';
+import type { LanguageOption } from '../types/i18n';
 import './i18n.css';
 
-const LOCALES: Record<string, Record<string, unknown>> = {
+interface LocaleMessages extends Record<string, unknown> {
+  languages?: Record<string, string>;
+}
+
+const LOCALES: Record<SupportedLang, LocaleMessages> = {
   en,
   es,
   fr,
   'zh-CN': zhCN,
   ja,
 };
-const SUPPORTED = ['en', 'es', 'fr', 'zh-CN', 'ja'] as const;
+const SUPPORTED = SUPPORTED_LANGS;
 const STORAGE_KEY = 'soroban_quest_lang';
-const DEFAULT_LANG: (typeof SUPPORTED)[number] = 'en';
 
 /**
  * Language option type
  */
-export interface LanguageOption {
-  code: (typeof SUPPORTED)[number];
-  name: string;
-}
-
 /**
  * Language context value type
  */
 export interface LanguageContextValue {
-  t: (_key: string, _vars?: Record<string, unknown>) => string;
-  language: (typeof SUPPORTED)[number];
-  setLanguage: (_lang: (typeof SUPPORTED)[number]) => void;
+  t: (
+    _key: string,
+    _varsOrFallback?: Record<string, unknown> | string,
+    _fallbackVars?: Record<string, unknown>,
+  ) => string;
+  language: SupportedLang;
+  setLanguage: (_lang: SupportedLang) => void;
   languages: LanguageOption[];
 }
 
@@ -85,7 +93,7 @@ function storageSet(key: string, value: string): void {
 
 /* ---------- helpers ---------- */
 
-function detectBrowserLanguage(): (typeof SUPPORTED)[number] {
+function detectBrowserLanguage(): SupportedLang {
   if (typeof navigator === 'undefined') return DEFAULT_LANG;
 
   const candidates = [
@@ -95,14 +103,14 @@ function detectBrowserLanguage(): (typeof SUPPORTED)[number] {
 
   for (const c of candidates) {
     const base = String(c).toLowerCase().split('-')[0];
-    if (SUPPORTED.includes(base as (typeof SUPPORTED)[number])) return base as (typeof SUPPORTED)[number];
+    if (SUPPORTED.includes(base as SupportedLang)) return base as SupportedLang;
   }
   return DEFAULT_LANG;
 }
 
-function readStoredLanguage(): (typeof SUPPORTED)[number] | null {
+function readStoredLanguage(): SupportedLang | null {
   const stored = storageGet(STORAGE_KEY);
-  if (stored && SUPPORTED.includes(stored as (typeof SUPPORTED)[number])) return stored as (typeof SUPPORTED)[number];
+  if (stored && SUPPORTED.includes(stored as SupportedLang)) return stored as SupportedLang;
   return null;
 }
 
@@ -139,7 +147,7 @@ function interpolate(
 export const LanguageProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [language, setLanguageState] = useState<(typeof SUPPORTED)[number]>(
+  const [language, setLanguageState] = useState<SupportedLang>(
     () => {
       const initial = readStoredLanguage() || detectBrowserLanguage();
       // Sync the bridge immediately so first-render data loads localize
@@ -181,7 +189,11 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
 
   // t('a.b.c', { name: 'World' })
   const t = useCallback(
-    (key: string, vars?: Record<string, unknown>): string => {
+    (
+      key: string,
+      varsOrFallback?: Record<string, unknown> | string,
+      fallbackVars?: Record<string, unknown>,
+    ): string => {
       if (!key) return '';
       const dict = LOCALES[language] || LOCALES[DEFAULT_LANG];
       const fallback = LOCALES[DEFAULT_LANG];
@@ -189,19 +201,25 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
       let value = resolveKey(dict, key);
       if (value == null) value = resolveKey(fallback, key);
       if (value == null) {
+        if (typeof varsOrFallback === 'string') {
+          return interpolate(varsOrFallback, fallbackVars);
+        }
         if (import.meta?.env?.DEV) {
           // Surface missing keys in development without crashing
           console.warn(`[i18n] Missing translation key: "${key}"`);
         }
         return key;
       }
-      return interpolate(value as string | undefined, vars);
+      return interpolate(
+        value as string | undefined,
+        typeof varsOrFallback === 'string' ? fallbackVars : varsOrFallback,
+      );
     },
     [language],
   );
 
   const setLanguage = useCallback(
-    (lang: (typeof SUPPORTED)[number]): void => {
+    (lang: SupportedLang): void => {
       if (!SUPPORTED.includes(lang)) return;
       userChoseRef.current = true; // mark explicit choice
       setLanguageState(lang);
@@ -211,10 +229,15 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
 
   const languages = useMemo(
     (): LanguageOption[] =>
-      SUPPORTED.map((code) => ({
-        code,
-        name: LOCALES[code]?.languages?.[code] || code.toUpperCase(),
-      })),
+      SUPPORTED.map((code) => {
+        const langRecord = LOCALES[code]?.languages as
+          | Record<string, string>
+          | undefined;
+        return {
+          code,
+          name: langRecord?.[code] || code.toUpperCase(),
+        };
+      }),
     [],
   );
 

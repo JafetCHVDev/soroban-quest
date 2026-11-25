@@ -7,6 +7,10 @@ import ConfirmationDialog from '../components/ConfirmationDialog';
 import './Journal.css';
 import useDocumentTitle from '../systems/useDocumentTitle';
 
+type JournalRow =
+  | { type: 'date'; id: string; date: string }
+  | { type: 'entry'; id: string; entry: ActivityEntry };
+
 // Filter chip definitions: i18n key for label + the EVENT_LABEL bucket it matches.
 const FILTER_DEFS = [
   { id: 'ALL', labelKey: 'journal.filters.all', bucket: null },
@@ -64,7 +68,7 @@ function formatEventMessage(entry: ActivityEntry, t: (key: string, vars?: Record
       return t('journal.events.levelUp', { level: data.level });
     case ACTIVITY_TYPES.HINT_USED:
       return t('journal.events.hintUsed', {
-        index: (data.hintIndex ?? 0) + 1,
+        index: (typeof data.hintIndex === 'number' ? data.hintIndex : 0) + 1,
       });
     case ACTIVITY_TYPES.EXPORT:
       return t('journal.events.export');
@@ -103,9 +107,9 @@ export function filterJournalEntries(
   });
 }
 
-export function buildJournalRows(entries: ActivityEntry[], t: (key: string, vars?: Record<string, unknown>) => string, language: string): Array<{ type: string; id: string; date?: string; entry?: ActivityEntry }> {
-  const rows = [];
-  let currentDate = null;
+export function buildJournalRows(entries: ActivityEntry[], t: (key: string, vars?: Record<string, unknown>) => string, language: string): JournalRow[] {
+  const rows: JournalRow[] = [];
+  let currentDate: string | null = null;
 
   for (const entry of entries) {
     const date = new Date(entry.timestamp);

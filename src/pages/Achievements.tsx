@@ -1,7 +1,7 @@
 import React from "react";
 import "./Achievements.css";
 
-import { BADGES } from "../systems/gameEngine";
+import { ACHIEVEMENTS } from "../systems/achievements";
 import { useGameState } from "../systems/GameStateContext";
 import { useTranslation } from "../i18n/useTranslation";
 import useDocumentTitle from "../systems/useDocumentTitle";
@@ -11,10 +11,10 @@ export default function Achievements() {
   const { progress, profile } = useGameState();
   const { t } = useTranslation();
 
-  const unlockedCount = BADGES.filter((badge) =>
+  const unlockedCount = ACHIEVEMENTS.filter((badge) =>
     progress.badges.includes(badge.id)
   ).length;
-  const completion = Math.round((unlockedCount / BADGES.length) * 100);
+  const completion = Math.round((unlockedCount / ACHIEVEMENTS.length) * 100);
 
   return (
     <div id="main-content" className="achievements-page">
@@ -26,7 +26,7 @@ export default function Achievements() {
         </div>
 
         <div className="achievements-summary" aria-label={t("achievements.summaryAria")}>
-          <strong>{unlockedCount}/{BADGES.length}</strong>
+          <strong>{unlockedCount}/{ACHIEVEMENTS.length}</strong>
           <span>{t("achievements.unlocked")}</span>
         </div>
       </header>
@@ -45,7 +45,7 @@ export default function Achievements() {
       </section>
 
       <section className="achievements-grid" aria-label={t("achievements.gridAria")}>
-        {BADGES.length === 0 ? (
+        {ACHIEVEMENTS.length === 0 ? (
           <div className="card text-center p-12">
             <div style={{ fontSize: "3rem", marginBottom: "1rem", opacity: 0.3 }}>
               🏅
@@ -53,7 +53,7 @@ export default function Achievements() {
             <p className="text-secondary">{t("achievements.empty")}</p>
           </div>
         ) : (
-          BADGES.map((badge) => {
+          ACHIEVEMENTS.map((badge) => {
             const isUnlocked = progress.badges.includes(badge.id);
             return (
               <article
@@ -65,12 +65,12 @@ export default function Achievements() {
                 </div>
                 <div className="achievement-content">
                   <div className="achievement-title-row">
-                    <h2>{t(`badges.${badge.id}.name`)}</h2>
+                    <h2>{t(badge.nameKey)}</h2>
                     <span className={`achievement-status ${isUnlocked ? "unlocked" : "locked"}`}>
                       {isUnlocked ? t("common.unlocked") : t("common.locked")}
                     </span>
                   </div>
-                  <p>{t(`badges.${badge.id}.description`)}</p>
+                  <p>{t(badge.descriptionKey)}</p>
                 </div>
               </article>
             );

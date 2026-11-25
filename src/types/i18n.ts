@@ -29,7 +29,11 @@ export interface LanguageOption {
  * Translation context
  */
 export interface TranslationContext {
-  t: (key: TranslationKey, defaultValue?: string) => string;
+  t: (
+    key: TranslationKey,
+    varsOrFallback?: Record<string, unknown> | string,
+    fallbackVars?: Record<string, unknown>,
+  ) => string;
   language: Language;
   setLanguage: (lang: Language) => void;
   languages: LanguageOption[];

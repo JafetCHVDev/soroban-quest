@@ -89,13 +89,18 @@ export default defineConfig({
             return 'vendor-pwa';
           }
 
+          // Keep the zh-CN mission text out of the shared missions chunk so
+          // each chunk stays within the CI bundle budget.
+          if (id.includes('src/data/missions.zh-CN')) {
+            return 'missions-zh-CN';
+          }
+
           return undefined;
         },
       },
     },
   },
   test: {
-    environment: 'jsdom',
     exclude: ['e2e/**', 'node_modules/**'],
   },
 });
