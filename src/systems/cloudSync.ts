@@ -9,12 +9,7 @@ import {
   getActiveProfileId,
   setActiveProfileId,
 } from "./storage";
-import type { GameState } from "./gameEngine";
-
-interface Profile {
-  name: string;
-  avatar: string;
-}
+import type { GameState, Profile } from "../types/game";
 
 const SYNC_STORAGE_KEY = "soroban_quest_cloud_sync";
 const SYNC_DEBOUNCE_MS = 800;

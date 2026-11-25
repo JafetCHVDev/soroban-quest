@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run lint
         run: |
@@ -31,8 +31,18 @@ jobs:
             echo "No lint script found, skipping linting check."
           fi
 
+      - name: Run typecheck
+        run: npm run typecheck
+
       - name: Run unit tests
-        run: npm test
+        run: npm test -- --coverage
+
+      - name: Upload Vitest coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-coverage
+          path: coverage
 
       - name: Validate mission data
         run: npm run mission:validate

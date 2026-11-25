@@ -8,7 +8,7 @@ const DEBOUNCE_DELAY = 2000; // 2 seconds
 
 export interface RecordedEvent {
   timestamp: number;
-  type: string;
+  type: "edit" | "run" | "hint" | "reset";
   content: string | number;
 }
 
@@ -66,7 +66,7 @@ class CodeRecorder {
   }
 
   // Add an event to the recording
-  addEvent(type: string, content: string | number = ""): void {
+  addEvent(type: RecordedEvent["type"], content: string | number = ""): void {
     if (!this.isRecording) return;
 
     const event: RecordedEvent = {

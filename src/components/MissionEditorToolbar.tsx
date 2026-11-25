@@ -63,6 +63,11 @@ export default function MissionEditorToolbar({
   const tokenHintLabel = nextHintAlreadyUnlocked
     ? t("missionDetail.editor.useTokenUnlocked")
     : t("missionDetail.editor.useToken", { count: hintTokens });
+  const goldHintTitle = nextHintAlreadyUnlocked
+    ? t("missionDetail.editor.goldHintUnlocked")
+    : goldBalance < goldHintCost
+      ? t("missionDetail.editor.goldHintInsufficient", { cost: goldHintCost })
+      : t("missionDetail.editor.goldHintTitle", { cost: goldHintCost });
   const tokenHintTitle = nextHintAlreadyUnlocked
     ? t("missionDetail.editor.useTokenUnlocked")
     : hintTokens < 1
@@ -128,14 +133,8 @@ export default function MissionEditorToolbar({
           className="btn btn-ghost btn-sm"
           onClick={onGoldHint}
           disabled={goldHintDisabled}
-          title={
-            nextHintAlreadyUnlocked
-              ? t("missionDetail.editor.goldHintUnlocked")
-              : goldBalance < goldHintCost
-                ? t("missionDetail.editor.goldHintInsufficient", { cost: goldHintCost })
-                : t("missionDetail.editor.goldHintTitle", { cost: goldHintCost })
-          }
-          aria-label="Spend gold to instantly reveal the next hint"
+          title={goldHintTitle}
+          aria-label={goldHintTitle}
         >
           {nextHintAlreadyUnlocked
             ? t("missionDetail.editor.goldHintUnlocked")

@@ -58,6 +58,7 @@ export interface MissionLocale {
  */
 export interface Mission {
   id: string;
+  type?: 'mission';
   chapter: number;
   order: number;
   difficulty: Difficulty;
@@ -67,6 +68,9 @@ export interface Mission {
   checks: Check[];
   conceptsIntroduced: string[];
   i18n: Partial<Record<Language, MissionLocale>>;
+  campaign?: string | number;
+  completed?: boolean;
+  standalone?: boolean;
 }
 
 /**

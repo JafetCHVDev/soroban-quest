@@ -33,7 +33,7 @@ function getDayOfYear(date: Date): number {
 /**
  * Deterministically picks a mission from the list based on the date.
  */
-export function getDailyChallengeMission(missions: Mission[], date: Date = new Date()): Mission {
+export function getDailyChallengeMission<T extends Mission>(missions: T[], date: Date = new Date()): T {
   if (!missions || missions.length === 0) {
     throw new Error('No missions provided for daily challenge');
   }

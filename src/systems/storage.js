@@ -64,10 +64,12 @@ function createDefaultProfileSlot(index = 0, overrides = {}) {
       name: index === 0 ? defaultProfile.name : `Player ${index + 1}`,
       ...(overrides.profile || {}),
     },
-    progress: withNormalizedAchievements({
-      ...getDefaultState(),
-      ...(overrides.progress || {}),
-    }),
+    progress: withNormalizedAchievements(
+      migrateInventory({
+        ...getDefaultState(),
+        ...(overrides.progress || {}),
+      })
+    ),
   };
 }
 
@@ -185,7 +187,7 @@ function readLegacyProgress() {
       };
     }
     
-    return withNormalizedAchievements({ ...getDefaultState(), ...parsed });
+    return withNormalizedAchievements(migrateInventory({ ...getDefaultState(), ...parsed }));
   } catch {
     return null;
   }

@@ -283,7 +283,7 @@ export default function MissionDetail() {
     );
   }
 
-  if (showReplay) {
+  if (showReplay && replayData && missionId) {
     return (
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <CodeReplayPlayer
@@ -348,7 +348,7 @@ export default function MissionDetail() {
               height="100%"
               defaultLanguage="rust"
               value={code}
-              onChange={(v) => setCode(v || "")}
+              onChange={(v: string | undefined) => setCode(v || "")}
               theme={editorTheme}
               onMount={handleEditorMount}
               options={{

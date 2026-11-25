@@ -12,6 +12,7 @@ import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 import { registerMissionCatalog } from './achievements';
 
+/** @param {import('../types/game').Language} [lang] @returns {import('../types/game').LocalizedMission[]} */
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
 }
@@ -43,6 +44,11 @@ export function getAllTheoryQuests(lang = getActiveLanguage()) {
     return theoryQuests.map((q) => localizeTheoryQuest(q, lang));
 }
 
+/**
+ * @param {string} id
+ * @param {import('../types/game').Language} [lang]
+ * @returns {import('../data/theoryQuests').LocalizedTheoryQuest | null}
+ */
 export function getTheoryQuestById(id, lang = getActiveLanguage()) {
     const quest = theoryQuests.find((item) => item.id === id);
     return quest ? localizeTheoryQuest(quest, lang) : null;

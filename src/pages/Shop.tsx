@@ -13,7 +13,7 @@ interface ShopItem {
   description: string;
   price: number;
   icon: string;
-  category: string;
+  category: 'avatars' | 'boosts' | 'badges';
   /** Consumables are bought repeatedly and stack in the inventory. */
   stackable?: boolean;
 }
