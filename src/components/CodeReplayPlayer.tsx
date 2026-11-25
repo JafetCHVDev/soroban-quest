@@ -354,9 +354,9 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
             tabSize: 4,
             readOnly: true,
             suggestOnTriggerCharacters: false,
-            quickSuggestions: 'off',
+            quickSuggestions: false,
             parameterHints: { enabled: false },
-            hover: { enabled: 'off' },
+            hover: { enabled: false },
             contextmenu: false
           }}
         />
