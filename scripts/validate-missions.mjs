@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCampaigns, loadLocales, loadMissions } from './mission-data.mjs';
 import {
+  getTranslationCoverage,
   validateCampaignCollection,
   validateMission,
   validateMissionCollection,
@@ -28,6 +29,14 @@ if (fs.existsSync(authoredDirectory)) {
       result.errors.push(`${filename}: invalid JSON (${error.message})`);
     }
   }
+}
+
+const coverage = getTranslationCoverage(missions, loadCampaigns());
+console.log('Translation coverage:');
+for (const [locale, { missions: m, campaigns: c }] of Object.entries(coverage)) {
+  console.log(`  ${locale.padEnd(6)} missions ${m.translated}/${m.total}, campaigns ${c.translated}/${c.total}`);
+  if (m.missing.length > 0) console.log(`         missing missions: ${m.missing.join(', ')}`);
+  if (c.missing.length > 0) console.log(`         missing campaigns: ${c.missing.join(', ')}`);
 }
 
 if (result.errors.length > 0) {

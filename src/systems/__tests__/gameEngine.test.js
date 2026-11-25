@@ -25,7 +25,6 @@ import {
   checkBadges,
   updateStreak,
   getDefaultState,
-  BADGES,
   HINT_GOLD_COST,
   isHintGoldUnlocked,
   spendGoldForHint,
@@ -34,6 +33,9 @@ import {
   consumeHintToken,
   spendHintTokenForHint,
 } from "../gameEngine";
+// Registers the real mission catalog with the achievement system, as the app
+// does before any mission can be completed.
+import "../missionLoader";
 
 describe("gameEngine core logic", () => {
   let baseState;
@@ -206,7 +208,7 @@ describe("gameEngine core logic", () => {
 
   describe("checkBadges", () => {
     it("unlocks badges based on completed missions", () => {
-      const s = { ...baseState, completedMissions: ["a", "b", "c"], badges: [] };
+      const s = { ...baseState, completedMissions: ["hello-soroban", "greetings-protocol", "counter-vault"], badges: [] };
       const out = checkBadges(s);
       // should unlock at least first_contract and triple_threat
       expect(out.newBadges).toEqual(expect.arrayContaining(["first_contract", "triple_threat"]));
@@ -214,7 +216,7 @@ describe("gameEngine core logic", () => {
     });
 
     it("does not duplicate badges when called twice", () => {
-      const s = { ...baseState, completedMissions: ["a"], badges: [] };
+      const s = { ...baseState, completedMissions: ["hello-soroban"], badges: [] };
       const first = checkBadges(s);
       const second = checkBadges(first);
       expect(second.newBadges).toEqual([]);
@@ -224,7 +226,7 @@ describe("gameEngine core logic", () => {
     it("unlocks multiple badges at once for high-achievement state", () => {
       const s = {
         ...baseState,
-        completedMissions: ["a", "b", "c", "d", "e"],
+        completedMissions: ["hello-soroban", "greetings-protocol", "counter-vault", "guardian-ledger", "token-forge"],
         badges: [],
         level: 5,
         xp: 1200,

@@ -14,6 +14,8 @@ import {
   saveProfile,
   mergeProgress,
   summarizeMerge,
+  importProgress,
+  migrateLegacyAchievements,
   validateImportData,
   readAndValidateFile,
   MAX_PROFILES,
@@ -337,6 +339,122 @@ describe("storage", () => {
       expect(summary.badges).toEqual({ before: 1, after: 2, added: 1 });
     });
   });
+
+  describe("achievement migration (unified achievements)", () => {
+    const LEGACY_KEY = "soroban_quest_achievements";
+    const LEGACY_PROGRESS_KEY = "soroban_quest_achievements_progress";
+
+    it("keeps unlocks from both old systems and removes the old key", () => {
+      // Old gameEngine badges in the main save...
+      save({
+        ...getDefaultState(),
+        xp: 1200,
+        completedMissions: ["hello-soroban", "greetings-protocol", "counter-vault"],
+        badges: ["first_contract", "triple_threat", "xp_1000", "chapter_1"],
+      });
+      // ...and old achievementEngine unlocks in their own key.
+      storage[LEGACY_KEY] = JSON.stringify({
+        unlocked: ["first_steps", "xp_collector", "streak_starter", "speed_demon"],
+        progress: {},
+        lastUpdated: "2026-01-01T00:00:00.000Z",
+      });
+      storage[LEGACY_PROGRESS_KEY] = "{}";
+
+      const state = load();
+
+      expect(state.badges).toEqual([
+        "first_contract",
+        "triple_threat",
+        "xp_1000",
+        "chapter_1",
+        "xp_500",
+        "streak_starter",
+        "speed_demon",
+      ]);
+      expect(storage[LEGACY_KEY]).toBeUndefined();
+      expect(storage[LEGACY_PROGRESS_KEY]).toBeUndefined();
+
+      // Persisted in the profile slot and the legacy progress mirror.
+      const [slot] = loadProfiles();
+      expect(slot.progress.badges).toEqual(state.badges);
+      expect(JSON.parse(storage.soroban_quest_progress).badges).toEqual(state.badges);
+
+      // Idempotent: a second load does not duplicate anything.
+      expect(load().badges).toEqual(state.badges);
+    });
+
+    it("merges legacy unlocks into the active profile only", () => {
+      loadProfiles();
+      const [second] = addProfile({ name: "Two" }).slice(-1);
+      setActiveProfileId(second.id);
+      storage[LEGACY_KEY] = JSON.stringify({ unlocked: ["dedicated"] });
+
+      expect(load().badges).toEqual(["dedicated"]);
+      const profiles = loadProfiles();
+      expect(profiles[0].progress.badges).toEqual([]);
+      expect(profiles.find((p) => p.id === second.id).progress.badges).toEqual(["dedicated"]);
+    });
+
+    it("falls back to the first profile when the stored active id is stale", () => {
+      loadProfiles();
+      setActiveProfileId("missing-profile");
+      storage[LEGACY_KEY] = JSON.stringify({ unlocked: ["dedicated"] });
+
+      expect(migrateLegacyAchievements()).toBe(true);
+      expect(loadProfiles()[0].progress.badges).toEqual(["dedicated"]);
+      expect(storage[LEGACY_KEY]).toBeUndefined();
+    });
+
+    it("removes a corrupt legacy store without touching progress", () => {
+      save({ ...getDefaultState(), badges: ["first_contract"] });
+      storage[LEGACY_KEY] = "{not json";
+      expect(migrateLegacyAchievements()).toBe(true);
+      expect(storage[LEGACY_KEY]).toBeUndefined();
+      expect(load().badges).toEqual(["first_contract"]);
+    });
+
+    it("is a no-op when there is no legacy store", () => {
+      expect(migrateLegacyAchievements()).toBe(false);
+    });
+
+    it("imports an old export file and normalizes legacy ids", async () => {
+      await importProgress({
+        state: {
+          ...getDefaultState(),
+          xp: 300,
+          level: 1,
+          completedMissions: ["hello-soroban"],
+          badges: ["first_contract", "first_steps", "level_up"],
+          skillPoints: [],
+        },
+        profile: { name: "Old Save", avatar: "🛡️" },
+      });
+      expect(load().badges).toEqual(["first_contract", "level_3"]);
+    });
+
+    it("merge-import unions and normalizes achievements", () => {
+      const merged = mergeProgress(
+        { badges: ["first_contract"] },
+        { badges: ["first_steps", "apprentice"] }
+      );
+      expect(merged.badges).toEqual(["first_contract", "five_star"]);
+      const summary = summarizeMerge(
+        { badges: ["first_contract", "first_steps"] },
+        { badges: ["apprentice"] }
+      );
+      expect(summary.badges).toEqual({ before: 1, after: 2, added: 1 });
+    });
+
+    it("profile reset clears achievements and any leftover legacy store", () => {
+      save({ ...getDefaultState(), badges: ["first_contract", "level_3"] });
+      storage[LEGACY_KEY] = JSON.stringify({ unlocked: ["dedicated"] });
+      const fresh = reset();
+      expect(fresh.badges).toEqual([]);
+      expect(storage[LEGACY_KEY]).toBeUndefined();
+      expect(load().badges).toEqual([]);
+    });
+  });
+
   describe("validateImportData", () => {
     const missionIds = ["hello-soroban", "greetings-protocol", "fund-account-model"];
 

@@ -281,6 +281,14 @@
     "profileCount": "{{count}} profiles",
     "active": "Active",
     "switch": "Switch",
+    "tabs": {
+      "ariaLabel": "Ranking category",
+      "xp": "XP",
+      "missions": "Missions completed",
+      "streak": "Current streak",
+      "badges": "Badges earned",
+      "gold": "Gold"
+    },
     "columns": {
       "rank": "Rank",
       "player": "Player",
@@ -288,6 +296,8 @@
       "level": "Level",
       "missions": "Missions",
       "badges": "Badges",
+      "streak": "Streak",
+      "gold": "Gold",
       "status": "Status"
     }
   },
@@ -679,6 +689,34 @@
     "chapter_7": {
       "name": "Security Sentinel",
       "description": "Complete all Chapter 7 missions"
+    },
+    "journeyman": {
+      "name": "Journeyman",
+      "description": "Complete 10 missions"
+    },
+    "xp_500": {
+      "name": "XP Collector",
+      "description": "Earn 500 XP"
+    },
+    "xp_2000": {
+      "name": "XP Magnate",
+      "description": "Earn 2000 XP"
+    },
+    "perfectionist": {
+      "name": "Perfectionist",
+      "description": "Complete 5 missions on first try"
+    },
+    "streak_starter": {
+      "name": "Streak Starter",
+      "description": "Maintain a 3-day login streak"
+    },
+    "dedicated": {
+      "name": "Dedicated",
+      "description": "Maintain a 7-day login streak"
+    },
+    "committed": {
+      "name": "Committed",
+      "description": "Maintain a 30-day login streak"
     }
   },
   "shop": {

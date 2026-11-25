@@ -1,7 +1,8 @@
 /* ==========================================
-   Game Engine — XP, Levels, Badges
+   Game Engine — XP, Levels, Achievement unlocks
    ========================================== */
 import { logActivity, ACTIVITY_TYPES } from "./activityLogger";
+import { evaluateAchievements, normalizeAchievementIds } from "./achievements";
 import { playSound, SOUND_TYPES } from "./soundManager";
 
 
@@ -25,124 +26,6 @@ const RANK_TITLES = [
   "DeFi Sage", // 13
   "Stellar Architect", // 14
   "Security Sentinel", // 15+
-];
-
-const CHAPTER_MISSIONS = {
-  1: ['hello-soroban', 'greetings-protocol'],
-  2: ['counter-vault', 'guardian-ledger'],
-  3: ['token-forge', 'time-lock', 'multi-party-pact'],
-  4: ['vault-manager', 'event-emitter', 'approval-manager'],
-  5: ['crowdfund', 'escrow-agent', 'subscription'],
-  6: ['flash-loan', 'permissions-rbac', 'oracle-feed', 'governor-simple'],
-  7: ['reentrancy-guard', 'access-control-fix'],
-};
-
-export const BADGES = [
-  {
-    id: "first_contract",
-    name: "First Contract",
-    description: "Complete your first mission",
-    icon: "📜",
-    condition: (state) => state.completedMissions.length >= 1,
-  },
-  {
-    id: "triple_threat",
-    name: "Triple Threat",
-    description: "Complete 3 missions",
-    icon: "⚡",
-    condition: (state) => state.completedMissions.length >= 3,
-  },
-  {
-    id: "five_star",
-    name: "Five Star",
-    description: "Complete 5 missions",
-    icon: "🌟",
-    condition: (state) => state.completedMissions.length >= 5,
-  },
-  {
-    id: "completionist",
-    name: "Completionist",
-    description: "Complete all missions",
-    icon: "👑",
-    condition: (state) => state.completedMissions.length >= 19,
-  },
-  {
-    id: "level_3",
-    name: "Rising Star",
-    description: "Reach level 3",
-    icon: "🚀",
-    condition: (state) => state.level >= 3,
-  },
-  {
-    id: "level_5",
-    name: "Stellar Guardian",
-    description: "Reach level 5",
-    icon: "🛡️",
-    condition: (state) => state.level >= 5,
-  },
-  {
-    id: "xp_1000",
-    name: "XP Hoarder",
-    description: "Earn 1000 XP",
-    icon: "💰",
-    condition: (state) => state.xp >= 1000,
-  },
-  {
-    id: "speed_demon",
-    name: "Speed Demon",
-    description: "Complete a mission on first try",
-    icon: "⚡",
-    condition: (state) => state.firstTryMissions?.length >= 1,
-  },
-  {
-    id: "chapter_1",
-    name: "Awakening",
-    description: "Complete all Chapter 1 missions",
-    icon: "🌅",
-    condition: (state) => CHAPTER_MISSIONS[1].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_2",
-    name: "Memory Keeper",
-    description: "Complete all Chapter 2 missions",
-    icon: "🔐",
-    condition: (state) => CHAPTER_MISSIONS[2].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_3",
-    name: "Forgemaster",
-    description: "Complete all Chapter 3 missions",
-    icon: "⚒️",
-    condition: (state) => CHAPTER_MISSIONS[3].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_4",
-    name: "Data Architect",
-    description: "Complete all Chapter 4 missions",
-    icon: "🏦",
-    condition: (state) => CHAPTER_MISSIONS[4].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_5",
-    name: "Protocol Pioneer",
-    description: "Complete all Chapter 5 missions",
-    icon: "🔗",
-    condition: (state) => CHAPTER_MISSIONS[5].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_6",
-    name: "Production Master",
-    description: "Complete all Chapter 6 missions",
-    icon: "⚡",
-    condition: (state) => CHAPTER_MISSIONS[6].every((id) => state.completedMissions.includes(id)),
-  },
-  {
-    id: "chapter_7",
-    name: "Security Sentinel",
-    description: "Complete all Chapter 7 missions",
-    icon: "🛡️",
-    condition: (state) => CHAPTER_MISSIONS[7].every((id) => state.completedMissions.includes(id)),
-  },
 ];
 
 function getDefaultState() {
@@ -421,25 +304,27 @@ export function recordAttempt(state, missionId) {
   };
 }
 
+/**
+ * Evaluate achievements (defined in ./achievements) against the state and
+ * record newly unlocked ids in `state.badges`, the single persisted store.
+ */
 export function checkBadges(state) {
-  const newBadges = [];
-  for (const badge of BADGES) {
-    if (!state.badges.includes(badge.id) && badge.condition(state)) {
-      newBadges.push(badge.id);
+  const current = normalizeAchievementIds(state.badges);
+  const unlocked = evaluateAchievements({ ...state, badges: current });
+  const newBadges = unlocked.map((a) => a.id);
 
-      playSound(SOUND_TYPES.BADGE_EARNED);
-
-      logActivity(
-        ACTIVITY_TYPES.BADGE_EARNED,
-        { badgeId: badge.id, badgeName: badge.name },
-        `Earned the "${badge.name}" badge!`,
-      );
-    }
+  for (const achievement of unlocked) {
+    playSound(SOUND_TYPES.BADGE_EARNED);
+    logActivity(
+      ACTIVITY_TYPES.BADGE_EARNED,
+      { badgeId: achievement.id, badgeName: achievement.name },
+      `Earned the "${achievement.name}" badge!`,
+    );
   }
 
   return {
     ...state,
-    badges: [...state.badges, ...newBadges],
+    badges: [...current, ...newBadges],
     newBadges,
   };
 }
