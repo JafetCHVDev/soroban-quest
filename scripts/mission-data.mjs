@@ -29,8 +29,10 @@ export function loadMissions() {
   const authoredMissions = authoredFiles.map((name) => JSON.parse(
     fs.readFileSync(path.join(authoredDirectory, name), 'utf8'),
   ));
+  const missionsZhCN = evaluateDataModule('src/data/missions.zh-CN.js', 'missionsZhCN');
   return evaluateDataModule('src/data/missions.js', 'missions', [
     [/^import helloSorobanMarkdown from .*?;$/m, `const helloSorobanMarkdown = ${markdown};`],
+    [/^import \{ missionsZhCN \} from .*?;$/m, `const missionsZhCN = ${JSON.stringify(missionsZhCN)};`],
     [/^import \{ createMissionFromMarkdown \} from .*?;$/m, ''],
     [/^import enLocale from .*?;$/m, 'const enLocale = {};'],
     [/^import esLocale from .*?;$/m, 'const esLocale = {};'],

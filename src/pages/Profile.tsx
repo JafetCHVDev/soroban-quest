@@ -10,7 +10,8 @@ import {
   defaultProfile,
 } from '../systems/storage';
 
-import { getXPProgress, BADGES } from '../systems/gameEngine';
+import { getXPProgress } from '../systems/gameEngine';
+import { ACHIEVEMENTS } from '../systems/achievements';
 import { getAllMissions } from '../systems/missionLoader';
 import { avatars } from '../data/avatars';
 import {
@@ -29,6 +30,7 @@ import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from '../i18n/useTranslation';
 import { authService } from '../systems/authService';
 import { cloudSyncService, getCloudSyncStatus } from '../systems/cloudSync';
+import PremiumBadge from '../components/PremiumBadge';
 
 // Total rank entries: 0..10. Anything >= 10 maps to the last rank.
 const MAX_RANK_INDEX = 10;
@@ -338,6 +340,7 @@ export default function Profile() {
           <h1 className="profile-name">
             <span className="sr-only">Adventurer Name: </span>
             {profile.name}
+            <PremiumBadge t={t} inventory={state.inventory} />
           </h1>
 
           <div className="profile-rank">
@@ -462,7 +465,7 @@ export default function Profile() {
       <h2 className="profile-section-title">{t('profile.sections.badges')}</h2>
 
       <div className="profile-badges-grid" role="region" aria-label="Badges progression collection">
-        {BADGES.map((badge) => {
+        {ACHIEVEMENTS.map((badge) => {
           const earned = state.badges.includes(badge.id);
 
           return (
@@ -475,8 +478,8 @@ export default function Profile() {
                 {badge.icon}
               </div>
               <div className="profile-badge-info" aria-hidden="true">
-                <h4>{t(`badges.${badge.id}.name`)}</h4>
-                <p>{t(`badges.${badge.id}.description`)}</p>
+                <h4>{t(badge.nameKey)}</h4>
+                <p>{t(badge.descriptionKey)}</p>
               </div>
             </div>
           );

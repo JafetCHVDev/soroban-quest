@@ -15,6 +15,7 @@ import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
 import { createMissionFromMarkdown } from '../systems/missionParser.js';
 import enLocale from '../i18n/locales/en.json';
 import esLocale from '../i18n/locales/es.json';
+import { missionsZhCN } from './missions.zh-CN.js';
 
 const authoredMissions = Object.values(
     import.meta.glob('./missions/authored/*.json', { eager: true, import: 'default' }),
@@ -148,6 +149,7 @@ Symbol               // 効率的な文字列型
                     '完全な戻り文: \`vec![&env, symbol_short!("Hello"), to]\`',
                 ],
             },
+            'zh-CN': missionsZhCN['hello-soroban'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
@@ -334,6 +336,7 @@ u32                 // 符号なし32ビット整数
                     '\`text.len()\`を使用して文字列の長さを取得する',
                 ],
             },
+            'zh-CN': missionsZhCN['greetings-protocol'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec, String};
@@ -528,6 +531,7 @@ env.storage().instance().get(&key)          // 読み取り（Optionを返す）
                     '\`env.storage().instance().set(&COUNTER, &new_count)\`を使用して新しいカウントを保存する',
                 ],
             },
+            'zh-CN': missionsZhCN['counter-vault'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -734,6 +738,7 @@ Map<Address, Symbol>        // キー・値マッピング
                     '保存: \`env.storage().instance().set(&who, &name)\`',
                 ],
             },
+            'zh-CN': missionsZhCN['guardian-ledger'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
@@ -955,6 +960,7 @@ let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
                     'transferの場合: 送信者からrequire_auth、両方の残高を読み取り、両方を更新',
                 ],
             },
+            'zh-CN': missionsZhCN['token-forge'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1177,6 +1183,7 @@ panic!("message")        // エラーで中止
                     'ロック解除後ストレージをクリア: \`env.storage().instance().remove(&key)\`',
                 ],
             },
+            'zh-CN': missionsZhCN['time-lock'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1424,6 +1431,7 @@ env.storage().instance().set(&signer_key, &true);
                     'is_completeで: signed >= requiredを比較',
                 ],
             },
+            'zh-CN': missionsZhCN['multi-party-pact'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1700,6 +1708,7 @@ env.storage().instance().set(&BALANCES, &balances);
                     'depositの場合: 現在の残高を取得、金額を追加、戻す',
                 ],
             },
+            'zh-CN': missionsZhCN['vault-manager'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
@@ -1964,6 +1973,7 @@ keys.push_back(key);
                     'keys.push_back(key)で新しいキーを追加',
                 ],
             },
+            'zh-CN': missionsZhCN['event-emitter'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
@@ -2206,6 +2216,7 @@ env.storage().instance().get(&(owner, spender))
                     'transfer_fromで: spenderからrequire_auth、指定を確認、減少、残高更新',
                 ],
             },
+            'zh-CN': missionsZhCN['approval-manager'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -2464,6 +2475,7 @@ if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
                     'check_goalで: 集めた総額を目標と比較',
                 ],
             },
+            'zh-CN': missionsZhCN['crowdfund'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -2729,6 +2741,7 @@ arbiter.require_auth();
                     'refundで: 仲介者からrequire_auth、買い手に払い戻す',
                 ],
             },
+            'zh-CN': missionsZhCN['escrow-agent'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -2993,6 +3006,7 @@ if env.ledger().sequence() >= next_billing {
                     'cancelで: ストレージからサブスクリプションデータをクリア',
                 ],
             },
+            'zh-CN': missionsZhCN['subscription'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3263,6 +3277,7 @@ env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
                     'repayで: ローンが存在することを確認、手数料付き資金をプールに返す、ローンをクリア',
                 ],
             },
+            'zh-CN': missionsZhCN['flash-loan'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
@@ -3523,6 +3538,7 @@ env.storage().instance()
                     'has_roleで: ロールキーが存在してtrueであることを確認',
                 ],
             },
+            'zh-CN': missionsZhCN['permissions-rbac'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -3770,6 +3786,7 @@ pub fn update_price(env: Env, asset: Symbol, price: i128) {
                     'get_all_assetsで：event-emitterと同様のVec<Symbol>トラッカーを使用',
                 ],
             },
+            'zh-CN': missionsZhCN['oracle-feed'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Vec};
@@ -4046,6 +4063,7 @@ let no_votes: u32 = /* valueがfalseの投票を数える */
                     'executeで：提案が可決されたことを確認し（はい>いいえ）、実行済みとしてマーク',
                 ],
             },
+            'zh-CN': missionsZhCN['governor-simple'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
@@ -4357,6 +4375,7 @@ env.storage().instance().set(&MUTEX, &false);
                     'ミューテックスを残高更新前にtrueに、その後falseに設定',
                 ],
             },
+            'zh-CN': missionsZhCN['reentrancy-guard'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -4625,6 +4644,7 @@ env.storage().instance().set(&FEE, &new_fee);
                     'init関数は大丈夫です — 既に管理者を正しく保存しています',
                 ],
             },
+            'zh-CN': missionsZhCN['access-control-fix'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -4836,6 +4856,7 @@ env.storage().instance().get(&VALUE).unwrap_or(0)
                     'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
                 ],
             },
+            'zh-CN': missionsZhCN['standalone-storage-dojo'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
@@ -5002,6 +5023,7 @@ env.storage().instance().set(&DONE, &true);
                     "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
                 ],
             },
+            'zh-CN': missionsZhCN['standalone-auth-guard'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -5179,6 +5201,7 @@ vals.len()
                     'Renvoie la longueur avec `vals.len()`',
                 ],
             },
+            'zh-CN': missionsZhCN['standalone-vector-lab'],
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
@@ -5249,9 +5272,15 @@ export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
         return value.split('.').reduce((current, part) => current?.[part], missionLocales[language]);
     };
 
+    // Resolve each field against the locale it actually came from, so a
+    // field that falls back to English never looks up the requested
+    // language's locale file (e.g. 'zh-CN', which has no mission keys).
     const pick = (field) => {
-        const value = locale[field] != null ? locale[field] : fallback[field] != null ? fallback[field] : neutral[field];
-        return resolve(value, locale === i18n?.[lang] ? lang : DEFAULT_MISSION_LANG);
+        if (locale[field] != null) {
+            return resolve(locale[field], locale === i18n?.[lang] ? lang : DEFAULT_MISSION_LANG);
+        }
+        if (fallback[field] != null) return resolve(fallback[field], DEFAULT_MISSION_LANG);
+        return resolve(neutral[field], DEFAULT_MISSION_LANG);
     };
 
     return {
