@@ -232,7 +232,7 @@ export default function Navbar({ onOpenShortcuts }: NavbarProps): ReactElement {
           className={`mobile-menu ${isOpen ? 'open' : ''}`}
           aria-label={t('navbar.ariaMobile')}
           aria-hidden={!isOpen}
-          inert={!isOpen ? undefined : ''}
+          inert={!isOpen}
         >
           <Link to="/" onClick={() => setIsOpen(false)}>
             {t('navbar.home')}

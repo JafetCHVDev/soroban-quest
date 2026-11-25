@@ -11,7 +11,7 @@ import {
   isDailyChallengeCompleted,
   getTodayDateString,
 } from "./dailyChallenge";
-import type { GameState } from "../types/game";
+import type { GameState, Language } from "../types/game";
 
 export const DAILY_CHALLENGE_BONUS_XP = 25;
 
@@ -36,7 +36,7 @@ export interface MissionCompletionResult {
 export function completeMissionWithDailyBonus(
   missionId: string | undefined,
   xpReward: number,
-  language: string,
+  language: Language,
 ): MissionCompletionResult {
   const state = loadProgress();
   const completedState: CompletedMissionState = missionId

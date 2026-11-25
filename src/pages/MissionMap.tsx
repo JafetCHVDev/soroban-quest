@@ -10,20 +10,26 @@ import useDocumentTitle from '../systems/useDocumentTitle';
 import './MissionMap.css';
 import { getXPProgress, getLevelFromXP, xpForLevel, getRankTitle } from '../systems/gameEngine';
 import { preloadMonacoEditor } from '../components/LazyMonacoEditor';
+import type { GameState, LocalizedMission } from '../types/game';
 
-function getMissionCompletionRatio(completed, total) {
+function getMissionCompletionRatio(completed: number, total: number): number {
   if (!total) return 0;
   return Math.min(Math.max((completed / total) * 100, 0), 100);
 }
 
-function formatLevel(progressState, fallbackLevel = 1) {
+function formatLevel(
+  progressState: Pick<GameState, 'level' | 'xp'>,
+  fallbackLevel = 1,
+): number {
   // Prefer the persisted level, but fall back to derived level from XP.
   if (typeof progressState?.level === 'number' && progressState.level > 0)
     return progressState.level;
   return getLevelFromXP(progressState?.xp ?? 0) || fallbackLevel;
 }
 
-function formatCurrentLevelProgressPercent(progressState) {
+function formatCurrentLevelProgressPercent(
+  progressState: Pick<GameState, 'level' | 'xp'>,
+): number {
   const level = formatLevel(progressState);
   // Show progress within the current level as a percent.
   const nextLevelXP = xpForLevel(level + 1);
@@ -33,14 +39,7 @@ function formatCurrentLevelProgressPercent(progressState) {
   return Math.min(Math.max(((xp - currentLevelXP) / denom) * 100, 0), 100);
 }
 
-interface PathMission {
-  id: string;
-  title: string;
-  order: number;
-  xpReward: number;
-  completed: boolean;
-  unlocked: boolean;
-}
+type PathMission = LocalizedMission & { completed: boolean; unlocked: boolean };
 
 interface MissionPathNodeProps {
   mission: PathMission;
@@ -236,12 +235,15 @@ export default function MissionMap() {
   const navigate = useNavigate();
   const state = loadProgress();
   const { t, language } = useTranslation();
-  const missions = useMemo(() => getAllMissions(language), [language]);
-  const learningPathRef = useRef(null);
+  const missions = useMemo<LocalizedMission[]>(
+    () => getAllMissions(language),
+    [language],
+  );
+  const learningPathRef = useRef<HTMLDivElement | null>(null);
   const [learningPathWidth, setLearningPathWidth] = useState(800);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
-  const [selectedChapter, setSelectedChapter] = useState('all');
+  const [selectedChapter, setSelectedChapter] = useState<number | 'all' | 'standalone'>('all');
 
   const chapters = useMemo(() => {
     return [...new Set(missions.map((m) => m.chapter).filter(Boolean))].sort((a, b) => a - b);
@@ -253,7 +255,7 @@ export default function MissionMap() {
   // mission states on the completed ids keeps them, and the path layout built
   // from them, referentially stable until progress actually changes.
   const completedMissionsKey = state.completedMissions.join('\n');
-  const missionStates = useMemo(() => {
+  const missionStates = useMemo<(LocalizedMission & { completed: boolean; unlocked: boolean })[]>(() => {
     const completedMissions = completedMissionsKey ? completedMissionsKey.split('\n') : [];
     return missions.map((m) => ({
       ...m,
@@ -262,7 +264,7 @@ export default function MissionMap() {
     }));
   }, [missions, completedMissionsKey]);
 
-  const missionGridRef = useRef(null);
+  const missionGridRef = useRef<HTMLDivElement | null>(null);
   const [missionGridColumns, setMissionGridColumns] = useState(1);
 
   const filteredMissions = useMemo(() => {
@@ -285,15 +287,15 @@ export default function MissionMap() {
     return getRecommendedMission(state, missions);
   }, [state, missions]);
 
-  const recommendedMission = useMemo(() => {
+  const recommendedMission = useMemo<PathMission | null>(() => {
     if (!recommendation?.missionId) return null;
-    return missions.find((m) => m.id === recommendation.missionId) || recommendation.mission;
-  }, [recommendation, missions]);
+    return missionStates.find((m) => m.id === recommendation.missionId) || null;
+  }, [recommendation, missionStates]);
 
   useEffect(() => {
     if (!missionGridRef.current || typeof ResizeObserver === 'undefined') return undefined;
 
-    const updateColumns = (width) => {
+    const updateColumns = (width: number) => {
       setMissionGridColumns(width >= 900 ? 3 : width >= 560 ? 2 : 1);
     };
     const node = missionGridRef.current;
@@ -307,7 +309,7 @@ export default function MissionMap() {
   }, []);
 
   const missionRows = useMemo(() => {
-    const rows = [];
+    const rows: PathMission[][] = [];
     for (let index = 0; index < filteredMissions.length; index += missionGridColumns) {
       rows.push(filteredMissions.slice(index, index + missionGridColumns));
     }
@@ -324,7 +326,7 @@ export default function MissionMap() {
   });
 
   const handleMissionClick = useCallback(
-    (mission) => {
+    (mission: PathMission) => {
       if (mission.unlocked) {
         navigate(`/mission/${mission.id}`);
       }
@@ -332,13 +334,13 @@ export default function MissionMap() {
     [navigate],
   );
 
-  const handleMissionHover = useCallback((mission) => {
+  const handleMissionHover = useCallback((mission: PathMission) => {
     if (mission.unlocked) {
       preloadMonacoEditor();
     }
   }, []);
 
-  const ariaLabelFor = (m) => {
+  const ariaLabelFor = (m: PathMission): string => {
     if (m.completed)
       return t('missionMap.aria.missionItemCompleted', { order: m.order, title: m.title });
     if (m.unlocked)
@@ -352,7 +354,7 @@ export default function MissionMap() {
     }
 
     const node = learningPathRef.current;
-    const updateWidth = (width) => {
+    const updateWidth = (width: number) => {
       setLearningPathWidth(Math.max(320, Math.floor(width)));
     };
 

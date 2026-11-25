@@ -226,14 +226,7 @@ Los contratos de Soroban persisten datos mediante almacenamiento. La idea import
   },
 ];
 
-interface LocalizedTheoryQuest extends Partial<TheoryQuestI18n> {
-  id: string;
-  type: string;
-  chapter: number;
-  order: number;
-  difficulty: string;
-  xpReward: number;
-}
+export interface LocalizedTheoryQuest extends Omit<TheoryQuest, 'i18n'>, TheoryQuestI18n {}
 
 export function localizeTheoryQuest(quest: TheoryQuest | null | undefined, lang: string = DEFAULT_THEORY_QUEST_LANG): LocalizedTheoryQuest | null | undefined {
   if (!quest) return quest;

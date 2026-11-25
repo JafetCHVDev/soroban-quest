@@ -14,6 +14,7 @@ import { downloadCampaignCertificate } from "../components/CampaignCertificate.j
 import { isMissionUnlocked } from "../systems/missionLoader";
 import { getLevelFromXP } from "../systems/gameEngine";
 import { useTranslation } from "../i18n/useTranslation";
+import type { LocalizedMission } from "../types/game";
 
 import "./Campaigns.css";
 import useDocumentTitle from '../systems/useDocumentTitle';
@@ -28,11 +29,11 @@ export default function Campaigns() {
   const [loading, setLoading] = useState(true);
   const [certificateLoading, setCertificateLoading] = useState<string | null>(null);
 
-  const localizedCampaigns = useMemo(
+  const localizedCampaigns = useMemo<LocalizedCampaign[]>(
     () => localizeCampaigns(campaigns, language),
     [language],
   );
-  const localizedMissions = useMemo(
+  const localizedMissions = useMemo<LocalizedMission[]>(
     () => localizeMissions(missions, language),
     [language],
   );
@@ -196,10 +197,12 @@ export default function Campaigns() {
           const completed = stats.completed === stats.total;
 
           const campaignMissions = campaign.missionIds
-            .map((id) => localizedMissions.find((m) => m.id === id))
-            .filter(Boolean);
-          const unlockableSkills = Array.from(
-            new Set(campaignMissions.flatMap((m) => m.conceptsIntroduced || [])),
+            .map((id) => localizedMissions.find((mission) => mission.id === id))
+            .filter((mission): mission is LocalizedMission => Boolean(mission));
+          const unlockableSkills: string[] = Array.from(
+            new Set<string>(
+              campaignMissions.flatMap((mission) => mission.conceptsIntroduced || []),
+            ),
           );
           const skillsTitle = language === "es" ? "Habilidades a desbloquear:" : "Skills to unlock:";
 
@@ -394,4 +397,16 @@ export default function Campaigns() {
       )}
     </div>
   );
+}
+
+interface LocalizedCampaign {
+  id: string;
+  title: string;
+  description: string;
+  lore?: string;
+  missionIds: string[];
+  requiredLevel: number;
+  chapterNumber: number;
+  heroImage: string;
+  color: string;
 }
