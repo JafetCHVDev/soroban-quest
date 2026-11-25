@@ -12,6 +12,19 @@ import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 import { registerMissionCatalog } from './achievements';
 
+const missionLocalePromises = new Map();
+
+export function loadMissionLocale(language) {
+    const locale = typeof language === 'string'
+        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
+        : 'en';
+    if (missionLocalePromises.has(locale)) return missionLocalePromises.get(locale);
+
+    const promise = Promise.resolve(locale);
+    missionLocalePromises.set(locale, promise);
+    return promise;
+}
+
 export function getAllMissions(lang = getActiveLanguage()) {
     return missions.map((m) => localizeMission(m, lang));
 }
