@@ -188,6 +188,7 @@ export default function Profile() {
     if (!importPreview) return;
 
     try {
+      await exportProgress();
       if (importPreview.state) {
         updateProgress(importPreview.state);
       }

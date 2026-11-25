@@ -201,7 +201,9 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({
       let value = resolveKey(dict, key);
       if (value == null) value = resolveKey(fallback, key);
       if (value == null) {
-        if (typeof varsOrFallback === 'string') return varsOrFallback;
+        if (typeof varsOrFallback === 'string') {
+          return interpolate(varsOrFallback, fallbackVars);
+        }
         if (import.meta?.env?.DEV) {
           // Surface missing keys in development without crashing
           console.warn(`[i18n] Missing translation key: "${key}"`);

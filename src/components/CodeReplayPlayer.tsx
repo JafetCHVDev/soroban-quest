@@ -445,7 +445,10 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
                 <span style={{ color: display.color, fontWeight: isActive ? 'bold' : 'normal' }}>
                   {display.text}
                 </span>
-                {event.type === 'hint' && Number.isFinite(Number(event.content)) && (
+                {event.type === 'hint' &&
+                  typeof event.content === 'string' &&
+                  event.content.trim() &&
+                  Number.isFinite(Number(event.content)) && (
                   <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem' }}>
                     #{Number(event.content) + 1}
                   </span>
