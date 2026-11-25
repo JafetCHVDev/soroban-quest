@@ -42,6 +42,16 @@ export function loadMissionLocale(language) {
         missionLocalePromises.set(locale, promise);
         return promise;
     }
+    if (locale === 'ja') {
+        const promise = import('../data/missions/i18n/ja.js')
+            .then((module) => {
+                localeCache.set(locale, module.missionLocale);
+                return module.missionLocale;
+            })
+            .finally(() => missionLocalePromises.delete(locale));
+        missionLocalePromises.set(locale, promise);
+        return promise;
+    }
     return Promise.resolve(locale);
 }
 
