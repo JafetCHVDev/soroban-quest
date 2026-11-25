@@ -7,12 +7,14 @@
    the active language (e.g. a component using useTranslation()).
    ========================================== */
 
-import { missions, localizeMission } from '../data/missions';
+import { missions, localizeMission as localizeCoreMission } from '../data/missions';
+import { missionLocale as englishMissionLocale } from '../data/missions/i18n/en';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
 import { registerMissionCatalog } from './achievements';
 
 const missionLocalePromises = new Map();
+const englishLocaleCache = new Map([['en', englishMissionLocale]]);
 
 export function loadMissionLocale(language) {
     const locale = typeof language === 'string'
@@ -23,6 +25,18 @@ export function loadMissionLocale(language) {
     const promise = Promise.resolve(locale);
     missionLocalePromises.set(locale, promise);
     return promise;
+}
+
+export function localizeMission(mission, language = 'en') {
+    if (!mission) return mission;
+    const locale = typeof language === 'string'
+        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
+        : 'en';
+    if (locale === 'en') {
+        const localized = englishLocaleCache.get('en')?.[mission.id] || {};
+        return { ...mission, ...localized };
+    }
+    return localizeCoreMission(mission, locale);
 }
 
 export function getAllMissions(lang = getActiveLanguage()) {
