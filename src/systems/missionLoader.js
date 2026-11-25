@@ -32,6 +32,16 @@ export function loadMissionLocale(language) {
         missionLocalePromises.set(locale, promise);
         return promise;
     }
+    if (locale === 'fr') {
+        const promise = import('../data/missions/i18n/fr.js')
+            .then((module) => {
+                localeCache.set(locale, module.missionLocale);
+                return module.missionLocale;
+            })
+            .finally(() => missionLocalePromises.delete(locale));
+        missionLocalePromises.set(locale, promise);
+        return promise;
+    }
     return Promise.resolve(locale);
 }
 
