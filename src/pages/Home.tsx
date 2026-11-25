@@ -13,7 +13,7 @@ import HomeSkeleton from '../components/HomeSkeleton';
 import Onboarding, { shouldShowOnboarding } from '../components/Onboarding';
 import { getActivityLog, type ActivityEntry } from '../systems/activityLogger';
 import { getRankTitle } from '../systems/gameEngine';
-import type { Mission } from '../types/game';
+import type { LocalizedMission } from '../types/game';
 
 /**
  * Home page
@@ -48,6 +48,7 @@ export default function Home(): ReactElement {
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         let animId: number;
 
         const resize = (): void => {
@@ -130,7 +131,7 @@ export default function Home(): ReactElement {
     const isCompleted = useMemo(() => isDailyChallengeCompleted(state.dailyChallengeCompletedDates || []), [state.dailyChallengeCompletedDates]);
 
     // eslint-disable-next-line react-hooks/preserve-manual-memoization
-    const nextMission: Mission | undefined = useMemo(() => {
+    const nextMission: LocalizedMission | undefined = useMemo(() => {
         return missions.find((m) => !state.completedMissions.includes(m.id));
     }, [missions, state.completedMissions]);
 

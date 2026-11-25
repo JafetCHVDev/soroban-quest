@@ -7,13 +7,13 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from "react"
 
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
-import { missions, localizeMissions } from "../data/missions";
 import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns";
 import { loadProgress, loadProfile } from "../systems/storage";
 import { downloadCampaignCertificate } from "../components/CampaignCertificate.jsx";
-import { isMissionUnlocked } from "../systems/missionLoader";
+import { getAllMissions, isMissionUnlocked } from "../systems/missionLoader";
 import { getLevelFromXP } from "../systems/gameEngine";
 import { useTranslation } from "../i18n/useTranslation";
+import type { LocalizedMission } from "../types/game";
 
 import "./Campaigns.css";
 import useDocumentTitle from '../systems/useDocumentTitle';
@@ -28,12 +28,12 @@ export default function Campaigns() {
   const [loading, setLoading] = useState(true);
   const [certificateLoading, setCertificateLoading] = useState<string | null>(null);
 
-  const localizedCampaigns = useMemo(
+  const localizedCampaigns = useMemo<LocalizedCampaign[]>(
     () => localizeCampaigns(campaigns, language),
     [language],
   );
-  const localizedMissions = useMemo(
-    () => localizeMissions(missions, language),
+  const localizedMissions = useMemo<LocalizedMission[]>(
+    () => getAllMissions(language),
     [language],
   );
   const selectedCampaign = useMemo(
@@ -181,7 +181,7 @@ export default function Campaigns() {
           {t("campaigns.subtitle", {
             level: currentLevel,
             completed: progress.completedMissions.length,
-            total: missions.length,
+            total: localizedMissions.length,
           })}
         </p>
       </div>
@@ -196,10 +196,12 @@ export default function Campaigns() {
           const completed = stats.completed === stats.total;
 
           const campaignMissions = campaign.missionIds
-            .map((id) => localizedMissions.find((m) => m.id === id))
-            .filter(Boolean);
-          const unlockableSkills = Array.from(
-            new Set(campaignMissions.flatMap((m) => m.conceptsIntroduced || [])),
+            .map((id) => localizedMissions.find((mission) => mission.id === id))
+            .filter((mission): mission is LocalizedMission => Boolean(mission));
+          const unlockableSkills: string[] = Array.from(
+            new Set<string>(
+              campaignMissions.flatMap((mission) => mission.conceptsIntroduced || []),
+            ),
           );
           const skillsTitle = language === "es" ? "Habilidades a desbloquear:" : "Skills to unlock:";
 
@@ -394,4 +396,16 @@ export default function Campaigns() {
       )}
     </div>
   );
+}
+
+interface LocalizedCampaign {
+  id: string;
+  title: string;
+  description: string;
+  lore?: string;
+  missionIds: string[];
+  requiredLevel: number;
+  chapterNumber: number;
+  heroImage: string;
+  color: string;
 }

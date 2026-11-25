@@ -1,32 +1,15 @@
 /* ==========================================
-   Mission Data — 7 progressive Soroban missions
-
-   Phase 3 (i18n): Language-neutral fields (id, chapter, order,
-   difficulty, xpReward, template, solution, checks,
-   conceptsIntroduced) live at the top level. Localizable fields
-   (title, story, learningGoal, hints) live under `i18n[locale]`.
-
-   Use `localizeMission(mission, lang)` to get a flat, render-ready
-   object whose title/story/learningGoal/hints resolve to the active
-   language (falling back to English when a translation is missing).
+   Language-neutral mission definitions. Localized narrative content
+   is loaded from src/data/missions/i18n by missionLoader.
    ========================================== */
-
-import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
-import { createMissionFromMarkdown } from '../systems/missionParser.js';
-import enLocale from '../i18n/locales/en.json';
-import esLocale from '../i18n/locales/es.json';
-import { missionsZhCN } from './missions.zh-CN.js';
-
 const authoredMissions = Object.values(
     import.meta.glob('./missions/authored/*.json', { eager: true, import: 'default' }),
 );
-const missionLocales = { en: enLocale, es: esLocale };
 
-export const DEFAULT_MISSION_LANG = 'en';
 
-const helloSorobanContent = createMissionFromMarkdown(helloSorobanMarkdown);
 
-/* eslint-disable no-useless-escape */
+ 
+/** @type {import('../types/game').Mission[]} */
 export const missions = [
     {
         id: 'hello-soroban',
@@ -34,14 +17,9 @@ export const missions = [
         order: 1,
         difficulty: 'beginner',
         xpReward: 100,
-        ...helloSorobanContent,
-        i18n: {
-            ...helloSorobanContent.i18n,
+        skills: ['contract', 'contractimpl', 'Env', 'Symbol', 'Vec'],
+        prereqs: [],
 
-
-
-            'zh-CN': missionsZhCN['hello-soroban'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec};
 
@@ -86,12 +64,7 @@ impl HelloContract {
         order: 2,
         difficulty: 'beginner',
         xpReward: 150,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['greetings-protocol'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, vec, Env, Symbol, Vec, String};
 
@@ -144,12 +117,7 @@ impl GreetingContract {
         order: 3,
         difficulty: 'beginner',
         xpReward: 200,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['counter-vault'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
@@ -210,12 +178,7 @@ impl CounterContract {
         order: 4,
         difficulty: 'intermediate',
         xpReward: 250,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['guardian-ledger'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
 
@@ -283,12 +246,7 @@ impl LedgerContract {
         order: 5,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['token-forge'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -369,12 +327,7 @@ impl TokenContract {
         order: 6,
         difficulty: 'advanced',
         xpReward: 350,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['time-lock'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -460,12 +413,7 @@ impl TimeLockContract {
         order: 7,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['multi-party-pact'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -556,12 +504,7 @@ impl PactContract {
         order: 8,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['vault-manager'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
 
@@ -648,12 +591,7 @@ impl VaultContract {
         order: 9,
         difficulty: 'intermediate',
         xpReward: 300,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['event-emitter'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
 
@@ -734,12 +672,7 @@ impl EventContract {
         order: 10,
         difficulty: 'intermediate',
         xpReward: 350,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['approval-manager'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -812,12 +745,7 @@ impl ApprovalContract {
         order: 11,
         difficulty: 'intermediate',
         xpReward: 350,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['crowdfund'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
@@ -905,12 +833,7 @@ impl CrowdfundContract {
         order: 12,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['escrow-agent'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1005,12 +928,7 @@ impl EscrowContract {
         order: 13,
         difficulty: 'advanced',
         xpReward: 400,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['subscription'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1111,12 +1029,7 @@ impl SubscriptionContract {
         order: 14,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['flash-loan'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
 
@@ -1203,12 +1116,7 @@ impl FlashLoanContract {
         order: 15,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['permissions-rbac'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1286,12 +1194,7 @@ impl RBACContract {
         order: 16,
         difficulty: 'advanced',
         xpReward: 450,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['oracle-feed'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Vec};
 
@@ -1394,12 +1297,7 @@ impl OracleContract {
         order: 17,
         difficulty: 'advanced',
         xpReward: 500,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['governor-simple'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
 
@@ -1521,12 +1419,7 @@ impl GovernorContract {
         order: 18,
         difficulty: 'advanced',
         xpReward: 500,
-        i18n: {
 
-
-
-            'zh-CN': missionsZhCN['reentrancy-guard'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1613,27 +1506,7 @@ impl VaultContract {
         order: 19,
         difficulty: 'advanced',
         xpReward: 500,
-        i18n: {
 
-            fr: {
-                title: 'Correction du Contrôle d\'Accès',
-                story: `# 🔓 La Brèche des Permissions
-
-La **Brèche des Permissions** est un terrain d'entraînement où l'on répare la logique d'autorisation défaillante.
-
-*"La deuxième vulnérabilité la plus courante,"* explique le Sage de la Sécurité, *"est l'absence de contrôle d'accès. Des fonctions qui devraient être réservées aux administrateurs sont appelables par n'importe qui."*
-
-## Ta Mission
-
-Le contrat ci-dessous stocke une adresse \`admin\` mais n'utilise JAMAIS \`require_auth()\` sur les fonctions privilégiées. Ta tâche est d'ajouter un contrôle d'accès approprié.
-
-Le code vulnérable comporte :
-- Une constante \`ADMIN\` définie mais jamais vérifiée
-- Les fonctions \`set_fee\` et \`pause\` appelables par n'importe qui
-- Aucun appel à \`require_auth()\` où que ce soit
-
-            'zh-CN': missionsZhCN['access-control-fix'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1738,45 +1611,7 @@ impl ConfigContract {
         order: 20,
         difficulty: 'beginner',
         xpReward: 120,
-        i18n: {
 
-            fr: {
-                title: 'Dojo de Stockage',
-                story: `# 🥋 Dojo de Stockage
-
-Bienvenue au **Dojo de Stockage** — une salle d'entraînement paisible en dehors du chemin de campagne.
-
-*"Avant de maîtriser les protocoles complexes, répète les bases jusqu'au réflexe,"* dit le Maître du Dojo.
-
-## Ta Mission
-
-Construis un contrat minimal capable de sauvegarder et récupérer une seule valeur :
-
-- \`set_value\` — stocke un \`u32\` sous une clé fixe
-- \`get_value\` — récupère la valeur stockée (par défaut \`0\` si vide)
-
-## Ce Que Tu Apprendras
-
-- \`env.storage().instance().set(&key, &value)\` — écrire
-- \`env.storage().instance().get(&key).unwrap_or(0)\` — lire avec défaut
-- La macro \`symbol_short!\` pour les clés de stockage
-
-## Concepts Clés
-
-\`\`\`rust
-const VALUE: Symbol = symbol_short!("VALUE");
-env.storage().instance().set(&VALUE, &value);
-env.storage().instance().get(&VALUE).unwrap_or(0)
-\`\`\``,
-                learningGoal: 'Pratique le stockage instance de base : enregistrer et récupérer une valeur u32',
-                hints: [
-                    'Définis `const VALUE: Symbol = symbol_short!("VALUE");` en haut',
-                    'Dans set_value : `env.storage().instance().set(&VALUE, &value)`',
-                    'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
-                ],
-            },
-            'zh-CN': missionsZhCN['standalone-storage-dojo'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
@@ -1833,46 +1668,7 @@ impl StorageDojo {
         order: 21,
         difficulty: 'beginner',
         xpReward: 150,
-        i18n: {
 
-            fr: {
-                title: "Exercice du Garde d'Autorisation",
-                story: `# 🛡️ Exercice du Garde d'Autorisation
-
-Entre dans le **Poste de Garde** — un exercice isolé pour l'autorisation.
-
-*"Chaque changement d'état doit prouver qui l'a demandé,"* avertit le Capitaine de la Garde.
-
-## Ta Mission
-
-Construis un contrat qui protège une action privilégiée avec \`require_auth\` :
-
-- \`init\` — enregistre une adresse admin
-- \`protected_action\` — exige l'auth de l'appelant, met le drapeau \`DONE\` à \`true\`
-- \`is_done\` — renvoie si le drapeau est activé
-
-## Ce Que Tu Apprendras
-
-- Le type \`Address\` pour les identités
-- Le garde \`address.require_auth()\`
-- Stocker et vérifier un drapeau booléen
-
-## Concepts Clés
-
-\`\`\`rust
-let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
-admin.require_auth();
-env.storage().instance().set(&DONE, &true);
-\`\`\``,
-                learningGoal: "Pratique le contrôle require_auth pour un changement d'état protégé",
-                hints: [
-                    "Stocke admin dans init : `env.storage().instance().set(&ADMIN, &admin)`",
-                    "Dans protected_action : vérifie avec `user.require_auth()`",
-                    "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
-                ],
-            },
-            'zh-CN': missionsZhCN['standalone-auth-guard'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
 
@@ -1943,45 +1739,7 @@ impl AuthGuard {
         order: 22,
         difficulty: 'beginner',
         xpReward: 130,
-        i18n: {
 
-            fr: {
-                title: 'Laboratoire de Vecteurs',
-                story: `# 🧪 Laboratoire de Vecteurs
-
-Entre dans le **Laboratoire de Vecteurs** — un atelier pratique pour la collection la plus flexible de Soroban.
-
-*"Les vecteurs contiennent le multiple, ordonnent le multiple, renvoient le multiple,"* dit le Technicien de Laboratoire.
-
-## Ta Mission
-
-Crée un contrat qui construit et inspecte des Vecteurs :
-
-- \`make_sequence\` — renvoie un \`Vec<u32>\` contenant \`[1, 2, 3]\`
-- \`get_length\` — reçoit un \`Vec<u32>\` et renvoie sa longueur en \`u32\`
-
-## Ce Que Tu Apprendras
-
-- Le type \`Vec\` et la macro \`vec![&env, ...]\`
-- \`Vec::len()\` pour la longueur
-- Passer des Vecteurs entre les fonctions
-
-## Concepts Clés
-
-\`\`\`rust
-use soroban_sdk::{vec, Vec};
-vec![&env, 1u32, 2u32, 3u32]
-vals.len()
-\`\`\``,
-                learningGoal: 'Pratique la création et l\'inspection de collections Vec<u32>',
-                hints: [
-                    'Utilise `vec![&env, 1u32, 2u32, 3u32]` pour construire la séquence',
-                    'Signature pour get_length : `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
-                    'Renvoie la longueur avec `vals.len()`',
-                ],
-            },
-            'zh-CN': missionsZhCN['standalone-vector-lab'],
-        },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
 
@@ -2030,48 +1788,3 @@ impl VectorLab {
     },
     ...authoredMissions,
 ];
-
-/**
- * Returns a flat, render-ready mission object for the given language.
- * Localizable fields (title, story, learningGoal, hints) are resolved
- * from `mission.i18n[lang]`, falling back to English, then to any
- * legacy top-level field. The `i18n` block itself is omitted from the
- * returned object so consumers keep using `mission.title` etc.
- */
-export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
-    if (!mission) return mission;
-
-    const { i18n, ...neutral } = mission;
-    const locale =
-        (i18n && (i18n[lang] || i18n[DEFAULT_MISSION_LANG])) || {};
-    const fallback = (i18n && i18n[DEFAULT_MISSION_LANG]) || {};
-
-    const resolve = (value, language) => {
-        if (typeof value !== 'string' || !value.startsWith('missions.')) return value;
-        return value.split('.').reduce((current, part) => current?.[part], missionLocales[language]);
-    };
-
-    // Resolve each field against the locale it actually came from, so a
-    // field that falls back to English never looks up the requested
-    // language's locale file (e.g. 'zh-CN', which has no mission keys).
-    const pick = (field) => {
-        if (locale[field] != null) {
-            return resolve(locale[field], locale === i18n?.[lang] ? lang : DEFAULT_MISSION_LANG);
-        }
-        if (fallback[field] != null) return resolve(fallback[field], DEFAULT_MISSION_LANG);
-        return resolve(neutral[field], DEFAULT_MISSION_LANG);
-    };
-
-    return {
-        ...neutral,
-        title: pick('title'),
-        story: pick('story'),
-        learningGoal: pick('learningGoal'),
-        hints: pick('hints') || [],
-    };
-}
-
-/** Localizes an array of missions. */
-export function localizeMissions(list, lang = DEFAULT_MISSION_LANG) {
-    return (list || []).map((m) => localizeMission(m, lang));
-}

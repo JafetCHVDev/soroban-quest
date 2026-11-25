@@ -17,6 +17,10 @@ export interface MissionCatalog {
 type LooseMission = any;
 
 export function getMissionCatalog(): MissionCatalog;
+/** Loads (once) and caches the mission narrative for a non-English locale. */
+export function loadMissionLocale(_language: string): Promise<unknown>;
+export function localizeMission(_mission: LooseMission, _language?: string): LooseMission;
+export function localizeMissions(_list: LooseMission[], _language?: string): LooseMission[];
 export function getAllMissions(_lang?: string): LooseMission[];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getAllTheoryQuests(_lang?: string): any[];

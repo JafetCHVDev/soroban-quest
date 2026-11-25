@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+ 
 import helloSorobanMarkdown from '../hello-soroban.md?raw';
 import { parseMissionMarkdown } from '../../../systems/missionParser.js';
 const helloSoroban = parseMissionMarkdown(helloSorobanMarkdown);

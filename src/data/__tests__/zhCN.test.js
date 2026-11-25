@@ -1,5 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { missions, localizeMission } from "../missions";
+import { missions as missionDefinitions } from "../missions";
+import { loadMissionLocale, localizeMission } from "../../systems/missionLoader";
+
+// zh-CN is loaded on demand; load it before the parametrized cases are built.
+const [english, chinese] = await Promise.all([
+  loadMissionLocale("en"),
+  loadMissionLocale("zh-CN"),
+]);
+const missions = missionDefinitions.map((mission) => ({
+  ...mission,
+  i18n: { en: english[mission.id], "zh-CN": chinese[mission.id] },
+}));
 import { campaigns, localizeCampaign } from "../campaigns";
 
 const HAN = /[一-鿿]/;

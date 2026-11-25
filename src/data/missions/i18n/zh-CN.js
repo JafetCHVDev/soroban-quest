@@ -9,7 +9,7 @@
    left untranslated.
    ========================================== */
 
-export const missionsZhCN = {
+export const missionLocale = {
     'hello-soroban': {
     title: '第一份合约',
     story: `# 觉醒

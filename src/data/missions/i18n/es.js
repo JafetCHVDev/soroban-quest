@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+ 
 export const missionLocale = {
   "hello-soroban": {
                 title: 'El Primer Contrato',

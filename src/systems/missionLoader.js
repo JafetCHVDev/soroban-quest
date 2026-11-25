@@ -1,79 +1,160 @@
 /* ==========================================
-   Mission Loader — Fetches and parses mission data
-
-   Phase 3 (i18n): All getters return language-localized mission
-   objects. The language is read from the i18n language bridge, with
-   an optional explicit `lang` override for callers that already know
-   the active language (e.g. a component using useTranslation()).
+   Mission Loader — language-neutral definitions
+   and cached, on-demand localized content
    ========================================== */
 
-import { missions, localizeMission as localizeCoreMission } from '../data/missions';
+import { missions } from '../data/missions';
 import { missionLocale as englishMissionLocale } from '../data/missions/i18n/en';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
+import enUiLocale from '../i18n/locales/en.json';
+import esUiLocale from '../i18n/locales/es.json';
 import { registerMissionCatalog } from './achievements';
 
-const missionLocalePromises = new Map();
-const localeCache = new Map([['en', englishMissionLocale]]);
+const localeLoaders = {
+    es: () => import('../data/missions/i18n/es.js'),
+    fr: () => import('../data/missions/i18n/fr.js'),
+    'zh-CN': () => import('../data/missions/i18n/zh-CN.js'),
+    ja: () => import('../data/missions/i18n/ja.js'),
+};
 
-export function loadMissionLocale(language) {
-    const locale = typeof language === 'string'
-        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
-        : 'en';
-    if (localeCache.has(locale)) return Promise.resolve(localeCache.get(locale));
-    if (missionLocalePromises.has(locale)) return missionLocalePromises.get(locale);
-    if (locale === 'es') {
-        const promise = import('../data/missions/i18n/es.js')
-            .then((module) => {
-                localeCache.set(locale, module.missionLocale);
-                return module.missionLocale;
-            })
-            .finally(() => missionLocalePromises.delete(locale));
-        missionLocalePromises.set(locale, promise);
-        return promise;
-    }
-    if (locale === 'fr') {
-        const promise = import('../data/missions/i18n/fr.js')
-            .then((module) => {
-                localeCache.set(locale, module.missionLocale);
-                return module.missionLocale;
-            })
-            .finally(() => missionLocalePromises.delete(locale));
-        missionLocalePromises.set(locale, promise);
-        return promise;
-    }
-    if (locale === 'ja') {
-        const promise = import('../data/missions/i18n/ja.js')
-            .then((module) => {
-                localeCache.set(locale, module.missionLocale);
-                return module.missionLocale;
-            })
-            .finally(() => missionLocalePromises.delete(locale));
-        missionLocalePromises.set(locale, promise);
-        return promise;
-    }
-    return Promise.resolve(locale);
+const authoredLocaleModules = {
+    en: import.meta.glob('../data/missions/authored/i18n/en/*.json', {
+        eager: true,
+        import: 'default',
+    }),
+    es: import.meta.glob('../data/missions/authored/i18n/es/*.json', {
+        import: 'default',
+    }),
+    fr: import.meta.glob('../data/missions/authored/i18n/fr/*.json', {
+        import: 'default',
+    }),
+    ja: import.meta.glob('../data/missions/authored/i18n/ja/*.json', {
+        import: 'default',
+    }),
+    'zh-CN': import.meta.glob('../data/missions/authored/i18n/zh-CN/*.json', {
+        import: 'default',
+    }),
+};
+
+const DEFAULT_MISSION_LANG = 'en';
+const localeCache = new Map([
+    [DEFAULT_MISSION_LANG, {
+        ...englishMissionLocale,
+        ...loadEagerAuthoredLocale('en'),
+    }],
+]);
+const localePromises = new Map();
+
+function missionIdFromPath(filePath) {
+    return filePath.slice(filePath.lastIndexOf('/') + 1).replace(/\.json$/, '');
 }
 
-export function localizeMission(mission, language = 'en') {
-    if (!mission) return mission;
-    const locale = typeof language === 'string'
-        ? (language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase())
-        : 'en';
-    const localized = localeCache.get(locale)?.[mission.id] ||
-        localeCache.get('en')?.[mission.id] || {};
-    return { ...localizeCoreMission(mission, 'en'), ...localized };
+function loadEagerAuthoredLocale(language) {
+    return Object.fromEntries(
+        Object.entries(authoredLocaleModules[language] || {}).map(([filePath, content]) => [
+            missionIdFromPath(filePath),
+            content,
+        ]),
+    );
 }
 
-export function getAllMissions(lang = getActiveLanguage()) {
-    return missions.map((m) => localizeMission(m, lang));
+async function loadAuthoredLocale(language) {
+    const modules = authoredLocaleModules[language] || {};
+    const entries = await Promise.all(
+        Object.entries(modules).map(async ([filePath, load]) => [
+            missionIdFromPath(filePath),
+            await load(),
+        ]),
+    );
+    return Object.fromEntries(entries);
+}
+
+// Mission fields may hold a `missions.*` key into the UI locale files.
+const keyedLocales = { en: enUiLocale, es: esUiLocale };
+
+function resolveLocaleKey(value, language) {
+    if (typeof value !== 'string' || !value.startsWith('missions.')) return value;
+    return value.split('.').reduce((current, part) => current?.[part], keyedLocales[language]);
+}
+
+function normalizeMissionLanguage(language) {
+    if (typeof language !== 'string') return DEFAULT_MISSION_LANG;
+    return language.toLowerCase() === 'zh-cn' ? 'zh-CN' : language.toLowerCase();
 }
 
 /**
- * Language-neutral summary of the mission catalog, used by systems that
- * only need ids/counts (e.g. achievement conditions) instead of
- * hard-coding the number of missions or chapter membership.
+ * Loads and caches one non-English mission locale and any authored content.
+ * The English content is statically available as the synchronous fallback.
  */
+export function loadMissionLocale(language) {
+    const locale = normalizeMissionLanguage(language);
+    if (!localeLoaders[locale]) return Promise.resolve(localeCache.get(DEFAULT_MISSION_LANG));
+    if (localeCache.has(locale)) return Promise.resolve(localeCache.get(locale));
+    if (localePromises.has(locale)) return localePromises.get(locale);
+
+    const promise = Promise.all([
+        localeLoaders[locale](),
+        loadAuthoredLocale(locale),
+    ])
+        .then(([module, authoredContent]) => {
+            const content = {
+                ...module.missionLocale,
+                ...authoredContent,
+            };
+            localeCache.set(locale, content);
+            return content;
+        })
+        .finally(() => localePromises.delete(locale));
+    localePromises.set(locale, promise);
+    return promise;
+}
+
+/**
+ * Returns a render-ready mission; if the requested locale has not loaded yet,
+ * English is returned until the caller rerenders after loadMissionLocale.
+ */
+export function localizeMission(mission, language = DEFAULT_MISSION_LANG) {
+    if (!mission) return mission;
+
+    const lang = normalizeMissionLanguage(language);
+    const { i18n, ...neutral } = mission;
+    // A mission that carries its own `i18n` is localized from it (as before
+    // the locale split); otherwise the cached per-locale modules are used.
+    // English is always available and is the per-field fallback.
+    const source = i18n
+        ? i18n
+        : {
+            [DEFAULT_MISSION_LANG]: localeCache.get(DEFAULT_MISSION_LANG)?.[mission.id],
+            [lang]: localeCache.get(lang)?.[mission.id],
+        };
+    const english = source[DEFAULT_MISSION_LANG] || {};
+    const requested = source[lang] || {};
+
+    // Resolve each field against the locale it actually came from, so a
+    // field that falls back to English never looks up the requested
+    // language's locale file.
+    const pick = (field) => {
+        if (requested[field] != null) return resolveLocaleKey(requested[field], lang);
+        if (english[field] != null) return resolveLocaleKey(english[field], DEFAULT_MISSION_LANG);
+        return resolveLocaleKey(neutral[field], DEFAULT_MISSION_LANG);
+    };
+
+    return {
+        ...neutral,
+        title: pick('title'),
+        story: pick('story'),
+        learningGoal: pick('learningGoal'),
+        hints: pick('hints') || [],
+    };
+}
+
+/** Localizes an array of missions. */
+export function localizeMissions(list, language = DEFAULT_MISSION_LANG) {
+    return (list || []).map((mission) => localizeMission(mission, language));
+}
+
+/** Language-neutral catalog (ids, count, chapters) used by the achievement system. */
 export function getMissionCatalog() {
     const chapters = {};
     for (const mission of missions) {
@@ -92,77 +173,74 @@ export function getMissionCatalog() {
 // Give the achievement system the real mission count and chapter lists.
 registerMissionCatalog(getMissionCatalog());
 
-export function getAllTheoryQuests(lang = getActiveLanguage()) {
-    return theoryQuests.map((q) => localizeTheoryQuest(q, lang));
+/** @param {import('../types/game').Language} [language] @returns {import('../types/game').LocalizedMission[]} */
+export function getAllMissions(language = getActiveLanguage()) {
+    return localizeMissions(missions, language);
 }
 
-export function getTheoryQuestById(id, lang = getActiveLanguage()) {
+/** @returns {import('../data/theoryQuests').LocalizedTheoryQuest[]} */
+export function getAllTheoryQuests(language = getActiveLanguage()) {
+    return theoryQuests
+        .map((quest) => localizeTheoryQuest(quest, language))
+        .filter((quest) => quest != null);
+}
+
+export function getTheoryQuestById(id, language = getActiveLanguage()) {
     const quest = theoryQuests.find((item) => item.id === id);
-    return quest ? localizeTheoryQuest(quest, lang) : null;
+    return quest ? localizeTheoryQuest(quest, language) : null;
 }
 
-export function getMissionById(id, lang = getActiveLanguage()) {
-    const mission = missions.find(m => m.id === id);
-    return mission ? localizeMission(mission, lang) : null;
+export function getMissionById(id, language = getActiveLanguage()) {
+    const mission = missions.find((item) => item.id === id);
+    return mission ? localizeMission(mission, language) : null;
 }
 
-export function getMissionsByChapter(lang = getActiveLanguage()) {
+export function getMissionsByChapter(language = getActiveLanguage()) {
     const chapters = {};
     for (const mission of missions) {
         if (mission.standalone) continue;
-        const ch = mission.chapter || 1;
-        if (!chapters[ch]) chapters[ch] = [];
-        chapters[ch].push(localizeMission(mission, lang));
+        const chapter = mission.chapter || 1;
+        if (!chapters[chapter]) chapters[chapter] = [];
+        chapters[chapter].push(localizeMission(mission, language));
     }
     return chapters;
 }
 
-export function getStandaloneMissions(lang = getActiveLanguage()) {
-    return missions.filter((m) => m.standalone).map((m) => localizeMission(m, lang));
+export function getStandaloneMissions(language = getActiveLanguage()) {
+    return missions
+        .filter((mission) => mission.standalone)
+        .map((mission) => localizeMission(mission, language));
 }
 
-export function getCampaignMissions(lang = getActiveLanguage()) {
-    return missions.filter((m) => !m.standalone).map((m) => localizeMission(m, lang));
+export function getCampaignMissions(language = getActiveLanguage()) {
+    return missions
+        .filter((mission) => !mission.standalone)
+        .map((mission) => localizeMission(mission, language));
 }
 
-export function getNextMission(currentId, lang = getActiveLanguage()) {
-    const campaignMissions = missions.filter((m) => !m.standalone);
-    const mission = missions.find((m) => m.id === currentId);
-    if (!mission) return null;
-    // For standalone missions, next is null (no campaign sequence)
-    if (mission.standalone) return null;
-    const idx = campaignMissions.findIndex((m) => m.id === currentId);
-    if (idx === -1 || idx === campaignMissions.length - 1) return null;
-    return localizeMission(campaignMissions[idx + 1], lang);
+export function getNextMission(currentId, language = getActiveLanguage()) {
+    const campaignMissions = missions.filter((mission) => !mission.standalone);
+    const missionIndex = campaignMissions.findIndex((mission) => mission.id === currentId);
+    if (missionIndex === -1 || missionIndex === campaignMissions.length - 1) return null;
+    return localizeMission(campaignMissions[missionIndex + 1], language);
 }
 
-export function getPreviousMission(currentId, lang = getActiveLanguage()) {
-    const campaignMissions = missions.filter((m) => !m.standalone);
-    const mission = missions.find((m) => m.id === currentId);
-    if (!mission) return null;
-    if (mission.standalone) return null;
-    const idx = campaignMissions.findIndex((m) => m.id === currentId);
-    if (idx <= 0) return null;
-    return localizeMission(campaignMissions[idx - 1], lang);
+export function getPreviousMission(currentId, language = getActiveLanguage()) {
+    const campaignMissions = missions.filter((mission) => !mission.standalone);
+    const missionIndex = campaignMissions.findIndex((mission) => mission.id === currentId);
+    if (missionIndex <= 0) return null;
+    return localizeMission(campaignMissions[missionIndex - 1], language);
 }
 
 export function isMissionUnlocked(missionId, completedMissions) {
-    // Language-neutral: relies only on ids and order.
-    const mission = missions.find((m) => m.id === missionId);
+    const mission = missions.find((item) => item.id === missionId);
     if (!mission) return false;
-
-    // Standalone missions are always unlocked — no campaign gating
     if (mission.standalone) return true;
 
-    // Campaign progression: only consider non-standalone missions in sequence
-    const campaignMissions = missions.filter((m) => !m.standalone);
-    const idx = campaignMissions.findIndex((m) => m.id === missionId);
-    if (idx === -1) return false;
+    const campaignMissions = missions.filter((item) => !item.standalone);
+    const index = campaignMissions.findIndex((item) => item.id === missionId);
+    if (index === -1) return false;
+    if (index === 0) return true;
 
-    // First campaign mission is always unlocked
-    if (idx === 0) return true;
-
-    // Subsequent campaign missions require the previous campaign mission to be completed
-    const prevMission = campaignMissions[idx - 1];
-    return completedMissions.includes(prevMission.id);
+    return completedMissions.includes(campaignMissions[index - 1].id);
 }
