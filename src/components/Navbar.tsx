@@ -7,6 +7,7 @@ import {
   unlockAudio,
 } from '../systems/soundManager';
 import { useTranslation } from '../i18n/useTranslation';
+import type { SupportedLang } from '../i18n/languageBridge';
 import { useGameState } from '../systems/GameStateContext';
 import LanguageSelector from './LanguageSelector';
 import { resetOnboarding } from './Onboarding';
@@ -79,7 +80,7 @@ export default function Navbar({ onOpenShortcuts }: NavbarProps): ReactElement {
   };
 
   const handleLanguageChange = (code: string): void => {
-    setLanguage(code as 'en' | 'es' | 'fr' | 'ja');
+    setLanguage(code as SupportedLang);
     setLangOpen(false);
   };
 
@@ -231,7 +232,7 @@ export default function Navbar({ onOpenShortcuts }: NavbarProps): ReactElement {
           className={`mobile-menu ${isOpen ? 'open' : ''}`}
           aria-label={t('navbar.ariaMobile')}
           aria-hidden={!isOpen}
-          inert={!isOpen ? undefined : ''}
+          inert={!isOpen}
         >
           <Link to="/" onClick={() => setIsOpen(false)}>
             {t('navbar.home')}

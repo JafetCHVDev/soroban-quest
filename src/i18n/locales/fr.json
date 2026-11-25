@@ -280,6 +280,14 @@
     "profileCount": "{{count}} profils",
     "active": "Actif",
     "switch": "Changer",
+    "tabs": {
+      "ariaLabel": "Catégorie de classement",
+      "xp": "XP",
+      "missions": "Missions terminées",
+      "streak": "Série actuelle",
+      "badges": "Badges obtenus",
+      "gold": "Or"
+    },
     "columns": {
       "rank": "Rang",
       "player": "Joueur",
@@ -287,6 +295,8 @@
       "level": "Niveau",
       "missions": "Missions",
       "badges": "Badges",
+      "streak": "Série",
+      "gold": "Or",
       "status": "Statut"
     }
   },
@@ -672,6 +682,34 @@
     "chapter_7": {
       "name": "Sentinelle de sécurité",
       "description": "Terminez toutes les missions du Chapitre 7"
+    },
+    "journeyman": {
+      "name": "Compagnon",
+      "description": "Terminez 10 missions"
+    },
+    "xp_500": {
+      "name": "Collectionneur d'XP",
+      "description": "Gagnez 500 XP"
+    },
+    "xp_2000": {
+      "name": "Magnat de l'XP",
+      "description": "Gagnez 2000 XP"
+    },
+    "perfectionist": {
+      "name": "Perfectionniste",
+      "description": "Terminez 5 missions du premier coup"
+    },
+    "streak_starter": {
+      "name": "Début de série",
+      "description": "Maintenez une série de connexion de 3 jours"
+    },
+    "dedicated": {
+      "name": "Assidu",
+      "description": "Maintenez une série de connexion de 7 jours"
+    },
+    "committed": {
+      "name": "Engagé",
+      "description": "Maintenez une série de connexion de 30 jours"
     }
   },
   "shop": {

@@ -14,6 +14,9 @@ export const CHECK_TYPES = [
 const DIFFICULTIES = ['beginner', 'intermediate', 'advanced'];
 const STORAGE_OPERATIONS = ['get', 'set', 'has', 'remove'];
 const LOCALES = ['en', 'es'];
+// Every UI language (mirrors SUPPORTED_LANGS in src/i18n/languageBridge.ts).
+// Coverage is reported for each of these.
+export const TRANSLATION_LOCALES = ['en', 'es', 'fr', 'ja', 'zh-CN'];
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
@@ -284,4 +287,34 @@ export function validateMissionLocaleKeys(missions, locales) {
     }
   }
   return errors;
+}
+
+/**
+ * Translation coverage per locale. A mission or campaign counts as translated
+ * for a locale when it has a complete entry for it (every localized field
+ * present and non-empty). Returns, for each locale, the translated count, the
+ * total and the ids that are missing a translation.
+ */
+export function getTranslationCoverage(missions, campaigns, locales = TRANSLATION_LOCALES) {
+  const isComplete = (validate, entry) => {
+    const errors = [];
+    validate(entry, 'entry', errors);
+    return errors.length === 0;
+  };
+  const summarize = (items, validate, locale) => {
+    const list = Array.isArray(items) ? items : [];
+    const missing = list
+      .filter((item) => !isComplete(validate, item?.i18n?.[locale]))
+      .map((item, index) => item?.id ?? `#${index}`);
+    return { translated: list.length - missing.length, total: list.length, missing };
+  };
+
+  const coverage = {};
+  for (const locale of locales) {
+    coverage[locale] = {
+      missions: summarize(missions, validateLocale, locale),
+      campaigns: summarize(campaigns, validateCampaignLocale, locale),
+    };
+  }
+  return coverage;
 }

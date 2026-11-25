@@ -7,6 +7,7 @@ import { loadProgress, saveProgress } from '../systems/storage';
 import { completeMission, recordAttempt } from '../systems/gameEngine';
 import { useToast } from '../systems/ToastContext';
 import { logActivity, ACTIVITY_TYPES } from '../systems/activityLogger';
+import type { LocalizedTheoryQuest } from '../data/theoryQuests';
 import './MissionDetail.css';
 
 /* eslint-disable react-hooks/set-state-in-effect */
@@ -18,7 +19,10 @@ export default function TheoryQuestDetail(): ReactElement {
   const toastContext = useToast();
   const showToast = toastContext?.showToast;
 
-  const quest = useMemo(() => getTheoryQuestById(questId || '', language), [questId, language]);
+  const quest = useMemo<LocalizedTheoryQuest | null>(
+    () => getTheoryQuestById(questId || '', language),
+    [questId, language],
+  );
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);

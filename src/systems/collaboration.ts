@@ -116,7 +116,15 @@ export interface CollaborationManagerOptions {
 }
 
 export type ListenerType = "code" | "status" | "peers" | "conflict";
-export type Listener = (_payload: unknown) => void;
+export interface CollaborationEventPayloads {
+  code: string;
+  status: CollaborationStatus;
+  peers: User[];
+  conflict: MergeResult;
+}
+export type Listener<K extends ListenerType = ListenerType> = (
+  _payload: CollaborationEventPayloads[K]
+) => void;
 
 export class CollaborationManager {
   roomId: string;
@@ -133,7 +141,7 @@ export class CollaborationManager {
   connected: boolean;
   destroyed: boolean;
   lastSyncedCode: string;
-  listeners: Record<ListenerType, Set<Listener>>;
+  listeners: { [K in ListenerType]: Set<Listener<K>> };
 
   constructor(options: CollaborationManagerOptions = {}) {
     this.roomId = normalizeRoomId(options.roomId || createId("mission"));
@@ -280,13 +288,13 @@ export class CollaborationManager {
       .filter((user): user is User => Boolean(user));
   }
 
-  on(type: ListenerType, listener: Listener): () => void {
-    this.listeners[type]?.add(listener);
-    return () => this.listeners[type]?.delete(listener);
+  on<K extends ListenerType>(type: K, listener: Listener<K>): () => void {
+    this.listeners[type].add(listener);
+    return () => this.listeners[type].delete(listener);
   }
 
-  emit(type: ListenerType, payload: unknown): void {
-    this.listeners[type]?.forEach((listener) => listener(payload));
+  emit<K extends ListenerType>(type: K, payload: CollaborationEventPayloads[K]): void {
+    this.listeners[type].forEach((listener) => listener(payload));
   }
 }
 

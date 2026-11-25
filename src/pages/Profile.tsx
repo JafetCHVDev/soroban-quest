@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import type { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
 
@@ -10,7 +11,8 @@ import {
   defaultProfile,
 } from '../systems/storage';
 
-import { getXPProgress, BADGES } from '../systems/gameEngine';
+import { getXPProgress } from '../systems/gameEngine';
+import { ACHIEVEMENTS } from '../systems/achievements';
 import { getAllMissions } from '../systems/missionLoader';
 import { avatars } from '../data/avatars';
 import {
@@ -29,6 +31,8 @@ import useDocumentTitle from '../systems/useDocumentTitle';
 import { useTranslation } from '../i18n/useTranslation';
 import { authService } from '../systems/authService';
 import { cloudSyncService, getCloudSyncStatus } from '../systems/cloudSync';
+import PremiumBadge from '../components/PremiumBadge';
+import type { ExportData, LocalizedMission } from '../types/game';
 
 // Total rank entries: 0..10. Anything >= 10 maps to the last rank.
 const MAX_RANK_INDEX = 10;
@@ -57,10 +61,10 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(profile.avatar || '🛡️');
 
   const [importStatus, setImportStatus] = useState('');
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [importPreview, setImportPreview] = useState(null);
-  const importModalRef = useRef(null);
+  const [importPreview, setImportPreview] = useState<ExportData | null>(null);
+  const importModalRef = useRef<HTMLDivElement | null>(null);
   const [authForm, setAuthForm] = useState({ email: '', username: '' });
   const [syncStatus, setSyncStatus] = useState(() => getCloudSyncStatus());
   const [syncMessage, setSyncMessage] = useState(
@@ -84,12 +88,13 @@ export default function Profile() {
     const modal = importModalRef.current;
     const focusableSelectors =
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-    const getFocusable = () => Array.from(modal.querySelectorAll(focusableSelectors));
+    const getFocusable = (): HTMLElement[] =>
+      Array.from(modal.querySelectorAll<HTMLElement>(focusableSelectors));
 
     const focusable = getFocusable();
     if (focusable.length) focusable[0].focus();
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         e.preventDefault();
         cancelImport();
@@ -157,7 +162,7 @@ export default function Profile() {
     setTimeout(() => setImportStatus(''), 3000);
   };
 
-  const handleFileSelect = async (e) => {
+  const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -179,11 +184,11 @@ export default function Profile() {
     }
   };
 
-  const confirmImport = async () => {
+  const confirmImport = async (): Promise<void> => {
     if (!importPreview) return;
 
     try {
-      await exportProgress(importPreview); // Note: keeping original storage flow pattern
+      await exportProgress();
       if (importPreview.state) {
         updateProgress(importPreview.state);
       }
@@ -208,7 +213,7 @@ export default function Profile() {
     setTimeout(() => setImportStatus(''), 3000);
   };
 
-  const handleAuthSubmit = async (mode) => {
+  const handleAuthSubmit = async (mode: 'signin' | 'signup'): Promise<void> => {
     try {
       if (mode === 'signup') {
         authService.signUp(authForm.email, authForm.username);
@@ -220,7 +225,7 @@ export default function Profile() {
       setSyncMessage('Signed in. Cloud sync is local-first and opt-in.');
       showToast('Signed in for cloud sync', 'success');
     } catch (err) {
-      const message = err?.message || 'Could not sign in';
+      const message = err instanceof Error ? err.message : 'Could not sign in';
       setSyncMessage(message);
       showToast(message, 'error');
     }
@@ -258,13 +263,15 @@ export default function Profile() {
     if (!nextMuted) playClick();
   };
 
-  const handleVolumeChange = (e) => {
+  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const nextVolume = Number(e.target.value);
     setVolume(nextVolume);
     setSoundVolume(nextVolume);
   };
 
-  const completedMissions = missions.filter((m) => state.completedMissions.includes(m.id));
+  const completedMissions: LocalizedMission[] = missions.filter((m: LocalizedMission) =>
+    state.completedMissions.includes(m.id),
+  );
 
   return (
     <div id="main-content" className="profile-page">
@@ -338,6 +345,7 @@ export default function Profile() {
           <h1 className="profile-name">
             <span className="sr-only">Adventurer Name: </span>
             {profile.name}
+            <PremiumBadge t={t} inventory={state.inventory} />
           </h1>
 
           <div className="profile-rank">
@@ -462,7 +470,7 @@ export default function Profile() {
       <h2 className="profile-section-title">{t('profile.sections.badges')}</h2>
 
       <div className="profile-badges-grid" role="region" aria-label="Badges progression collection">
-        {BADGES.map((badge) => {
+        {ACHIEVEMENTS.map((badge) => {
           const earned = state.badges.includes(badge.id);
 
           return (
@@ -475,8 +483,8 @@ export default function Profile() {
                 {badge.icon}
               </div>
               <div className="profile-badge-info" aria-hidden="true">
-                <h4>{t(`badges.${badge.id}.name`)}</h4>
-                <p>{t(`badges.${badge.id}.description`)}</p>
+                <h4>{t(badge.nameKey)}</h4>
+                <p>{t(badge.descriptionKey)}</p>
               </div>
             </div>
           );
@@ -487,7 +495,7 @@ export default function Profile() {
       <h2 className="profile-section-title">Inventory</h2>
       <div className="profile-badges-grid">
         {(state.inventory?.owned || []).map((itemId) => {
-          const isEquipped = state.inventory.equipped.includes(itemId);
+          const isEquipped = state.inventory?.equipped.includes(itemId) ?? false;
           return (
             <div key={itemId} className="card p-4">
               <h4>{itemId}</h4>
@@ -666,7 +674,7 @@ export default function Profile() {
             aria-modal="true"
             aria-labelledby="import-preview-heading"
             ref={importModalRef}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
           >
             <h3 id="import-preview-heading" className="text-xl font-bold mb-4">
               Import Preview

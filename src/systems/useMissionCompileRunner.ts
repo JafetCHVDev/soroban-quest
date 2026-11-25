@@ -14,6 +14,7 @@ import { completeMissionWithDailyBonus } from "./missionCompletion";
 import type { SetEditorMarkers } from "./useMonacoMarkers";
 import type { ToastContextValue } from "./ToastContext";
 import type { VictoryData } from "./useVictoryModal";
+import type { Language } from "../types/game";
 
 /** One line in the mission terminal. */
 export interface TerminalLine {
@@ -33,7 +34,7 @@ export interface UseMissionCompileRunnerOptions {
   code: string;
   mission: RunnableMission | null;
   missionId: string | undefined;
-  language: string;
+  language: Language;
   t: Translate;
   showToast: ToastContextValue["showToast"] | undefined;
   setActiveTab: (_tab: string) => void;
@@ -77,9 +78,10 @@ export function useMissionCompileRunner({
 
   // Set up the WASM compiler (lazy worker) and tear it down on unmount.
   useEffect(() => {
-    compilerRef.current = getWasmCompiler();
+    const compiler = getWasmCompiler();
+    compilerRef.current = compiler;
     // Kick off worker init in the background so the first compile is snappy.
-    compilerRef.current.init?.();
+    compiler.init?.();
     return () => {
       setMarkers(COMPILE_MARKER_OWNER, []);
     };
