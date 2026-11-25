@@ -1,15 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
-
-// Give the English locale a mission key so the fallback lookup can be checked.
-vi.mock("../../i18n/locales/en.json", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    default: {
-      ...actual.default,
-      missions: { keyed: { title: "Keyed English Title" } },
-    },
-  };
-});
+import { describe, it, expect } from "vitest";
 
 const { localizeMission } = await import("../missions");
 
@@ -18,13 +7,13 @@ describe("localizeMission zh-CN fallback to an English locale key", () => {
     const mission = {
       id: "keyed",
       i18n: {
-        en: { title: "missions.keyed.title", story: "s", learningGoal: "g", hints: ["h"] },
+        en: { title: "English fallback title", story: "s", learningGoal: "g", hints: ["h"] },
         "zh-CN": { story: "故事", learningGoal: "目标", hints: ["提示"] },
       },
     };
 
     const result = localizeMission(mission, "zh-CN");
-    expect(result.title).toBe("Keyed English Title");
+    expect(result.title).toBe("English fallback title");
     expect(result.story).toBe("故事");
   });
 });

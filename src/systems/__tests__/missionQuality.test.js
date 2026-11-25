@@ -40,7 +40,10 @@ Complete the code template to pass all checks.`,
 }));
 
 // Import missions after the mock is registered.
-import { missions, localizeMission } from '../../data/missions.js';
+import { missions } from '../../data/missions.js';
+import { loadMissionLocale, localizeMission } from '../missionLoader.js';
+
+await Promise.all(['es', 'fr', 'ja', 'zh-CN'].map(loadMissionLocale));
 
 // ---------------------------------------------------------------------------
 // Helper: compute a difficulty score for a mission used in Category 3.
@@ -644,20 +647,15 @@ describe('Hint Quality', () => {
 // ===========================================================================
 describe('i18n Completeness', () => {
     const REQUIRED_KEYS = ['title', 'story', 'learningGoal', 'hints'];
-    const LANGUAGES = ['en', 'es'];
+    const LANGUAGES = ['en', 'es', 'fr', 'ja', 'zh-CN'];
 
     missions.forEach((mission) => {
         describe(`[${mission.id}]`, () => {
             LANGUAGES.forEach((lang) => {
                 describe(`[${lang}]`, () => {
-                    it(`should have an i18n.${lang} block`, () => {
-                        expect(mission.i18n).toBeDefined();
-                        expect(mission.i18n[lang]).toBeDefined();
-                    });
-
                     REQUIRED_KEYS.forEach((key) => {
                         it(`should have a non-empty '${key}' field`, () => {
-                            const locale = mission.i18n[lang];
+                            const locale = localizeMission(mission, lang);
                             expect(
                                 locale[key],
                                 `${mission.id}[${lang}].${key} is missing`
@@ -686,13 +684,13 @@ describe('i18n Completeness', () => {
                     });
 
                     it(`'title' should not equal the key name itself ("title")`, () => {
-                        const locale = mission.i18n[lang];
+                        const locale = localizeMission(mission, lang);
                         if (!locale?.title) return; // caught by required-key test above
                         expect(locale.title.trim().toLowerCase()).not.toBe('title');
                     });
 
                     it(`'learningGoal' should not equal the key name itself`, () => {
-                        const locale = mission.i18n[lang];
+                        const locale = localizeMission(mission, lang);
                         if (!locale?.learningGoal) return;
                         expect(locale.learningGoal.trim().toLowerCase()).not.toBe('learninggoal');
                     });
@@ -700,22 +698,22 @@ describe('i18n Completeness', () => {
             });
 
             it('EN and ES titles should differ (actual translation, not a copy)', () => {
-                const enTitle = mission.i18n?.en?.title?.trim();
-                const esTitle = mission.i18n?.es?.title?.trim();
+                const enTitle = localizeMission(mission, 'en').title?.trim();
+                const esTitle = localizeMission(mission, 'es').title?.trim();
                 if (!enTitle || !esTitle) return; // guarded by required-key tests
                 expect(enTitle.toLowerCase()).not.toBe(esTitle.toLowerCase());
             });
 
             it('EN and ES learningGoals should differ', () => {
-                const enGoal = mission.i18n?.en?.learningGoal?.trim();
-                const esGoal = mission.i18n?.es?.learningGoal?.trim();
+                const enGoal = localizeMission(mission, 'en').learningGoal?.trim();
+                const esGoal = localizeMission(mission, 'es').learningGoal?.trim();
                 if (!enGoal || !esGoal) return;
                 expect(enGoal.toLowerCase()).not.toBe(esGoal.toLowerCase());
             });
 
             it('EN and ES stories should differ', () => {
-                const enStory = mission.i18n?.en?.story?.trim();
-                const esStory = mission.i18n?.es?.story?.trim();
+                const enStory = localizeMission(mission, 'en').story?.trim();
+                const esStory = localizeMission(mission, 'es').story?.trim();
                 if (!enStory || !esStory) return;
                 expect(enStory.toLowerCase()).not.toBe(esStory.toLowerCase());
             });

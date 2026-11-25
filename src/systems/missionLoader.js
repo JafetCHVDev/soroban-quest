@@ -7,7 +7,7 @@
    the active language (e.g. a component using useTranslation()).
    ========================================== */
 
-import { missions, localizeMission as localizeCoreMission } from '../data/missions';
+import { missions } from '../data/missions';
 import { missionLocale as englishMissionLocale } from '../data/missions/i18n/en';
 import { theoryQuests, localizeTheoryQuest } from '../data/theoryQuests';
 import { getActiveLanguage } from '../i18n/languageBridge';
@@ -72,7 +72,7 @@ export function localizeMission(mission, language = 'en') {
         : 'en';
     const localized = localeCache.get(locale)?.[mission.id] ||
         localeCache.get('en')?.[mission.id] || {};
-    return { ...localizeCoreMission(mission, 'en'), ...localized };
+    return { ...mission, ...localized };
 }
 
 export function getAllMissions(lang = getActiveLanguage()) {

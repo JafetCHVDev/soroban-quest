@@ -6,6 +6,7 @@ import {
   getNextMission,
   getPreviousMission,
   isMissionUnlocked,
+  loadMissionLocale,
 } from '../missionLoader.js';
 import { missions } from '../../data/missions.js';
 import {
@@ -62,7 +63,8 @@ describe('missionLoader', () => {
       expect(new Set(ids).size).toBe(ids.length);
     });
 
-    it('localizes titles into Spanish when lang is "es"', () => {
+    it('localizes titles into Spanish when lang is "es"', async () => {
+      await loadMissionLocale('es');
       const en = getAllMissions('en');
       const es = getAllMissions('es');
 
@@ -70,11 +72,20 @@ describe('missionLoader', () => {
       expect(es[0].title).toBe('El Primer Contrato');
     });
 
-    it('uses the active language when no explicit lang is passed', () => {
+    it('uses the active language when no explicit lang is passed', async () => {
+      await loadMissionLocale('es');
       setActiveLanguage('es');
       expect(getActiveLanguage()).toBe('es');
 
       expect(getAllMissions()[0].title).toBe('El Primer Contrato');
+    });
+
+    it('updates mission text after switching locale content', async () => {
+      await loadMissionLocale('es');
+      await loadMissionLocale('zh-CN');
+
+      expect(getAllMissions('es')[0].title).toBe('El Primer Contrato');
+      expect(getAllMissions('zh-CN')[0].title).toBe('第一份合约');
     });
   });
 
@@ -95,7 +106,8 @@ describe('missionLoader', () => {
       expect(getMissionById(undefined)).toBeNull();
     });
 
-    it('localizes content into Spanish', () => {
+    it('localizes content into Spanish', async () => {
+      await loadMissionLocale('es');
       const mission = getMissionById('hello-soroban', 'es');
 
       expect(mission.title).toBe('El Primer Contrato');
@@ -139,7 +151,8 @@ describe('missionLoader', () => {
       ]);
     });
 
-    it('localizes the grouped missions', () => {
+    it('localizes the grouped missions', async () => {
+      await loadMissionLocale('es');
       const chapters = getMissionsByChapter('es');
 
       expect(chapters[1][0].title).toBe('El Primer Contrato');
@@ -174,7 +187,8 @@ describe('missionLoader', () => {
       expect(getPreviousMission('nope')).toBeNull();
     });
 
-    it('localizes the returned neighbour mission', () => {
+    it('localizes the returned neighbour mission', async () => {
+      await loadMissionLocale('es');
       expect(getNextMission('hello-soroban', 'es').title).toBe(
         'Protocolo de Saludos',
       );

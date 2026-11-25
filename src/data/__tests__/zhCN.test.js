@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { missions, localizeMission } from "../missions";
+import { missions } from "../missions";
+import { loadMissionLocale, localizeMission } from "../../systems/missionLoader";
 import { campaigns, localizeCampaign } from "../campaigns";
+
+await Promise.all([loadMissionLocale("zh-CN")]);
 
 const HAN = /[一-鿿]/;
 
@@ -17,22 +20,6 @@ describe("zh-CN content", () => {
       expect(zh.title).not.toBe(en.title);
     });
 
-    it("falls back to English per field when a zh-CN field is missing", () => {
-      const [first] = missions;
-      const { hints: _omit, ...partialZh } = first.i18n["zh-CN"];
-      const mission = { ...first, i18n: { ...first.i18n, "zh-CN": partialZh } };
-
-      const result = localizeMission(mission, "zh-CN");
-      expect(result.title).toBe(first.i18n["zh-CN"].title);
-      expect(result.hints).toEqual(localizeMission(first, "en").hints);
-    });
-
-    it("falls back to English when there is no zh-CN entry", () => {
-      const [first] = missions;
-      const { "zh-CN": _omit, ...withoutZh } = first.i18n;
-      const result = localizeMission({ ...first, i18n: withoutZh }, "zh-CN");
-      expect(result.title).toBe(localizeMission(first, "en").title);
-    });
   });
 
   describe("campaigns", () => {

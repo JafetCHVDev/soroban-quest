@@ -13,7 +13,6 @@ import { scheduleCloudSync } from './systems/cloudSync';
 import { useKeyboardShortcuts } from './systems/useKeyboardShortcuts';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
 import { useTranslation } from './i18n/useTranslation';
-import { loadMissionLocale } from './systems/missionLoader';
 import './systems/Toast.css';
 
 // Lazy load page components
@@ -53,7 +52,8 @@ function AppContent(): ReactElement {
     if (!needsMissionLocale) return undefined;
 
     let cancelled = false;
-    void loadMissionLocale(language)
+    void import('./systems/missionLoader')
+      .then(({ loadMissionLocale }) => loadMissionLocale(language))
       .then(() => {
         if (!cancelled) setMissionLocaleResult({ language, error: false });
       })
