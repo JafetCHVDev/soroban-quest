@@ -17,6 +17,7 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
+    "check:duplicates": "node scripts/check-duplicates.mjs",
     "mission:new": "node scripts/create-mission.mjs",
     "mission:validate": "node scripts/validate-missions.mjs"
   },

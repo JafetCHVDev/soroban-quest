@@ -20,14 +20,14 @@ This document outlines the implementation plan for optimizing the Soroban Quest 
     - Verify installation with `npm ls rollup-plugin-visualizer`
     - _Requirements: 4, 9, 10, 14_
   
-  - [ ] 1.2 Update vite.config.js with rollupOptions for code splitting
+  - [ ] 1.2 Update vite.config.ts with rollupOptions for code splitting
     - Add rollupOptions.output configuration with manualChunks for 'react-core'
     - Configure entryFileNames, chunkFileNames, assetFileNames with [hash] for cache-busting
     - Set minify to 'terser' with drop_console: true
     - Set chunkSizeWarningLimit to 250KB
     - _Requirements: 9, 14_
   
-  - [ ] 1.3 Add visualizer plugin to vite.config.js
+  - [ ] 1.3 Add visualizer plugin to vite.config.ts
     - Import rollup-plugin-visualizer
     - Add plugin configuration with dist/bundle-analysis.html output path
     - Set brotli: true and gzip: true options
@@ -48,7 +48,7 @@ This document outlines the implementation plan for optimizing the Soroban Quest 
     - _Requirements: 10, 8_
   
   - [ ]* 1.6 Write tests for bundle configuration
-    - Create test to verify vite.config.js has rollupOptions defined
+    - Create test to verify vite.config.ts has rollupOptions defined
     - Create test to verify visualizer plugin is configured
     - Create test to verify sideEffects is false in package.json
     - _Requirements: 9_
