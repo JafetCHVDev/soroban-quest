@@ -22,7 +22,8 @@
     "completed": "Terminée",
     "locked": "Verrouillée",
     "unlocked": "Déverrouillée",
-    "skipToContent": "Passer au contenu principal"
+    "skipToContent": "Passer au contenu principal",
+    "missionLocaleError": "Impossible de charger les traductions des missions. Le contenu des missions s'affiche en anglais."
   },
   "shortcuts": {
     "title": "Raccourcis clavier",

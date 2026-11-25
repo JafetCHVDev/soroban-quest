@@ -23,7 +23,8 @@
     "completed": "已完成",
     "locked": "已锁定",
     "unlocked": "已解锁",
-    "skipToContent": "跳到主要内容"
+    "skipToContent": "跳到主要内容",
+    "missionLocaleError": "无法加载任务翻译，正在显示英文任务内容。"
   },
   "shortcuts": {
     "title": "键盘快捷键",

@@ -7,11 +7,10 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from "react"
 
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
-import { missions, localizeMissions } from "../data/missions";
 import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns";
 import { loadProgress, loadProfile } from "../systems/storage";
 import { downloadCampaignCertificate } from "../components/CampaignCertificate.jsx";
-import { isMissionUnlocked } from "../systems/missionLoader";
+import { getAllMissions, isMissionUnlocked } from "../systems/missionLoader";
 import { getLevelFromXP } from "../systems/gameEngine";
 import { useTranslation } from "../i18n/useTranslation";
 import type { LocalizedMission } from "../types/game";
@@ -34,7 +33,7 @@ export default function Campaigns() {
     [language],
   );
   const localizedMissions = useMemo<LocalizedMission[]>(
-    () => localizeMissions(missions, language),
+    () => getAllMissions(language),
     [language],
   );
   const selectedCampaign = useMemo(
@@ -182,7 +181,7 @@ export default function Campaigns() {
           {t("campaigns.subtitle", {
             level: currentLevel,
             completed: progress.completedMissions.length,
-            total: missions.length,
+            total: localizedMissions.length,
           })}
         </p>
       </div>

@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { missions, localizeMissions } from '../data/missions';
-
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { loadProgress } from '../systems/storage';
@@ -9,6 +7,7 @@ import './SkillTree.css';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import { measureRender } from '../systems/performanceMonitor';
 import type { LocalizedMission } from '../types/game';
+import { getAllMissions } from '../systems/missionLoader';
 
 // Concept identifiers are kept untranslated — they're code-level tokens
 // (e.g. `contract`, `Env`, `require_auth`) that appear verbatim in Rust.
@@ -58,7 +57,7 @@ export default function SkillTree() {
   });
 
   const localizedMissions = useMemo<LocalizedMission[]>(
-    () => localizeMissions(missions, language),
+    () => getAllMissions(language),
     [language],
   );
 

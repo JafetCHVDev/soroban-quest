@@ -11,7 +11,7 @@ vi.mock("../../i18n/locales/en.json", async (importOriginal) => {
   };
 });
 
-const { localizeMission } = await import("../missions");
+const { localizeMission } = await import("../../systems/missionLoader");
 
 describe("localizeMission zh-CN fallback to an English locale key", () => {
   it("resolves the English key when the zh-CN field is missing", () => {

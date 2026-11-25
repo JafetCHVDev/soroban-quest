@@ -22,7 +22,8 @@
     "completed": "Completed",
     "locked": "Locked",
     "unlocked": "Unlocked",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "missionLocaleError": "Mission translations could not be loaded. Showing English mission content."
   },
   "shortcuts": {
     "title": "Keyboard Shortcuts",

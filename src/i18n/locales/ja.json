@@ -23,7 +23,8 @@
     "completed": "完了しました",
     "locked": "ロック",
     "unlocked": "ロック解除",
-    "skipToContent": "メインコンテンツにスキップ"
+    "skipToContent": "メインコンテンツにスキップ",
+    "missionLocaleError": "ミッションの翻訳を読み込めませんでした。英語のミッション内容を表示しています。"
   },
   "shortcuts": {
     "title": "キーボードショートカット",

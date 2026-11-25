@@ -1,7 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { beforeAll, describe, it, expect } from 'vitest';
 import jaLocale from '../locales/ja.json';
-import { missions, localizeMission } from '../../data/missions';
+import { missions as missionDefinitions } from '../../data/missions';
+import { loadMissionLocale, localizeMission } from '../../systems/missionLoader';
 import { campaigns, localizeCampaign } from '../../data/campaigns';
+
+let missions;
+
+beforeAll(async () => {
+  const [english, japanese] = await Promise.all([
+    loadMissionLocale('en'),
+    loadMissionLocale('ja'),
+  ]);
+  missions = missionDefinitions.map((mission) => ({
+    ...mission,
+    i18n: {
+      en: english[mission.id],
+      ...(japanese[mission.id] ? { ja: japanese[mission.id] } : {}),
+    },
+  }));
+});
 
 /**
  * Japanese Localization Tests
@@ -112,8 +129,7 @@ describe('Japanese (ja) Localization', () => {
     });
 
     it('should fallback to English when Japanese is missing', () => {
-      // Find or create a mission without Japanese
-      const mission = { ...missions[0], i18n: { en: missions[0].i18n.en } };
+      const mission = missions.find((item) => item.id === 'standalone-storage-dojo');
       const localized = localizeMission(mission, 'ja');
       
       // Should fallback to English
