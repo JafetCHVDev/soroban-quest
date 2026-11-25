@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, ReactElement, ChangeEvent } from 'react';
-import type { IStandaloneCodeEditor } from 'monaco-editor';
+import type { editor as MonacoEditor } from 'monaco-editor';
+import type { RecordedEvent, RecordingData } from '../systems/codeRecorder';
 import LazyMonacoEditor from './LazyMonacoEditor';
 
 /* eslint-disable react-hooks/set-state-in-effect */
@@ -9,20 +10,6 @@ const PLAYBACK_SPEEDS = [1, 2, 4];
 /**
  * Replay event structure
  */
-interface ReplayEvent {
-  type: 'edit' | 'run' | 'hint' | 'reset';
-  timestamp: number;
-  content?: string;
-}
-
-/**
- * Recording structure
- */
-interface Recording {
-  duration: number;
-  events: ReplayEvent[];
-}
-
 /**
  * CodeReplayPlayer component props
  */
@@ -30,7 +17,7 @@ interface CodeReplayPlayerProps {
   /** Current mission ID */
   missionId: string;
   /** Recording to replay */
-  recording: Recording;
+  recording: RecordingData;
   /** Callback to close the player */
   onClose: () => void;
 }
@@ -58,6 +45,10 @@ function formatTime(ms: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
+function getRecordedCode(event: RecordedEvent | undefined): string {
+  return typeof event?.content === 'string' ? event.content : '';
+}
+
 /**
  * CodeReplayPlayer component
  * Interactive player for replaying recorded code editing sessions with controls and timeline
@@ -74,20 +65,20 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
   const [duration, setDuration] = useState(0);
   
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const editorRef = useRef<IStandaloneCodeEditor | null>(null);
+  const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
   // Initialize - Multiple setState calls are batched by React and acceptable
   /* eslint-disable-next-line react-hooks/set-state-in-effect */
   useEffect(() => {
     if (recording) {
       setDuration(recording.duration || 0);
-      setCurrentCode(recording.events[0]?.content || '');
+      setCurrentCode(getRecordedCode(recording.events[0]));
       setCurrentEventIndex(0);
       setCurrentTime(0);
     }
   }, [recording]);
 
   // Handle editor mount
-  const handleEditorDidMount = (editor: IStandaloneCodeEditor): void => {
+  const handleEditorDidMount = (editor: MonacoEditor.IStandaloneCodeEditor): void => {
     editorRef.current = editor;
     // Make editor read-only
     editor.updateOptions({ readOnly: true });
@@ -107,8 +98,8 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
       setCurrentEventIndex(nextIndex);
       setCurrentTime(nextEvent.timestamp);
       
-      if (nextEvent.type === 'edit' && nextEvent.content) {
-        setCurrentCode(nextEvent.content);
+      if (nextEvent.type === 'edit') {
+        setCurrentCode(getRecordedCode(nextEvent));
       }
     }
   }, [currentEventIndex, recording]);
@@ -123,10 +114,10 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
       setCurrentTime(prevEvent.timestamp);
       
       // Find the last edit event before this timestamp
-      let lastEditCode = recording.events[0]?.content || '';
+      let lastEditCode = getRecordedCode(recording.events[0]);
       for (let i = 0; i <= prevIndex; i++) {
-        if (recording.events[i].type === 'edit' && recording.events[i].content) {
-          lastEditCode = recording.events[i].content || '';
+        if (recording.events[i].type === 'edit') {
+          lastEditCode = getRecordedCode(recording.events[i]);
         }
       }
       setCurrentCode(lastEditCode);
@@ -137,13 +128,13 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
   const jumpToTime = useCallback((targetTime: number): void => {
     // Find the event at or before the target time
     let targetIndex = 0;
-    let codeAtTime = recording.events[0]?.content || '';
+    let codeAtTime = getRecordedCode(recording.events[0]);
     
     for (let i = 0; i < recording.events.length; i++) {
       if (recording.events[i].timestamp <= targetTime) {
         targetIndex = i;
-        if (recording.events[i].type === 'edit' && recording.events[i].content) {
-          codeAtTime = recording.events[i].content || '';
+        if (recording.events[i].type === 'edit') {
+          codeAtTime = getRecordedCode(recording.events[i]);
         }
       } else {
         break;
@@ -394,13 +385,13 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
             const handleSelect = (): void => {
               setCurrentEventIndex(index);
               setCurrentTime(event.timestamp);
-              if (event.type === 'edit' && event.content) {
-                setCurrentCode(event.content);
+              if (event.type === 'edit') {
+                setCurrentCode(getRecordedCode(event));
               } else {
-                let lastEditCode = recording.events[0]?.content || '';
+                let lastEditCode = getRecordedCode(recording.events[0]);
                 for (let i = 0; i <= index; i++) {
-                  if (recording.events[i].type === 'edit' && recording.events[i].content) {
-                    lastEditCode = recording.events[i].content || '';
+                  if (recording.events[i].type === 'edit') {
+                    lastEditCode = getRecordedCode(recording.events[i]);
                   }
                 }
                 setCurrentCode(lastEditCode);
@@ -454,9 +445,12 @@ export default function CodeReplayPlayer({ missionId, recording, onClose }: Code
                 <span style={{ color: display.color, fontWeight: isActive ? 'bold' : 'normal' }}>
                   {display.text}
                 </span>
-                {event.type === 'hint' && event.content && (
+                {event.type === 'hint' &&
+                  typeof event.content === 'string' &&
+                  event.content.trim() &&
+                  Number.isFinite(Number(event.content)) && (
                   <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem' }}>
-                    #{parseInt(event.content) + 1}
+                    #{Number(event.content) + 1}
                   </span>
                 )}
               </div>

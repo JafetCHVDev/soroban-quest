@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
-    "allowJs": false,
+    "allowJs": true,
     "checkJs": false,
     "noImplicitAny": true,
     "esModuleInterop": true,

@@ -5,6 +5,8 @@ import {
   createCollaborationInvite,
   createCollaborationManager,
   readCollaborationRoom,
+  type CollaborationStatus,
+  type User,
 } from "../systems/collaboration";
 
 const COLORS = ["#06d6a0", "#8b5cf6", "#f59e0b", "#3b82f6", "#ef4444"];
@@ -12,35 +14,8 @@ const COLORS = ["#06d6a0", "#8b5cf6", "#f59e0b", "#3b82f6", "#ef4444"];
 /**
  * Collaboration manager interface
  */
-interface CollaborationManager {
-  roomId: string;
-  on: (_event: string, _handler: (..._args: unknown[]) => void) => void;
-  connect: () => void;
-  destroy: () => void;
-  setCode: (_code: string) => void;
-  getCode: () => string;
-  getStatus: () => CollaborationStatus;
-  getPeers: () => CollaborationUser[];
-  reconnect: () => void;
-}
-
-/**
- * Collaboration status
- */
-interface CollaborationStatus {
-  connected: boolean;
-  peerCount: number;
-}
-
-/**
- * Collaboration user
- */
-interface CollaborationUser {
-  id: string;
-  name: string;
-  color: string;
-  editing?: boolean;
-}
+type CollaborationManager = ReturnType<typeof createCollaborationManager>;
+type CollaborationUser = User & { editing?: boolean };
 
 /**
  * CollaborationBar component props
@@ -90,7 +65,11 @@ export default function CollaborationBar({
 }: CollaborationBarProps): ReactElement {
   const [roomInput, setRoomInput] = useState(() => readCollaborationRoom());
   const [manager, setManager] = useState<CollaborationManager | null>(null);
-  const [status, setStatus] = useState<CollaborationStatus>({ connected: false, peerCount: 0 });
+  const [status, setStatus] = useState<CollaborationStatus>({
+    roomId: "",
+    connected: false,
+    peerCount: 0,
+  });
   const [peers, setPeers] = useState<CollaborationUser[]>([]);
   const [copied, setCopied] = useState(false);
   const [conflict, setConflict] = useState(false);
@@ -111,11 +90,11 @@ export default function CollaborationBar({
       missionId,
       user,
       initialCode: code,
-    }) as CollaborationManager;
+    });
 
-    nextManager.on("status", setStatus);
-    nextManager.on("peers", setPeers);
-    nextManager.on("code", (nextCode: string) => {
+    nextManager.on("status", (nextStatus) => setStatus(nextStatus));
+    nextManager.on("peers", (nextPeers) => setPeers(nextPeers));
+    nextManager.on("code", (nextCode) => {
       if (nextCode !== code) onCodeChange?.(nextCode);
     });
     nextManager.on("conflict", () => setConflict(true));
@@ -130,7 +109,7 @@ export default function CollaborationBar({
 
   const copyInvite = async (): Promise<void> => {
     const roomId = manager?.roomId || roomInput || undefined;
-    const invite = createCollaborationInvite(roomId);
+    const invite = createCollaborationInvite(roomId ?? "");
     await navigator.clipboard?.writeText(invite);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
