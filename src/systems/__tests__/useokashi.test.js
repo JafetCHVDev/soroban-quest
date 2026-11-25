@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
-import { TOAST_STATES, useOkashi } from "../useokashi.js";
+import { TOAST_STATES, useOkashi } from "../useokashi";
 
 const OKASHI_URL = "https://okashi.dev";
 const OPEN_FEATURES = "noopener,noreferrer";

@@ -473,6 +473,10 @@
       "goldHintTitle": "Dépensez {{cost}} or pour révéler le prochain indice",
       "goldHintInsufficient": "Pas assez d'or — besoin de {{cost}} pour déverrouiller",
       "goldHintUnlocked": "🪙 Indice (déverrouillé)",
+      "useToken": "💡 Utiliser un jeton ({{count}})",
+      "useTokenTitle": "Dépensez un jeton d'indice pour révéler le prochain indice",
+      "useTokenEmpty": "Plus de jetons d'indice — achetez-en dans la boutique",
+      "useTokenUnlocked": "💡 Indice (déverrouillé)",
       "solution": "👁️ Solution",
       "run": "▶ Lancer les tests",
       "running": "Exécution…",
@@ -528,6 +532,8 @@
       "hintUnlocked": "Indice {{index}} débloqué",
       "hintGoldUnlocked": "Indice {{index}} débloqué pour {{cost}} or",
       "hintInsufficientGold": "Pas assez d'or — besoin de {{cost}} pour déverrouiller",
+      "hintTokenUnlocked": "Indice {{index}} débloqué avec un jeton d'indice",
+      "hintTokenMissing": "Plus de jetons d'indice — achetez-en dans la boutique",
       "codeReset": "Code réinitialisé au modèle",
       "solutionLoaded": "Solution chargée dans l'éditeur"
     },
@@ -744,7 +750,9 @@
     "purchaseSuccess": "{{item}} acheté avec succès !",
     "empty": "Aucun article trouvé dans cette catégorie",
     "ariaPurchase": "Acheter {{item}} pour {{price}} Or",
-    "ariaPurchased": "{{item}} - Déjà acheté"
+    "ariaPurchased": "{{item}} - Déjà acheté",
+    "hintTokensLabel": "Jetons d'indice",
+    "hintTokensCount": "Jetons d'indice : {{count}}"
   },
   "onboarding": {
     "step1": {

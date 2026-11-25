@@ -43,6 +43,7 @@ function getDefaultState() {
     inventory: {
       owned: [],
       equipped: [],
+      hintTokens: 0,
     },
     purchasedItems: [],
     xpBoostActive: false,
@@ -187,6 +188,82 @@ export function spendGoldForHint(state, missionId, hintIndex, cost = HINT_GOLD_C
     },
     hintAlreadyUnlocked: false,
     insufficientGold: false,
+  };
+}
+
+/**
+ * Shop id of the consumable Hint Token. The owned quantity lives in
+ * `state.inventory.hintTokens` as a count, not as ownership in `owned`.
+ */
+export const HINT_TOKEN_ID = "hint-token";
+
+/**
+ * Number of hint tokens the player currently owns.
+ */
+export function getHintTokenCount(state) {
+  const count = state?.inventory?.hintTokens;
+  return Number.isInteger(count) && count > 0 ? count : 0;
+}
+
+/**
+ * Purchase hint tokens. Tokens stack, and a legacy `hint-token` entry in the
+ * owned/purchased lists is dropped so the token never behaves like a permanent
+ * equippable item.
+ */
+export function purchaseHintTokens(state, amount = 1) {
+  const inventory = state.inventory || { owned: [], equipped: [] };
+  const owned = (inventory.owned || []).filter((id) => id !== HINT_TOKEN_ID);
+  const equipped = (inventory.equipped || []).filter((id) => id !== HINT_TOKEN_ID);
+
+  return {
+    ...state,
+    inventory: {
+      ...inventory,
+      owned,
+      equipped,
+      hintTokens: getHintTokenCount(state) + Math.max(0, Math.floor(amount)),
+    },
+  };
+}
+
+/**
+ * Consume exactly one hint token. Returns the state unchanged with
+ * `insufficientTokens: true` when the player has none left.
+ */
+export function consumeHintToken(state) {
+  const count = getHintTokenCount(state);
+  if (count < 1) return { ...state, insufficientTokens: true };
+
+  const inventory = state.inventory || { owned: [], equipped: [] };
+  return {
+    ...state,
+    insufficientTokens: false,
+    inventory: { ...inventory, hintTokens: count - 1 },
+  };
+}
+
+/**
+ * Reveal a hint by spending one hint token instead of Gold.
+ *
+ * Hints already paid for (with Gold or an earlier token) are never re-charged,
+ * mirroring `spendGoldForHint`.
+ */
+export function spendHintTokenForHint(state, missionId, hintIndex) {
+  if (isHintGoldUnlocked(state, missionId, hintIndex)) {
+    return { ...state, hintAlreadyUnlocked: true, insufficientTokens: false };
+  }
+
+  const consumed = consumeHintToken(state);
+  if (consumed.insufficientTokens) return consumed;
+
+  const missionHints = consumed.goldUnlockedHints?.[missionId] || [];
+  return {
+    ...consumed,
+    goldUnlockedHints: {
+      ...(consumed.goldUnlockedHints || {}),
+      [missionId]: [...missionHints, hintIndex],
+    },
+    hintAlreadyUnlocked: false,
   };
 }
 

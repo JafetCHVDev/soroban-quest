@@ -98,6 +98,50 @@ describe("storage", () => {
     });
   });
 
+  describe("hint token migration", () => {
+    it("converts a legacy purchased hint-token into one token", () => {
+      storage["soroban_quest_progress"] = JSON.stringify({
+        xp: 100,
+        level: 1,
+        purchasedItems: ["hint-token", "xp-boost"],
+      });
+
+      const state = load();
+
+      expect(state.inventory.hintTokens).toBe(1);
+      expect(state.inventory.owned).toEqual(["xp-boost"]);
+      expect(state.purchasedItems).not.toContain("hint-token");
+    });
+
+    it("converts a legacy owned hint-token and drops it from the equipment", () => {
+      storage["soroban_quest_progress"] = JSON.stringify({
+        xp: 0,
+        level: 1,
+        inventory: { owned: ["hint-token"], equipped: ["hint-token"] },
+      });
+
+      const state = load();
+
+      expect(state.inventory.hintTokens).toBe(1);
+      expect(state.inventory.owned).toEqual([]);
+      expect(state.inventory.equipped).toEqual([]);
+    });
+
+    it("preserves an existing token count", () => {
+      storage["soroban_quest_progress"] = JSON.stringify({
+        xp: 0,
+        level: 1,
+        inventory: { owned: [], equipped: [], hintTokens: 4 },
+      });
+
+      expect(load().inventory.hintTokens).toBe(4);
+    });
+
+    it("defaults new saves to zero tokens", () => {
+      expect(load().inventory.hintTokens).toBe(0);
+    });
+  });
+
   describe("profiles", () => {
     it("migrates legacy profile and progress into the first profile slot", () => {
       storage["soroban_quest_profile"] = JSON.stringify({
@@ -514,6 +558,20 @@ describe("storage", () => {
       const result = validate(validState({ inventory: { owned: [], equipped: ["xp-boost"] } }));
       expect(result.errors).toEqual([
         "state.inventory.equipped contains item(s) not in state.inventory.owned: xp-boost",
+      ]);
+    });
+
+    it("accepts a stacked hint token count", () => {
+      const state = validState();
+      state.inventory = { ...state.inventory, hintTokens: 3 };
+      expect(validate(state)).toEqual({ isValid: true, errors: [] });
+    });
+
+    it.each([-1, 1.5, "2"])("rejects hintTokens = %s", (hintTokens) => {
+      const state = validState();
+      state.inventory = { ...state.inventory, hintTokens };
+      expect(validate(state).errors).toEqual([
+        `state.inventory.hintTokens must be an integer between 0 and ${MAX_IMPORT_ARRAY_LENGTH}`,
       ]);
     });
 

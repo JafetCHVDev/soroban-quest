@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from '../i18n/useTranslation';
 import { useGameState } from '../systems/GameStateContext';
 import { useToast } from '../systems/ToastContext';
-import { spendGold } from '../systems/gameEngine';
+import { getHintTokenCount, purchaseHintTokens, spendGold } from '../systems/gameEngine';
 import { logActivity, ACTIVITY_TYPES } from '../systems/activityLogger';
 import useDocumentTitle from '../systems/useDocumentTitle';
 import './Shop.css';
@@ -14,6 +14,8 @@ interface ShopItem {
   price: number;
   icon: string;
   category: 'avatars' | 'boosts' | 'badges';
+  /** Consumables are bought repeatedly and stack in the inventory. */
+  stackable?: boolean;
 }
 
 const SHOP_ITEMS: ShopItem[] = [
@@ -56,6 +58,8 @@ const SHOP_ITEMS: ShopItem[] = [
     price: 150,
     icon: '💡',
     category: 'boosts',
+    // Consumable: purchases stack a count instead of unlocking the item once.
+    stackable: true,
   },
   {
     id: 'premium-badge',
@@ -74,6 +78,7 @@ export default function Shop() {
   const { showToast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const ownedItems = progress.inventory?.owned || [];
+  const hintTokenCount = getHintTokenCount(progress);
 
   const categories = [
     { id: 'all', name: 'shop.categories.all' },
@@ -86,8 +91,8 @@ export default function Shop() {
     ? SHOP_ITEMS
     : SHOP_ITEMS.filter(item => item.category === selectedCategory);
 
-  const handlePurchase = (item: ShopItem) => {
-    if (ownedItems.includes(item.id)) {
+  const handlePurchase = (item: ShopItem): void => {
+    if (!item.stackable && ownedItems.includes(item.id)) {
       showToast(t('shop.alreadyPurchased'), 'error');
       return;
     }
@@ -98,11 +103,13 @@ export default function Shop() {
       return;
     }
 
-    const newProgress = spendGold(progress, item.price);
+    let newProgress = spendGold(progress, item.price);
     // Initialize inventory if undefined (should be covered by migration but for new profiles)
-    if (!newProgress.inventory) newProgress.inventory = { owned: [], equipped: [] };
-    
-    newProgress.inventory.owned = [...ownedItems, item.id];
+    if (!newProgress.inventory) newProgress.inventory = { owned: [], equipped: [], hintTokens: 0 };
+
+    newProgress = item.stackable
+      ? purchaseHintTokens(newProgress, 1)
+      : { ...newProgress, inventory: { ...newProgress.inventory, owned: [...ownedItems, item.id] } };
     logActivity(ACTIVITY_TYPES.SHOP_PURCHASE, { itemId: item.id, price: item.price }, `Purchased ${item.name} for ${item.price} gold`);
     updateProgress(newProgress);
     showToast(t('shop.purchaseSuccess', { item: t(`shop.items.${item.name}`) }), 'success');
@@ -115,9 +122,17 @@ export default function Shop() {
           <h1 className="shop-title">{t('shop.title')}</h1>
           <p className="shop-subtitle">{t('shop.subtitle')}</p>
         </div>
-        <div className="shop-balance">
-          <div className="balance-icon">💰</div>
-          <div className="balance-amount">{progress.gold || 0}</div>
+        <div className="shop-balances">
+          <div className="shop-balance" title={t('shop.hintTokensLabel')}>
+            <div className="balance-icon">💡</div>
+            <div className="balance-tokens" data-testid="shop-hint-tokens">
+              {t('shop.hintTokensCount', { count: hintTokenCount })}
+            </div>
+          </div>
+          <div className="shop-balance">
+            <div className="balance-icon">💰</div>
+            <div className="balance-amount">{progress.gold || 0}</div>
+          </div>
         </div>
       </section>
 
@@ -137,7 +152,7 @@ export default function Shop() {
 
       <div className="shop-grid">
         {filteredItems.map((item) => {
-          const isOwned = ownedItems.includes(item.id);
+          const isOwned = !item.stackable && ownedItems.includes(item.id);
           const canAfford = (progress.gold || 0) >= item.price;
 
           return (
@@ -152,6 +167,11 @@ export default function Shop() {
                 <div className="shop-item-price">
                   {item.price} 🪙
                 </div>
+                {item.stackable && (
+                  <p className="shop-item-owned-count">
+                    {t('shop.hintTokensCount', { count: hintTokenCount })}
+                  </p>
+                )}
               </div>
               <button
                 type="button"

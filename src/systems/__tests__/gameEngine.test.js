@@ -28,6 +28,10 @@ import {
   HINT_GOLD_COST,
   isHintGoldUnlocked,
   spendGoldForHint,
+  getHintTokenCount,
+  purchaseHintTokens,
+  consumeHintToken,
+  spendHintTokenForHint,
 } from "../gameEngine";
 // Registers the real mission catalog with the achievement system, as the app
 // does before any mission can be completed.
@@ -329,6 +333,67 @@ describe("gameEngine core logic", () => {
       const out = updateStreak(s);
       expect(out.streak).toBe(5); // Streak freeze worked, streak preserved
     });
+  });
+});
+
+describe("hint token system", () => {
+  it("starts with no hint tokens", () => {
+    expect(getHintTokenCount(getDefaultState())).toBe(0);
+  });
+
+  it("stacks tokens when the player buys more than one", () => {
+    let state = purchaseHintTokens(getDefaultState());
+    state = purchaseHintTokens(state);
+    state = purchaseHintTokens(state);
+
+    expect(getHintTokenCount(state)).toBe(3);
+    // Consumables are not permanent owned items.
+    expect(state.inventory.owned).not.toContain("hint-token");
+  });
+
+  it("consumes exactly one token and leaves the rest", () => {
+    const state = purchaseHintTokens(getDefaultState(), 3);
+    const out = consumeHintToken(state);
+
+    expect(getHintTokenCount(out)).toBe(2);
+    expect(out.insufficientTokens).toBe(false);
+  });
+
+  it("does not consume anything when the player has zero tokens", () => {
+    const out = consumeHintToken(getDefaultState());
+
+    expect(getHintTokenCount(out)).toBe(0);
+    expect(out.insufficientTokens).toBe(true);
+  });
+
+  it("reveals a hint with a token without spending gold", () => {
+    const state = purchaseHintTokens({ ...getDefaultState(), gold: 500 }, 2);
+    const out = spendHintTokenForHint(state, "hello-soroban", 0);
+
+    expect(out.gold).toBe(500);
+    expect(getHintTokenCount(out)).toBe(1);
+    expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(true);
+    expect(out.insufficientTokens).toBe(false);
+  });
+
+  it("refuses to reveal a hint with no tokens left", () => {
+    const state = { ...getDefaultState(), gold: 500 };
+    const out = spendHintTokenForHint(state, "hello-soroban", 0);
+
+    expect(out.insufficientTokens).toBe(true);
+    expect(out.gold).toBe(500);
+    expect(getHintTokenCount(out)).toBe(0);
+    expect(isHintGoldUnlocked(out, "hello-soroban", 0)).toBe(false);
+  });
+
+  it("does not consume a token for an already unlocked hint", () => {
+    const state = purchaseHintTokens({ ...getDefaultState(), gold: 500 }, 2);
+    const unlocked = spendHintTokenForHint(state, "hello-soroban", 0);
+    const revisit = spendHintTokenForHint(unlocked, "hello-soroban", 0);
+
+    expect(revisit.hintAlreadyUnlocked).toBe(true);
+    expect(getHintTokenCount(revisit)).toBe(1);
+    expect(revisit.gold).toBe(500);
   });
 });
 

@@ -474,6 +474,10 @@
       "goldHintTitle": "Spend {{cost}} gold to instantly reveal the next hint",
       "goldHintInsufficient": "Not enough gold — need {{cost}} to unlock this hint",
       "goldHintUnlocked": "🪙 Hint (unlocked)",
+      "useToken": "💡 Use Token ({{count}})",
+      "useTokenTitle": "Spend one Hint Token to reveal the next hint",
+      "useTokenEmpty": "No Hint Tokens left — buy more in the Shop",
+      "useTokenUnlocked": "💡 Hint (unlocked)",
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
       "running": "Running…",
@@ -529,6 +533,8 @@
       "hintUnlocked": "Hint {{index}} unlocked",
       "hintGoldUnlocked": "Hint {{index}} unlocked for {{cost}} gold",
       "hintInsufficientGold": "Not enough gold — need {{cost}} to unlock this hint",
+      "hintTokenUnlocked": "Hint {{index}} unlocked with a Hint Token",
+      "hintTokenMissing": "No Hint Tokens left — buy more in the Shop",
       "codeReset": "Code reset to template",
       "solutionLoaded": "Solution loaded into editor"
     },
@@ -745,7 +751,9 @@
     "purchaseSuccess": "Successfully purchased {{item}}!",
     "empty": "No items found in this category",
     "ariaPurchase": "Purchase {{item}} for {{price}} Gold",
-    "ariaPurchased": "{{item}} - Already purchased"
+    "ariaPurchased": "{{item}} - Already purchased",
+    "hintTokensLabel": "Hint Tokens",
+    "hintTokensCount": "Hint Tokens: {{count}}"
   },
   "onboarding": {
     "step1": {
