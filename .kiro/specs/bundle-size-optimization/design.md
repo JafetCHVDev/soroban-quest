@@ -183,7 +183,7 @@ const WARNING_MARGIN = 0.9; // Warn at 90% of target
 
 ### Build Configuration
 
-The vite.config.js is enhanced with explicit code splitting and optimization settings:
+The vite.config.ts is enhanced with explicit code splitting and optimization settings:
 
 ```javascript
 export default defineConfig({
@@ -306,7 +306,7 @@ Monaco Editor is bundled with MissionDetail because:
 3. Users won't load MissionDetail without needing Monaco
 4. Total MissionDetail chunk target: <150KB (gzip)
 
-Configuration in vite.config.js:
+Configuration in vite.config.ts:
 
 ```javascript
 rollupOptions: {
@@ -653,7 +653,7 @@ No breaking changes expected. This is purely a configuration and code organizati
 
 ### Files to Modify
 
-#### 1. `vite.config.js`
+#### 1. `vite.config.ts`
 - Add rollup manual chunks configuration
 - Add visualizer plugin for bundle analysis
 - Enable tree-shaking and minification
@@ -755,7 +755,7 @@ Developer documentation explaining the optimization strategy (see Testing Strate
 
 ### Configuration Updates
 
-#### vite.config.js - Rollup Configuration
+#### vite.config.ts - Rollup Configuration
 
 Add this to the build section:
 
@@ -807,13 +807,13 @@ This tells bundlers that no files have side effects, enabling aggressive tree-sh
 
 **Tasks**:
 1. Add rollup-plugin-visualizer to package.json
-2. Update vite.config.js with rollupOptions
-3. Add bundle size reporter plugin to vite.config.js
+2. Update vite.config.ts with rollupOptions
+3. Add bundle size reporter plugin to vite.config.ts
 4. Run `npm run build` and generate baseline analysis
 5. Document current bundle sizes
 
 **Deliverables**:
-- Updated vite.config.js with full config
+- Updated vite.config.ts with full config
 - dist/bundle-analysis.html showing current state
 - Baseline metrics in project documentation
 
@@ -1363,7 +1363,7 @@ Create `docs/BUNDLE_OPTIMIZATION.md` containing:
 
 1. **Overview**: What was optimized and why
 2. **Architecture Diagram**: How chunks are split
-3. **Configuration Guide**: How vite.config.js controls splitting
+3. **Configuration Guide**: How vite.config.ts controls splitting
 4. **Adding New Routes**: How to add lazy-loaded routes
 5. **Analyzing Bundles**: How to run bundle analyzer
 6. **Size Targets**: What sizes should be maintained

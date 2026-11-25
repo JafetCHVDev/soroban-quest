@@ -120,10 +120,10 @@ This document defines requirements for optimizing the Soroban Quest production b
 
 **Acceptance Criteria**
 
-1. WHEN the vite.config.js build configuration is reviewed, it SHALL explicitly configure rollup options to split code by route
+1. WHEN the vite.config.ts build configuration is reviewed, it SHALL explicitly configure rollup options to split code by route
 2. THE build configuration SHALL define separate chunk entry points for each lazy-loaded route component
 3. WHEN a new route is added to the application, the Vite configuration or app router structure SHALL guide developers to lazy-load the new route by default
-4. THE vite-bundle-analyzer plugin configuration SHALL be present in vite.config.js with output path and visualization options
+4. THE vite-bundle-analyzer plugin configuration SHALL be present in vite.config.ts with output path and visualization options
 
 ### Requirement 10: Build Process Verification
 

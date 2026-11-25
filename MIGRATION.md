@@ -40,7 +40,7 @@ Successfully migrated the entire Soroban Quest codebase from JavaScript (83 file
 **Completed Changes:**
 - `tsconfig.json` - Strict mode enabled, JSX support configured, path aliases set
 - `package.json` - TypeScript and @types dependencies added, typecheck script configured
-- `vite.config.ts` - Created (migrated from vite.config.js)
+- `vite.config.ts` - Created (migrated from the previous JavaScript Vite config)
 - `eslint.config.js` - Updated to parse TypeScript files
 
 **Status:** Configuration ready for TypeScript compilation with strict type checking.
@@ -775,7 +775,7 @@ All original .jsx and .js files corresponding to the TypeScript migrations above
 
 - tsconfig.json - Added TypeScript compilation settings
 - package.json - Added TypeScript dependencies and scripts
-- vite.config.ts - Created (was vite.config.js)
+- vite.config.ts - Created (replaced the previous JavaScript Vite config)
 - eslint.config.js - Updated for TypeScript support
 
 ---
